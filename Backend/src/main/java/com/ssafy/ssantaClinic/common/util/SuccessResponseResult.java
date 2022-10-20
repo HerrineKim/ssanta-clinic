@@ -1,4 +1,4 @@
-package com.ssafy.ssantaClinic;
+package com.ssafy.ssantaClinic.common.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
