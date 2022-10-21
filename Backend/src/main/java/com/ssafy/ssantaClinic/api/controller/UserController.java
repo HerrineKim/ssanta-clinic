@@ -17,7 +17,11 @@ public class UserController {
     @Autowired
     public UserService userService;
 
-    @ApiOperation(value = "설문조사 내용 업데이트", notes="회원가입에 성공하면 success, 아니면 fail", httpMethod = "POST")
+    /**
+     * @Method Name : join
+     * @Method 설명 : 회원가입
+     */
+    @ApiOperation(value = "회원가입", notes="회원가입에 성공하면 success, 아니면 fail", httpMethod = "POST")
     @PostMapping("/join")
     public SuccessResponseResult join(){
 
