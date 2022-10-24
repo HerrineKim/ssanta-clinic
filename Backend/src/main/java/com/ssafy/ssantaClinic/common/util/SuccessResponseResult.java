@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SuccessResponseResult {
-    private final String state = "SUCCESS";
+    private String state = "SUCCESS";
     private Object data;
 }
