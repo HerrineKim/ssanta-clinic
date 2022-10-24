@@ -1,8 +1,6 @@
 package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.request.BoxRequest;
-import com.ssafy.ssantaClinic.api.response.BoxDetailResponse;
-import com.ssafy.ssantaClinic.api.response.BoxResponse;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
 import com.ssafy.ssantaClinic.common.util.SuccessResponseResult;
@@ -13,7 +11,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,7 +35,7 @@ public class CalendarController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 204, message = "조회할 상자 없음"),
-            @ApiResponse(code = 400, message = "조회 오류"),
+            @ApiResponse(code = 400, message = "회원 정보 조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
@@ -48,7 +45,7 @@ public class CalendarController {
          * @Method 설명 : 오늘 열람가능한 상자 목록을 조회한다.
          */
         int userId = 1; // temp
-        List<BoxResponse> boxes = calendarService.findAllTodayBoxes(userId);
+        List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllTodayBoxes(userId);
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
         else
@@ -68,7 +65,7 @@ public class CalendarController {
          * @Method 설명 : 상자 상세 정보를 조회한다.
          */
         int userId = 1; //temp
-        BoxDetailResponse box = calendarService.findBox(userId, boxId);
+        CalendarResponse.GetBoxDetailResponse box = calendarService.findBox(userId, boxId);
         return ResponseEntity.ok(new SuccessResponseResult(box));
     }
 
@@ -113,7 +110,7 @@ public class CalendarController {
          * @Method Name : getAdventCalendarInfo
          * @Method 설명 : 회원의 어드벤트 캘린더 정보를 조회한다.
          */
-        List<CalendarResponse> calendarInfo = calendarService.findAdventCalendarByUserId(userId);
+        List<CalendarResponse.GetCalendarResponse> calendarInfo = calendarService.findAdventCalendarByUserId(userId);
         return ResponseEntity.ok(new SuccessResponseResult(calendarInfo));
     }
 
@@ -130,7 +127,7 @@ public class CalendarController {
          * @Method 설명 : 해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.
          */
         int userId = 1; //temp
-        List<BoxResponse> boxes = calendarService.findAllBoxesByDate(userId, date);
+        List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllBoxesByDate(userId, date);
         return ResponseEntity.ok(new SuccessResponseResult(boxes));
     }
 }
