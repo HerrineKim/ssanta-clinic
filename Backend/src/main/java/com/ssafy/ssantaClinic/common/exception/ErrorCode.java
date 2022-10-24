@@ -23,7 +23,10 @@ public enum ErrorCode {
 
     // 로그인
     LOGIN_NOT_FOUND_ID(HttpStatus.NOT_FOUND, "400", "해당 아이디를 찾을 수 없습니다"),
-    NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "400", "해당 유저가 존재하지 않습니다");
+    NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "400", "해당 유저가 존재하지 않습니다"),
+
+    // 어드벤트 캘린더
+    D_DAY_IS_NOT_COMING(HttpStatus.FORBIDDEN, "403", "아직 상자를 열람할 수 없습니다.");
 
 
     private final HttpStatus status;
