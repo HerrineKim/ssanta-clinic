@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface AdventCalendarRepository extends JpaRepository<AdventCalendar, Integer> {
-    List<AdventCalendar> findAllByReceiverIdAndDay()
+    List<AdventCalendar> findAllByReceiverIdAndDay(int receiverId, int day);
 }
