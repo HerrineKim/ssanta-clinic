@@ -10,7 +10,6 @@ public class UserResponse {
     public static class GetUserResponse {
         private int userId;
         private String email;
-        private String password;
         private String nickName;
     }
 }
