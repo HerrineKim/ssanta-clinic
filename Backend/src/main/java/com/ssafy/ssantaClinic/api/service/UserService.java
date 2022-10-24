@@ -5,4 +5,6 @@ import com.ssafy.ssantaClinic.db.entity.User;
 public interface UserService {
 
     void save(User user);
+
+    User getUserByUserId(int userId);
 }
