@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SignUp } from './pages/users/SignUp';
 import { LogIn } from './pages/users/LogIn';
