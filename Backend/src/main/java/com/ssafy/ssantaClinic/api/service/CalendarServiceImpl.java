@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,7 +95,18 @@ public class CalendarServiceImpl implements CalendarService{
 
     @Override
     public List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(int userId) {
-        return null;
+        /**
+         * @Method Name : findAdventCalendarByUserId
+         * @Method 설명 : 회원이 보유한 어드벤트 캘린더 정보를 반환한다.
+         */
+        // 존재하는 회원인지 확인
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        List<CalendarResponse.GetCalendarResponse> result = new ArrayList<>();
+        for(int i = 1; i <= 25; i++){
+            int cnt = (int) calendarRepository.countByReceiverIdAndDay(userId, i);
+            result.add(CalendarResponse.GetCalendarResponse.builder().date(i).cnt(cnt).build());
+        }
+        return result;
     }
 
     @Override
