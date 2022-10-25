@@ -87,6 +87,8 @@ public class CalendarController {
     @ApiOperation(value = "상자 선물하기", notes = "상자를 선물한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "등록 성공"),
+            @ApiResponse(code = 400, message = "날짜 형식 오류"),
+            @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @PostMapping
