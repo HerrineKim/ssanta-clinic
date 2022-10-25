@@ -122,6 +122,9 @@ public class CalendarController {
     @ApiOperation(value = "해당 날짜 상자 목록 조회", notes = "해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 204, message = "조회할 상자 없음"),
+            @ApiResponse(code = 403, message = "접근 권한 없음"),
+            @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
@@ -133,6 +136,9 @@ public class CalendarController {
          */
         int userId = 1; //temp
         List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllBoxesByDate(userId, date);
-        return ResponseEntity.ok(new SuccessResponseResult(boxes));
+        if(boxes.isEmpty())
+            return ResponseEntity.noContent().build();
+        else
+            return ResponseEntity.ok(new SuccessResponseResult(boxes));
     }
 }
