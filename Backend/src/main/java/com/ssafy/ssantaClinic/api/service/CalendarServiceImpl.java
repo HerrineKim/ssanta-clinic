@@ -56,7 +56,8 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 회원인지 확인
         userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 존재하는 상자인지 확인
-        AdventCalendar box = calendarRepository.findById(boxId).orElseThrow(()-> new CustomException(ErrorCode.BOX_NOT_FOUND));
+        AdventCalendar box = calendarRepository.findById(boxId)
+                .orElseThrow(()-> new CustomException(ErrorCode.BOX_NOT_FOUND));
         // 개봉 날짜가 지났는지 확인
         int day = now.get(Calendar.DATE);
         if(day < box.getDay()){
@@ -77,8 +78,10 @@ public class CalendarServiceImpl implements CalendarService{
          * @Method 설명 : 상자를 등록한다.
          */
         // 존재하는 회원인지 확인
-        User receiver = userRepository.findById(box.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        User sender = userRepository.findByEmail(box.getSender()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        User receiver = userRepository.findById(box.getReceiverId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        User sender = userRepository.findByEmail(box.getSender())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // String -> LocalDateTime
         LocalDateTime createdAt;
         try {
@@ -111,6 +114,21 @@ public class CalendarServiceImpl implements CalendarService{
 
     @Override
     public List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(int userId, String date) {
-        return null;
+        /**
+         * @Method Name : findAllBoxesByDate
+         * @Method 설명 : 해당 날짜에 회원이 보유한 상자 목록을 반환한다.
+         */
+        // 존재하는 회원인지 확인
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        // 날짜 변환
+        int day = Integer.parseInt(date);
+        // 개봉 날짜가 지났는지 확인
+        int nowDate = now.get(Calendar.DATE);
+        if(nowDate < day){
+            throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
+        }
+        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverIdAndDay(userId, day)
+                .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
+        return boxes;
     }
 }
