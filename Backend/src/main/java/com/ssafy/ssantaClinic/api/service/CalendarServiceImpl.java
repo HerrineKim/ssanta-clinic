@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 /**
  * @FileName : CalendarServiceImpl
- * @작성자 : 허성은
  * @Class 설명 : 어드벤트 캘린더 관련 비즈니스 처리 로직을 위한 서비스 구현 정의
  */
 @Service
