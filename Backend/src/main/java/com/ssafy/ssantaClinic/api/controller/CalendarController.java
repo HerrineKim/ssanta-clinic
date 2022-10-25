@@ -1,6 +1,6 @@
 package com.ssafy.ssantaClinic.api.controller;
 
-import com.ssafy.ssantaClinic.api.request.BoxRequest;
+import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
 import com.ssafy.ssantaClinic.common.util.SuccessResponseResult;
@@ -91,7 +91,7 @@ public class CalendarController {
     })
     @PostMapping
     public ResponseEntity<?> sendBox(HttpServletRequest request,
-                                     @RequestBody BoxRequest boxRequest) {
+                                     @RequestBody CalendarRequest.sendRequest boxRequest) {
         /**
          * @Method Name : sendBox
          * @Method 설명 : 상자를 선물한다.

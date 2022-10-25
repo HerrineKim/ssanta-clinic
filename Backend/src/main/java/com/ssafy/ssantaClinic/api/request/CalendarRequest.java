@@ -2,7 +2,7 @@ package com.ssafy.ssantaClinic.api.request;
 
 import lombok.Data;
 
-public class BoxRequest {
+public class CalendarRequest {
     @Data
     public static class sendRequest{
         private String content;
