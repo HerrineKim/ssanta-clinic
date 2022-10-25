@@ -25,6 +25,9 @@ public enum ErrorCode {
     LOGIN_NOT_FOUND_ID(HttpStatus.NOT_FOUND, "404", "해당 아이디를 찾을 수 없습니다"),
     NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "404", "해당 유저가 존재하지 않습니다"),
 
+    // formatter 오류
+    FORMAT_NOT_MATCH(HttpStatus.BAD_REQUEST, "400", "변환 형식이 일치하지 않습니다."),
+
     // 어드벤트 캘린더
     D_DAY_IS_NOT_COMING(HttpStatus.FORBIDDEN, "403", "아직 상자를 열람할 수 없습니다."),
     BOX_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 상자가 존재하지 않습니다."),

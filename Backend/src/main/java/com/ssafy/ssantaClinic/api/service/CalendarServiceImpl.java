@@ -1,6 +1,6 @@
 package com.ssafy.ssantaClinic.api.service;
 
-import com.ssafy.ssantaClinic.api.request.BoxRequest;
+import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +31,7 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     static Calendar now = Calendar.getInstance();
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     @Override
     public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId) {
         /**
@@ -66,8 +70,26 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public AdventCalendar saveBox(BoxRequest box) {
-        return null;
+    public AdventCalendar saveBox(CalendarRequest.sendRequest box) {
+        /**
+         * @Method Name : saveBox
+         * @Method 설명 : 상자를 등록한다.
+         */
+        // 존재하는 회원인지 확인
+        User receiver = userRepository.findById(box.getReceiverId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        User sender = userRepository.findByEmail(box.getSender()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        // String -> LocalDateTime
+        LocalDateTime createdAt;
+        try {
+            createdAt = LocalDateTime.parse(box.getDate(), formatter);
+        } catch (Exception e){
+            throw new CustomException(ErrorCode.FORMAT_NOT_MATCH);
+        }
+        AdventCalendar calendar = AdventCalendar.builder().content(box.getContent())
+                .sender(sender).createdAt(createdAt).receiver(receiver)
+                .build();
+        calendarRepository.save(calendar);
+        return calendar;
     }
 
     @Override
