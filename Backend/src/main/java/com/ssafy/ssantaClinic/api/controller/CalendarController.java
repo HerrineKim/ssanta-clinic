@@ -59,7 +59,7 @@ public class CalendarController {
             @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @GetMapping
+    @GetMapping(params = {"boxId"})
     public ResponseEntity<?> getBox(HttpServletRequest request,
                                     @RequestParam(value = "boxId") int boxId) {
         /**
@@ -108,7 +108,7 @@ public class CalendarController {
             @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @GetMapping
+    @GetMapping(params = {"userId"})
     public ResponseEntity<?> getAdventCalendarInfo(HttpServletRequest request,
                                      @RequestParam(value = "userId") int userId) {
         /**
@@ -127,7 +127,7 @@ public class CalendarController {
             @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @GetMapping
+    @GetMapping(params = {"date"})
     public ResponseEntity<?> getBoxListByDate(HttpServletRequest request,
                                                    @RequestParam(value = "date") String date) {
         /**

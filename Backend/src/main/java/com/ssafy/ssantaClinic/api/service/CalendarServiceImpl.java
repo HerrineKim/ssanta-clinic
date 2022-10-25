@@ -41,7 +41,7 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 회원인지 확인
         userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         int day = now.get(Calendar.DATE);
-        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverIdAndDay(userId, day)
+        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
         return boxes;
     }
@@ -105,7 +105,7 @@ public class CalendarServiceImpl implements CalendarService{
         userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         List<CalendarResponse.GetCalendarResponse> result = new ArrayList<>();
         for(int i = 1; i <= 25; i++){
-            int cnt = (int) calendarRepository.countByReceiverIdAndDay(userId, i);
+            int cnt = (int) calendarRepository.countByReceiverUserIdAndDay(userId, i);
             result.add(CalendarResponse.GetCalendarResponse.builder().date(i).cnt(cnt).build());
         }
         return result;
@@ -126,7 +126,7 @@ public class CalendarServiceImpl implements CalendarService{
         if(nowDate < day){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
-        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverIdAndDay(userId, day)
+        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
         return boxes;
     }
