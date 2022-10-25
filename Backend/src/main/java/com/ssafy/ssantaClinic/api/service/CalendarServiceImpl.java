@@ -16,6 +16,11 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @FileName : CalendarServiceImpl
+ * @작성자 : 허성은
+ * @Class 설명 : 어드벤트 캘린더 관련 비즈니스 처리 로직을 위한 서비스 구현 정의
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +30,12 @@ public class CalendarServiceImpl implements CalendarService{
     static Calendar now = Calendar.getInstance();
     @Override
     public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        /**
+         * @Method Name : findAllTodayBoxes
+         * @Method 설명 : 오늘 날짜에 열 수 있는 상자 목록을 조회한다.
+         */
+        // 존재하는 회원인지 확인
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         int day = now.get(Calendar.DATE);
         List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
@@ -34,7 +44,25 @@ public class CalendarServiceImpl implements CalendarService{
 
     @Override
     public CalendarResponse.GetBoxDetailResponse findBox(int userId, int boxId) {
-        return null;
+        /**
+         * @Method Name : findBox
+         * @Method 설명 : 상자를 상세 조회한다.
+         */
+        // 존재하는 회원인지 확인
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        // 존재하는 상자인지 확인
+        AdventCalendar box = calendarRepository.findById(boxId).orElseThrow(()-> new CustomException(ErrorCode.BOX_NOT_FOUND));
+        // 개봉 날짜가 지났는지 확인
+        int day = now.get(Calendar.DATE);
+        if(day < box.getDay()){
+            throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
+        }
+        // 접근 권한 확인
+        if(box.getReceiver().getUserId() != userId){
+            throw new CustomException(ErrorCode.BOX_OPEN_WRONG_ACCESS);
+        }
+        return CalendarResponse.GetBoxDetailResponse.builder().
+                content(box.getContent()).audioUrl(box.getAudioUrl()).sender(box.getSender().getNickName()).build();
     }
 
     @Override

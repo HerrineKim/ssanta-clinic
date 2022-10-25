@@ -1,6 +1,7 @@
 package com.ssafy.ssantaClinic.api.response;
 
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class CalendarResponse {
 
     @Data
     @Builder
+    @AllArgsConstructor
     public static class GetBoxResponse {
         private int boxId;
         private String content;

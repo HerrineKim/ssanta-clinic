@@ -35,7 +35,7 @@ public class CalendarController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 204, message = "조회할 상자 없음"),
-            @ApiResponse(code = 400, message = "회원 정보 조회 오류"),
+            @ApiResponse(code = 404, message = "회원 정보 조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
@@ -55,6 +55,8 @@ public class CalendarController {
     @ApiOperation(value = "상자 조회", notes = "상자 상세 정보를 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 403, message = "접근 권한 없음"),
+            @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
