@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface AdventCalendarRepository extends JpaRepository<AdventCalendar, Integer> {
-    List<AdventCalendar> findAllByReceiverIdAndDay(int receiverId, int day);
-    long countByReceiverIdAndDay(int receiverId, int day);
+    List<AdventCalendar> findAllByReceiverUserIdAndDay(int receiverId, int day);
+    long countByReceiverUserIdAndDay(int receiverId, int day);
 }

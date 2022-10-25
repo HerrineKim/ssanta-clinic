@@ -24,12 +24,12 @@ public class AdventCalendar {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User Sender;
+    private User sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User Receiver;
+    private User receiver;
 
     @Column(length = 200)
     private String content;
@@ -48,8 +48,8 @@ public class AdventCalendar {
     @Builder
     public AdventCalendar(int adventCalendarId, User sender, User receiver, String content, Boolean isRead, int day, LocalDateTime createdAt, String audioUrl) {
         this.adventCalendarId = adventCalendarId;
-        Sender = sender;
-        Receiver = receiver;
+        sender = sender;
+        receiver = receiver;
         this.content = content;
         this.isRead = isRead;
         this.day = day;
@@ -58,11 +58,11 @@ public class AdventCalendar {
     }
 
 
-    public void setReceiver(User Receiver) {
-        this.Receiver = Receiver;
+    public void setReceiver(User rceiver) {
+        this.receiver = receiver;
     }
 
-    public void setSender(User Sender) {
-        this.Sender = Sender;
+    public void setSender(User sender) {
+        this.sender = sender;
     }
 }
