@@ -9,7 +9,6 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -21,7 +20,7 @@ public class AdventCalendar {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "advent_calendar_id")
-    private int adventCalendarId;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "sender_id")
@@ -52,7 +51,7 @@ public class AdventCalendar {
 
     @Builder
     public AdventCalendar(int adventCalendarId, User sender, User receiver, String content, Boolean isRead, int day, LocalDateTime createdAt, String audioUrl, List<AdventCalendarImg> imgList) {
-        this.adventCalendarId = adventCalendarId;
+        this.id = adventCalendarId;
         this.sender = sender;
         this.receiver = receiver;
         this.content = content;

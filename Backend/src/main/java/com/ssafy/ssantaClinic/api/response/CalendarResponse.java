@@ -33,7 +33,7 @@ public class CalendarResponse {
         private boolean isRead;
 
         public GetBoxResponse(AdventCalendar calendar) {
-            this.boxId = calendar.getAdventCalendarId();
+            this.boxId = calendar.getId();
             this.content = calendar.getContent();
             this.audioUrl = calendar.getAudioUrl();
             this.imges = calendar.getImgList().stream()

@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     private final AdventCalendarImgRepository imgRepository;
+    private final S3Service s3Service;
     static Calendar now = Calendar.getInstance();
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss");
     @Override
@@ -76,7 +78,7 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public AdventCalendar saveBox(List<MultipartFile> imges, CalendarRequest.sendRequest box) {
+    public AdventCalendar saveBox(List<MultipartFile> imges, MultipartFile audio, CalendarRequest.sendRequest box) throws IOException {
         /**
          * @Method Name : saveBox
          * @Method 설명 : 상자를 등록한다.
@@ -93,10 +95,20 @@ public class CalendarServiceImpl implements CalendarService{
         } catch (Exception e){
             throw new CustomException(ErrorCode.FORMAT_NOT_MATCH);
         }
-        AdventCalendar calendar = AdventCalendar.builder().content(box.getContent())
+        // 오디오 S3 업로드
+        String audioUrl = s3Service.upload(audio);
+        // 어드벤트 캘린더 객체 저장
+        AdventCalendar calendar = AdventCalendar.builder().content(box.getContent()).audioUrl(audioUrl)
                 .sender(sender).createdAt(createdAt).receiver(receiver)
                 .build();
         calendarRepository.save(calendar);
+        // 이미지 S3 업로드
+        List<String> imgUrlList = s3Service.uploadImges(imges);
+        // 이미지 객체 저장
+        for (String url : imgUrlList) {
+            AdventCalendarImg img = AdventCalendarImg.builder().adventCalendar(calendar).imgUrl(url).build();
+            imgRepository.save(img);
+        }
         return calendar;
     }
 
