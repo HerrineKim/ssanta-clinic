@@ -31,7 +31,8 @@ public enum ErrorCode {
     // 어드벤트 캘린더
     D_DAY_IS_NOT_COMING(HttpStatus.FORBIDDEN, "403", "아직 상자를 열람할 수 없습니다."),
     BOX_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 상자가 존재하지 않습니다."),
-    BOX_OPEN_WRONG_ACCESS(HttpStatus.FORBIDDEN, "403", "상자의 주인만 상자를 열 수 있습니다.");
+    BOX_OPEN_WRONG_ACCESS(HttpStatus.FORBIDDEN, "403", "상자의 주인만 상자를 열 수 있습니다."),
+    EMPTY_BOX_ERROR(HttpStatus.BAD_REQUEST, "400", "빈 상자는 선물할 수 없습니다.");
 
     private final HttpStatus status;
     private final String errorCode;

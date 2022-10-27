@@ -34,9 +34,9 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     private final AdventCalendarImgRepository imgRepository;
-    private final S3Service s3Service;
     static Calendar now = Calendar.getInstance();
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss");
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    static final int D_MONTH = 10 - 1;
     @Override
     public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId) {
         /**
@@ -45,6 +45,10 @@ public class CalendarServiceImpl implements CalendarService{
          */
         // 존재하는 회원인지 확인
         userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        int month = now.get(Calendar.MONTH);
+        if(month != D_MONTH){
+            throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
+        }
         int day = now.get(Calendar.DATE);
         List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
@@ -71,6 +75,9 @@ public class CalendarServiceImpl implements CalendarService{
         if(box.getReceiver().getUserId() != userId){
             throw new CustomException(ErrorCode.BOX_OPEN_WRONG_ACCESS);
         }
+        // 상자 열림 표시
+        box.isOpened();
+        calendarRepository.save(box);
         List<String> imges = imgRepository.findAllByAdventCalendarId(boxId).stream()
                 .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
         return CalendarResponse.GetBoxDetailResponse.builder().
@@ -78,7 +85,7 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public AdventCalendar saveBox(List<MultipartFile> imges, MultipartFile audio, CalendarRequest.sendRequest box) throws IOException {
+    public AdventCalendar saveBox(List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException {
         /**
          * @Method Name : saveBox
          * @Method 설명 : 상자를 등록한다.
@@ -91,23 +98,21 @@ public class CalendarServiceImpl implements CalendarService{
         // String -> LocalDateTime
         LocalDateTime createdAt;
         try {
-            createdAt = LocalDateTime.parse(box.getDate(), formatter);
+            createdAt = LocalDateTime.parse(box.getCreatedAt(), formatter);
         } catch (Exception e){
             throw new CustomException(ErrorCode.FORMAT_NOT_MATCH);
         }
-        // 오디오 S3 업로드
-        String audioUrl = s3Service.upload(audio);
         // 어드벤트 캘린더 객체 저장
         AdventCalendar calendar = AdventCalendar.builder().content(box.getContent()).audioUrl(audioUrl)
-                .sender(sender).createdAt(createdAt).receiver(receiver)
+                .sender(sender).createdAt(createdAt).receiver(receiver).isRead(false).day(box.getDay())
                 .build();
         calendarRepository.save(calendar);
-        // 이미지 S3 업로드
-        List<String> imgUrlList = s3Service.uploadImges(imges);
         // 이미지 객체 저장
-        for (String url : imgUrlList) {
-            AdventCalendarImg img = AdventCalendarImg.builder().adventCalendar(calendar).imgUrl(url).build();
-            imgRepository.save(img);
+        if(!imgUrls.isEmpty()){
+            for (String url : imgUrls) {
+                AdventCalendarImg img = AdventCalendarImg.builder().adventCalendar(calendar).imgUrl(url).build();
+                imgRepository.save(img);
+            }
         }
         return calendar;
     }

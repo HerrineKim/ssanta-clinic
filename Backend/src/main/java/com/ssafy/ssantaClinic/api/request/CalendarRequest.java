@@ -7,7 +7,8 @@ public class CalendarRequest {
     public static class sendRequest{
         private String content;
         private String sender;
-        private String date;
+        private String createdAt;
+        private int day;
         private int receiverId;
     }
 }

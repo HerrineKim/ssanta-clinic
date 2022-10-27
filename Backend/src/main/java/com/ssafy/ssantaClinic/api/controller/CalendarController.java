@@ -3,6 +3,9 @@ package com.ssafy.ssantaClinic.api.controller;
 import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
+import com.ssafy.ssantaClinic.api.service.S3Service;
+import com.ssafy.ssantaClinic.common.exception.CustomException;
+import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,6 +36,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalendarController {
     private final CalendarService calendarService;
+    private final S3Service s3Service;
 
     @ApiOperation(value = "상자 목록 조회", notes = "오늘 열람가능한 상자 목록을 조회한다.")
     @ApiResponses({
@@ -46,7 +51,7 @@ public class CalendarController {
          * @Method Name : getTodayBoxList
          * @Method 설명 : 오늘 열람가능한 상자 목록을 조회한다.
          */
-        int userId = 1; // temp
+        int userId = 2; // temp
         List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllTodayBoxes(userId);
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
@@ -68,7 +73,7 @@ public class CalendarController {
          * @Method Name : getBox
          * @Method 설명 : 상자 상세 정보를 조회한다.
          */
-        int userId = 1; //temp
+        int userId = 2; //temp
         CalendarResponse.GetBoxDetailResponse box = calendarService.findBox(userId, boxId);
         return ResponseEntity.ok(box);
     }
@@ -89,7 +94,7 @@ public class CalendarController {
     @ApiOperation(value = "상자 선물하기", notes = "상자를 선물한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "등록 성공"),
-            @ApiResponse(code = 400, message = "날짜 형식 오류"),
+            @ApiResponse(code = 400, message = "형식 오류"),
             @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
@@ -103,7 +108,21 @@ public class CalendarController {
          * @Method Name : sendBox
          * @Method 설명 : 상자를 선물한다.
          */
-        AdventCalendar box = calendarService.saveBox(imges, audio, boxRequest);
+        // 오디오, 사진, 텍스트 모두 없을 시 오류
+        if((boxRequest.getContent() == null || boxRequest.getContent().isBlank()) && audio == null && imges == null){
+            throw new CustomException(ErrorCode.EMPTY_BOX_ERROR);
+        }
+        // 오디오 S3 업로드
+        String audioUrl = "";
+        if(audio != null){
+            audioUrl = s3Service.upload(audio);
+        }
+        // 이미지 업로드
+        List<String> imgUrls = new ArrayList<>();
+        if(imges != null){
+            imgUrls = s3Service.uploadImges(imges);
+        }
+        AdventCalendar box = calendarService.saveBox(imgUrls, audioUrl, boxRequest);
         return ResponseEntity.created(URI.create("/"+box.getId())).build();
     }
 
@@ -139,7 +158,7 @@ public class CalendarController {
          * @Method Name : getBoxListByDate
          * @Method 설명 : 해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.
          */
-        int userId = 1; //temp
+        int userId = 2; //temp
         List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllBoxesByDate(userId, date);
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
