@@ -12,13 +12,13 @@ export function SignUp() {
   const handleSubmit = (e: any) => {
     e.preventDefault();
     axios
-      .post('api/user/join', {
+      .post('http://localhost:8080' + '/api/user/join', {
         email: email,
         password: password,
-        nickname: nickname,
+        nickName: nickname,
       })
       .then((res) => {
-        console.log('응답 받아옴 성공!');
+        console.log(res.data);
         localStorage.setItem('token', res.data.jwt); // 바로 로그인
         navigate('/'); // 회원가입 성공하면 홈으로
       })
