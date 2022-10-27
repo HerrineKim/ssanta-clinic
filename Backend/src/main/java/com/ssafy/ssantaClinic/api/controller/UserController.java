@@ -7,6 +7,7 @@ import com.ssafy.ssantaClinic.common.util.SuccessResponseResult;
 import com.ssafy.ssantaClinic.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,19 +22,16 @@ import java.net.URI;
 @Api(value = "user-controller", tags={"user-controller"})
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
-    public UserService userService;
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     @ApiOperation(value = "회원가입", notes="회원가입에 성공하면 success, 아니면 fail", httpMethod = "POST")
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody UserRequest.JoinRequest formRequest){
-//        log.info("회원가입 시작");
+
         User user = User.builder()
                 .email(formRequest.getEmail())
                 .password(formRequest.getPassword())
@@ -41,15 +39,10 @@ public class UserController {
                 .build();
 
         userService.save(user);
-//        log.info("회원가입 완료");
 
         return ResponseEntity
                 .created(URI.create("/detail/"+ user.getUserId()))
-                .body(UserResponse.GetUserResponse.builder()
-                        .userId(user.getUserId())
-                        .email(user.getEmail())
-                        .nickName(user.getNickName())
-                        .build());
+                .body("JWT Token");
     }
 
     @ApiOperation(value = "유저 상세정보", notes="유저 상세정보를 제공한다.", httpMethod = "GET")
