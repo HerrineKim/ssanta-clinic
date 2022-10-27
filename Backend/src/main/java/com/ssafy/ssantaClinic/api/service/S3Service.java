@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+/**
+ * @FileName : S3Service
+ * @Class 설명 : S3 관련 비즈니스 처리 로직을 위한 서비스 구현 정의
+ */
 @RequiredArgsConstructor
 @Component
 @Slf4j
@@ -32,7 +35,10 @@ public class S3Service {
     private final AmazonS3Client amazonS3Client;
 
     public String upload(MultipartFile uploadFile) throws IOException {
-
+        /**
+         * @Method Name : upload
+         * @Method 설명 : 파일 업로드를 위한 로직
+         */
         String origName = uploadFile.getOriginalFilename();
         String url;
         try {
@@ -58,6 +64,10 @@ public class S3Service {
     }
 
     public List<String> uploadImges(List<MultipartFile> multipartFile) throws IOException {
+        /**
+         * @Method Name : uploadImges
+         * @Method 설명 : 이미지 리스트를 한 번에 업로드
+         */
         log.info("이미지 업로드 시작");
         List<String> imgUrlList = new ArrayList<>();
 
@@ -71,13 +81,25 @@ public class S3Service {
     }
 
     private static String getUuid() {
+        /**
+         * @Method Name : getUuid
+         * @Method 설명 : 파일 이름 암호화를 위한 UUID 생성
+         */
         return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
     private void uploadOnS3(final String findName, final File file) {
+        /**
+         * @Method Name : uploadOnS3
+         * @Method 설명 : S3 버킷에 파일 업로드
+         */
         amazonS3Client.putObject(new PutObjectRequest(bucket, findName, file).withCannedAcl(CannedAccessControlList.PublicRead));
     }
     public void delete(String imageUrl) {
+        /**
+         * @Method Name : delete
+         * @Method 설명 : S3 버킷에서 파일 삭제
+         */
         try {
             final String deleteFileName = imageUrl.substring(imageUrl.lastIndexOf('/')+1);
             amazonS3Client.deleteObject(this.bucket, deleteFileName);
