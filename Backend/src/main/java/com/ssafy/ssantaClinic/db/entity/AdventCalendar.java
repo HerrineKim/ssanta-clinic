@@ -32,7 +32,7 @@ public class AdventCalendar {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User receiver;
 
-    @Column(length = 200)
+    @Column(length = 1000)
     private String content;
 
     @Column(nullable = false, name = "is_read")
@@ -68,5 +68,9 @@ public class AdventCalendar {
 
     public void setSender(User sender) {
         this.sender = sender;
+    }
+
+    public void isOpened() {
+        this.isRead = true;
     }
 }
