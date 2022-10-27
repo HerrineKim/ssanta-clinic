@@ -3,20 +3,16 @@ package com.ssafy.ssantaClinic.api.controller;
 import com.ssafy.ssantaClinic.api.request.UserRequest;
 import com.ssafy.ssantaClinic.api.response.UserResponse;
 import com.ssafy.ssantaClinic.api.service.UserService;
-import com.ssafy.ssantaClinic.common.auth.JwtTokenProvider;
 import com.ssafy.ssantaClinic.common.util.SuccessResponseResult;
 import com.ssafy.ssantaClinic.db.entity.User;
-import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.util.*;
 
 /**
  * @FileName : UserController
@@ -26,7 +22,6 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/user")
-@RequiredArgsConstructor
 public class UserController {
 
     public UserService userService;
@@ -63,23 +58,5 @@ public class UserController {
         User user = userService.getUserByUserId(userId);
 
         return ResponseEntity.ok().body(user);
-    }
-
-    @Autowired
-    JwtTokenProvider jwtTokenProvider;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> user) {
-        log.info("user email = {}", user.get("email"));
-        log.info("user password = {}", user.get("password"));
-        String email = user.get("email");
-        String password = user.get("password");
-
-        List<String> roles = new ArrayList<>();
-        roles.add("ROLE_USER");
-        return jwtTokenProvider.createToken(email, roles);
     }
 }
