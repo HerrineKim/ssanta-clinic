@@ -36,8 +36,6 @@ dependencies {
 //	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE' // s3 설정
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1' //jwt
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
