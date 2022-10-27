@@ -23,4 +23,9 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.getUserByUserId(userId);
         return user;
     }
+
+    @Override
+    public Optional<User> findByNickName(String nickname) {
+        return userRepository.findByNickName(nickname);
+    }
 }

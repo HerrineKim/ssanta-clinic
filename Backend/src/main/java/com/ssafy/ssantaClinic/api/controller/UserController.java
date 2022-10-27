@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.Optional;
 
 /**
  * @FileName : UserController
@@ -51,5 +52,22 @@ public class UserController {
         User user = userService.getUserByUserId(userId);
 
         return ResponseEntity.ok().body(user);
+    }
+    @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
+    @GetMapping("/check/{nickname}")
+    public ResponseEntity<?> checkDuplicateNickname(@PathVariable String nickname){
+        Optional<User> user = userService.findByNickName(nickname);
+        System.out.println(user);
+        if (user.isEmpty()){
+            return ResponseEntity.ok().body(
+                    UserResponse.DuplicatedNicknameResponse.builder()
+                    .duplicated(false)
+                    .build());
+        } else {
+            return ResponseEntity.ok().body(
+                    UserResponse.DuplicatedNicknameResponse.builder()
+                            .duplicated(true)
+                            .build());
+        }
     }
 }
