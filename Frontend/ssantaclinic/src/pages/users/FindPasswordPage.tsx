@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ChangePassword } from './ChangePassword';
+import { ChangePassword } from './ChangePasswordPage';
 import { useNavigate } from 'react-router-dom';
 
 export function FindPassword() {
