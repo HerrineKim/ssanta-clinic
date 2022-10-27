@@ -23,7 +23,7 @@ export function LogIn() {
         navigate('/'); // Login 성공하면 홈으로
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   };
 
