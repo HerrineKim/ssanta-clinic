@@ -19,4 +19,10 @@ public class UserResponse {
         private Boolean duplicated;
     }
 
+    @Data
+    @Builder
+    public static class findPasswordResponse {
+        private String findPasswordNum;
+    }
+
 }

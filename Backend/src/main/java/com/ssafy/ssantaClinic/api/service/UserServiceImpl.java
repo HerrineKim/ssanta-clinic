@@ -37,6 +37,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public User getUserByEmail(String email) {
+        /**
+         * @Method Name : getUserByEmail
+         * @Method 설명 : email에 해당하는 유저 객체를 반환한다.
+         */
+
+        // 유저 있는지 없는지 부터 체크해야함
+        User user = userRepository.getUserByEmail(email);
+        return user;
+    }
+
+    @Override
     public Optional<User> findByNickName(String nickname) {
         /**
          * @Method Name : findByNickName
@@ -52,5 +64,20 @@ public class UserServiceImpl implements UserService{
          * @Method 설명 : email을 받아 해당하는 유저를 반환한다. 없으면 Empty.
          */
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public String getFindPasswordNum(String email) {
+        /**
+         * @Method Name : getFindPasswordNum
+         * @Method 설명 : email을 받아 유저 존재를 확인한 뒤, 있으면 고유값을 없으면 null을 반환
+         */
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            return null;
+        }
+        int userId = userRepository.getUserByEmail(email).getUserId();
+        // 할 일) userId를 이용해서 sha256 해쉬변환하기
+        return Integer.toString(userId);
     }
 }

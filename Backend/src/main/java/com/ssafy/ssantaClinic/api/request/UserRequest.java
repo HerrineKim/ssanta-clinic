@@ -18,7 +18,13 @@ public class UserRequest {
     }
 
     @Data
-    public static class CheckDuplicateEmailRequest{
+    public static class EmailRequest{
         private String email;
+    }
+
+    @Data
+    public static class LoginRequest{
+        private String email;
+        private String password;
     }
 }
