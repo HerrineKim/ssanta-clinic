@@ -13,7 +13,7 @@ export function LogIn() {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post('api/user/login', {
+      .post('http://localhost:8080' + '/api/user/login', {
         email: email,
         password: password,
       })

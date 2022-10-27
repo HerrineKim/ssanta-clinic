@@ -4,9 +4,10 @@ import { SignUp } from './pages/users/SignUpPage';
 import { LogIn } from './pages/users/LogInPage';
 import { Home } from './pages/Home';
 import WitsPage from './pages/game/WitsPage';
+import MemoryPage from './pages/game/MemoryPage';
 import { FindPassword } from './pages/users/FindPasswordPage';
 import { ChangePassword } from './pages/users/ChangePasswordPage';
-import { CalendarPage } from './pages/calendar/calendarPage';
+import { Letter } from './pages/letter/LetterPage';
 
 function App() {
   return (
@@ -16,9 +17,10 @@ function App() {
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/login" element={<LogIn />}></Route>
         <Route path="/wits" element={<WitsPage />}></Route>
+        <Route path="/memory" element={<MemoryPage />}></Route>
         <Route path="/findpassword" element={<FindPassword />}></Route>
         <Route path="/changepassword" element={<ChangePassword />}></Route>
-        <Route path="/calendar" element={<CalendarPage />}></Route>
+        <Route path="/letter" element={<Letter />}></Route>
       </Routes>
     </Router>
   );
