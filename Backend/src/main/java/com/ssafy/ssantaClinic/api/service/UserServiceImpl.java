@@ -44,4 +44,13 @@ public class UserServiceImpl implements UserService{
          */
         return userRepository.findByNickName(nickname);
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        /**
+         * @Method Name : findByEmail
+         * @Method 설명 : email을 받아 해당하는 유저를 반환한다. 없으면 Empty.
+         */
+        return userRepository.findByEmail(email);
+    }
 }

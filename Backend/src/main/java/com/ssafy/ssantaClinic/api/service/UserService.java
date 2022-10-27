@@ -11,4 +11,6 @@ public interface UserService {
     User getUserByUserId(int userId);
 
     Optional<User> findByNickName(String nickname);
+
+    Optional<User> findByEmail(String email);
 }
