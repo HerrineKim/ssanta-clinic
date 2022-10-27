@@ -32,7 +32,10 @@ public class UserController {
     @ApiOperation(value = "회원가입", notes="회원가입에 성공하면 success, 아니면 fail", httpMethod = "POST")
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody UserRequest.JoinRequest formRequest){
-
+        /**
+         * @Method Name : join
+         * @Method 설명 : 회원정보를 받아 가입시키고 JWT 토큰을 반환한다.
+         */
         User user = User.builder()
                 .email(formRequest.getEmail())
                 .password(formRequest.getPassword())
@@ -49,15 +52,23 @@ public class UserController {
     @ApiOperation(value = "유저 상세정보", notes="유저 상세정보를 제공한다.", httpMethod = "GET")
     @GetMapping("/detail/{userId}")
     public ResponseEntity<?> getUser(@PathVariable int userId){
+        /**
+         * @Method Name : getUser
+         * @Method 설명 : userId를 받아 회원 상세정보를 반환한다.
+         */
         User user = userService.getUserByUserId(userId);
 
         return ResponseEntity.ok().body(user);
     }
-    @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
+    @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "GET")
     @GetMapping("/check/{nickname}")
     public ResponseEntity<?> checkDuplicateNickname(@PathVariable String nickname){
+        /**
+         * @Method Name : checkDuplicateNickname
+         * @Method 설명 : nickname을 받아서 중복된 nickname이 존재하는지 확인한다.
+         */
         Optional<User> user = userService.findByNickName(nickname);
-        System.out.println(user);
+
         if (user.isEmpty()){
             return ResponseEntity.ok().body(
                     UserResponse.DuplicatedNicknameResponse.builder()
