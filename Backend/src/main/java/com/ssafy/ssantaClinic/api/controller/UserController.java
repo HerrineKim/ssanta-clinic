@@ -60,23 +60,47 @@ public class UserController {
 
         return ResponseEntity.ok().body(user);
     }
-    @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "GET")
-    @GetMapping("/check/{nickname}")
-    public ResponseEntity<?> checkDuplicateNickname(@PathVariable String nickname){
+    @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
+    @PostMapping("/check/nickname")
+    public ResponseEntity<?> checkDuplicateNickname(@RequestBody UserRequest.CheckDuplicateNicknameRequest formRequest){
         /**
          * @Method Name : checkDuplicateNickname
          * @Method 설명 : nickname을 받아서 중복된 nickname이 존재하는지 확인한다.
          */
-        Optional<User> user = userService.findByNickName(nickname);
+        Optional<User> user = userService.findByNickName(formRequest.getNickName());
 
+        // 닉네임으로 찾아온 user가 empty면 중복이 아니므로 false, 아니면 true
         if (user.isEmpty()){
             return ResponseEntity.ok().body(
-                    UserResponse.DuplicatedNicknameResponse.builder()
+                    UserResponse.DuplicatedResponse.builder()
                     .duplicated(false)
                     .build());
         } else {
             return ResponseEntity.ok().body(
-                    UserResponse.DuplicatedNicknameResponse.builder()
+                    UserResponse.DuplicatedResponse.builder()
+                            .duplicated(true)
+                            .build());
+        }
+    }
+
+    @ApiOperation(value = "이메일 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
+    @PostMapping ("/check/email")
+    public ResponseEntity<?> checkDuplicateEmail(@RequestBody UserRequest.CheckDuplicateEmailRequest formRequest){
+        /**
+         * @Method Name : checkDuplicateEmail
+         * @Method 설명 : email을 받아서 중복된 email이 존재하는지 확인한다.
+         */
+        Optional<User> user = userService.findByEmail(formRequest.getEmail());
+
+        // 이메일로 찾아온 user가 empty면 중복이 아니므로 false, 아니면 true
+        if (user.isEmpty()){
+            return ResponseEntity.ok().body(
+                    UserResponse.DuplicatedResponse.builder()
+                            .duplicated(false)
+                            .build());
+        } else {
+            return ResponseEntity.ok().body(
+                    UserResponse.DuplicatedResponse.builder()
                             .duplicated(true)
                             .build());
         }

@@ -15,7 +15,7 @@ public class UserResponse {
 
     @Data
     @Builder
-    public static class DuplicatedNicknameResponse {
+    public static class DuplicatedResponse {
         private Boolean duplicated;
     }
 

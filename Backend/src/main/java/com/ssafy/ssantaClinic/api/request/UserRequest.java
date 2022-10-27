@@ -11,4 +11,14 @@ public class UserRequest {
         private String password;
         private String nickName;
     }
+
+    @Data
+    public static class CheckDuplicateNicknameRequest{
+        private String nickName;
+    }
+
+    @Data
+    public static class CheckDuplicateEmailRequest{
+        private String email;
+    }
 }
