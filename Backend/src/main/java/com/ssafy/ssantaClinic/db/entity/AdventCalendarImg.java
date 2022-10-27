@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.db.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
@@ -26,4 +27,11 @@ public class AdventCalendarImg {
 
     @Column(length = 300, name = "img_url", nullable = false)
     private String imgUrl;
+
+    @Builder
+    public AdventCalendarImg(int imageId, AdventCalendar adventCalendar, String imgUrl) {
+        this.imageId = imageId;
+        this.adventCalendar = adventCalendar;
+        this.imgUrl = imgUrl;
+    }
 }

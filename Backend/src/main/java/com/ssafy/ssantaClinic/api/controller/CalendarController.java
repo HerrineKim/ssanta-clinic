@@ -3,7 +3,6 @@ package com.ssafy.ssantaClinic.api.controller;
 import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
-import com.ssafy.ssantaClinic.common.util.SuccessResponseResult;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
@@ -97,13 +97,14 @@ public class CalendarController {
             produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<?> sendBox(HttpServletRequest request,
                                      @RequestPart(required = false) List<MultipartFile> imges,
-                                     @RequestPart CalendarRequest.sendRequest boxRequest) {
+                                     @RequestPart(required = false) MultipartFile audio,
+                                     @RequestPart CalendarRequest.sendRequest boxRequest) throws IOException {
         /**
          * @Method Name : sendBox
          * @Method 설명 : 상자를 선물한다.
          */
-        AdventCalendar box = calendarService.saveBox(imges, boxRequest);
-        return ResponseEntity.created(URI.create("/"+box.getAdventCalendarId())).build();
+        AdventCalendar box = calendarService.saveBox(imges, audio, boxRequest);
+        return ResponseEntity.created(URI.create("/"+box.getId())).build();
     }
 
     @ApiOperation(value = "어드벤트 캘린더 전체 조회", notes = "회원의 어드벤트 캘린더 정보를 조회한다.")
