@@ -30,12 +30,20 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'io.springfox:springfox-boot-starter:3.0.0' // swagger 설정
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-//	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE' // s3 설정
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1' //jwt
+	//aws
+	implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+	implementation("org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE")
+	implementation("org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.6.RELEASE")
+	implementation("com.amazonaws:aws-java-sdk-core:1.12.275")
+	implementation("com.amazonaws:aws-java-sdk-s3:1.12.267")
+	// test
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+
 }
 
 tasks.named('test') {
