@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import Board from '../../components/game/Board';
 import Timer from '../../components/game/Timer';
 import './game.css';
