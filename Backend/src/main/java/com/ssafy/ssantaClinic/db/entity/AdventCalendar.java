@@ -9,6 +9,8 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -45,20 +47,23 @@ public class AdventCalendar {
     @Column(length = 300)
     private String audioUrl;
 
+    @OneToMany(mappedBy = "adventCalendar", cascade = CascadeType.ALL)
+    List<AdventCalendarImg> imgList;
+
     @Builder
-    public AdventCalendar(int adventCalendarId, User sender, User receiver, String content, Boolean isRead, int day, LocalDateTime createdAt, String audioUrl) {
+    public AdventCalendar(int adventCalendarId, User sender, User receiver, String content, Boolean isRead, int day, LocalDateTime createdAt, String audioUrl, List<AdventCalendarImg> imgList) {
         this.adventCalendarId = adventCalendarId;
-        sender = sender;
-        receiver = receiver;
+        this.sender = sender;
+        this.receiver = receiver;
         this.content = content;
         this.isRead = isRead;
         this.day = day;
         this.createdAt = createdAt;
         this.audioUrl = audioUrl;
+        this.imgList = imgList;
     }
 
-
-    public void setReceiver(User rceiver) {
+    public void setReceiver(User receiver) {
         this.receiver = receiver;
     }
 

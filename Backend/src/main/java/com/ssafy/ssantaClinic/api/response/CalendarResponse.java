@@ -1,9 +1,13 @@
 package com.ssafy.ssantaClinic.api.response;
 
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
+import com.ssafy.ssantaClinic.db.entity.AdventCalendarImg;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @FileName : CalendarResponse
@@ -24,6 +28,7 @@ public class CalendarResponse {
         private int boxId;
         private String content;
         private String audioUrl;
+        private List<String> imges;
         private String sender;
         private boolean isRead;
 
@@ -31,6 +36,8 @@ public class CalendarResponse {
             this.boxId = calendar.getAdventCalendarId();
             this.content = calendar.getContent();
             this.audioUrl = calendar.getAudioUrl();
+            this.imges = calendar.getImgList().stream()
+                    .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
             this.sender = calendar.getSender().getNickName();
             this.isRead = calendar.getIsRead();
         }
@@ -41,6 +48,7 @@ public class CalendarResponse {
     public static class GetBoxDetailResponse {
         private String content;
         private String audioUrl;
+        private List<String> imges;
         private String sender;
     }
 }

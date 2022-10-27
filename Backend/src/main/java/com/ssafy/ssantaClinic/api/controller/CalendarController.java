@@ -11,8 +11,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -49,7 +51,7 @@ public class CalendarController {
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
         else
-            return ResponseEntity.ok(new SuccessResponseResult(boxes));
+            return ResponseEntity.ok(boxes);
     }
 
     @ApiOperation(value = "상자 조회", notes = "상자 상세 정보를 조회한다.")
@@ -68,7 +70,7 @@ public class CalendarController {
          */
         int userId = 1; //temp
         CalendarResponse.GetBoxDetailResponse box = calendarService.findBox(userId, boxId);
-        return ResponseEntity.ok(new SuccessResponseResult(box));
+        return ResponseEntity.ok(box);
     }
 
 //    @ApiOperation(value = "상자 속 음성 재생", notes = "상자의 음성 메세지를 재생한다.")
@@ -91,14 +93,16 @@ public class CalendarController {
             @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @PostMapping
+    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE })
     public ResponseEntity<?> sendBox(HttpServletRequest request,
-                                     @RequestBody CalendarRequest.sendRequest boxRequest) {
+                                     @RequestPart(required = false) List<MultipartFile> imges,
+                                     @RequestPart CalendarRequest.sendRequest boxRequest) {
         /**
          * @Method Name : sendBox
          * @Method 설명 : 상자를 선물한다.
          */
-        AdventCalendar box = calendarService.saveBox(boxRequest);
+        AdventCalendar box = calendarService.saveBox(imges, boxRequest);
         return ResponseEntity.created(URI.create("/"+box.getAdventCalendarId())).build();
     }
 
@@ -116,7 +120,7 @@ public class CalendarController {
          * @Method 설명 : 회원의 어드벤트 캘린더 정보를 조회한다.
          */
         List<CalendarResponse.GetCalendarResponse> calendarInfo = calendarService.findAdventCalendarByUserId(userId);
-        return ResponseEntity.ok(new SuccessResponseResult(calendarInfo));
+        return ResponseEntity.ok(calendarInfo);
     }
 
     @ApiOperation(value = "해당 날짜 상자 목록 조회", notes = "해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.")
@@ -139,6 +143,6 @@ public class CalendarController {
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
         else
-            return ResponseEntity.ok(new SuccessResponseResult(boxes));
+            return ResponseEntity.ok(boxes);
     }
 }

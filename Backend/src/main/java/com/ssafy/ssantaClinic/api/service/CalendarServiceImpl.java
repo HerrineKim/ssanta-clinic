@@ -5,14 +5,16 @@ import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
+import com.ssafy.ssantaClinic.db.entity.AdventCalendarImg;
 import com.ssafy.ssantaClinic.db.entity.User;
+import com.ssafy.ssantaClinic.db.repository.AdventCalendarImgRepository;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,8 +32,9 @@ import java.util.stream.Collectors;
 public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
+    private final AdventCalendarImgRepository imgRepository;
     static Calendar now = Calendar.getInstance();
-    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYY-MM-DD HH:mm:ss");
     @Override
     public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId) {
         /**
@@ -66,12 +69,14 @@ public class CalendarServiceImpl implements CalendarService{
         if(box.getReceiver().getUserId() != userId){
             throw new CustomException(ErrorCode.BOX_OPEN_WRONG_ACCESS);
         }
+        List<String> imges = imgRepository.findAllByAdventCalendarId(boxId).stream()
+                .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
         return CalendarResponse.GetBoxDetailResponse.builder().
-                content(box.getContent()).audioUrl(box.getAudioUrl()).sender(box.getSender().getNickName()).build();
+                content(box.getContent()).audioUrl(box.getAudioUrl()).imges(imges).sender(box.getSender().getNickName()).build();
     }
 
     @Override
-    public AdventCalendar saveBox(CalendarRequest.sendRequest box) {
+    public AdventCalendar saveBox(List<MultipartFile> imges, CalendarRequest.sendRequest box) {
         /**
          * @Method Name : saveBox
          * @Method 설명 : 상자를 등록한다.
@@ -79,7 +84,7 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 회원인지 확인
         User receiver = userRepository.findById(box.getReceiverId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        User sender = userRepository.findByEmail(box.getSender())
+        User sender = userRepository.findByNickName(box.getSender())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // String -> LocalDateTime
         LocalDateTime createdAt;
