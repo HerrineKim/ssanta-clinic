@@ -11,8 +11,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,7 +20,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Optional;
 
 /**
@@ -44,13 +41,8 @@ public class UserController {
     @ApiOperation(value = "회원가입", notes="회원가입에 성공하면 success, 아니면 fail", httpMethod = "POST")
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody UserRequest.JoinRequest formRequest){
-        User user = User.builder()
-                .email(formRequest.getEmail())
-                .password(passwordEncoder.encode(formRequest.getPassword()))
-                .nickName(formRequest.getNickName())
-                .build();
-
-        userService.save(user);
+        // 회원 가입 처리
+        userService.save(formRequest);
 
         // 회원가입 성공시 AuthenticaionManager를 통해 로그인 처리하고, JWT 토큰을 발급한다.
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(formRequest.getEmail(), formRequest.getPassword());
@@ -58,16 +50,19 @@ public class UserController {
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         // 인증이 완료된 후 SecurityContextHolder에 인증 정보를 저장한다.
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtManager.createToken(authentication);
 
-        return ResponseEntity
-                .created(URI.create("/detail/"+ user.getUserId()))
-                .header(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt).body("success");
+        // JWT 토큰을 생성한다.
+        String jwt = jwtManager.createToken(authentication);
+        User joinedUser = userService.getUserByEmail(formRequest.getEmail());
+        return ResponseEntity.ok()
+                .header(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt)
+                .body(joinedUser);
     }
 
+    @ApiOperation(value = "로그인", notes="로그인에 성공하면 header에 Authorization success, 아니면 fail", httpMethod = "POST")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
 
         // Auth를 진행할 때 자동으로 CustomUserDetailsService에서 loadUserByUsername이 실행된다.
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -76,21 +71,19 @@ public class UserController {
 
         String jwt = jwtManager.createToken(authentication);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setLocation(URI.create("/detail/"+ userService.getUserByEmail(loginDto.getUsername()).getUserId()));
-        httpHeaders.add(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt)
+                .body(userService.getUserByEmail(loginDto.getEmail()));
     }
 
+    /**
+     * @Method Name : getUser
+     * @Method 설명 : userId를 받아 회원 상세정보를 반환한다.
+     */
     @ApiOperation(value = "유저 상세정보", notes="유저 상세정보를 제공한다.", httpMethod = "GET")
     @GetMapping("/detail/{userId}")
     public ResponseEntity<?> getUser(@PathVariable int userId){
-        /**
-         * @Method Name : getUser
-         * @Method 설명 : userId를 받아 회원 상세정보를 반환한다.
-         */
-        User user = userService.getUserByUserId(userId);
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(userService.getUserByUserId(userId));
     }
 
     @ApiOperation(value = "유저 상세정보", notes="유저 자신의 상세정보를 제공한다.", httpMethod = "GET")
@@ -98,7 +91,12 @@ public class UserController {
     public ResponseEntity<?> getMyInfo(){
         String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
         User user = userService.getUserByEmail(email);
-        return ResponseEntity.ok().body(user);
+        UserResponse.GetUserResponse detailResponse = UserResponse.GetUserResponse.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .nickName(user.getNickName())
+                .build();
+        return ResponseEntity.ok().body(detailResponse);
     }
     @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping("/check/nickname")
