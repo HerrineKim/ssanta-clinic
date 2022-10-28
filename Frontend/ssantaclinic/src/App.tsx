@@ -8,6 +8,8 @@ import MemoryPage from './pages/game/MemoryPage';
 import { FindPassword } from './pages/users/FindPasswordPage';
 import { ChangePassword } from './pages/users/ChangePasswordPage';
 import { Letter } from './pages/letter/LetterPage';
+import { CalendarPage } from './pages/calendar/calendarPage';
+import { BoxCreate } from './pages/calendar/boxCreate';
 
 function App() {
   return (
@@ -18,9 +20,11 @@ function App() {
         <Route path="/login" element={<LogIn />}></Route>
         <Route path="/wits" element={<WitsPage />}></Route>
         <Route path="/memory" element={<MemoryPage />}></Route>
-        <Route path="/findpassword" element={<FindPassword />}></Route>
-        <Route path="/changepassword" element={<ChangePassword />}></Route>
+        <Route path="/findPassword" element={<FindPassword />}></Route>
+        <Route path="/changePassword" element={<ChangePassword />}></Route>
         <Route path="/letter" element={<Letter />}></Route>
+        <Route path="/calendar" element={<CalendarPage />}></Route>
+        <Route path="/boxCreate" element={<BoxCreate />}></Route>
       </Routes>
     </Router>
   );
