@@ -20,7 +20,7 @@ export function FindPassword() {
         // setUUID로 나중에 변경
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   };
 
