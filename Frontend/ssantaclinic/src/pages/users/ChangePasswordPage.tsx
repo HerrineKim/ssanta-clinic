@@ -23,7 +23,7 @@ export function ChangePassword() {
         console.log('응답 받아옴 비밀번호 변경 성공!', res.data);
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   };
   return (
