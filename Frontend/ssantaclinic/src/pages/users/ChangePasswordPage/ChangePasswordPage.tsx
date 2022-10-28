@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-export function ChangePassword() {
+export default function ChangePasswordPage() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [UUID, setUUID] = useState('');
@@ -23,7 +23,7 @@ export function ChangePassword() {
         console.log('응답 받아옴 비밀번호 변경 성공!', res.data);
       })
       .catch((err) => {
-        console.log(err.response);
+        console.log(err.resonse);
       });
   };
   return (

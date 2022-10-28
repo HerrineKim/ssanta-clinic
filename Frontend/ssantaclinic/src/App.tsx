@@ -1,26 +1,36 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { SignUp } from './pages/users/SignUpPage';
-import { LogIn } from './pages/users/LogInPage';
-import { Home } from './pages/Home';
+import { SignUpPage } from './pages/users/SignUpPage/SignUpPage';
+import { LogInPage } from './pages/users/LoginPage/LogInPage';
+import HomePage from './pages/HomePage';
 import WitsPage from './pages/game/WitsPage';
 import MemoryPage from './pages/game/MemoryPage';
-import { FindPassword } from './pages/users/FindPasswordPage';
-import { ChangePassword } from './pages/users/ChangePasswordPage';
-import { Letter } from './pages/letter/LetterPage';
+import { CalendarPage } from './pages/calendar/calendarPage';
+import { BoxCreate } from './pages/calendar/boxCreate';
+import FindPasswordPage from './pages/users/FindPasswordPage/FindPasswordPage';
+import ChangePasswordPage from './pages/users/ChangePasswordPage/ChangePasswordPage';
+import { WriteLetterPage } from './pages/letter/WriteLetterPage';
+import { MyRoomPage } from './pages/MyRoomPage';
+import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/login" element={<LogIn />}></Route>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/signup" element={<SignUpPage />}></Route>
+        <Route path="/login" element={<LogInPage />}></Route>
         <Route path="/wits" element={<WitsPage />}></Route>
         <Route path="/memory" element={<MemoryPage />}></Route>
-        <Route path="/findpassword" element={<FindPassword />}></Route>
-        <Route path="/changepassword" element={<ChangePassword />}></Route>
-        <Route path="/letter" element={<Letter />}></Route>
+        <Route path="/calendar" element={<CalendarPage />}></Route>
+        <Route path="/boxCreate" element={<BoxCreate />}></Route>
+        <Route path="/findpassword" element={<FindPasswordPage />}></Route>
+        <Route path="/changepassword" element={<ChangePasswordPage />}></Route>
+        <Route path="/letter/write" element={<WriteLetterPage />}></Route>
+        <Route path="/room" element={<MyRoomPage />}></Route>
+        {/* 여기 룸 뒤에 사용자 아이디 시용예정 */}
+        <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route>
+        {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
       </Routes>
     </Router>
   );
