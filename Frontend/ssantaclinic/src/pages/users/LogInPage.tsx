@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './LogIn.css';
+import './LogInPage.css';
 
 export function LogIn() {
   const [email, setEmail] = useState('');
@@ -13,7 +13,7 @@ export function LogIn() {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post('api/user/login', {
+      .post('http://localhost:8080' + '/api/user/login', {
         email: email,
         password: password,
       })
@@ -23,7 +23,7 @@ export function LogIn() {
         navigate('/'); // Login 성공하면 홈으로
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   };
 
