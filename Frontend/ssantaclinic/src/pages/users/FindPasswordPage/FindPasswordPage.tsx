@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { ChangePassword } from './ChangePasswordPage';
 import { useNavigate } from 'react-router-dom';
 
-export function FindPassword() {
+export default function FindPasswordPage() {
   const [email, setEmail] = useState('');
   const [isValid, setIsValid] = useState(false);
   const navigate = useNavigate();
@@ -20,7 +19,7 @@ export function FindPassword() {
         // setUUID로 나중에 변경
       })
       .catch((err) => {
-        console.log(err.response);
+        console.log(err.resonse);
       });
   };
 
