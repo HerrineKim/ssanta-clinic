@@ -2,7 +2,7 @@ import React from 'react';
 import { CalendarPageContainer } from './styles';
 import { CalendarPageTitle } from './styles';
 import { AdventCalendarBox } from './styles';
-import { CalendarDetail } from '../calendarDetail';
+import { CalendarDetail } from '../../../components/calendar/calendarDetail';
 
 export function CalendarPage() {
   // 모달창 노출 여부
