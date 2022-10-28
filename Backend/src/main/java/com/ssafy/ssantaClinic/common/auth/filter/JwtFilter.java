@@ -46,7 +46,7 @@ public class JwtFilter extends GenericFilterBean {
             ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
         }
 
-        // controller 처리 후, token의 시간이 30분 이하로 남았으면 갱신 해준다.
+        // Token의 시간이 30분 이하로 남았으면 갱신 해준다.
         if(!requestURI.equals("/api/user/join") && !requestURI.equals("/api/user/login") && !requestURI.equals("/api/error")) {
             jwt = JwtUtil.resolveToken((HttpServletRequest) request);
             if(StringUtils.hasText(jwt) && jwtManager.validateToken(jwt)){
@@ -54,7 +54,7 @@ public class JwtFilter extends GenericFilterBean {
                 long timeDifference = (expireTime.getTime() - new Date().getTime());
                 long minutes_difference = timeDifference / (1000*60);
 
-                if(minutes_difference <= 300) {
+                if(minutes_difference <= 30) {
                     final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                     jwtManager.deleteToken(jwt);
                     ((HttpServletResponse) response).setHeader("Authorization", "Bearer " + jwtManager.createToken(authentication));
