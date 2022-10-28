@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useCanvas } from '../hooks/useCanvas';
 
-export function Home() {
+export default function Home() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useCanvas(canvasRef.current);
   return (
-    <div>
-      <h1>Home</h1>
+    <div className="webgl-container">
+      <canvas ref={canvasRef} />;
     </div>
   );
 }
