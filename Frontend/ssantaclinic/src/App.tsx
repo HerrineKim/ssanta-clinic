@@ -12,6 +12,7 @@ import ChangePasswordPage from './pages/users/ChangePasswordPage/ChangePasswordP
 import { WriteLetterPage } from './pages/letter/WriteLetterPage';
 import { MyRoomPage } from './pages/MyRoomPage';
 import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
+import NotificationPage from './pages/NotificationPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         {/* 여기 룸 뒤에 사용자 아이디 시용예정 */}
         <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route>
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
+        <Route path="/notification" element={<NotificationPage />}></Route>
       </Routes>
     </Router>
   );
