@@ -45,8 +45,7 @@ public class SpringSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/user/login"
-                , "/user/join");
+        return (web) -> web.ignoring().antMatchers("/api/user/login", "/api/user/join");
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
