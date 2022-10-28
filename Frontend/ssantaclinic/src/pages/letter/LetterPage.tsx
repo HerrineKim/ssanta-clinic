@@ -21,7 +21,7 @@ export function Letter() {
         console.log('응답 받아옴 성공!', res.data);
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   };
   const toggleJob = () => {
