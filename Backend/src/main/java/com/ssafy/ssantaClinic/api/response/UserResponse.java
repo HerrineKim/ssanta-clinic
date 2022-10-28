@@ -13,4 +13,16 @@ public class UserResponse {
         private String nickName;
     }
 
+    @Data
+    @Builder
+    public static class DuplicatedResponse {
+        private Boolean duplicated;
+    }
+
+    @Data
+    @Builder
+    public static class findPasswordResponse {
+        private String findPasswordNum;
+    }
+
 }
