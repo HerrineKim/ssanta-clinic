@@ -204,7 +204,7 @@ export class HomeCanvas {
 
     const loader = new GLTFLoader();
 
-    loader.load('assets/space.glb', (gltf) => {
+    loader.load('space.glb', (gltf) => {
       const model = gltf.scene;
 
       this._scene.add(model);
@@ -230,7 +230,7 @@ export class HomeCanvas {
     // }
     // )
 
-    loader.load('assets/character.glb', (gltf) => {
+    loader.load('character.glb', (gltf) => {
       const model: any = gltf.scene;
 
       this._scene.add(model);
