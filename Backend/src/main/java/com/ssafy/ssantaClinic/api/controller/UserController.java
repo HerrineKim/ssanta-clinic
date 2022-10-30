@@ -45,6 +45,8 @@ public class UserController {
         userService.save(formRequest);
 
         // 회원가입 성공시 AuthenticaionManager를 통해 로그인 처리하고, JWT 토큰을 발급한다.
+
+        // security 인증을 위한 UsernamePasswordAuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(formRequest.getEmail(), formRequest.getPassword());
         // Auth를 진행할 때 자동으로 CustomUserDetailsService에서 loadUserByUsername이 실행된다.
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
@@ -89,14 +91,15 @@ public class UserController {
     @ApiOperation(value = "유저 상세정보", notes="유저 자신의 상세정보를 제공한다.", httpMethod = "GET")
     @GetMapping("/detail")
     public ResponseEntity<?> getMyInfo(){
+        // 현재 로그인한 유저의 정보를 가져온다.
         String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
         User user = userService.getUserByEmail(email);
-        UserResponse.GetUserResponse detailResponse = UserResponse.GetUserResponse.builder()
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .nickName(user.getNickName())
-                .build();
-        return ResponseEntity.ok().body(detailResponse);
+//        UserResponse.GetUserResponse detailResponse = UserResponse.GetUserResponse.builder()
+//                .userId(user.getUserId())
+//                .email(user.getEmail())
+//                .nickName(user.getNickName())
+//                .build();
+        return ResponseEntity.ok().body(user);
     }
     @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping("/check/nickname")
