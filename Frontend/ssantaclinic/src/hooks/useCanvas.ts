@@ -6,7 +6,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기
 import { Octree } from 'three/examples/jsm/math/Octree.js';
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
 type RGB = `rgb(${number}, ${number}, ${number})`;
@@ -14,6 +14,32 @@ type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
 type HEX = `#${string}`;
 
 type Color = RGB | RGBA | HEX;
+
+// export const useCanvas = (canvasElement: HTMLCanvasElement | null) => {
+//   console.log(canvasElement);
+//   const [homeCanvas, setHomeCanvas] = useState<HomeCanvas>();
+//   const animate = useCallback(async () => {
+//     if (!homeCanvas) {
+//       return;
+//     }
+//     try {
+//       if (!homeCanvas) {
+//         setHomeCanvas(
+//           new HomeCanvas({
+//             canvas: canvasElement,
+//           }),
+//         );
+//         return;
+//       }
+//     } catch (e) {
+//       setHomeCanvas(
+//         new HomeCanvas({
+//           canvas: canvasElement,
+//         }),
+//       );
+//     }
+//   }, [homeCanvas]);
+// };
 
 function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
   const localPrefix = isLast ? '└─' : '├─';
@@ -29,13 +55,8 @@ function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
   return lines;
 }
 
-export const useCanvas = (canvasElement: HTMLCanvasElement | null) => {
-  const [homeCanvas, setHomeCanvas] = useState<HomeCanvas>();
-  setHomeCanvas(new HomeCanvas());
-};
-
-class HomeCanvas {
-  _divContainer: any;
+export class HomeCanvas {
+  _canvasContainer: any;
   _renderer: any;
   _scene: any;
   _worldOctree: any;
@@ -56,12 +77,17 @@ class HomeCanvas {
   _previousTime: any;
 
   constructor() {
-    const divContainer = document.querySelector('#webgl-container');
-    this._divContainer = divContainer;
+    // const divContainer = document.querySelector('#webgl-container');
+    // this._divContainer = divContainer;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const canvasContainer = document.querySelector('canvas');
+    this._canvasContainer = canvasContainer;
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+    });
     renderer.setPixelRatio(window.devicePixelRatio);
-    divContainer?.appendChild(renderer.domElement);
+    canvasContainer?.appendChild(renderer.domElement);
 
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.VSMShadowMap;
@@ -100,7 +126,7 @@ class HomeCanvas {
   }
 
   _setupControls() {
-    this._controls = new OrbitControls(this._camera, this._divContainer);
+    this._controls = new OrbitControls(this._camera, this._canvasContainer);
 
     //캐릭터 카메라 중앙에 변경
     this._controls.target.set(0, 100, 0);
@@ -112,7 +138,7 @@ class HomeCanvas {
     this._controls.enableDamping = true;
 
     const stats = Stats();
-    this._divContainer.appendChild(stats.dom);
+    this._canvasContainer.appendChild(stats.dom);
     this._fps = stats;
 
     //키눌렀을 때 애니메이션
@@ -178,7 +204,7 @@ class HomeCanvas {
 
     const loader = new GLTFLoader();
 
-    loader.load('./data/space.glb', (gltf) => {
+    loader.load('assets/space.glb', (gltf) => {
       const model = gltf.scene;
 
       this._scene.add(model);
@@ -204,7 +230,7 @@ class HomeCanvas {
     // }
     // )
 
-    loader.load('./data/character.glb', (gltf) => {
+    loader.load('assets/character.glb', (gltf) => {
       const model: any = gltf.scene;
 
       this._scene.add(model);
@@ -270,12 +296,15 @@ class HomeCanvas {
 
   _setupHover() {
     const raycaster3 = new THREE.Raycaster();
-    this._divContainer.addEventListener('mouseover', this._setTest.bind(this));
+    this._canvasContainer.addEventListener(
+      'mouseover',
+      this._setTest.bind(this),
+    );
     this._raycaster3 = raycaster3;
   }
   _setTest(event: any) {
-    const width = this._divContainer.clientWidth;
-    const height = this._divContainer.clientHeight;
+    const width = this._canvasContainer.clientWidth;
+    const height = this._canvasContainer.clientHeight;
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
       y: -(event.offsetY / height) * 2 + 1,
@@ -301,13 +330,16 @@ class HomeCanvas {
 
   _setupClick() {
     const raycaster2 = new THREE.Raycaster();
-    this._divContainer.addEventListener('click', this._setupModal.bind(this));
+    this._canvasContainer.addEventListener(
+      'click',
+      this._setupModal.bind(this),
+    );
     this._raycaster2 = raycaster2;
   }
 
   _setupModal(event: any) {
-    const width = this._divContainer.clientWidth;
-    const height = this._divContainer.clientHeight;
+    const width = this._canvasContainer.clientWidth;
+    const height = this._canvasContainer.clientHeight;
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
       y: -(event.offsetY / height) * 2 + 1,
@@ -334,7 +366,7 @@ class HomeCanvas {
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
     const raycaster = new THREE.Raycaster();
-    this._divContainer.addEventListener(
+    this._canvasContainer.addEventListener(
       'dblclick',
       this._onDblClick.bind(this),
     );
@@ -342,8 +374,8 @@ class HomeCanvas {
   }
   //더블클릭 함수
   _onDblClick(event: any) {
-    const width = this._divContainer.clientWidth;
-    const height = this._divContainer.clientHeight;
+    const width = this._canvasContainer.clientWidth;
+    const height = this._canvasContainer.clientHeight;
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
       y: -(event.offsetY / height) * 2 + 1,
@@ -661,8 +693,8 @@ class HomeCanvas {
   }
 
   resize() {
-    const width = this._divContainer.clientWidth;
-    const height = this._divContainer.clientHeight;
+    const width = this._canvasContainer.clientWidth;
+    const height = this._canvasContainer.clientHeight;
 
     this._camera.aspect = width / height;
     this._camera.updateProjectionMatrix();
