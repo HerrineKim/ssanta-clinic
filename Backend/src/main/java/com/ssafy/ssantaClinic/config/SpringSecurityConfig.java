@@ -43,10 +43,24 @@ public class SpringSecurityConfig {
 //        return source;
 //    }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/api/user/login", "/api/user/join");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring().antMatchers("/api/user/login", "/api/user/join");
+//    }
+
+    private static final String[] PERMIT_URL_ARRAY = {
+            /* swagger v2 */
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            /* swagger v3 */
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -67,6 +81,7 @@ public class SpringSecurityConfig {
                 // 아래 3개 api는 permit, 나머지는 인증 필요
                 .and()
                 .authorizeRequests()
+                .antMatchers(PERMIT_URL_ARRAY).permitAll()
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/join").permitAll()
                 .antMatchers("/resources/**").permitAll()
