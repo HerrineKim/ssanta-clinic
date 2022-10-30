@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
-// import { Canvas } from './styles';
+import { Canvas } from './styles';
 import { HomeCanvas } from '../../hooks/useCanvas';
 
 export default function Home() {
@@ -16,9 +16,5 @@ export default function Home() {
     // console.log(canvas);
     new HomeCanvas();
   }, []);
-  return (
-    <div id="main-canvas">
-      <canvas></canvas>
-    </div>
-  );
+  return <div id="main-canvas"></div>;
 }
