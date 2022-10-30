@@ -30,9 +30,11 @@ public class User {
 
     @Builder.Default
     @Column(length=30, nullable = false)
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
     @Column(length=64)
+    @JsonIgnore
     private String findPasswordNum;
 }
