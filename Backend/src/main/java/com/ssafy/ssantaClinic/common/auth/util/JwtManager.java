@@ -33,7 +33,10 @@ public class JwtManager implements InitializingBean {
     private final long tokenValidityInMilliseconds;
     private Key key;
 
-    // 로그아웃처리시 토큰을 저장할 Map
+    // 로그아웃 요청으로 더 이상 유효하지 않은 토큰을 저장할 Map
+    // 이후 로그아웃 요청이 들어올 때, 해당 토큰이 유효하지 않은 토큰인지 검증할 때 사용
+    // ConcurrentHashMap은 동기화를 보장하는 HashMap
+    // 현재 토큰을 한번 저장하고 나면 삭제하지 않는 문제가 있음. 매번 삭제하는 것은 성능적으로 좋지 않을 것 같아, 차후 redis를 사용하여 해결할 수 있는지 검토 예정.
     private final Map<String,Date> blockList = new ConcurrentHashMap<>();
 
     /**

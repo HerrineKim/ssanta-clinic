@@ -40,6 +40,7 @@ public class JwtFilter extends GenericFilterBean {
 
         if(StringUtils.hasText(jwt) && jwtManager.validateToken(jwt)) {
             Authentication authentication = jwtManager.getAuthentication(jwt);
+            // SecurityContext에 Authentication 객체를 저장
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // Token의 시간이 30분 이하로 남았으면 갱신 해준다.
@@ -51,7 +52,10 @@ public class JwtFilter extends GenericFilterBean {
                     long minutes_difference = timeDifference / (1000*60);
 
                     if(minutes_difference <= 30) {
+                        // SecurityContext에서 Authentication 객체를 가져온다.
                         authentication = SecurityContextHolder.getContext().getAuthentication();
+
+                        // 해당 jwt는 더 이상 사용하지 못하게 blockList에 저장해둔다.
                         jwtManager.deleteToken(jwt);
                         ((HttpServletResponse) response).setHeader("Authorization", "Bearer " + jwtManager.createToken(authentication));
                     }

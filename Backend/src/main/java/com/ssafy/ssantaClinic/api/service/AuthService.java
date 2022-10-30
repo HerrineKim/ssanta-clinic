@@ -21,6 +21,10 @@ import java.util.stream.Collectors;
 public class AuthService implements UserDetailsService {
     final private UserRepository userRepository;
 
+    /**
+     * @Method Name : loadUserByUsername
+     * @Method 설명 : 로그인 시 사용자 정보를 조회한다.
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.getUserByEmail(username);
@@ -32,6 +36,7 @@ public class AuthService implements UserDetailsService {
     }
 
     private org.springframework.security.core.userdetails.User createUser(String username, User user) {
+        // 현재는 일반 사용자 <-> 관리자 구분이 없는 만큼, 이 부분은 주석 처리 했습니다.
 //        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
 //                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
 //                .collect(Collectors.toList());
