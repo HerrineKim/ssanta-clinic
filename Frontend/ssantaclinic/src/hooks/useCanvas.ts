@@ -6,7 +6,6 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기
 import { Octree } from 'three/examples/jsm/math/Octree.js';
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
-import { useState, useCallback } from 'react';
 
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
 type RGB = `rgb(${number}, ${number}, ${number})`;
@@ -43,8 +42,8 @@ type Color = RGB | RGBA | HEX;
 
 function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
   const localPrefix = isLast ? '└─' : '├─';
-  const word = `${prefix}${prefix ? localPrefix : ''}$
-  {obj.name || '*no-name*'} [${obj.type}]`;
+  const word = `${prefix}${prefix ? localPrefix : ''}
+  ${obj.name || '*no-name*'} [${obj.type}]`;
   lines.push(word);
   const newPrefix = prefix + (isLast ? '  ' : '│ ');
   const lastNdx: number = obj.children.length - 1;
@@ -80,7 +79,7 @@ export class HomeCanvas {
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
 
-    const canvasContainer = document.querySelector('canvas');
+    const canvasContainer = document.querySelector('#main-canvas');
     this._canvasContainer = canvasContainer;
 
     const renderer = new THREE.WebGLRenderer({
