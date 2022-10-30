@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.db.entity;
 
+import com.ssafy.ssantaClinic.common.util.CryptoConverter;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class AdventCalendar {
     private User receiver;
 
     @Column(length = 1000)
+    @Convert(converter = CryptoConverter.class)
     private String content;
 
     @Column(nullable = false, name = "is_read")

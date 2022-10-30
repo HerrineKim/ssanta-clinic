@@ -158,7 +158,7 @@ public class CalendarController {
          * @Method Name : getBoxListByDate
          * @Method 설명 : 해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.
          */
-        int userId = 2; //temp
+        int userId = 1; //temp
         List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllBoxesByDate(userId, date);
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
