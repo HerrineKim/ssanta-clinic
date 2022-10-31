@@ -80,7 +80,7 @@ public class CalendarServiceImpl implements CalendarService{
         List<String> imges = imgRepository.findAllByAdventCalendarId(boxId).stream()
                 .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
         return CalendarResponse.GetBoxDetailResponse.builder().
-                content(box.getContent()).audioUrl(box.getAudioUrl()).imges(imges).sender(box.getSender().getNickName()).build();
+                content(box.getContent()).audioUrl(box.getAudioUrl()).imges(imges).sender(box.getSender()).build();
     }
 
     @Override
@@ -92,10 +92,8 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 회원인지 확인
         User receiver = userRepository.findById(box.getReceiverId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        User sender = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 자기 자신에게 선물하면 오류
-        if(receiver.equals(sender)){
+        if(receiver.getEmail().equals(email)){
             throw new CustomException(ErrorCode.SELF_GIFT_ERROR);
         }
         // String -> LocalDateTime
@@ -111,7 +109,7 @@ public class CalendarServiceImpl implements CalendarService{
         }
         // 어드벤트 캘린더 객체 저장
         AdventCalendar calendar = AdventCalendar.builder().content(box.getContent()).audioUrl(audioUrl)
-                .sender(sender).createdAt(createdAt).receiver(receiver).isRead(false).day(box.getDay())
+                .sender(box.getSender()).createdAt(createdAt).receiver(receiver).isRead(false).day(box.getDay())
                 .build();
         calendarRepository.save(calendar);
         // 이미지 객체 저장
