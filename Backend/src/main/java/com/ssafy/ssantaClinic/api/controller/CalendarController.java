@@ -4,9 +4,12 @@ import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
 import com.ssafy.ssantaClinic.api.service.S3Service;
+import com.ssafy.ssantaClinic.api.service.UserService;
+import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
+import com.ssafy.ssantaClinic.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,6 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CalendarController {
     private final CalendarService calendarService;
+    private final UserService userService;
     private final S3Service s3Service;
 
     @ApiOperation(value = "상자 목록 조회", notes = "오늘 열람가능한 상자 목록을 조회한다.")
@@ -51,8 +55,9 @@ public class CalendarController {
          * @Method Name : getTodayBoxList
          * @Method 설명 : 오늘 열람가능한 상자 목록을 조회한다.
          */
-        int userId = 2; // temp
-        List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllTodayBoxes(userId);
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
+        List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllTodayBoxes(email);
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
         else
@@ -73,8 +78,9 @@ public class CalendarController {
          * @Method Name : getBox
          * @Method 설명 : 상자 상세 정보를 조회한다.
          */
-        int userId = 2; //temp
-        CalendarResponse.GetBoxDetailResponse box = calendarService.findBox(userId, boxId);
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
+        CalendarResponse.GetBoxDetailResponse box = calendarService.findBox(email, boxId);
         return ResponseEntity.ok(box);
     }
 
@@ -108,6 +114,8 @@ public class CalendarController {
          * @Method Name : sendBox
          * @Method 설명 : 상자를 선물한다.
          */
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
         // 오디오, 사진, 텍스트 모두 없을 시 오류
         if((boxRequest.getContent() == null || boxRequest.getContent().isBlank()) && audio == null && imges == null){
             throw new CustomException(ErrorCode.EMPTY_BOX_ERROR);
@@ -122,7 +130,7 @@ public class CalendarController {
         if(imges != null){
             imgUrls = s3Service.uploadImges(imges);
         }
-        AdventCalendar box = calendarService.saveBox(imgUrls, audioUrl, boxRequest);
+        AdventCalendar box = calendarService.saveBox(email, imgUrls, audioUrl, boxRequest);
         return ResponseEntity.created(URI.create("/"+box.getId())).build();
     }
 
@@ -139,7 +147,9 @@ public class CalendarController {
          * @Method Name : getAdventCalendarInfo
          * @Method 설명 : 회원의 어드벤트 캘린더 정보를 조회한다.
          */
-        List<CalendarResponse.GetCalendarResponse> calendarInfo = calendarService.findAdventCalendarByUserId(userId);
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
+        List<CalendarResponse.GetCalendarResponse> calendarInfo = calendarService.findAdventCalendarByUserId(email);
         return ResponseEntity.ok(calendarInfo);
     }
 
@@ -158,8 +168,9 @@ public class CalendarController {
          * @Method Name : getBoxListByDate
          * @Method 설명 : 해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.
          */
-        int userId = 1; //temp
-        List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllBoxesByDate(userId, date);
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
+        List<CalendarResponse.GetBoxResponse> boxes = calendarService.findAllBoxesByDate(email, date);
         if(boxes.isEmpty())
             return ResponseEntity.noContent().build();
         else
