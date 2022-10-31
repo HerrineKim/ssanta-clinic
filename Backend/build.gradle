@@ -33,7 +33,7 @@ dependencies {
 	implementation 'io.springfox:springfox-boot-starter:3.0.0' // swagger 설정
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1' //jwt
+
 	//aws
 	implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
 	implementation("org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE")
@@ -45,6 +45,13 @@ dependencies {
 	testImplementation 'io.findify:s3mock_2.13:0.2.6'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// spring security, jwt
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
 }
 
