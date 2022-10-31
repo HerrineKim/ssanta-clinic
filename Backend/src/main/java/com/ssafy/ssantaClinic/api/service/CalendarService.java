@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface CalendarService {
-    List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId);
-    CalendarResponse.GetBoxDetailResponse findBox(int userId, int boxId);
-    AdventCalendar saveBox(List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException;
-    List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(int userId);
-    List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(int userId, String date);
+    List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(String email);
+    CalendarResponse.GetBoxDetailResponse findBox(String email, int boxId);
+    AdventCalendar saveBox(String email, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException;
+    List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(String email);
+    List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(String email, String date);
 }
