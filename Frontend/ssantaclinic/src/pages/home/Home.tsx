@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
-// import { Canvas } from './styles';
+import { Div } from './styles';
 import { HomeCanvas } from '../../hooks/useCanvas';
 
 export default function Home() {
@@ -21,5 +21,5 @@ export default function Home() {
 
     return () => cancelAnimationFrame(requestId);
   });
-  return <div id="main-canvas"></div>;
+  return <Div id="main-canvas"></Div>;
 }
