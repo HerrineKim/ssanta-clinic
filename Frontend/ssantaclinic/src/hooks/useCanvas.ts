@@ -74,11 +74,12 @@ export class HomeCanvas {
   _raycaster: any;
 
   _previousTime: any;
+  _requestId: any;
 
   constructor() {
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
-
+    console.log('!');
     const canvasContainer = document.querySelector('#main-canvas');
     this._canvasContainer = canvasContainer;
 
@@ -108,14 +109,20 @@ export class HomeCanvas {
     window.onresize = this.resize.bind(this);
     this.resize();
 
-    requestAnimationFrame(this.render.bind(this));
+    const requestId = requestAnimationFrame(this.render.bind(this));
+    this._requestId = requestId;
+  }
+
+  requestId() {
+    return this._requestId;
   }
 
   render(time: number) {
     this._renderer.render(this._scene, this._camera);
     this.update(time);
 
-    requestAnimationFrame(this.render.bind(this));
+    const requestId = requestAnimationFrame(this.render.bind(this));
+    this._requestId = requestId;
   }
 
   _setupOctree(model: any) {
