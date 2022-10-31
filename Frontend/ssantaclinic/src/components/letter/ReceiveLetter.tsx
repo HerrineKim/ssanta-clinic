@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export const ReceiveLetter = () => {
-  const [message, setMessage] = useState('');
-  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
 
   useEffect(() => {
     axios
