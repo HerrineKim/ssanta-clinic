@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { SignUpPage } from './pages/users/SignUpPage/SignUpPage';
 import { LogInPage } from './pages/users/LoginPage/LogInPage';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/home/HomePage';
 
 import WitsPage from './pages/game/WitsPage';
 import MemoryPage from './pages/game/MemoryPage';
