@@ -1,21 +1,34 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import axios from 'axios';
 
-export const WriteLetter = () => {
-  const [message, setMessage] = useState('');
-  const [title, setTitle] = useState('');
-  const [button, setButton] = useState(true);
-  const [isJobSelect, setIsJobSelect] = useState(false);
-  const [isFutureSelect, setIsFutureSelect] = useState(false);
+type Keyword = '취업' | '진로';
 
+export const WriteLetter = () => {
+  const [message, setMessage] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [button, setButton] = useState<boolean>(true);
+  const [isJobSelect, setIsJobSelect] = useState<boolean>(false);
+  const [isFutureSelect, setIsFutureSelect] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<Keyword>('취업');
+
+  const ACCESS_TOKEN =
+    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkbGFkaGtzeG9yOTZAbmF2ZXIuY29tIiwiYXV0aCI6IiIsImV4cCI6MTY2NzIwMTQ3MH0.Od2caTwqJo5ZkNnSQJb47nnm1BhIlzUG4pOQWuL-OkGc3kAn6IDk3flLPTQY1tHRV4LBkKNH5sfKPIf6pnKfPA';
   const handleSubmit = (e: any) => {
     console.log('요청 보냄');
     e.preventDefault();
     axios
-      .post('http://localhost:8080' + '/api/letter', {
-        title: title,
-        message: message,
-      })
+      .post(
+        'http://localhost:8080' + '/api/letter',
+        {
+          title: title,
+          message: message,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_TOKEN}`,
+          },
+        },
+      )
       .then((res) => {
         console.log('응답 받아옴 성공!', res.data);
       })
@@ -32,6 +45,20 @@ export const WriteLetter = () => {
   function changeButton() {
     message.length >= 10 ? setButton(false) : setButton(true);
   }
+  const handleChangeTitle = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setTitle(e.target.value);
+    },
+    [],
+  );
+
+  const handleChangeMessage = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setMessage(e.target.value);
+    },
+    [],
+  );
+
   return (
     <div id="write-letter-container">
       <div>
@@ -55,7 +82,8 @@ export const WriteLetter = () => {
             <textarea
               name="title"
               id="title"
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={handleChangeTitle}
+              required
             ></textarea>
           </div>
           <div>
@@ -63,7 +91,7 @@ export const WriteLetter = () => {
             <textarea
               name="message"
               id="message"
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={handleChangeMessage}
               onKeyUp={changeButton}
             ></textarea>
           </div>
