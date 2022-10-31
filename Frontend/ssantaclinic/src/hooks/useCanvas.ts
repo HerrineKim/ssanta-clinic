@@ -73,6 +73,7 @@ export class HomeCanvas {
   _raycaster3: any;
   _raycaster2: any;
   _raycaster: any;
+  _cars: any;
 
   _previousTime: any;
   _requestId: any;
@@ -208,7 +209,7 @@ export class HomeCanvas {
 
     // //바닥평면을 옥트리객체에 추가
     // this._worldOctree.fromGraphNode(plane);
-
+    const cars: any = [];
     const loader = new GLTFLoader();
 
     loader.load('space.glb', (gltf) => {
@@ -287,6 +288,7 @@ export class HomeCanvas {
       this._boxHelper = boxHelper;
       this._model = model;
       this._model.name = 'car';
+      cars.push(model);
 
       // //상자하나 생성
       // const boxG = new THREE.BoxGeometry(100, diameter-5, 100);
@@ -299,6 +301,11 @@ export class HomeCanvas {
       // //상자 장애물로 지정
       // this._worldOctree.fromGraphNode(boxM);
     });
+
+    // scene에 있는 모든 3dobj 검사
+
+    this._cars = cars;
+    console.log(cars);
   }
 
   _setupHover() {
@@ -338,7 +345,7 @@ export class HomeCanvas {
   _setupClick() {
     const raycaster2 = new THREE.Raycaster();
     this._canvasContainer.addEventListener(
-      'click',
+      'dblclick',
       this._setupModal.bind(this),
     );
     this._raycaster2 = raycaster2;
@@ -374,7 +381,7 @@ export class HomeCanvas {
     // raycaster로 뭘 눌렀는지 판단해야함
     const raycaster = new THREE.Raycaster();
     this._canvasContainer.addEventListener(
-      'dblclick',
+      'click',
       this._onDblClick.bind(this),
     );
     this._raycaster = raycaster;
@@ -383,23 +390,32 @@ export class HomeCanvas {
   _onDblClick(event: any) {
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
+    console.log(event);
+    console.log(event.offsetX);
+    console.log(event.offsetY);
+
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
       y: -(event.offsetY / height) * 2 + 1,
     };
+    console.log(xy);
+    //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
+    //  and Y components should be between -1 and 1.
     this._raycaster.setFromCamera(xy, this._camera);
 
     // scene에 있는 모든 3dobj 검사
-    const cars: any = [];
-    this._scene.traverse((obj3d: any) => {
-      if (obj3d.name === 'car') {
-        cars.push(obj3d);
-      }
-    });
+    // const cars: any = [];
+    // this._scene.traverse((obj3d: any) => {
+    //   if (obj3d.name === 'car') {
+    //     cars.push(obj3d);
+    //   }
+    // });
+    // this._cars = cars;
+    // console.log(cars);
 
     // 모든 3d 돌면서 더블클릭된 객체 zoomfit
-    for (let i = 0; i < cars.length; i++) {
-      const car = cars[i];
+    for (let i = 0; i < this._cars.length; i++) {
+      const car = this._cars[i];
       const targets = this._raycaster.intersectObject(car);
       if (targets.length > 0) {
         this._zoomFit(car, 70);
@@ -470,7 +486,7 @@ export class HomeCanvas {
       1,
       5000,
     );
-
+    console.log('camera');
     camera.position.set(0, 100, 500);
     this._camera = camera;
   }
