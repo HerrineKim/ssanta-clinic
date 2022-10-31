@@ -1,16 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import { SignUpPage } from './pages/users/SignUpPage/SignUpPage';
-import { LogInPage } from './pages/users/LoginPage/LogInPage';
+import { SignUpPage } from './pages/auth/SignUpPage';
+import { LogInPage } from './pages/auth/LogInPage';
 import HomePage from './pages/home/HomePage';
 
 import WitsPage from './pages/game/WitsPage';
 import MemoryPage from './pages/game/MemoryPage';
 import { CalendarPage } from './pages/calendar/calendarPage';
 import { BoxCreate } from './pages/calendar/boxCreate';
-import FindPasswordPage from './pages/users/FindPasswordPage/FindPasswordPage';
-import ChangePasswordPage from './pages/users/ChangePasswordPage/ChangePasswordPage';
+import FindPasswordPage from './pages/auth/FindPasswordPage';
+import ChangePasswordPage from './pages/auth/ChangePasswordPage';
 import { WriteLetterPage } from './pages/letter/WriteLetterPage';
 import { MyRoomPage } from './pages/MyRoomPage';
 import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
