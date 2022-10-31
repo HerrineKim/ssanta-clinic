@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './LetterPage.css';
 
-export function Letter() {
+export const WriteLetter = () => {
   const [message, setMessage] = useState('');
   const [title, setTitle] = useState('');
   const [button, setButton] = useState(true);
@@ -21,7 +20,7 @@ export function Letter() {
         console.log('응답 받아옴 성공!', res.data);
       })
       .catch((err) => {
-        console.log(err.response);
+        console.log(err.resonse);
       });
   };
   const toggleJob = () => {
@@ -34,7 +33,7 @@ export function Letter() {
     message.length >= 10 ? setButton(false) : setButton(true);
   }
   return (
-    <div id="letter-container">
+    <div id="write-letter-container">
       <div>
         <h1>어떤 고민이 있니</h1>
       </div>
@@ -76,4 +75,4 @@ export function Letter() {
       </div>
     </div>
   );
-}
+};

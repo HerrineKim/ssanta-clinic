@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export function SignUp() {
+import { SignUpContainer } from './styles';
+import { SignUpbButton } from './styles';
+import { SignUpInput } from './styles';
+import { CheckButton } from './styles';
+
+export const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -69,26 +74,26 @@ export function SignUp() {
       });
   }
   return (
-    <div id="signup-container">
+    <SignUpContainer>
       <div id="signup">
         <h1>회원가입</h1>
       </div>
       <form onSubmit={handleSubmit}>
-        <input
+        <SignUpInput
           name="email"
           value={email}
           placeholder="이메일"
           onChange={(e) => setEmail(e.target.value)}
         />
-        <button onClick={checkEmail}>중복확인</button>
-        <input
+        <CheckButton onClick={checkEmail}>중복확인</CheckButton>
+        <SignUpInput
           type="password"
           name="password"
           value={password}
           placeholder="비밀번호"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <input
+        <SignUpInput
           type="password"
           name="passwordConfirm"
           value={passwordConfirm}
@@ -96,15 +101,15 @@ export function SignUp() {
           onChange={(e) => setPasswordConfirm(e.target.value)}
         />
         {password !== passwordConfirm && <p>비밀번호가 달라요!</p>}
-        <input
+        <SignUpInput
           name="Nickname"
           value={nickname}
           placeholder="닉네임"
           onChange={(e) => setNickname(e.target.value)}
         />
-        <button onClick={checkNickname}>중복확인</button>
-        <input type="submit" />
+        <CheckButton onClick={checkNickname}>중복확인</CheckButton>
+        <SignUpbButton type="submit">회원가입</SignUpbButton>
       </form>
-    </div>
+    </SignUpContainer>
   );
-}
+};

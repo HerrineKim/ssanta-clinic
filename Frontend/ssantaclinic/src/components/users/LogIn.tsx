@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './LogInPage.css';
 
-export function LogIn() {
+export const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [button, setButton] = useState(true);
@@ -60,4 +59,4 @@ export function LogIn() {
       </form>
     </div>
   );
-}
+};
