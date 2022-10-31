@@ -6,6 +6,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기
 import { Octree } from 'three/examples/jsm/math/Octree.js';
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
+import { gsap } from 'gsap';
 
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
 type RGB = `rgb(${number}, ${number}, ${number})`;
