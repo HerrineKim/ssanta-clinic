@@ -23,10 +23,8 @@ public class AdventCalendar {
     @Column(name = "advent_calendar_id")
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User sender;
+    @Column(length = 100, nullable = false)
+    private String sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id")
@@ -52,7 +50,7 @@ public class AdventCalendar {
     List<AdventCalendarImg> imgList;
 
     @Builder
-    public AdventCalendar(int adventCalendarId, User sender, User receiver, String content, Boolean isRead, int day, LocalDateTime createdAt, String audioUrl, List<AdventCalendarImg> imgList) {
+    public AdventCalendar(int adventCalendarId, String sender, User receiver, String content, Boolean isRead, int day, LocalDateTime createdAt, String audioUrl, List<AdventCalendarImg> imgList) {
         this.id = adventCalendarId;
         this.sender = sender;
         this.receiver = receiver;
@@ -66,10 +64,6 @@ public class AdventCalendar {
 
     public void setReceiver(User receiver) {
         this.receiver = receiver;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
     }
 
     public void isOpened() {

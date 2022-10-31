@@ -38,7 +38,7 @@ public class CalendarResponse {
             this.audioUrl = calendar.getAudioUrl();
             this.imges = calendar.getImgList().stream()
                     .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
-            this.sender = calendar.getSender().getNickName();
+            this.sender = calendar.getSender();
             this.isRead = calendar.getIsRead();
         }
     }
