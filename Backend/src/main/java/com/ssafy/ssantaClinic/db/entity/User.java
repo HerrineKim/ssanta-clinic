@@ -1,6 +1,7 @@
 package com.ssafy.ssantaClinic.db.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class User {
     private String email;
 
     @Column(length=100, nullable = false)
+    @JsonIgnore
     private String password;
 
     @Column(length=30, nullable = false)
@@ -28,9 +30,11 @@ public class User {
 
     @Builder.Default
     @Column(length=30, nullable = false)
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
     @Column(length=64)
+    @JsonIgnore
     private String findPasswordNum;
 }
