@@ -10,6 +10,7 @@ import { ChangePassword } from './pages/users/ChangePasswordPage';
 import { Letter } from './pages/letter/LetterPage';
 
 function App() {
+  console.log('APP');
   return (
     <Router>
       <Routes>

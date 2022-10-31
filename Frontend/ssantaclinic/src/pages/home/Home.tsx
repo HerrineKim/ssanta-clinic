@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { Canvas } from './styles';
+// import { Canvas } from './styles';
 import { HomeCanvas } from '../../hooks/useCanvas';
 
 export default function Home() {
@@ -11,10 +11,15 @@ export default function Home() {
 
   // useCanvas(canvasRef.current);
   // console.log(canvasRef.current);
+  console.log('home');
   useEffect(() => {
     // const canvas = document.querySelector('canvas');
     // console.log(canvas);
-    new HomeCanvas();
-  }, []);
+    console.log('useeffect');
+    const homeCanvas = new HomeCanvas();
+    const requestId = homeCanvas.requestId();
+
+    return () => cancelAnimationFrame(requestId);
+  });
   return <div id="main-canvas"></div>;
 }
