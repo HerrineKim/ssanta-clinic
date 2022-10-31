@@ -6,6 +6,7 @@ public class CalendarRequest {
     @Data
     public static class sendRequest{
         private String content;
+        private String sender;
         private String createdAt;
         private int day;
         private int receiverId;
