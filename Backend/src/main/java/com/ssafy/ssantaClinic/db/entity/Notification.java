@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @DynamicUpdate
-@Builder
 @Table(name = "NOTIFICATION")
 public class Notification {
     @Id
@@ -30,10 +29,19 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Builder.Default
-    private boolean isRead = false;
+    @Column(name = "is_read")
+    private boolean isRead ;
 
-    @Builder.Default
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "crated_at", nullable = false)
+    private LocalDateTime createdAt;
+
+    @Builder
+    public Notification(int notiId, String title, String message, Type type, boolean isRead, LocalDateTime createdAt) {
+        this.notiId = notiId;
+        this.title = title;
+        this.message = message;
+        this.type = type;
+        this.isRead = isRead;
+        this.createdAt = createdAt;
+    }
 }
