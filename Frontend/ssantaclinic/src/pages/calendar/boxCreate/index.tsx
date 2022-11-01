@@ -3,37 +3,40 @@ import axios from 'axios';
 import { ReactMediaRecorder } from 'react-media-recorder';
 // https://stackoverflow.com/questions/56457935/typescript-error-property-x-does-not-exist-on-type-window
 // declare const window: any;
-const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+// const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
 export function BoxCreate() {
   // 상자 보내기 (/api/calendar)
-  const [audio, setAudio] = useState<any>();
+  const [audio, setAudio] = useState<File>();
   const sendBox = (e: any) => {
     e.preventDefault();
+    const formData = new FormData();
+    if (audio) {
+      formData.append('audio', audio);
+    }
+    const boxRequest = {
+      content: 'content',
+      createdAt: '2022-11-01',
+      day: 1,
+      receiverId: 1, // 받는 사람 아이디
+    };
+    const blob = new Blob([JSON.stringify(boxRequest)], {
+      type: 'application/json',
+    });
+    formData.append('boxRequest', blob);
     axios
-      .post(
-        'http://localhost:8080' + '/api/calendar',
-        {
-          boxRequest: {
-            content: 'content',
-            createdAt: '2021-01-01',
-            day: 1,
-            receiverId: 1,
-          },
-          imges: [],
-          audio: audio,
+      .post('http://localhost:8080' + '/api/calendar', {
+        headers: {
+          Authorization:
+            'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhcHJpbGtpbTk4QG5hdmVyLmNvbSIsImF1dGgiOiIiLCJleHAiOjE2NjcyOTM0MDh9.xtnddbu6dWYdBVqAeaU6HCnyf-dex9aavcuEqCNrwwBaQ22Z6RUQa8IMzfSAu0M8i2E3A-Oc_udfKbdIvJkdkA',
+          'Content-type': 'multipart/form-data',
         },
-        {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        },
-      )
+        data: formData,
+      })
       .then((res) => {
-        console.log(ACCESS_TOKEN);
         console.log('응답 받아옴 성공!', res.data);
       })
       .catch((err) => {
-        console.log(ACCESS_TOKEN);
+        // console.log(ACCESS_TOKEN);
         console.log(err.response);
       });
   };
