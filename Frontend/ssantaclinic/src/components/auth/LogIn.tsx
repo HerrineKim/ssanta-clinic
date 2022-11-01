@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useSetRecoilState } from 'recoil';
+import { currentUser } from '../../store/store';
 
 export const LogIn = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [button, setButton] = useState(true);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [button, setButton] = useState<boolean>(true);
+  const setUserState = useSetRecoilState(currentUser);
   const navigate = useNavigate();
+  let accessToken: any = '';
 
-  const handleSubmit = (e: any) => {
+  const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
     axios
@@ -17,9 +21,15 @@ export const LogIn = () => {
         password: password,
       })
       .then((res) => {
-        console.log('응답 받아옴 성공!');
-        localStorage.setItem('token', res.data.jwt); // 토큰 저장
-        navigate('/'); // Login 성공하면 홈으로
+        console.log(res.data);
+        accessToken = res.headers.authorization;
+        localStorage.setItem('jwt', accessToken);
+        setUserState({
+          email: email,
+          id: res.data.userId,
+          nickname: res.data.nickName,
+        });
+        navigate('/room'); // Login 성공하면 일단 내 방으로
       })
       .catch((err) => {
         console.log(err.response);
@@ -32,6 +42,19 @@ export const LogIn = () => {
       ? setButton(false)
       : setButton(true);
   }
+
+  const handleChangeEmail = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setEmail(e.target.value);
+    },
+    [],
+  );
+  const handleChangePassword = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setPassword(e.target.value);
+    },
+    [],
+  );
   return (
     <div id="login-container">
       <div id="login">
@@ -42,7 +65,8 @@ export const LogIn = () => {
           name="email"
           value={email}
           placeholder="이메일"
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleChangeEmail}
+          required
           onKeyUp={changeButton}
         />
         <input
@@ -50,7 +74,8 @@ export const LogIn = () => {
           name="password"
           value={password}
           placeholder="비밀번호"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={handleChangePassword}
+          required
           onKeyUp={changeButton}
         />
         <button type="submit" className="loginButton" disabled={button}>
