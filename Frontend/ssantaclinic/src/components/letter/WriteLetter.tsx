@@ -1,23 +1,43 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { selectUserNickname, selectUserId } from '../../store/store';
+import { useRecoilValue } from 'recoil';
+import { Link } from 'react-router-dom';
+
+type Keyword = '취업' | '진로';
 
 export const WriteLetter = () => {
-  const [message, setMessage] = useState('');
-  const [title, setTitle] = useState('');
-  const [button, setButton] = useState(true);
-  const [isJobSelect, setIsJobSelect] = useState(false);
-  const [isFutureSelect, setIsFutureSelect] = useState(false);
+  const [message, setMessage] = useState<string>('');
+  const [title, setTitle] = useState<string>('');
+  const [button, setButton] = useState<boolean>(true);
+  const [isJobSelect, setIsJobSelect] = useState<boolean>(false);
+  const [isFutureSelect, setIsFutureSelect] = useState<boolean>(false);
+  const [keyword, setKeyword] = useState<Keyword>('취업');
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+  // const ID = useRecoilValue(selectUserId);
+  const navigate = useNavigate();
 
   const handleSubmit = (e: any) => {
     console.log('요청 보냄');
     e.preventDefault();
     axios
-      .post('http://localhost:8080' + '/api/letter', {
-        title: title,
-        message: message,
-      })
+      .post(
+        'http://localhost:8080' + '/api/letter',
+        {
+          title: title,
+          message: message,
+          keyword: keyword,
+        },
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      )
       .then((res) => {
         console.log('응답 받아옴 성공!', res.data);
+        navigate('/room');
       })
       .catch((err) => {
         console.log(err.resonse);
@@ -32,6 +52,20 @@ export const WriteLetter = () => {
   function changeButton() {
     message.length >= 10 ? setButton(false) : setButton(true);
   }
+  const handleChangeTitle = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setTitle(e.target.value);
+    },
+    [],
+  );
+
+  const handleChangeMessage = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setMessage(e.target.value);
+    },
+    [],
+  );
+
   return (
     <div id="write-letter-container">
       <div>
@@ -39,6 +73,7 @@ export const WriteLetter = () => {
       </div>
       <div>
         <h2>고민 고르기</h2>
+        <Link to="/room">내 방으로 가기</Link>
         <div>
           <button onClick={toggleJob}>
             {isJobSelect ? '취업' : '취업 선택됨'}
@@ -55,7 +90,8 @@ export const WriteLetter = () => {
             <textarea
               name="title"
               id="title"
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={handleChangeTitle}
+              required
             ></textarea>
           </div>
           <div>
@@ -63,7 +99,7 @@ export const WriteLetter = () => {
             <textarea
               name="message"
               id="message"
-              onChange={(e) => setMessage(e.target.value)}
+              onChange={handleChangeMessage}
               onKeyUp={changeButton}
             ></textarea>
           </div>

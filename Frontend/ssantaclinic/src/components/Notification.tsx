@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 export const Notification = () => {
-  const [notiList, setNotiList] = useState([1, 2, 3, 4, 5]);
+  const [notiList, setNotiList] = useState<number[]>([1, 2, 3, 4, 5]);
   useEffect(() => {
     axios
       .get('http://localhost:8080' + '/api/noti', {})

@@ -1,9 +1,11 @@
 package com.ssafy.ssantaClinic.api.service;
 
+import com.ssafy.ssantaClinic.api.request.UserRequest;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,6 +18,17 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public void save(UserRequest.JoinRequest joinRequest) {
+        User user = User.builder()
+                .email(joinRequest.getEmail())
+                .password(passwordEncoder.encode(joinRequest.getPassword()))
+                .nickName(joinRequest.getNickName())
+                .build();
+        userRepository.save(user);
+    }
 
     @Override
     public void save(User user) {
