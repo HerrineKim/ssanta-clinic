@@ -87,12 +87,11 @@ export class HomeCanvas {
     this.resize();
   }
 
-  render(time: number): number {
+  render(time: number) {
     this._renderer.render(this._scene, this._camera);
     this.update(time);
 
     requestAnimationFrame(this.render.bind(this));
-    return time;
   }
 
   update(time: number) {
