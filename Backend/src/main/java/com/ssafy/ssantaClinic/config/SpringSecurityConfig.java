@@ -37,6 +37,7 @@ public class SpringSecurityConfig {
 //        configuration.addAllowedOrigin("*");
 //        configuration.addAllowedHeader("*");
 //        configuration.addAllowedMethod("*");
+//        configuration.addExposedHeader("*");
 //        configuration.setAllowCredentials(true);
 //
 //        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -86,6 +87,9 @@ public class SpringSecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS).permitAll() // CORS Preflight 방지
                 .antMatchers("/user/login").permitAll()
                 .antMatchers("/user/join").permitAll()
+                .antMatchers("/user/check/nickname").permitAll()
+                .antMatchers("/user/find/password").permitAll()
+                .antMatchers("/user/check/email").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .anyRequest().authenticated()
                 // 차후 관리자, 일반 유저 권한 구분하려면 아래 기능 사용
