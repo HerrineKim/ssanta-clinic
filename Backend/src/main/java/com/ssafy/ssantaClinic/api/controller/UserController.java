@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 /**
@@ -129,20 +130,34 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 찾기", notes="비밀번호 재설정 고유값 반환", httpMethod = "POST")
     @PostMapping ("/find/password")
-    public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest){
+    public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
         /**
          * @Method Name : findPassword
          * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
          */
 
-        String findPasswordNum = userService.getFindPasswordNum(formRequest.getEmail());
-
-        if (findPasswordNum == null) {
-            return ResponseEntity.status(400).body("존재하지 않는 회원입니다.");// 에러코드 40x 잘모르겠음
-        }
         return ResponseEntity.ok().body(UserResponse.findPasswordResponse.builder()
-                .findPasswordNum(findPasswordNum)
+                .findPasswordNum(userService.getFindPasswordNum(formRequest.getEmail()))
                 .build());
     }
+    @ApiOperation(value = "비밀번호재설정 url 전송", notes="회원 고유값을 포함한 비밀번호 재설정 url 메일 전송", httpMethod = "POST")
+    @PostMapping("/find/password/url")
+    public void sendUrl(@RequestBody UserRequest.UrlRequest formRequest) {
+        /**
+         * @Method Name : sendUrl
+         * @Method 설명 : 비밀번호 재설정 url을 받아서 회원 이메일로 전송한다.
+         */
+        userService.sendMail(formRequest.getEmail(), formRequest.getUrl());
+    }
+    @ApiOperation(value = "회원 비밀번호 수정", notes="회원 비밀번호 수정", httpMethod = "PATCH")
+    @PatchMapping("/find/password/update")
+    public void updatePassword(@RequestBody UserRequest.UpdatePasswordRequest formRequest) {
+        /**
+         * @Method Name : updatePassword
+         * @Method 설명 : 새로운 비밀번호를 받아서 수정한다.
+         */
+        userService.updatePassword(formRequest.getUserId(), formRequest.getPassword());
+    }
+
 
 }
