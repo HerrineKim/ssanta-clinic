@@ -149,5 +149,15 @@ public class UserController {
          */
         userService.sendMail(formRequest.getEmail(), formRequest.getUrl());
     }
+    @ApiOperation(value = "회원 비밀번호 수정", notes="회원 비밀번호 수정", httpMethod = "PATCH")
+    @PatchMapping("/find/password/update")
+    public void updatePassword(@RequestBody UserRequest.UpdatePasswordRequest formRequest) {
+        /**
+         * @Method Name : updatePassword
+         * @Method 설명 : 새로운 비밀번호를 받아서 수정한다.
+         */
+        userService.updatePassword(formRequest.getUserId(), formRequest.getPassword());
+    }
+
 
 }

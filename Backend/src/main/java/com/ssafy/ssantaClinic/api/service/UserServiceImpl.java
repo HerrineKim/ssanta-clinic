@@ -138,6 +138,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void sendMail(String email, String url) {
+        /**
+         * @Method Name : sendMail
+         * @Method 설명 : 회원 email로 비밀번호 재설정 url을 전송한다.
+         */
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setFrom(UserServiceImpl.FROM_ADDRESS);
@@ -145,5 +149,17 @@ public class UserServiceImpl implements UserService{
         message.setText(url);
 
         mailSender.send(message);
+    }
+
+    @Override
+    public void updatePassword(int userId, String password) {
+        /**
+         * @Method Name : updatePassword
+         * @Method 설명 : 새로운 비밀번호를 받아서 회원 비밀번호를 재설정한다.
+         */
+        User user = userRepository.getUserByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        user.changePassword(password);
     }
 }
