@@ -22,7 +22,7 @@ function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
   return lines;
 }
 
-export class TreeCanvas {
+export class TreeCan {
   _canvasContainer: any;
   _renderer: any;
   _scene: any;
@@ -52,8 +52,8 @@ export class TreeCanvas {
     this._isTreeModal = false;
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
-    console.log('constructor');
-    const canvasContainer = document.querySelector('#main-canvas');
+    console.log('tree constructor');
+    const canvasContainer = document.querySelector('.treecanvas');
     this._canvasContainer = canvasContainer;
 
     const renderer = new THREE.WebGLRenderer({
