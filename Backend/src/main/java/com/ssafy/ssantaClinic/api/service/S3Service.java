@@ -1,6 +1,5 @@
 package com.ssafy.ssantaClinic.api.service;
 
-import com.amazonaws.AmazonClientException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -13,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -106,5 +105,30 @@ public class S3Service {
         } catch (SdkClientException e) {
             e.printStackTrace();
         }
+    }
+    public File downloadFile(String fileUrl,String fileName) {
+        URL url;
+        //읽기 객체
+        InputStream is;
+        //쓰기 객체
+        OutputStream os;
+        try {
+            url = new URL(fileUrl);
+            is = url.openStream();
+            os = new FileOutputStream(fileName);
+            byte[] buffer = new byte[1024*16];
+            while (true) {
+                int inputData = is.read(buffer);
+                if(inputData == -1)break;
+                os.write(buffer,0,inputData);
+            }
+            is.close();
+            os.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return new File(fileName);
     }
 }

@@ -14,7 +14,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -33,9 +37,10 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     private final AdventCalendarImgRepository imgRepository;
+    private final S3Service s3Service;
     static Calendar now = Calendar.getInstance();
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    static final int D_MONTH = 10 - 1;
+    static final int D_MONTH = Calendar.DECEMBER;
     @Override
     public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(String email) {
         /**
@@ -156,5 +161,28 @@ public class CalendarServiceImpl implements CalendarService{
         List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverEmailAndDay(email, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
         return boxes;
+    }
+
+    @Override
+    public void playAudio(int boxId) {
+        /**
+         * @Method Name : playAudio
+         * @Method 설명 : 상자에 있는 음성을 재생한다.
+         */
+        // 존재하는 상자인지 확인
+        AdventCalendar box = calendarRepository.findById(boxId).orElseThrow(() -> new CustomException(ErrorCode.BOX_NOT_FOUND));
+        // 오디오 주소 가져오기
+        String audioUrl = box.getAudioUrl();
+        try {
+            File audio = s3Service.downloadFile(audioUrl, boxId + " audio");
+            System.out.println(audio.exists());
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(audio));
+            // clip.loop(Clip.LOOP_CONTINUOUSLY);
+            clip.loop(1);
+            clip.start();
+        } catch (Exception e) {
+            System.err.println("Put the music.wav file in the sound folder if you want to play background music, only optional!");
+        }
     }
 }
