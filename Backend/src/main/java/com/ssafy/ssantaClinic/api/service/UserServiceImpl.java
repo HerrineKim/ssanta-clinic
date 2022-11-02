@@ -1,6 +1,8 @@
 package com.ssafy.ssantaClinic.api.service;
 
 import com.ssafy.ssantaClinic.api.request.UserRequest;
+import com.ssafy.ssantaClinic.common.exception.CustomException;
+import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,9 +47,20 @@ public class UserServiceImpl implements UserService{
          * @Method Name : getUserByUserId
          * @Method 설명 : userId에 해당하는 유저 객체를 반환한다.
          */
-        User user = userRepository.getUserByUserId(userId);
+        User user = userRepository.getUserByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         return user;
     }
+
+//    @Override
+//    public User getUserByUserId(int userId) {
+//        /**
+//         * @Method Name : getUserByUserId
+//         * @Method 설명 : userId에 해당하는 유저 객체를 반환한다.
+//         */
+//        User user = userRepository.getUserByUserId(userId);
+//        return user;
+//    }
 
     @Override
     public User getUserByEmail(String email) {
@@ -68,6 +81,34 @@ public class UserServiceImpl implements UserService{
          * @Method 설명 : nickname을 받아 해당하는 유저를 반환한다. 없으면 Empty.
          */
         return userRepository.findByNickName(nickname);
+    }
+
+    @Override
+    public boolean isDuplicatedNickName(String nickname) {
+        /**
+         * @Method Name : isDuplicatedNickName
+         * @Method 설명 : nickname을 받아 boolean 반환. 중복이면 true 아니면 false
+         */
+        boolean isDuplicated = true;
+        Optional<User> user = userRepository.findByNickName(nickname);
+        if (user.isEmpty()) {
+            isDuplicated = false;
+        }
+        return isDuplicated;
+    }
+
+    @Override
+    public boolean isDuplicatedEmail(String email) {
+        /**
+         * @Method Name : isDuplicatedEmail
+         * @Method 설명 : email을 받아 boolean 반환. 중복이면 true 아니면 false
+         */
+        boolean isDuplicated = true;
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isEmpty()) {
+            isDuplicated = false;
+        }
+        return isDuplicated;
     }
 
     @Override
