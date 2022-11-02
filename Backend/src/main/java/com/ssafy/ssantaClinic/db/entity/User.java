@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -38,7 +39,13 @@ public class User {
     @JsonIgnore
     private String findPasswordNum;
 
+    @OneToMany(mappedBy = "parent")
+    List<Follow> followers;
+
+    @OneToMany(mappedBy = "child")
+    List<Follow> followings;
     public void changePassword(String password) {
         this.password = password;
     }
+
 }
