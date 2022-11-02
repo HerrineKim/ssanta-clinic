@@ -2,7 +2,6 @@ package com.ssafy.ssantaClinic.common.exception;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 @Getter
@@ -32,7 +31,13 @@ public enum ErrorCode {
     NOT_YOUR_BOX(HttpStatus.FORBIDDEN, "403", "상자의 주인만 상자를 열 수 있습니다."),
     EMPTY_BOX_ERROR(HttpStatus.BAD_REQUEST, "400", "빈 상자는 선물할 수 없습니다."),
     SELF_GIFT_ERROR(HttpStatus.BAD_REQUEST, "400", "자기 자신에게 선물할 수 없습니다."),
-    CHRISTMAS_IS_OVER(HttpStatus.BAD_REQUEST, "400", "1일에서 25일까지만 선물 가능합니다.");
+    CHRISTMAS_IS_OVER(HttpStatus.BAD_REQUEST, "400", "1일에서 25일까지만 선물 가능합니다."),
+
+    // 팔로우 팔로잉
+    // 로그인
+    FOLLOW_NOT_FOUND_USER_ID(HttpStatus.NOT_FOUND, "404", "해당 아이디를 찾을 수 없습니다"),
+    FOLLOW_NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "404", "해당 유저가 존재하지 않습니다"),
+    FOLLOW_ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST, "400", "이미 팔로우 중입니다");
 
     private final HttpStatus status;
     private final String errorCode;
