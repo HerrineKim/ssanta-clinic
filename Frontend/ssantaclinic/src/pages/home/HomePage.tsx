@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { Div, ModalDiv } from './styles';
-import { HomeCanvas } from '../../hooks/useCanvas';
+import { MainCanvas } from '../../three/main';
 
 export default function Home() {
   // const firstCanvas = document.getElementById('main-canvas');
@@ -14,7 +14,7 @@ export default function Home() {
 
   console.log('home');
   useEffect(() => {
-    const homeCanvas = new HomeCanvas();
+    const homeCanvas = new MainCanvas();
     // const canvas = document.querySelector('canvas');
     // console.log(canvas);
     console.log('useeffect');
