@@ -3,6 +3,7 @@ package com.ssafy.ssantaClinic.api.service;
 import com.ssafy.ssantaClinic.api.request.UserRequest;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
+import com.ssafy.ssantaClinic.common.util.SHA256;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 /**
  * @FileName : UserServiceImpl
@@ -121,17 +123,18 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public String getFindPasswordNum(String email) {
+    public String getFindPasswordNum(String email) throws NoSuchAlgorithmException {
         /**
          * @Method Name : getFindPasswordNum
          * @Method 설명 : email을 받아 유저 존재를 확인한 뒤, 있으면 고유값을 없으면 null을 반환
          */
-        Optional<User> user = userRepository.findByEmail(email);
-        if (user.isEmpty()) {
-            return null;
-        }
-        int userId = userRepository.getUserByEmail(email).getUserId();
-        // 할 일) userId를 이용해서 sha256 해쉬변환하기
-        return Integer.toString(userId);
+        // email로 유저 검색, 없으면 404 error
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        // userId를 이용하여 sha256 변환
+        SHA256 sha256 = new SHA256();
+
+        return sha256.encrypt(user.getEmail());
     }
 }
