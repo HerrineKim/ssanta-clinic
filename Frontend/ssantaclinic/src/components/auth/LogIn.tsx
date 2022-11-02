@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { currentUser } from '../../store/store';
@@ -29,7 +29,8 @@ export const LogIn = () => {
           id: res.data.userId,
           nickname: res.data.nickName,
         });
-        navigate('/room'); // Login 성공하면 일단 내 방으로
+        const myRoomPath = '/room/' + res.data.userId;
+        navigate(myRoomPath); // Login 성공하면 일단 내 방으로
       })
       .catch((err) => {
         console.log(err.response);

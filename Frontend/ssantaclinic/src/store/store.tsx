@@ -1,4 +1,7 @@
 import { atom, selector } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export interface IUser {
   email: string;
@@ -15,6 +18,7 @@ export const currentUser = atom<IUser>({
     nickname: '',
     // jwt: '',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 // export const selectToken = selector({
