@@ -18,7 +18,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class CalendarServiceImpl implements CalendarService{
         }
         // 접근 권한 확인
         if(!box.getReceiver().getEmail().equals(email)){
-            throw new CustomException(ErrorCode.BOX_OPEN_WRONG_ACCESS);
+            throw new CustomException(ErrorCode.NOT_YOUR_BOX);
         }
         // 상자 열림 표시
         box.isOpened();
@@ -164,13 +163,18 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public void playAudio(int boxId) {
+    public void playAudio(String email, int boxId) {
         /**
          * @Method Name : playAudio
          * @Method 설명 : 상자에 있는 음성을 재생한다.
          */
         // 존재하는 상자인지 확인
         AdventCalendar box = calendarRepository.findById(boxId).orElseThrow(() -> new CustomException(ErrorCode.BOX_NOT_FOUND));
+        // 존재하는 회원인지 확인
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        // 열람 권한 확인
+        if(user.getUserId() != box.getReceiver().getUserId())
+            throw new CustomException(ErrorCode.NOT_YOUR_BOX);
         // 오디오 주소 가져오기
         String audioUrl = box.getAudioUrl();
         try {
@@ -182,7 +186,7 @@ public class CalendarServiceImpl implements CalendarService{
             clip.loop(1);
             clip.start();
         } catch (Exception e) {
-            System.err.println("Put the music.wav file in the sound folder if you want to play background music, only optional!");
+            e.printStackTrace();
         }
     }
 }
