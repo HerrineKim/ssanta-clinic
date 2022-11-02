@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
 import HomePage from './pages/home/HomePage';
-
+import TetrisPage from './pages/game/tetris';
 import WitsPage from './pages/game/WitsPage';
 import MemoryPage from './pages/game/MemoryPage';
 import { CalendarPage } from './pages/calendar/calendarPage';
@@ -36,6 +36,7 @@ function App() {
         <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route>
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
         <Route path="/notification" element={<NotificationPage />}></Route>
+        <Route path="/tetris" element={<TetrisPage />}></Route>
       </Routes>
     </Router>
   );
