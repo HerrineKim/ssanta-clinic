@@ -27,4 +27,10 @@ public class UserRequest {
         private String email;
         private String password;
     }
+
+    @Data
+    public static class UrlRequest{
+        private String url;
+        private String email;
+    }
 }

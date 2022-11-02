@@ -133,14 +133,21 @@ public class UserController {
     public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
         /**
          * @Method Name : findPassword
-         * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환 .(sha256)
+         * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
          */
 
-        //로직 : 여기서 고유값 반환 => 프론트에서 다시 url보내주면 => 회원 이메일로 메일 전송 => 회원이 들어가서 백으로 비밀번호 보내면
-        // => 비밀번호 update
         return ResponseEntity.ok().body(UserResponse.findPasswordResponse.builder()
                 .findPasswordNum(userService.getFindPasswordNum(formRequest.getEmail()))
                 .build());
+    }
+    @ApiOperation(value = "비밀번호재설정 url 전송", notes="회원 고유값을 포함한 비밀번호 재설정 url 메일 전송", httpMethod = "POST")
+    @PostMapping("/find/password/url")
+    public void sendUrl(@RequestBody UserRequest.UrlRequest formRequest) {
+        /**
+         * @Method Name : sendUrl
+         * @Method 설명 : 비밀번호 재설정 url을 받아서 회원 이메일로 전송한다.
+         */
+        userService.sendMail(formRequest.getEmail(), formRequest.getUrl());
     }
 
 }
