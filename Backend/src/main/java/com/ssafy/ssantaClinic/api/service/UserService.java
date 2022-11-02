@@ -26,4 +26,6 @@ public interface UserService {
 
     String getFindPasswordNum(String email) throws NoSuchAlgorithmException;
 
+    void sendMail(String email, String url);
+
 }
