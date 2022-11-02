@@ -7,15 +7,14 @@ import { Octree } from 'three/examples/jsm/math/Octree.js';
 import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
 import { gsap } from 'gsap';
-import { useEffect } from 'react';
+
+// type RGB = `rgb(${number}, ${number}, ${number})`;
+// type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+// type HEX = `#${string}`;
+
+// type Color = RGB | RGBA | HEX;
 
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
-type RGB = `rgb(${number}, ${number}, ${number})`;
-type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
-type HEX = `#${string}`;
-
-type Color = RGB | RGBA | HEX;
-
 function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
   const localPrefix = isLast ? '└─' : '├─';
   const word = `${prefix}${prefix ? localPrefix : ''}
