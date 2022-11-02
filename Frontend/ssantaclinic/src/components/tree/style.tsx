@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
-export const CalendarDetailContainer = styled.div`
-  width: 300px;
-  height: 200px;
+export const TreeModalDiv = styled.div`
+  width: 80%;
+  height: 80%;
   z-index: 999;
   position: absolute;
   top: 50%;
@@ -11,4 +11,6 @@ export const CalendarDetailContainer = styled.div`
   background-color: gray;
   border: 1px solid black;
   border-radius: 8px;
+  display: none;
+  flex-direction: column;
 `;

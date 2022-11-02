@@ -4,10 +4,10 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기위 한 모듈
 //충돌 감지 를 위한 모듈들
 import { Octree } from 'three/examples/jsm/math/Octree.js';
-import { Capsule } from 'three/examples/jsm/math/Capsule.js';
+// import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
 import { gsap } from 'gsap';
-import { chdir } from 'process';
+// import { chdir } from 'process';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
 // type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
