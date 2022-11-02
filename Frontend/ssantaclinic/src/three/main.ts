@@ -433,7 +433,9 @@ export class MainCanvas {
         console.log('tree!!!!!');
         // 트리 줌인 후에 꾸밀수 있도록 인벤토리
         this._zoomFit(targets[0].object.parent, 60);
-        this._setupModal();
+        setTimeout(() => {
+          this._setupModal();
+        }, 1600);
       } else if (targets[0].object.name === 'house') {
         console.log('house!!!!!!!!');
         this._zoomFit(targets[0].object.parent, 60);
