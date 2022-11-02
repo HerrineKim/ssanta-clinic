@@ -84,18 +84,20 @@ public class CalendarController {
         return ResponseEntity.ok(box);
     }
 
-//    @ApiOperation(value = "상자 속 음성 재생", notes = "상자의 음성 메세지를 재생한다.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "조회 성공"),
-//            @ApiResponse(code = 500, message = "서버 에러 발생")
-//    })
-//    @GetMapping("/{boxId}/play")
-//    public ResponseEntity<?> playVoiceMessage(HttpServletRequest request, @PathVariable int boxId) {
-//        /**
-//         * @Method Name : playVoiceMessage
-//         * @Method 설명 : 상자의 음성 메세지를 재생한다.
-//         */
-//    }
+    @ApiOperation(value = "상자 속 음성 재생", notes = "상자의 음성 메세지를 재생한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping("/{boxId}/play")
+    public ResponseEntity<?> playVoiceMessage(HttpServletRequest request, @PathVariable int boxId) {
+        /**
+         * @Method Name : playVoiceMessage
+         * @Method 설명 : 상자의 음성 메세지를 재생한다.
+         */
+        calendarService.playAudio(boxId);
+        return ResponseEntity.ok().build();
+    }
 
     @ApiOperation(value = "상자 선물하기", notes = "상자를 선물한다.")
     @ApiResponses({

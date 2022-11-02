@@ -5,6 +5,7 @@ import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,4 +15,5 @@ public interface CalendarService {
     AdventCalendar saveBox(String email, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException;
     List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(String email);
     List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(String email, String date);
+    void playAudio(int boxId);
 }
