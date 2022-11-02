@@ -300,7 +300,7 @@ export class MainCanvas {
       const model = gltf.scene;
       this._model = model;
       this._scene.add(model);
-      console.log('model:', model);
+      // console.log('model:', model);
       // model.children.forEach((child) => {
       //   // model은 그림자 생성 true
       //   if (child instanceof THREE.Group) {
@@ -311,6 +311,7 @@ export class MainCanvas {
       //   }
       // });
       model.traverse((child) => {
+        // console.log(child);
         // model은 그림자 생성 true
         if (child instanceof THREE.Group) {
           // console.log(child, child.name);
@@ -331,55 +332,11 @@ export class MainCanvas {
       group.push(model);
     });
 
-    // loader.load('main/house2.glb', (gltf) => {
-    //   const model: any = gltf.scene;
+    loader.load('main/camera.glb', (gltf) => {
+      const model: any = gltf.scene;
 
-    //   this._scene.add(model);
-    //   console.log(model);
-    //   // console.dir(model);
-
-    //   model.traverse((child: any) => {
-    //     // model은 그림자 생성 true
-    //     if (child instanceof THREE.Mesh) {
-    //       console.log('housechild :', child);
-    //       child.castShadow = true;
-    //     }
-    //   });
-
-    //   const box = new THREE.Box3().setFromObject(model);
-    //   model.position.y = (box.max.y - box.min.y) / 2;
-
-    //   //캡슐을 정하기
-    //   const height = box.max.y - box.min.y; // 캐릭터 높이
-    //   const diameter = box.max.z - box.min.z; // 반지름
-    //   model._capsule = new Capsule(
-    //     new THREE.Vector3(0, diameter / 2, 0),
-    //     new THREE.Vector3(0, height - diameter / 2, 0),
-    //     diameter / 2,
-    //   );
-
-    //   const axisHelper = new THREE.AxesHelper(1000);
-    //   this._scene.add(axisHelper);
-
-    //   //모델 바운딩 박스
-    //   const boxHelper = new THREE.BoxHelper(model);
-    //   this._scene.add(boxHelper);
-    //   this._boxHelper = boxHelper;
-    //   this._model = model;
-    //   // this._model.name = 'car';
-    //   cars.push(model);
-
-    //   // //상자하나 생성
-    //   // const boxG = new THREE.BoxGeometry(100, diameter-5, 100);
-    //   // const boxM = new THREE.Mesh(boxG, planeMaterial);
-    //   // boxM.receiveShadow = true;
-    //   // boxM.castShadow = true;
-    //   // boxM.position.set(150, 0, 0);
-    //   // this._scene.add(boxM);
-
-    //   // //상자 장애물로 지정
-    //   // this._worldOctree.fromGraphNode(boxM);
-    // });
+      console.log(model);
+    });
 
     // scene에 있는 모든 3dobj 검사
 
@@ -474,11 +431,12 @@ export class MainCanvas {
         console.log('tree!!!!!');
         // 트리 줌인 후에 꾸밀수 있도록 인벤토리
         this._zoomFit(targets[0].object.parent, 60);
+        this._setupModal();
       } else if (targets[0].object.name === 'house') {
         console.log('house!!!!!!!!');
         this._zoomFit(targets[0].object.parent, 60);
         setTimeout(() => {
-          this._setupModal();
+          this._setupAlert();
         }, 1500);
       } else if (targets[0].object.name === 'ball1') {
         console.log('ball1!!!!!!!!!!!!!!');
@@ -493,6 +451,14 @@ export class MainCanvas {
       setTimeout(() => {
         this._zoomFit(this._model, 60);
       }, 100);
+    }
+  }
+  _setupAlert() {
+    const alert = document.querySelector('.alert') as HTMLElement | null;
+    console.log(alert);
+    if (alert !== null) {
+      console.log('alert');
+      alert.style.display = 'flex';
     }
   }
 
