@@ -44,6 +44,7 @@ public class AdventCalendar {
     private LocalDateTime createdAt;
 
     @Column(length = 300)
+    @Convert(converter = CryptoConverter.class)
     private String audioUrl;
 
     @OneToMany(mappedBy = "adventCalendar", cascade = CascadeType.ALL)
