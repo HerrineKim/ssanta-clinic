@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 /**
@@ -129,19 +130,16 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 찾기", notes="비밀번호 재설정 고유값 반환", httpMethod = "POST")
     @PostMapping ("/find/password")
-    public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest){
+    public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
         /**
          * @Method Name : findPassword
-         * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
+         * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환 .(sha256)
          */
 
-        String findPasswordNum = userService.getFindPasswordNum(formRequest.getEmail());
-
-        if (findPasswordNum == null) {
-            return ResponseEntity.status(400).body("존재하지 않는 회원입니다.");// 에러코드 40x 잘모르겠음
-        }
+        //로직 : 여기서 고유값 반환 => 프론트에서 다시 url보내주면 => 회원 이메일로 메일 전송 => 회원이 들어가서 백으로 비밀번호 보내면
+        // => 비밀번호 update
         return ResponseEntity.ok().body(UserResponse.findPasswordResponse.builder()
-                .findPasswordNum(findPasswordNum)
+                .findPasswordNum(userService.getFindPasswordNum(formRequest.getEmail()))
                 .build());
     }
 
