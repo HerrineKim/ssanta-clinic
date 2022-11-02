@@ -49,11 +49,13 @@ export class MainCanvas {
   _raycaster2: any;
   _raycaster: any;
   _group: any;
+  _isAlert: boolean;
 
   _previousTime: any;
   _requestId: any;
 
   constructor() {
+    this._isAlert = false;
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
     console.log('constructor');
@@ -441,17 +443,31 @@ export class MainCanvas {
       } else if (targets[0].object.name === 'ball1') {
         console.log('ball1!!!!!!!!!!!!!!');
       } else {
+        if (this._isAlert) {
+          this._removeAlert();
+        }
         this._removeModal();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
         }, 100);
       }
     } else {
+      if (this._isAlert) {
+        this._removeAlert();
+      }
       this._removeModal();
       setTimeout(() => {
         this._zoomFit(this._model, 60);
       }, 100);
     }
+  }
+  _removeAlert() {
+    const alert = document.querySelector('.alert') as HTMLElement | null;
+    console.log(alert);
+    if (alert !== null) {
+      alert.style.display = 'none';
+    }
+    this._isAlert = false;
   }
   _setupAlert() {
     const alert = document.querySelector('.alert') as HTMLElement | null;
@@ -460,6 +476,7 @@ export class MainCanvas {
       console.log('alert');
       alert.style.display = 'flex';
     }
+    this._isAlert = true;
   }
 
   _removeModal() {
