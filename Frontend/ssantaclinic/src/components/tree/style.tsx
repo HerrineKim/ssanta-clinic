@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const TreeModalDiv = styled.div`
-  width: 80%;
+  width: 90%;
   height: 80%;
   z-index: 999;
   position: absolute;
@@ -12,5 +12,7 @@ export const TreeModalDiv = styled.div`
   border: 1px solid black;
   border-radius: 8px;
   display: none;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 `;
