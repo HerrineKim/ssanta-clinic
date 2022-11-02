@@ -8,39 +8,13 @@ import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
 import { gsap } from 'gsap';
 
+// type RGB = `rgb(${number}, ${number}, ${number})`;
+// type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+// type HEX = `#${string}`;
+
+// type Color = RGB | RGBA | HEX;
+
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
-type RGB = `rgb(${number}, ${number}, ${number})`;
-type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
-type HEX = `#${string}`;
-
-type Color = RGB | RGBA | HEX;
-
-// export const useCanvas = (canvasElement: HTMLCanvasElement | null) => {
-//   console.log(canvasElement);
-//   const [homeCanvas, setHomeCanvas] = useState<HomeCanvas>();
-//   const animate = useCallback(async () => {
-//     if (!homeCanvas) {
-//       return;
-//     }
-//     try {
-//       if (!homeCanvas) {
-//         setHomeCanvas(
-//           new HomeCanvas({
-//             canvas: canvasElement,
-//           }),
-//         );
-//         return;
-//       }
-//     } catch (e) {
-//       setHomeCanvas(
-//         new HomeCanvas({
-//           canvas: canvasElement,
-//         }),
-//       );
-//     }
-//   }, [homeCanvas]);
-// };
-
 function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
   const localPrefix = isLast ? '└─' : '├─';
   const word = `${prefix}${prefix ? localPrefix : ''}
@@ -73,6 +47,7 @@ export class HomeCanvas {
   _raycaster3: any;
   _raycaster2: any;
   _raycaster: any;
+  _cars: any;
 
   _previousTime: any;
   _requestId: any;
@@ -109,21 +84,144 @@ export class HomeCanvas {
 
     window.onresize = this.resize.bind(this);
     this.resize();
-
-    const requestId = requestAnimationFrame(this.render.bind(this));
-    this._requestId = requestId;
-  }
-
-  requestId() {
-    return this._requestId;
   }
 
   render(time: number) {
     this._renderer.render(this._scene, this._camera);
     this.update(time);
 
-    const requestId = requestAnimationFrame(this.render.bind(this));
-    this._requestId = requestId;
+    requestAnimationFrame(this.render.bind(this));
+  }
+
+  update(time: number) {
+    time *= 0.001; // second unit
+
+    this._controls.update();
+
+    // 모델이 움직일때마다 모델박스 바껴야 하므로
+    if (this._boxHelper) {
+      this._boxHelper.update();
+    }
+
+    this._fps.update();
+
+    //애니메이션 update
+    if (this._mixer) {
+      // console.log('mixer');  //mixer는 charecter.glb의 animation
+      const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
+      this._mixer.update(deltaTime);
+
+      //카메라 각도 조정
+      const angleCameraDirectionAxixsY =
+        Math.atan2(
+          this._camera.position.x - this._model.position.x,
+          this._camera.position.z - this._model.position.z,
+        ) + Math.PI;
+
+      //모델 회전 후 각도
+      const rotateQuarternion = new THREE.Quaternion();
+      rotateQuarternion.setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        angleCameraDirectionAxixsY,
+        //  + this._directionOffset(),
+      );
+
+      //실제 회전
+      this._model.quaternion.rotateTowards(
+        rotateQuarternion,
+        THREE.MathUtils.degToRad(5),
+      );
+
+      //모뎅 이동 방향 = 카메라 방향
+      const walkDirection = new THREE.Vector3();
+      this._camera.getWorldDirection(walkDirection);
+
+      //하늘 땅으로 이동 x
+      // walkDirection.y = 0;
+      walkDirection.y = this._bOnTheGround ? 0 : -1; // 땅위에있으면 0 땅위가 아니라고 판단되면 y축으로 -1로이동(추락)
+      walkDirection.normalize();
+
+      // //키보드 입력에 대해 각도 회전
+      // walkDirection.applyAxisAngle(
+      //   new THREE.Vector3(0, 1, 0),
+      //   this._directionOffset(),
+      // );
+
+      //캐릭터 부드럽게 이동하기 위해
+      if (this._speed < this._maxSpeed) this._speed += this._acceleration;
+      else this._speed -= this._acceleration * 2;
+
+      //추락 속도
+      if (!this._bOnTheGround) {
+        this._fallingAcceleration += 1;
+        this._fallingSpeed += Math.pow(this._fallingAcceleration, 2);
+      } else {
+        this._fallingAcceleration = 0;
+        this._fallingSpeed = 0;
+      }
+
+      const velocity = new THREE.Vector3(
+        walkDirection.x * this._speed,
+        walkDirection.y * this._fallingSpeed,
+        walkDirection.z * this._speed,
+      );
+      const deltaPosition = velocity.clone().multiplyScalar(deltaTime);
+
+      // //이동 거리 계산
+      // const moveX = walkDirection.x * (this._speed * deltaTime);
+      // const moveZ = walkDirection.z * (this._speed * deltaTime);
+
+      // //계산된 거리만큼 이동
+      // this._model.position.x += moveX;
+      // this._model.position.z += moveZ;
+
+      // 이전에는 모델을 직접 움직였지만, 충돌 감지를 위해 캡슐이동후 모델을 그안에 넣는 형식으로 변환
+      this._model._capsule.translate(deltaPosition);
+
+      //충돌 검사
+      const result = this._worldOctree.capsuleIntersect(this._model._capsule);
+      if (result) {
+        //충돌
+        this._model._capsule.translate(
+          result.normal.multiplyScalar(result.depth),
+        );
+        this._bOnTheGround = true;
+      } else {
+        //충돌 x
+        this._bOnTheGround = false;
+      }
+
+      // 변경전 모델의 위치저장
+      const previousPosition = this._model.position.clone();
+      const capsuleHeight =
+        this._model._capsule.end.y -
+        this._model._capsule.start.y +
+        this._model._capsule.radius * 2; //캡슐높이
+      // 모델의 위치를 캡슐에 맞춤
+      this._model.position.set(
+        this._model._capsule.start.x,
+        this._model._capsule.start.y -
+          this._model._capsule.radius +
+          capsuleHeight / 2,
+        this._model._capsule.start.z,
+      );
+
+      // //카메라 위치도 모뎅 이동만큼 이동
+      // this._camera.position.x += moveX;
+      // this._camera.position.z += moveZ;
+
+      //카메라도 캡슐에 맞춰
+      this._camera.position.x -= previousPosition.x - this._model.position.x;
+      this._camera.position.z -= previousPosition.z - this._model.position.z;
+
+      //
+      this._controls.target.set(
+        this._model.position.x,
+        this._model.position.y,
+        this._model.position.z,
+      );
+    }
+    this._previousTime = time;
   }
 
   _setupOctree(model: any) {
@@ -208,7 +306,7 @@ export class HomeCanvas {
 
     // //바닥평면을 옥트리객체에 추가
     // this._worldOctree.fromGraphNode(plane);
-
+    const cars: any = [];
     const loader = new GLTFLoader();
 
     loader.load('space.glb', (gltf) => {
@@ -287,6 +385,7 @@ export class HomeCanvas {
       this._boxHelper = boxHelper;
       this._model = model;
       this._model.name = 'car';
+      cars.push(model);
 
       // //상자하나 생성
       // const boxG = new THREE.BoxGeometry(100, diameter-5, 100);
@@ -299,6 +398,11 @@ export class HomeCanvas {
       // //상자 장애물로 지정
       // this._worldOctree.fromGraphNode(boxM);
     });
+
+    // scene에 있는 모든 3dobj 검사
+
+    this._cars = cars;
+    console.log(cars);
   }
 
   _setupHover() {
@@ -338,82 +442,82 @@ export class HomeCanvas {
   _setupClick() {
     const raycaster2 = new THREE.Raycaster();
     this._canvasContainer.addEventListener(
-      'click',
+      'dblclick',
       this._setupModal.bind(this),
     );
     this._raycaster2 = raycaster2;
   }
 
-  _setupModal(event: any) {
-    const width = this._canvasContainer.clientWidth;
-    const height = this._canvasContainer.clientHeight;
-    const xy = {
-      x: (event.offsetX / width) * 2 - 1,
-      y: -(event.offsetY / height) * 2 + 1,
-    };
-    this._raycaster2.setFromCamera(xy, this._camera);
-
-    const cars: any = [];
-    this._scene.traverse((obj3d: any) => {
-      if (obj3d.name === 'car') {
-        cars.push(obj3d);
-      }
-    });
-
-    for (let i = 0; i < cars.length; i++) {
-      const car = cars[i];
-      const targets = this._raycaster2.intersectObject(car);
-      if (targets.length > 0) {
-        alert('클릭!');
-        return;
-      }
-    }
-  }
-
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
     const raycaster = new THREE.Raycaster();
-    this._canvasContainer.addEventListener(
-      'dblclick',
-      this._onDblClick.bind(this),
-    );
+    this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
   }
-  //더블클릭 함수
-  _onDblClick(event: any) {
+  //클릭 함수
+  _onClick(event: any) {
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
+    console.log(event);
+    console.log(event.offsetX);
+    console.log(event.offsetY);
+
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
       y: -(event.offsetY / height) * 2 + 1,
     };
+    console.log(xy);
+    //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
+    //  and Y components should be between -1 and 1.
     this._raycaster.setFromCamera(xy, this._camera);
 
     // scene에 있는 모든 3dobj 검사
-    const cars: any = [];
-    this._scene.traverse((obj3d: any) => {
-      if (obj3d.name === 'car') {
-        cars.push(obj3d);
-      }
-    });
+    // const cars: any = [];
+    // this._scene.traverse((obj3d: any) => {
+    //   if (obj3d.name === 'car') {
+    //     cars.push(obj3d);
+    //   }
+    // });
+    // this._cars = cars;
+    // console.log(cars);
 
     // 모든 3d 돌면서 더블클릭된 객체 zoomfit
-    for (let i = 0; i < cars.length; i++) {
-      const car = cars[i];
+    for (let i = 0; i < this._cars.length; i++) {
+      const car = this._cars[i];
       const targets = this._raycaster.intersectObject(car);
       if (targets.length > 0) {
-        this._zoomFit(car, 70);
-        this._controls.enabled = true;
+        this._zoomFit(car, 90);
+        setTimeout(() => {
+          this._setupModal();
+        }, 1500);
+        // this._controls.enabled = true;
         return;
+      } else {
+        const box = this._scene.getObjectByName('box');
+        this._removeModal();
+        setTimeout(() => {
+          this._zoomFit(box, 90);
+        }, 100);
       }
     }
+  }
 
-    const box = this._scene.getObjectByName('box');
-    this._zoomFit(box, 45);
+  _removeModal() {
+    const modal = document.querySelector('.modal') as HTMLElement | null;
+    if (modal !== null) {
+      modal.style.display = 'none';
+    }
+  }
+  _setupModal() {
+    const modal = document.querySelector('.modal') as HTMLElement | null;
+    if (modal !== null) {
+      modal.style.display = 'block';
+    }
   }
 
   // https://www.youtube.com/watch?v=OgC3kGKKb7A
-  _zoomFit(object3d: any, viewAngle: any) {
+  // viewangle 은 수직축으로의 각도 90 도면 평면과 평행하게 바라봄. 0 도면 위에서 바라봄.
+  _zoomFit(object3d: any, viewAngle: number) {
     //box 는 객체를 담는 최소크기 박스
     const box = new THREE.Box3().setFromObject(object3d);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
@@ -439,6 +543,7 @@ export class HomeCanvas {
     // this._controls.target.copy(centerBox);
 
     //애니메이션 라이브러리 gsap
+    //카메라 위치변경
     gsap.to(this._camera.position, {
       duration: 1.5,
       x: newPosition.x,
@@ -447,6 +552,9 @@ export class HomeCanvas {
     });
 
     //this._controls.target.copy(centerBox);
+    // console.log(this._controls);
+    // console.log(this._controls.target);
+    // 타겟위치변경
     gsap.to(this._controls.target, {
       duration: 0.5,
       x: centerBox.x,
@@ -470,7 +578,7 @@ export class HomeCanvas {
       1,
       5000,
     );
-
+    console.log('camera');
     camera.position.set(0, 100, 500);
     this._camera = camera;
   }
@@ -531,35 +639,35 @@ export class HomeCanvas {
   _previousDirectionOffset = 0;
 
   //키조작에 따른 모델 각 조정값
-  _directionOffset() {
-    const pressedKeys = this._pressedKeys;
-    let directionOffset = 0;
+  // _directionOffset() {
+  //   const pressedKeys = this._pressedKeys;
+  //   let directionOffset = 0;
 
-    if (pressedKeys['w']) {
-      if (pressedKeys['a']) {
-        directionOffset = Math.PI / 4;
-      } else if (pressedKeys['d']) {
-        directionOffset = -Math.PI / 4;
-      }
-    } else if (pressedKeys['s']) {
-      if (pressedKeys['a']) {
-        directionOffset = Math.PI / 4 + Math.PI / 2;
-      } else if (pressedKeys['d']) {
-        directionOffset = -Math.PI / 4 - Math.PI / 2;
-      } else {
-        directionOffset = Math.PI;
-      }
-    } else if (pressedKeys['a']) {
-      directionOffset = Math.PI / 2;
-    } else if (pressedKeys['d']) {
-      directionOffset = -Math.PI / 2;
-    } else {
-      directionOffset = this._previousDirectionOffset; //이동후 캐릭터 회전 없애기
-    }
+  //   if (pressedKeys['w']) {
+  //     if (pressedKeys['a']) {
+  //       directionOffset = Math.PI / 4;
+  //     } else if (pressedKeys['d']) {
+  //       directionOffset = -Math.PI / 4;
+  //     }
+  //   } else if (pressedKeys['s']) {
+  //     if (pressedKeys['a']) {
+  //       directionOffset = Math.PI / 4 + Math.PI / 2;
+  //     } else if (pressedKeys['d']) {
+  //       directionOffset = -Math.PI / 4 - Math.PI / 2;
+  //     } else {
+  //       directionOffset = Math.PI;
+  //     }
+  //   } else if (pressedKeys['a']) {
+  //     directionOffset = Math.PI / 2;
+  //   } else if (pressedKeys['d']) {
+  //     directionOffset = -Math.PI / 2;
+  //   } else {
+  //     directionOffset = this._previousDirectionOffset; //이동후 캐릭터 회전 없애기
+  //   }
 
-    this._previousDirectionOffset = directionOffset;
-    return directionOffset;
-  }
+  //   this._previousDirectionOffset = directionOffset;
+  //   return directionOffset;
+  // }
 
   //초기 속도
   _speed = 0;
@@ -569,135 +677,6 @@ export class HomeCanvas {
   _bOnTheGround = false; //모델이 바닥위에 있는지 여부체크
   _fallingAcceleration = 0;
   _fallingSpeed = 0;
-
-  update(time: number) {
-    time *= 0.001; // second unit
-
-    this._controls.update();
-
-    // 모델이 움직일때마다 모델박스 바껴야 하므로
-    if (this._boxHelper) {
-      this._boxHelper.update();
-    }
-
-    this._fps.update();
-
-    //애니메이션 update
-    if (this._mixer) {
-      const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
-      this._mixer.update(deltaTime);
-
-      //카메라 각도 조정
-      const angleCameraDirectionAxixsY =
-        Math.atan2(
-          this._camera.position.x - this._model.position.x,
-          this._camera.position.z - this._model.position.z,
-        ) + Math.PI;
-
-      //모델 회전 후 각도
-      const rotateQuarternion = new THREE.Quaternion();
-      rotateQuarternion.setFromAxisAngle(
-        new THREE.Vector3(0, 1, 0),
-        angleCameraDirectionAxixsY + this._directionOffset(),
-      );
-
-      //실제 회전
-      this._model.quaternion.rotateTowards(
-        rotateQuarternion,
-        THREE.MathUtils.degToRad(5),
-      );
-
-      //모뎅 이동 방향 = 카메라 방향
-      const walkDirection = new THREE.Vector3();
-      this._camera.getWorldDirection(walkDirection);
-
-      //하늘 땅으로 이동 x
-      // walkDirection.y = 0;
-      walkDirection.y = this._bOnTheGround ? 0 : -1; // 땅위에있으면 0 땅위가 아니라고 판단되면 y축으로 -1로이동(추락)
-      walkDirection.normalize();
-
-      //키보디 입력에 대해 각도 회전
-      walkDirection.applyAxisAngle(
-        new THREE.Vector3(0, 1, 0),
-        this._directionOffset(),
-      );
-
-      //캐릭터 부드럽게 이동하기 위해
-      if (this._speed < this._maxSpeed) this._speed += this._acceleration;
-      else this._speed -= this._acceleration * 2;
-
-      //추락 속도
-      if (!this._bOnTheGround) {
-        this._fallingAcceleration += 1;
-        this._fallingSpeed += Math.pow(this._fallingAcceleration, 2);
-      } else {
-        this._fallingAcceleration = 0;
-        this._fallingSpeed = 0;
-      }
-
-      const velocity = new THREE.Vector3(
-        walkDirection.x * this._speed,
-        walkDirection.y * this._fallingSpeed,
-        walkDirection.z * this._speed,
-      );
-      const deltaPosition = velocity.clone().multiplyScalar(deltaTime);
-
-      // //이동 거리 계산
-      // const moveX = walkDirection.x * (this._speed * deltaTime);
-      // const moveZ = walkDirection.z * (this._speed * deltaTime);
-
-      // //계산된 거리만큼 이동
-      // this._model.position.x += moveX;
-      // this._model.position.z += moveZ;
-
-      // 이전에는 모델을 직접 움직였지만, 충돌 감지를 위해 캡슐이동후 모델을 그안에 넣는 형식으로 변환
-      this._model._capsule.translate(deltaPosition);
-
-      //충돌 검사
-      const result = this._worldOctree.capsuleIntersect(this._model._capsule);
-      if (result) {
-        //충돌
-        this._model._capsule.translate(
-          result.normal.multiplyScalar(result.depth),
-        );
-        this._bOnTheGround = true;
-      } else {
-        //충돌 x
-        this._bOnTheGround = false;
-      }
-
-      // 변경전 모델의 위치저장
-      const previousPosition = this._model.position.clone();
-      const capsuleHeight =
-        this._model._capsule.end.y -
-        this._model._capsule.start.y +
-        this._model._capsule.radius * 2; //캡슐높이
-      // 모델의 위치를 캡슐에 맞춤
-      this._model.position.set(
-        this._model._capsule.start.x,
-        this._model._capsule.start.y -
-          this._model._capsule.radius +
-          capsuleHeight / 2,
-        this._model._capsule.start.z,
-      );
-
-      // //카메라 위치도 모뎅 이동만큼 이동
-      // this._camera.position.x += moveX;
-      // this._camera.position.z += moveZ;
-
-      //카메라도 캡슐에 맞춰
-      this._camera.position.x -= previousPosition.x - this._model.position.x;
-      this._camera.position.z -= previousPosition.z - this._model.position.z;
-
-      //
-      this._controls.target.set(
-        this._model.position.x,
-        this._model.position.y,
-        this._model.position.z,
-      );
-    }
-    this._previousTime = time;
-  }
 
   resize() {
     const width = this._canvasContainer.clientWidth;

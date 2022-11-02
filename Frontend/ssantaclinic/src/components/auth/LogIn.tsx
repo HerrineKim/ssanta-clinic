@@ -1,36 +1,36 @@
 import React, { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import { IUser, currentUser } from '../../store/store';
+import { useSetRecoilState } from 'recoil';
+import { currentUser } from '../../store/store';
 
 export const LogIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [button, setButton] = useState<boolean>(true);
-  const [userState, setUserState] = useRecoilState<IUser>(currentUser);
+  const setUserState = useSetRecoilState(currentUser);
   const navigate = useNavigate();
+  let accessToken: any = '';
 
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post(
-        'http://localhost:8080' + '/api/user/login',
-        {
-          email: email,
-          password: password,
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
-      )
+      .post('http://localhost:8080' + '/api/user/login', {
+        email: email,
+        password: password,
+      })
       .then((res) => {
-        console.log(res);
-        // localStorage.setItem('token', res.data.jwt); // 토큰 저장
-        navigate('/room'); // Login 성공하면 홈으로
+        console.log(res.data);
+        accessToken = res.headers.authorization;
+        localStorage.setItem('jwt', accessToken);
+        setUserState({
+          email: email,
+          id: res.data.userId,
+          nickname: res.data.nickName,
+        });
+        const myRoomPath = '/room/' + res.data.userId;
+        navigate(myRoomPath); // Login 성공하면 일단 내 방으로
       })
       .catch((err) => {
         console.log(err.response);
