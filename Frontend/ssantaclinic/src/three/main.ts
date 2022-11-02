@@ -53,9 +53,11 @@ export class MainCanvas {
 
   _previousTime: any;
   _requestId: any;
+  _isTreeModal: boolean;
 
   constructor() {
     this._isAlert = false;
+    this._isTreeModal = false;
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
     console.log('constructor');
@@ -244,7 +246,7 @@ export class MainCanvas {
         // 트리 줌인 후에 꾸밀수 있도록 인벤토리
         this._zoomFit(targets[0].object.parent, 60);
         setTimeout(() => {
-          this._setupModal();
+          this._setupTreeModal();
         }, 1600);
       } else if (targets[0].object.name === 'house') {
         console.log('house!!!!!!!!');
@@ -258,6 +260,11 @@ export class MainCanvas {
         if (this._isAlert) {
           this._removeAlert();
         }
+
+        if (this._isTreeModal) {
+          this._removeTreeModal();
+        }
+
         this._removeModal();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
@@ -267,12 +274,38 @@ export class MainCanvas {
       if (this._isAlert) {
         this._removeAlert();
       }
+
+      if (this._isTreeModal) {
+        this._removeTreeModal();
+      }
+
       this._removeModal();
       setTimeout(() => {
         this._zoomFit(this._model, 60);
       }, 100);
     }
   }
+
+  _setupTreeModal() {
+    const treeModal = document.querySelector(
+      '.treemodal',
+    ) as HTMLElement | null;
+    if (treeModal !== null) {
+      treeModal.style.display = 'flex';
+    }
+    this._isTreeModal = true;
+  }
+
+  _removeTreeModal() {
+    const treeModal = document.querySelector(
+      '.treemodal',
+    ) as HTMLElement | null;
+    if (treeModal !== null) {
+      treeModal.style.display = 'none';
+    }
+    this._isTreeModal = false;
+  }
+
   _removeAlert() {
     const alert = document.querySelector('.alert') as HTMLElement | null;
     console.log(alert);
