@@ -2,6 +2,7 @@ package com.ssafy.ssantaClinic.common.exception;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.http.ResponseEntity;
 
 @Data
