@@ -37,4 +37,8 @@ public class User {
     @Column(length=64)
     @JsonIgnore
     private String findPasswordNum;
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
 }

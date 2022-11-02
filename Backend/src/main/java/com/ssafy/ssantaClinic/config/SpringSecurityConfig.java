@@ -90,6 +90,7 @@ public class SpringSecurityConfig {
                 .antMatchers("/user/check/nickname").permitAll()
                 .antMatchers("/user/find/password").permitAll()
                 .antMatchers("/user/find/password/url").permitAll()
+                .antMatchers("/user/find/password/update").permitAll()
                 .antMatchers("/user/check/email").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .anyRequest().authenticated()

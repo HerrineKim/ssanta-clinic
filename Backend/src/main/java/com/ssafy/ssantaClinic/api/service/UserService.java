@@ -28,4 +28,6 @@ public interface UserService {
 
     void sendMail(String email, String url);
 
+    void updatePassword(int userId, String password);
+
 }

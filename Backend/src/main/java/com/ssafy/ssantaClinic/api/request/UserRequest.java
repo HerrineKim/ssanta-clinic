@@ -33,4 +33,10 @@ public class UserRequest {
         private String url;
         private String email;
     }
+
+    @Data
+    public static class UpdatePasswordRequest{
+        private String password;
+        private int userId;
+    }
 }
