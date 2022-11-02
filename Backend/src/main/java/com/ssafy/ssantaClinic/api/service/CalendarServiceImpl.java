@@ -14,10 +14,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -177,14 +179,21 @@ public class CalendarServiceImpl implements CalendarService{
             throw new CustomException(ErrorCode.NOT_YOUR_BOX);
         // 오디오 주소 가져오기
         String audioUrl = box.getAudioUrl();
+        // 오디오 재생
+        File audio;
+        AudioInputStream stream;
         try {
-            File audio = s3Service.downloadFile(audioUrl, boxId + " audio");
-            System.out.println(audio.exists());
+            audio = s3Service.downloadFile(audioUrl, boxId + " audio");
             Clip clip = AudioSystem.getClip();
-            clip.open(AudioSystem.getAudioInputStream(audio));
-            // clip.loop(Clip.LOOP_CONTINUOUSLY);
-            clip.loop(1);
+            stream = AudioSystem.getAudioInputStream(audio);
+            clip.open(stream);
             clip.start();
+            while(clip.getMicrosecondLength() != clip.getMicrosecondPosition()){
+                //waiting for sound to be finished
+            }
+            stream.close();
+            clip.close();
+            audio.delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
