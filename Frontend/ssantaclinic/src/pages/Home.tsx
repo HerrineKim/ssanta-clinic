@@ -14,6 +14,7 @@ export function Home() {
       <Link to="/letter">편지</Link>
       <Link to="/calendar">캘린더</Link>
       <Link to="/boxCreate">박스 생성</Link>
+      <Link to="/room/:id">내 방 가기</Link>
       {/* 화면 전환해도 끊기지 않는 배경 음악으로 구현하려고 했는데 후순위로 미뤄야.. */}
       {/* 재생 목록 자체를 가져온 거라 사용자가 저희 리스트에서 선택해서 듣도록 */}
       {/* 버튼을 만들어서 숨기고 열고 할 수 있도록 */}
