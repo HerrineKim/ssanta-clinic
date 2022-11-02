@@ -28,10 +28,10 @@ function App() {
         <Route path="/memory" element={<MemoryPage />}></Route>
         <Route path="/calendar" element={<CalendarPage />}></Route>
         <Route path="/boxCreate" element={<BoxCreate />}></Route>
-        <Route path="/findpassword" element={<FindPasswordPage />}></Route>
-        <Route path="/changepassword" element={<ChangePasswordPage />}></Route>
+        <Route path="/findPassword" element={<FindPasswordPage />}></Route>
+        <Route path="/changePassword" element={<ChangePasswordPage />}></Route>
         <Route path="/letter/write" element={<WriteLetterPage />}></Route>
-        <Route path="/room" element={<MyRoomPage />}></Route>
+        <Route path="/room/:id" element={<MyRoomPage />}></Route>
         {/* 여기 룸 뒤에 사용자 아이디 시용예정 */}
         <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route>
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}

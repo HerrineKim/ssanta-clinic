@@ -1,5 +1,9 @@
 import React, { useCallback, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { selectUserNickname, selectUserId } from '../../store/store';
+import { useRecoilValue } from 'recoil';
+import { Link } from 'react-router-dom';
 
 type Keyword = '취업' | '진로';
 
@@ -10,9 +14,10 @@ export const WriteLetter = () => {
   const [isJobSelect, setIsJobSelect] = useState<boolean>(false);
   const [isFutureSelect, setIsFutureSelect] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<Keyword>('취업');
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+  // const ID = useRecoilValue(selectUserId);
+  const navigate = useNavigate();
 
-  const ACCESS_TOKEN =
-    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkbGFkaGtzeG9yOTZAbmF2ZXIuY29tIiwiYXV0aCI6IiIsImV4cCI6MTY2NzIwMTQ3MH0.Od2caTwqJo5ZkNnSQJb47nnm1BhIlzUG4pOQWuL-OkGc3kAn6IDk3flLPTQY1tHRV4LBkKNH5sfKPIf6pnKfPA';
   const handleSubmit = (e: any) => {
     console.log('요청 보냄');
     e.preventDefault();
@@ -22,15 +27,17 @@ export const WriteLetter = () => {
         {
           title: title,
           message: message,
+          keyword: keyword,
         },
         {
           headers: {
-            Authorization: `Bearer ${ACCESS_TOKEN}`,
+            Authorization: ACCESS_TOKEN,
           },
         },
       )
       .then((res) => {
         console.log('응답 받아옴 성공!', res.data);
+        navigate('/room');
       })
       .catch((err) => {
         console.log(err.resonse);
@@ -66,6 +73,7 @@ export const WriteLetter = () => {
       </div>
       <div>
         <h2>고민 고르기</h2>
+        <Link to="/room">내 방으로 가기</Link>
         <div>
           <button onClick={toggleJob}>
             {isJobSelect ? '취업' : '취업 선택됨'}

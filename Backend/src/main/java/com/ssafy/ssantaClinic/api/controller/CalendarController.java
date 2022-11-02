@@ -9,7 +9,6 @@ import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
-import com.ssafy.ssantaClinic.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -84,18 +83,22 @@ public class CalendarController {
         return ResponseEntity.ok(box);
     }
 
-//    @ApiOperation(value = "상자 속 음성 재생", notes = "상자의 음성 메세지를 재생한다.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "조회 성공"),
-//            @ApiResponse(code = 500, message = "서버 에러 발생")
-//    })
-//    @GetMapping("/{boxId}/play")
-//    public ResponseEntity<?> playVoiceMessage(HttpServletRequest request, @PathVariable int boxId) {
-//        /**
-//         * @Method Name : playVoiceMessage
-//         * @Method 설명 : 상자의 음성 메세지를 재생한다.
-//         */
-//    }
+    @ApiOperation(value = "상자 속 음성 재생", notes = "상자의 음성 메세지를 재생한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping("/play")
+    public ResponseEntity<?> playVoiceMessage(HttpServletRequest request, @RequestParam(value = "boxId") int boxId) {
+        /**
+         * @Method Name : playVoiceMessage
+         * @Method 설명 : 상자의 음성 메세지를 재생한다.
+         */
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
+        calendarService.playAudio(email, boxId);
+        return ResponseEntity.ok().build();
+    }
 
     @ApiOperation(value = "상자 선물하기", notes = "상자를 선물한다.")
     @ApiResponses({
@@ -104,9 +107,13 @@ public class CalendarController {
             @ApiResponse(code = 404, message = "조회 오류"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @PostMapping(consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
-            produces = { MediaType.APPLICATION_JSON_VALUE })
+    @PostMapping(
+            consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
+            produces = { MediaType.APPLICATION_JSON_VALUE }
+            )
     public ResponseEntity<?> sendBox(HttpServletRequest request,
+                                     @RequestParam(value = "userId") int userId,
+                                     @RequestParam(value = "day") int day,
                                      @RequestPart(required = false) List<MultipartFile> imges,
                                      @RequestPart(required = false) MultipartFile audio,
                                      @RequestPart CalendarRequest.sendRequest boxRequest) throws IOException {
