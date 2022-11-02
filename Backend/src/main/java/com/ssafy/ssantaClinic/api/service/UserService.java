@@ -17,6 +17,10 @@ public interface UserService {
 
     Optional<User> findByNickName(String nickname);
 
+    boolean isDuplicatedNickName(String nickname);
+
+    boolean isDuplicatedEmail(String email);
+
     Optional<User> findByEmail(String email);
 
     String getFindPasswordNum(String email);
