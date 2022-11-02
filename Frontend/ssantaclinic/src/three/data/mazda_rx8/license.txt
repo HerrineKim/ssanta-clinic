@@ -1,0 +1,11 @@
+Model Information:
+* title:	Mazda RX8
+* source:	https://sketchfab.com/3d-models/mazda-rx8-6c4dec575a814b1a87f484527b0ec1f1
+* author:	yoshipicture (https://sketchfab.com/yoshipicture)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Mazda RX8" (https://sketchfab.com/3d-models/mazda-rx8-6c4dec575a814b1a87f484527b0ec1f1) by yoshipicture (https://sketchfab.com/yoshipicture) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
