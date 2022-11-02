@@ -107,6 +107,10 @@ public class S3Service {
         }
     }
     public File downloadFile(String fileUrl,String fileName) {
+        /**
+         * @Method Name : downloadFile
+         * @Method 설명 : S3 버킷에서 파일 가져오기
+         */
         URL url;
         //읽기 객체
         InputStream is;
@@ -125,10 +129,8 @@ public class S3Service {
             is.close();
             os.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
         return new File(fileName);
     }
 }
