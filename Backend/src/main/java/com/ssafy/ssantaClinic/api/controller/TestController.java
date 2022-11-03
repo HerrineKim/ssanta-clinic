@@ -36,6 +36,7 @@ public class TestController {
         // S3 업로드
         String url = "";
         if(url != null){
+            log.info(glbfile.getOriginalFilename());
             url = s3Service.upload(glbfile);
         }
         return ResponseEntity.ok().build();
