@@ -55,8 +55,24 @@ export class MainCanvas {
   _requestId: any;
   _isTreeModal: boolean;
   _tree: any;
+  _items: number[];
+  _position: any[];
 
-  constructor() {
+  constructor(items: number[]) {
+    //(9, 0, -4.5);
+    this._position = [
+      [7, 1, 1],
+      [7.5, 1, 1],
+      [8, 2, -2.5],
+      [6, 3, -2.5],
+      [7, 3, -2.5],
+      [8, 3, -2.5],
+      [6, 4, -2.5],
+      [7, 4, -2.5],
+      [8, 4, -2.5],
+      [9, 4, -2.5],
+    ];
+    this._items = items;
     this._isAlert = false;
     this._isTreeModal = false;
     // const divContainer = document.querySelector('#webgl-container');
@@ -78,6 +94,9 @@ export class MainCanvas {
 
     const scene = new THREE.Scene();
     this._scene = scene;
+
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
 
     // this._setupOctree();
     this._setupLight();
@@ -137,7 +156,7 @@ export class MainCanvas {
   _setupModel() {
     const group: any = [];
     const loader = new GLTFLoader();
-
+    // 안눌러도 되는 맵 로드
     loader.load('main/santa.glb', (gltf) => {
       const model = gltf.scene;
       this._model = model;
@@ -178,12 +197,18 @@ export class MainCanvas {
 
     loader.load('main/showcase.glb', (gltf) => {
       const model: any = gltf.scene;
+      model.traverse((child: any) => {
+        if (child instanceof THREE.Group) {
+          // console.log(child, child.name);
+          group.push(child);
+        }
+      });
       model.scale.set(20, 20, 20);
       model.position.set(9, 0, -4.5);
       model.children[0].children[0].children[0].children[0].children[0].material.color.set(
         0xff00ff,
       );
-      this._scene.add(model);
+      // this._scene.add(model);
       console.dir(model);
       console.log('showcase:', model);
     });
@@ -191,6 +216,12 @@ export class MainCanvas {
     loader.load('main/lowtree.glb', (gltf) => {
       const tree: any[] = [];
       const model: any = gltf.scene;
+      model.traverse((child: any) => {
+        if (child instanceof THREE.Group) {
+          // console.log(child, child.name);
+          group.push(child);
+        }
+      });
       model.position.set(5, 0, -4.5);
       model.name = 'tree';
       model.traverse((child: THREE.Object3D) => {
@@ -200,6 +231,20 @@ export class MainCanvas {
       this._scene.add(model);
       console.log('treegltf:', model);
       this._tree = tree;
+    });
+
+    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    this._items.forEach((item, index) => {
+      // console.log('item:', item);
+      console.log(index);
+      loader.load(`main/${item}.glb`, (gltf) => {
+        console.log(index);
+        const model = gltf.scene;
+        console.log(`${index}: `, model);
+        const position = this._position[`${index}`];
+        model.position.set(position[0], position[1], position[2]);
+        this._scene.add(model);
+      });
     });
 
     // scene에 있는 모든 3dobj 검사

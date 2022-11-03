@@ -24,7 +24,7 @@ export default function Home() {
 
   console.log('home');
   useEffect(() => {
-    const homeCanvas = new MainCanvas();
+    const homeCanvas = new MainCanvas(items);
     // const canvas = document.querySelector('canvas');
     // console.log(canvas);
     console.log('useeffect');
