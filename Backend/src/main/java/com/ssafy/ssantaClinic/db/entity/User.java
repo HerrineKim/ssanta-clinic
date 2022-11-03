@@ -2,11 +2,13 @@ package com.ssafy.ssantaClinic.db.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,10 +43,24 @@ public class User {
 
     @ColumnDefault("0")
     private int money;
+
+    @OneToMany(mappedBy = "parent")
+    @JsonIgnore
+    List<Follow> followers;
+
+    @OneToMany(mappedBy = "child")
+    @JsonIgnore
+    List<Follow> followings;
+
+    @JsonIgnore
+    public FriendResponse getFriendResponse(){
+        return FriendResponse.builder().userId(userId).nickName(nickName).build();
+    }
+
     public void changePassword(String password) {
         this.password = password;
     }
-
+    
     public void changeMoney(int money) {
         this.money = money;
     }

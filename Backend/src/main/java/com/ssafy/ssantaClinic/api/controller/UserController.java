@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -63,7 +65,7 @@ public class UserController {
                 .body(joinedUser);
     }
 
-    @ApiOperation(value = "로그인", notes="로그인에 성공하면 header에 Authorization success, 아니면 fail", httpMethod = "POST")
+    @ApiOperation(value = "로그인", notes="로그인에 성공하면 header에 Authorization 추가, 아니면 fail", httpMethod = "POST")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -78,6 +80,22 @@ public class UserController {
         return ResponseEntity.ok()
                 .header(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt)
                 .body(userService.getUserByEmail(loginDto.getEmail()));
+    }
+
+    @ApiOperation(value = "로그아웃", notes="로그아웃 요청, 성공하면 200 code 반환 아니면 fail", httpMethod = "GET")
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        String jwtToken = JwtUtil.resolveToken(request);
+        if (jwtToken == null) {
+            throw new CustomException(ErrorCode.JWT_TOKEN_WRONG_FORM);
+        }
+    
+        // 해당 jwt 토큰을 blacklist에 추가한다.
+        jwtManager.deleteToken(jwtToken);
+        
+        // response에 토큰을 삭제한다.
+        response.reset();
+        return ResponseEntity.ok().body("success");
     }
 
     /**
