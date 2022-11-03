@@ -3,6 +3,7 @@ package com.ssafy.ssantaClinic.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -38,7 +39,13 @@ public class User {
     @JsonIgnore
     private String findPasswordNum;
 
+    @ColumnDefault("0")
+    private int money;
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeMoney(int money) {
+        this.money = money;
     }
 }
