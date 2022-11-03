@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.db.entity;
 
+import com.ssafy.ssantaClinic.api.response.StoreResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,4 +28,15 @@ public class UserItemBox {
     private Item item;
 
     private int count;
+
+    public void changeCount(int count){
+        this.count = count;
+    }
+
+    public static StoreResponse.UserItemListResponse EntityToDto(UserItemBox userItemBox) {
+        return StoreResponse.UserItemListResponse.builder()
+                .ItemId(userItemBox.getItem().getItemId())
+                .count(userItemBox.getCount())
+                .build();
+    }
 }
