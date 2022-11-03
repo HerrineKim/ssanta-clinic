@@ -5,7 +5,7 @@ import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
 import { LogOutPage } from './pages/auth/LogOutPage';
 import HomePage from './pages/home/HomePage';
-import TetrisPage from './pages/game/tetris';
+import TetrisPage from './pages/game/tetris/TetrisPage';
 import WitsPage from './pages/game/WitsPage';
 import MemoryPage from './pages/game/MemoryPage';
 import { CalendarPage } from './pages/calendar/calendarPage';
