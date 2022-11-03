@@ -500,13 +500,13 @@ export class MainCanvas {
   _setupAlert(glbFile: Blob) {
     const formData = new FormData();
 
-    formData.append('glbFile', glbFile);
+    formData.append('glbfile', glbFile);
 
     console.log('setupAlert : ', glbFile);
     const alert = document.querySelector('.alert') as HTMLElement | null;
     // 백에 glb 보내기
     axios({
-      url: 'https://k7a201.p.ssafy.io/api/test',
+      url: 'http://localhost:8080/api/test',
       method: 'post',
       data: formData,
     }).then((res) => {
