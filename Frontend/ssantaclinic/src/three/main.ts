@@ -401,6 +401,7 @@ export class MainCanvas {
   _onClick(event: any) {
     function saveArrayBuffer(buffer: any) {
       const file = new Blob([buffer], { type: 'application/octet-stream' });
+      console.log('saveArray:', file);
       return file;
     }
 
@@ -453,10 +454,11 @@ export class MainCanvas {
 
         //glb 내보내기
         const exporter = new GLTFExporter();
+        console.log('target object:', targets[0].object);
         exporter.parse(
-          targets[0].object.name,
+          targets[0].object,
           function (result) {
-            console.log(typeof result);
+            console.log('result:', result);
             glbFile = saveArrayBuffer(result);
           },
           function (error) {
@@ -467,7 +469,7 @@ export class MainCanvas {
 
         setTimeout(() => {
           this._setupAlert(glbFile);
-        }, 1500);
+        }, 3000);
       } else if (targets[0].object.name === 'ball1') {
         console.log('ball1!!!!!!!!!!!!!!');
       } else {
