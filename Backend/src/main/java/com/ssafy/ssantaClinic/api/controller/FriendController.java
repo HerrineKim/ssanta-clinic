@@ -1,5 +1,7 @@
 package com.ssafy.ssantaClinic.api.controller;
 
+import com.ssafy.ssantaClinic.api.request.FollowRequest;
+import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import com.ssafy.ssantaClinic.api.service.FollowService;
 import com.ssafy.ssantaClinic.api.service.UserService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
@@ -13,9 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @FileName : FriendController.java
@@ -30,7 +34,6 @@ public class FriendController {
     private final UserService userService;
     private final FollowService followService;
 
-
     @ApiOperation(value = "팔로잉 목록 조회", notes = "유저의 팔로잉 목록을 반환한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "팔로잉 정보 조회 성공"),
@@ -38,7 +41,7 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping("/followings")
-    public ResponseEntity<List<User>> getFollowingList(HttpServletRequest request) {
+    public ResponseEntity<List<FriendResponse>> getFollowingList(HttpServletRequest request) {
         /**
          * @Method Name : getFollowingList
          * @Method 설명 : 유저 자신이 팔로잉 하고 있는 유저 목록들을 반환한다.
@@ -48,7 +51,7 @@ public class FriendController {
             return ResponseEntity.notFound().build();
         }
         else{
-            return ResponseEntity.ok(followService.getFollowingList(email.get()));
+            return ResponseEntity.ok(followService.getFollowingList(email.get()).stream().map(User::getFriendResponse).collect(Collectors.toList()));
         }
     }
 
@@ -59,7 +62,7 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping("/followers")
-    public ResponseEntity<List<User>> getFollowerList(HttpServletRequest request) {
+    public ResponseEntity<List<FriendResponse>> getFollowerList() {
         /**
          * @Method Name : getFollowerList
          * @Method 설명 : 해당 유저를 팔로잉 하는 사람들 목록들을 반환한다.
@@ -69,7 +72,7 @@ public class FriendController {
             return ResponseEntity.notFound().build();
         }
         else{
-            return ResponseEntity.ok(followService.getFollowingList(email.get()));
+            return ResponseEntity.ok(followService.getFollowerList(email.get()).stream().map(User::getFriendResponse).collect(Collectors.toList()));
         }
     }
 
@@ -94,22 +97,19 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @PostMapping("/follow")
-    public ResponseEntity<?> requestFollow(HttpServletRequest request) {
+    public ResponseEntity<?> requestFollow(@RequestBody @Valid FollowRequest followRequest) {
         /**
          * @Method Name : follow
          * @Method 설명 : 해당 유저를 자신의 팔로잉 목록에 추가한다.
          */
-        String email = request.getParameter("email");
-        if(email == null){
-            return ResponseEntity.notFound().build();
-        }
+        int parentId = followRequest.getUserId();
         Optional<String> currentUserEmail = JwtUtil.getCurrentUserEmail();
         if(currentUserEmail.isEmpty()){
             return ResponseEntity.notFound().build();
         }
         else{
-//            followService.follow(currentUserEmail.get(), email);
-            return ResponseEntity.ok().build();
+            followService.follow(parentId, userService.getUserByEmail(currentUserEmail.get()).getUserId());
+            return ResponseEntity.ok("success");
         }
     }
 
@@ -120,17 +120,19 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @DeleteMapping("/follow")
-    public ResponseEntity<?> removeFollowing(HttpServletRequest request) {
+    public ResponseEntity<?> requestUnfollow(@RequestBody @Valid FollowRequest followRequest) {
         /**
          * @Method Name : removeFollowing
          * @Method 설명 : 해당 유저를 자신의 팔로잉 목록에서 삭제한다.
          */
-        String email = request.getParameter("email");
-        if (email == null) {
+        int parentId = followRequest.getUserId();
+        Optional<String> currentUserEmail = JwtUtil.getCurrentUserEmail();
+        if(currentUserEmail.isEmpty()){
             return ResponseEntity.notFound().build();
-        }else{
-            Optional<String> currentUserEmail = JwtUtil.getCurrentUserEmail();
-            return ResponseEntity.notFound().build();
+        }
+        else{
+            followService.unfollow(parentId, userService.getUserByEmail(currentUserEmail.get()).getUserId());
+            return ResponseEntity.ok("success");
         }
 
     }
