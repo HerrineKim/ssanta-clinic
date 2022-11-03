@@ -4,23 +4,16 @@ import axios from 'axios';
 export function ChangePassword() {
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-  const [UUID, setUUID] = useState<string>('');
 
-  useEffect(() => {
-    setUUID('testUUID');
-  });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
-    console.log(UUID);
     axios
-      .patch('api/user/find/password', {
+      .patch('http://localhost:8080' + 'api/user/find/password/update', {
         password: password,
-        params: {
-          UUID: UUID,
-        },
       })
       .then((res) => {
         console.log('응답 받아옴 비밀번호 변경 성공!', res.data);
+        confirm('비밀번호 변경 성공');
       })
       .catch((err) => {
         console.log(err.response);
