@@ -2,6 +2,7 @@ package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.request.FollowRequest;
 import com.ssafy.ssantaClinic.api.response.FriendResponse;
+import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.FollowService;
 import com.ssafy.ssantaClinic.api.service.UserService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
@@ -97,7 +98,7 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @PostMapping("/follow")
-    public ResponseEntity<?> requestFollow(@RequestBody @Valid FollowRequest followRequest) {
+    public ResponseEntity<SimpleMessageResponse> requestFollow(@RequestBody @Valid FollowRequest followRequest) {
         /**
          * @Method Name : follow
          * @Method 설명 : 해당 유저를 자신의 팔로잉 목록에 추가한다.
@@ -109,7 +110,7 @@ public class FriendController {
         }
         else{
             followService.follow(parentId, userService.getUserByEmail(currentUserEmail.get()).getUserId());
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok(SimpleMessageResponse.builder().Result("success").build());
         }
     }
 
@@ -120,7 +121,7 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @DeleteMapping("/follow")
-    public ResponseEntity<?> requestUnfollow(@RequestBody @Valid FollowRequest followRequest) {
+    public ResponseEntity<SimpleMessageResponse> requestUnfollow(@RequestBody @Valid FollowRequest followRequest) {
         /**
          * @Method Name : removeFollowing
          * @Method 설명 : 해당 유저를 자신의 팔로잉 목록에서 삭제한다.
@@ -132,7 +133,7 @@ public class FriendController {
         }
         else{
             followService.unfollow(parentId, userService.getUserByEmail(currentUserEmail.get()).getUserId());
-            return ResponseEntity.ok("success");
+            return ResponseEntity.ok(SimpleMessageResponse.builder().Result("success").build());
         }
 
     }
