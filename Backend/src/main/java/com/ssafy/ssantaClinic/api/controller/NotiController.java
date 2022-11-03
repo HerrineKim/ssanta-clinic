@@ -1,6 +1,7 @@
 package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
+import com.ssafy.ssantaClinic.api.service.NotiService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -29,18 +31,25 @@ import java.util.List;
 @RequestMapping("/noti")
 @RequiredArgsConstructor
 public class NotiController {
+    private final NotiService notiService;
+    private SseEmitter sseEmitter;
 
-//    @ApiOperation(value = "알림 구독", notes = "SSE 실시간 알림을 구독한다.")
-//    @ApiResponses({
-//            @ApiResponse(code = 200, message = "조회 성공"),
-//            @ApiResponse(code = 500, message = "서버 에러 발생")
-//    })
-//    @GetMapping(value = "/sub",
-//                produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-//    public ResponseEntity<?> subscribeAlarm(HttpServletRequest request) {
-//        /**
-//         * @Method Name : subscribeAlarm
-//         * @Method 설명 : SSE 실시간 알림을 구독한다.
-//         */
-//    }
+    @ApiOperation(value = "SSE 구독", notes = "SSE 서버에 접속한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping(value = "/sub",
+                produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ResponseEntity<?> subscribe(HttpServletRequest request) {
+        /**
+         * @Method Name : subscribe
+         * @Method 설명 : SSE 서버에 접속한다.
+         */
+        // 현재 로그인한 유저의 이메일 가져오기
+        String email = JwtUtil.getCurrentUserEmail().isPresent() ? JwtUtil.getCurrentUserEmail().get() : "anonymousUser";
+        notiService.subscribe(email);
+        return ResponseEntity.ok().build();
+    }
+
 }
