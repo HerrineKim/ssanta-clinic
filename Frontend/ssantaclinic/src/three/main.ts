@@ -8,6 +8,8 @@ import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
 import { gsap } from 'gsap';
 import { chdir } from 'process';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import axios from 'axios';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
 // type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
@@ -397,6 +399,18 @@ export class MainCanvas {
   }
   //클릭 함수
   _onClick(event: any) {
+    function saveArrayBuffer(buffer: any) {
+      const file = new Blob([buffer], { type: 'application/octet-stream' });
+      console.log('saveArray:', file);
+      return file;
+    }
+
+    let glbFile: Blob;
+
+    // function save(blob, fileName) {
+    //   link.href = URL.createObjectURL(blob)
+    // }
+
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
     console.log(event);
@@ -437,9 +451,25 @@ export class MainCanvas {
       } else if (targets[0].object.name === 'house') {
         console.log('house!!!!!!!!');
         this._zoomFit(targets[0].object.parent, 60);
+
+        //glb 내보내기
+        const exporter = new GLTFExporter();
+        console.log('target object:', targets[0].object);
+        exporter.parse(
+          targets[0].object,
+          function (result) {
+            console.log('result:', result);
+            glbFile = saveArrayBuffer(result);
+          },
+          function (error) {
+            console.log(error);
+          },
+          { binary: true },
+        );
+
         setTimeout(() => {
-          this._setupAlert();
-        }, 1500);
+          this._setupAlert(glbFile);
+        }, 3000);
       } else if (targets[0].object.name === 'ball1') {
         console.log('ball1!!!!!!!!!!!!!!');
       } else {
@@ -469,9 +499,22 @@ export class MainCanvas {
     }
     this._isAlert = false;
   }
-  _setupAlert() {
+  _setupAlert(glbFile: Blob) {
+    const formData = new FormData();
+
+    formData.append('glbfile', glbFile);
+
+    console.log('setupAlert : ', glbFile);
     const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.log(alert);
+    // 백에 glb 보내기
+    axios({
+      url: 'http://localhost:8080/api/test',
+      method: 'post',
+      data: formData,
+    }).then((res) => {
+      console.log(res);
+    });
+
     if (alert !== null) {
       console.log('alert');
       alert.style.display = 'flex';
