@@ -2,16 +2,19 @@ import React, { useCallback, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import { SignUpContainer } from './styles';
-import { SignUpbButton } from './styles';
-import { SignUpInput } from './styles';
-import { CheckButton } from './styles';
+import { SignUpContainer } from './styled';
+import { Button } from './styled';
+import { Input } from './styled';
+import { CheckButton } from './styled';
 
 export const SignUp = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
   const [nickname, setNickname] = useState<string>('');
+  const [emailDuplicated, setEmailDuplicated] = useState<boolean>(true);
+  const [nickNameDuplicated, setNickNameDuplicated] = useState<boolean>(true);
+  const [isValid, setIsValid] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
@@ -33,28 +36,50 @@ export const SignUp = () => {
       });
   };
 
-  function checkEmail(e: any) {
+  function checkEmail(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
+    console.log(email);
     axios
       .post('http://localhost:8080' + '/api/user/check/email', {
-        data: {
-          email: email,
-        },
+        email: email,
       })
       .then((res) => {
-        // 응답 값 T or F 해서 T => 중복 있음, F => 중복 없음
-        // if (res.data === true) {
-        //   console.log('중복됨 다시!');
-        // } else {
-        //   console.log('중복 안됨');
-        // }
-        console.log(res);
+        // true면 중복이라는 얘기
+        if (res.data.duplicated) {
+          alert('중복입니다');
+        } else {
+          alert('말복입니다 통과~');
+          setEmailDuplicated(false);
+          if (!emailDuplicated && !nickNameDuplicated) {
+            setIsValid(true);
+          }
+        }
       })
       .catch((err) => {
         console.log(err.response);
       });
   }
-
+  function checkNickname(e: React.FormEvent<HTMLElement>) {
+    e.preventDefault();
+    axios
+      .post('http://localhost:8080' + '/api/user/check/nickname', {
+        nickName: nickname,
+      })
+      .then((res) => {
+        if (res.data.duplicated) {
+          alert('중복입니다');
+        } else {
+          alert('말복입니다 통과~');
+          setNickNameDuplicated(false);
+          if (!emailDuplicated && !nickNameDuplicated) {
+            setIsValid(true);
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
   const handleChangeEmail = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
@@ -79,34 +104,13 @@ export const SignUp = () => {
     },
     [],
   );
-  function checkNickname(e: any) {
-    e.preventDefault();
-    axios
-      .post('http://localhost:8080' + '/api/user/check/nickname', {
-        data: {
-          nickname: nickname,
-        },
-      })
-      .then((res) => {
-        // 응답 값 T or F 해서 T => 중복 있음, F => 중복 없음
-        // if (res.data === true) {
-        //   console.log('중복됨 다시!');
-        // } else {
-        //   console.log('중복 안됨');
-        // }
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }
   return (
     <SignUpContainer>
       <div id="signup">
         <h1>회원가입</h1>
       </div>
       <form onSubmit={handleSubmit}>
-        <SignUpInput
+        <Input
           name="email"
           value={email}
           placeholder="이메일"
@@ -114,7 +118,7 @@ export const SignUp = () => {
           required
         />
         <CheckButton onClick={checkEmail}>중복확인</CheckButton>
-        <SignUpInput
+        <Input
           type="password"
           name="password"
           value={password}
@@ -122,7 +126,7 @@ export const SignUp = () => {
           onChange={handleChangePassword}
           required
         />
-        <SignUpInput
+        <Input
           type="password"
           name="passwordConfirm"
           value={passwordConfirm}
@@ -131,7 +135,7 @@ export const SignUp = () => {
           required
         />
         {password !== passwordConfirm && <p>비밀번호가 달라요!</p>}
-        <SignUpInput
+        <Input
           name="Nickname"
           value={nickname}
           placeholder="닉네임"
@@ -139,7 +143,9 @@ export const SignUp = () => {
           required
         />
         <CheckButton onClick={checkNickname}>중복확인</CheckButton>
-        <SignUpbButton type="submit">회원가입</SignUpbButton>
+        <Button type="submit" disabled={isValid}>
+          회원가입
+        </Button>
       </form>
     </SignUpContainer>
   );
