@@ -92,7 +92,7 @@ public class SpringSecurityConfig {
                 .antMatchers("/user/find/password/url").permitAll()
                 .antMatchers("/user/find/password/update").permitAll()
                 .antMatchers("/user/check/email").permitAll()
-                .antMatchers("test").permitAll()
+                .antMatchers("/test").permitAll()
                 .antMatchers("/resources/**").permitAll()
                 .anyRequest().authenticated()
                 // 차후 관리자, 일반 유저 권한 구분하려면 아래 기능 사용
