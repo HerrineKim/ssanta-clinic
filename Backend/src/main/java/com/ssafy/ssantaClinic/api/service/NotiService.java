@@ -1,5 +1,7 @@
 package com.ssafy.ssantaClinic.api.service;
 
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
 public interface NotiService {
-    void subscribe(String email);
+    SseEmitter subscribe(String email, String lastEventId);
 }

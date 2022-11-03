@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,8 +21,13 @@ public class Notification {
     @Column(name = "notification_id")
     private int notiId;
 
-    @Column(length = 50, nullable = false)
-    private String title;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
+
+    @Column(length = 300, nullable = false)
+    private String url;
 
     @Column(length = 200, nullable = false)
     private String message;
@@ -36,9 +43,10 @@ public class Notification {
     private LocalDateTime createdAt;
 
     @Builder
-    public Notification(int notiId, String title, String message, Type type, boolean isRead, LocalDateTime createdAt) {
+    public Notification(int notiId, User user, String url, String message, Type type, boolean isRead, LocalDateTime createdAt) {
         this.notiId = notiId;
-        this.title = title;
+        this.user = user;
+        this.url = url;
         this.message = message;
         this.type = type;
         this.isRead = isRead;
