@@ -55,7 +55,8 @@ public class NotiServiceImpl implements NotiService {
         return emitter;
     }
 
-    private void sendToClient(SseEmitter emitter, String id, Object data) {
+    @Override
+    public void sendToClient(SseEmitter emitter, String id, Object data) {
         /**
          * @Method Name :  sendToClient
          * @Method 설명 :  sse로 데이터를 전송한다.
@@ -68,6 +69,7 @@ public class NotiServiceImpl implements NotiService {
             throw new CustomException(ErrorCode.SSE_SEND_ERROR);
         }
     }
+    @Override
     public void send(User receiver, Type type, String message) {
         /**
          * @Method Name :  send
@@ -87,7 +89,8 @@ public class NotiServiceImpl implements NotiService {
                 }
         );
     }
-    private Notification createNotification(User receiver, Type type, String message) {
+    @Override
+    public Notification createNotification(User receiver, Type type, String message) {
         /**
          * @Method Name :  createNotification
          * @Method 설명 :  알림 객체를 생성한다.
