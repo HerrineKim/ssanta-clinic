@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
 import HomePage from './pages/home/HomePage';
-import TetrisPage from './pages/game/tetris';
+import TetrisPage from './pages/game/tetris/TetrisPage';
 import WitsPage from './pages/game/WitsPage';
 import MemoryPage from './pages/game/MemoryPage';
 import { CalendarPage } from './pages/calendar/calendarPage';
