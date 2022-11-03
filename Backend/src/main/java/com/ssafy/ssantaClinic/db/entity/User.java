@@ -40,9 +40,11 @@ public class User {
     private String findPasswordNum;
 
     @OneToMany(mappedBy = "parent")
+    @JsonIgnore
     List<Follow> followers;
 
     @OneToMany(mappedBy = "child")
+    @JsonIgnore
     List<Follow> followings;
     public void changePassword(String password) {
         this.password = password;
