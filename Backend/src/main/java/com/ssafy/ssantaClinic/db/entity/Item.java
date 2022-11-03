@@ -29,4 +29,5 @@ public class Item {
 
     @NotBlank
     private int price;
+
 }
