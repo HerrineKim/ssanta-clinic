@@ -2,6 +2,7 @@ package com.ssafy.ssantaClinic.db.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -50,4 +51,8 @@ public class User {
         this.password = password;
     }
 
+    @JsonIgnore
+    public FriendResponse getFriendResponse(){
+        return FriendResponse.builder().userId(userId).nickName(nickName).build();
+    }
 }

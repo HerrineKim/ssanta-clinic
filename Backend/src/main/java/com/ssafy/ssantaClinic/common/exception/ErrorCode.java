@@ -37,7 +37,8 @@ public enum ErrorCode {
     // 로그인
     FOLLOW_NOT_FOUND_USER_ID(HttpStatus.NOT_FOUND, "404", "해당 아이디를 찾을 수 없습니다"),
     FOLLOW_NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "404", "해당 유저가 존재하지 않습니다"),
-    FOLLOW_ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST, "400", "이미 팔로우 중입니다");
+    FOLLOW_ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST, "400", "이미 팔로우 중입니다"),
+    FOLLOW_NOT_FOLLOWING(HttpStatus.BAD_REQUEST, "400", "팔로우 중이 아닙니다");
 
     private final HttpStatus status;
     private final String errorCode;
