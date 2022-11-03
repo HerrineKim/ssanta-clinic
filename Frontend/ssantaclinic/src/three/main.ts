@@ -342,6 +342,17 @@ export class MainCanvas {
       console.log(model);
     });
 
+    loader.load(
+      'https://ssanta-clinic.s3.ap-northeast-2.amazonaws.com/blob.glb',
+      (gltf) => {
+        const model: any = gltf.scene;
+        model.scale.set(5, 5, 5);
+        model.position.set(10, 10, 10);
+        this._scene.add(model);
+        console.log('url load:', model);
+      },
+    );
+
     // scene에 있는 모든 3dobj 검사
 
     this._group = group;
