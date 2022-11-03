@@ -15,8 +15,12 @@ export default function Home() {
   // console.log(canvasRef.current);
 
   //myroom 에서 axios 로 받아오는 트리에 대한 정보
-  //트리 위치에 따라 장식품 리스트로 받아옴
-  const data = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 1, 2, 3, 1, 1, 2, 2];
+  //트리 위치에 따라 장식품 리스트로 받아옴 => tree는 백에서 glb로 받아오는걸로
+  // const data = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 1, 2, 3, 1, 1, 2, 2];
+
+  // 로그인한 유저가 갖고있는 아이템 정보를 받아와야함
+  // 개수 정해봐야함 (개수 limit 거는게 맞는 것 같음)
+  const items = [1, 2, 3, 1, 1, 2, 3, 1, 2, 3];
 
   console.log('home');
   useEffect(() => {
@@ -31,7 +35,7 @@ export default function Home() {
   return (
     <Div>
       <Alert>들어갈래?</Alert>
-      <TreeModal data={data}></TreeModal>
+      {/* <TreeModal data={data}></TreeModal> */}
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
     </Div>

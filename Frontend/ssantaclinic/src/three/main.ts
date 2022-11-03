@@ -54,6 +54,7 @@ export class MainCanvas {
   _previousTime: any;
   _requestId: any;
   _isTreeModal: boolean;
+  _tree: any;
 
   constructor() {
     this._isAlert = false;
@@ -137,7 +138,7 @@ export class MainCanvas {
     const group: any = [];
     const loader = new GLTFLoader();
 
-    loader.load('main/ssanta.glb', (gltf) => {
+    loader.load('main/santa.glb', (gltf) => {
       const model = gltf.scene;
       this._model = model;
       this._scene.add(model);
@@ -146,6 +147,10 @@ export class MainCanvas {
       model.traverse((child) => {
         // console.log(child);
         // model은 그림자 생성 true
+
+        if (child instanceof THREE.PointLight) {
+          child.intensity = 2;
+        }
         if (child instanceof THREE.Group) {
           // console.log(child, child.name);
           group.push(child);
@@ -169,6 +174,32 @@ export class MainCanvas {
       const model: any = gltf.scene;
 
       console.log(model);
+    });
+
+    loader.load('main/showcase.glb', (gltf) => {
+      const model: any = gltf.scene;
+      model.scale.set(20, 20, 20);
+      model.position.set(9, 0, -4.5);
+      model.children[0].children[0].children[0].children[0].children[0].material.color.set(
+        0xff00ff,
+      );
+      this._scene.add(model);
+      console.dir(model);
+      console.log('showcase:', model);
+    });
+
+    loader.load('main/lowtree.glb', (gltf) => {
+      const tree: any[] = [];
+      const model: any = gltf.scene;
+      model.position.set(5, 0, -4.5);
+      model.name = 'tree';
+      model.traverse((child: THREE.Object3D) => {
+        tree.push(child);
+        child.name = 'tree';
+      });
+      this._scene.add(model);
+      console.log('treegltf:', model);
+      this._tree = tree;
     });
 
     // scene에 있는 모든 3dobj 검사
@@ -283,6 +314,19 @@ export class MainCanvas {
       setTimeout(() => {
         this._zoomFit(this._model, 60);
       }, 100);
+    }
+
+    const targets2 = this._raycaster.intersectObjects(this._tree);
+    if (targets2.length > 0) {
+      let object = targets2[0].object;
+      while (object.parent) {
+        object = object.parent;
+        if (object instanceof THREE.Group) {
+          break;
+        }
+      }
+      console.log('parent:', object);
+      this._zoomFit(object, 60);
     }
   }
 
