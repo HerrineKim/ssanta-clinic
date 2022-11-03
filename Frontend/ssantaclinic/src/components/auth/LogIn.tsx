@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { currentUser } from '../../store/store';
+import { Button } from './styled';
+import { Input } from './styled';
 
 export const LogIn = () => {
   const [email, setEmail] = useState<string>('');
@@ -11,7 +13,12 @@ export const LogIn = () => {
   const setUserState = useSetRecoilState(currentUser);
   const navigate = useNavigate();
   let accessToken: any = '';
-
+  useEffect(() => {
+    if (localStorage.getItem('jwt') !== '') {
+      alert('로그인 했잖아요;;');
+      navigate('/');
+    }
+  });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
@@ -62,7 +69,7 @@ export const LogIn = () => {
         <h1>로그인</h1>
       </div>
       <form onSubmit={handleSubmit}>
-        <input
+        <Input
           name="email"
           value={email}
           placeholder="이메일"
@@ -70,7 +77,7 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
-        <input
+        <Input
           type="password"
           name="password"
           value={password}
@@ -79,9 +86,9 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
-        <button type="submit" className="loginButton" disabled={button}>
+        <Button type="submit" className="loginButton" disabled={button}>
           로그인
-        </button>
+        </Button>
       </form>
     </div>
   );
