@@ -1,11 +1,11 @@
 import React from 'react';
-import { MyRoom } from '../components/MyRoom';
+import { LogOut } from '../../components/auth/LogOut';
 
-export const MyRoomPage = () => {
+export const LogOutPage = () => {
   return (
     <div>
       <React.Fragment>
-        <MyRoom />
+        <LogOut />
       </React.Fragment>
     </div>
   );
