@@ -30,10 +30,7 @@ public class FollowServiceImpl implements FollowService {
                 .parent(parent)
                 .child(child)
                 .build();
-
-        parent.getFollowers().add(follow);
-        parent.getFollowings().add(follow);
-
+        
         followRepository.save(follow);
     }
 
@@ -44,10 +41,6 @@ public class FollowServiceImpl implements FollowService {
         User child = userRepository.findById(childId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
         Follow follow = followRepository.findByParentAndChild(parent, child).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOLLOWING));
-
-        parent.getFollowers().remove(follow);
-        parent.getFollowings().remove(follow);
-
         followRepository.delete(follow);
     }
 
