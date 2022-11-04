@@ -7,6 +7,7 @@ import { Octree } from 'three/examples/jsm/math/Octree.js';
 // import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
 import { gsap } from 'gsap';
+import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { threadId } from 'worker_threads';
 // import { chdir } from 'process';
 
@@ -58,7 +59,7 @@ export class MainCanvas {
   _requestId: any;
   _isTreeModal: boolean;
   _tree: any;
-  _items: number[];
+  _items: any[];
   _position: any[];
   _showcase: any;
   _close: any;
@@ -141,7 +142,7 @@ export class MainCanvas {
 
   update2(time: number) {
     time *= 0.001;
-    console.log('updaete2');
+    // console.log('updaete2');
     this._controls.update();
   }
 
@@ -348,6 +349,10 @@ export class MainCanvas {
     const raycaster = new THREE.Raycaster();
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
+    this._canvasContainer.addEventListener(
+      'wheel',
+      this._setupRotate.bind(this),
+    );
   }
 
   //클릭 함수
@@ -438,10 +443,13 @@ export class MainCanvas {
     } else {
       // console.log('onclick2');
       // drag & drop 구현
+
       // x누르면 다시 돌아가는거 구현
       console.log('close:', this._close);
       console.log('raycaster:', this._raycaster);
       const closeTarget = this._raycaster.intersectObject(this._close);
+      const treeTarget = this._raycaster.intersectObjects(this._tree);
+      const itemTarget = this._raycaster.intersectObjects(this._items);
       console.log('closeTarget:', closeTarget);
       if (closeTarget.length > 0) {
         // scene1으롣 돌아가기
@@ -455,9 +463,18 @@ export class MainCanvas {
           this._zoomFit(this._model, 60);
         }, 100);
       }
+      console.log('treetarget:', treeTarget);
+      console.log('itemTarget:', itemTarget);
     }
   }
 
+  _setupRotate(event: any) {
+    if (this._scenenumber === 2) {
+      event.preventDefault();
+      console.log('rotate', this._tree);
+      this._tree[0].rotateY(event.deltaY * 0.0005);
+    }
+  }
   // _setupTreeModal() {
   //   const treeModal = document.querySelector(
   //     '.treemodal',
@@ -467,6 +484,25 @@ export class MainCanvas {
   //   }
   //   this._isTreeModal = true;
   // }
+
+  _setupDrag() {
+    this._items.forEach((item) => {
+      const controls = new DragControls(
+        item,
+        this._camera,
+        this._renderer.domElement,
+      );
+      controls.addEventListener('dragstart', function (event) {
+        event.object.material.emissive.set(0xaaaaaa);
+      });
+
+      controls.addEventListener('dragend', function (event) {
+        event.object.material.emissive.set(0x000000);
+      });
+    });
+
+    // add event listener to highlight dragged objects
+  }
 
   _removeTreeModal() {
     this._scene.remove(this._showcase);
@@ -624,6 +660,7 @@ export class MainCanvas {
       this._scenenumber = 2;
       this._setupControls();
       this._setupPicking();
+      this._setupDrag();
     }, 1500);
   }
 
