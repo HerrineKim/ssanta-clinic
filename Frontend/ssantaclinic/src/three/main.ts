@@ -135,7 +135,6 @@ export class MainCanvas {
       this.update2(time);
 
       requestAnimationFrame(this.render.bind(this));
-      console.log(222);
     }
   }
 
@@ -150,6 +149,7 @@ export class MainCanvas {
   update2(time: number) {
     time *= 0.001;
     console.log('updaete2');
+    this._controls.update();
   }
 
   update(time: number) {
@@ -173,18 +173,26 @@ export class MainCanvas {
     console.dir(this._worldOctree);
   }
 
+  // scene 1을 위한 controls
   _setupControls() {
-    this._controls = new OrbitControls(this._camera, this._canvasContainer);
+    if (this._scenenumber === 1) {
+      this._controls = new OrbitControls(this._camera, this._canvasContainer);
 
-    //orbicontrol shift 기능 없애기
-    this._controls.enablePan = false;
+      //orbicontrol shift 기능 없애기
+      this._controls.enablePan = false;
 
-    //마우스 회전 부드럽게
-    this._controls.enableDamping = true;
+      //마우스 회전 부드럽게
+      this._controls.enableDamping = true;
 
-    const stats = Stats();
-    this._canvasContainer.appendChild(stats.dom);
-    this._fps = stats;
+      const stats = Stats();
+      this._canvasContainer.appendChild(stats.dom);
+      this._fps = stats;
+    } else {
+      // 트리 위주로 돌릴 수 있게
+      // 드래그앤 드롭
+      this._controls.enabled = false;
+      console.log('setupcontrols222');
+    }
   }
 
   _setupModel() {
@@ -387,8 +395,10 @@ export class MainCanvas {
         setTimeout(() => {
           this._zoomFit(this._model, 60);
         }, 100);
+        this._scenenumber = 1;
       }
     } else {
+      this._scenenumber = 1;
       if (this._isAlert) {
         this._removeAlert();
       }
@@ -581,6 +591,7 @@ export class MainCanvas {
       this._scene2.add(object3d[0]);
       this._scene2.add(...this._items);
       this._scenenumber = 2;
+      this._setupControls();
     }, 1500);
 
     // const scene2 = new THREE.Scene();
