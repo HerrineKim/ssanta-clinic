@@ -3,8 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { currentUser } from '../../store/store';
-import { Button } from './styled';
-import { Input } from './styled';
+import { Button, LoginContainer } from './styles';
+import { Input } from './styles';
 
 export const LogIn = () => {
   const [email, setEmail] = useState<string>('');
@@ -35,6 +35,7 @@ export const LogIn = () => {
           email: email,
           id: res.data.userId,
           nickname: res.data.nickName,
+          noti: [],
         });
         const myRoomPath = '/room/' + res.data.userId;
         navigate(myRoomPath); // Login 성공하면 일단 내 방으로
@@ -64,7 +65,7 @@ export const LogIn = () => {
     [],
   );
   return (
-    <div id="login-container">
+    <LoginContainer id="login-container">
       <div id="login">
         <h1>로그인</h1>
       </div>
@@ -90,6 +91,6 @@ export const LogIn = () => {
           로그인
         </Button>
       </form>
-    </div>
+    </LoginContainer>
   );
 };
