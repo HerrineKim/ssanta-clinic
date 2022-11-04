@@ -40,9 +40,7 @@ public class StoreController {
          * @Method Name : buyItem
          * @Method 설명 : store에서 아이템을 구매한다. 유저 아이템 테이블 갱신, 유저 잔고 갱신
          */
-        return  ResponseEntity.ok().body(StoreResponse.BuyItemResponse.builder()
-                .money(storeService.buyItem(formRequest.getUserId(), formRequest.getItemId(), formRequest.getCount()))
-                .build());
+        return  ResponseEntity.ok().body(storeService.buyItem(formRequest.getUserId(), formRequest.getItemId(), formRequest.getCount()));
     }
 
     @ApiOperation(value = "개인 아이템 조회", notes="개인이 보유하고 있는 아이템 목록 조회", httpMethod = "GET")
@@ -54,6 +52,5 @@ public class StoreController {
          */
         return  ResponseEntity.ok().body(storeService.getUserItemList(userId));
     }
-
 
 }

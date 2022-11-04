@@ -9,6 +9,14 @@ public class StoreResponse {
 
     @Data
     @Builder
+    public static class StoreItemListResponse {
+        private int itemId;
+        private String imgUrl;
+        private String itemName;
+        private int price;
+    }
+    @Data
+    @Builder
     public static class BuyItemResponse {
         private int money;
     }

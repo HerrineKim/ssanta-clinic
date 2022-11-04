@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface StoreService {
 
-    List<Item> getItemList();
+    List<StoreResponse.StoreItemListResponse> getItemList();
 
-    int buyItem(int userId, int itemId, int count);
+    StoreResponse.BuyItemResponse buyItem(int userId, int itemId, int count);
 
     List<StoreResponse.UserItemListResponse> getUserItemList(int userId);
 }
