@@ -71,16 +71,16 @@ export class MainCanvas {
   constructor(items: number[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
     this._position = [
-      [7, 0.5, -3],
-      [7.5, 0.5, -3],
-      [8, 0.5, -3],
-      [8.5, 0.5, -3],
-      [9, 0.5, -3],
-      [7, 1, -3.5],
-      [7.5, 1, -3.5],
-      [8, 1, -3.5],
-      [8.5, 1, -3.5],
-      [9, 1, -3.5],
+      [7, 0.5, -2],
+      [7.5, 0.5, -2],
+      [8, 0.5, -2],
+      [8.5, 0.5, -2],
+      [9, 0.5, -2],
+      [7, 1, -2.5],
+      [7.5, 1, -2.5],
+      [8, 1, -2.5],
+      [8.5, 1, -2.5],
+      [9, 1, -2.5],
     ];
     this._items = items;
     this._isAlert = false;
@@ -489,7 +489,7 @@ export class MainCanvas {
   // }
 
   _setupDrag() {
-    console.log(this._items);
+    // console.log(this._items);
     this._items.forEach((child) => {
       const controls = new DragControls(
         [child],
@@ -497,10 +497,21 @@ export class MainCanvas {
         this._renderer.domElement,
       );
       controls.transformGroup = true;
-    });
-    // controls1.transformGroup = true;
 
-    // add event listener to highlight dragged objects
+      controls.addEventListener('dragstart', function (event) {
+        // console.log(event.object);
+        event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+      });
+
+      controls.addEventListener('dragend', function (event) {
+        event.object.children[0].children[0].material.emissive.set(0x000000);
+      });
+
+      controls.addEventListener('drag', function (event) {
+        console.log('drag');
+        event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
+      });
+    });
   }
 
   _removeTreeModal() {
