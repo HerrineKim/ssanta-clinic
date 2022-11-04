@@ -7,6 +7,7 @@ import { Octree } from 'three/examples/jsm/math/Octree.js';
 // import { Capsule } from 'three/examples/jsm/math/Capsule.js';
 import { Mesh } from 'three';
 import { gsap } from 'gsap';
+import { threadId } from 'worker_threads';
 // import { chdir } from 'process';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
@@ -50,6 +51,8 @@ export class MainCanvas {
   _raycaster: any;
   _group: any;
   _isAlert: boolean;
+  _inven: any;
+  _scene2: any;
 
   _previousTime: any;
   _requestId: any;
@@ -59,18 +62,18 @@ export class MainCanvas {
   _position: any[];
 
   constructor(items: number[]) {
-    //(9, 0, -4.5);
+    //(9, 0, -4.5);  오른쪽, 위, 앞
     this._position = [
-      [7, 1, 1],
-      [7.5, 1, 1],
-      [8, 2, -2.5],
-      [6, 3, -2.5],
-      [7, 3, -2.5],
-      [8, 3, -2.5],
-      [6, 4, -2.5],
-      [7, 4, -2.5],
-      [8, 4, -2.5],
-      [9, 4, -2.5],
+      [7, 0.5, -3],
+      [7.5, 0.5, -3],
+      [8, 0.5, -3],
+      [8.5, 0.5, -3],
+      [9, 0.5, -3],
+      [7, 1, -3.5],
+      [7.5, 1, -3.5],
+      [8, 1, -3.5],
+      [8.5, 1, -3.5],
+      [9, 1, -3.5],
     ];
     this._items = items;
     this._isAlert = false;
@@ -118,6 +121,14 @@ export class MainCanvas {
     requestAnimationFrame(this.render.bind(this));
   }
 
+  //inven 볼때의 render
+  // render2(time: number) {
+  //   this._renderer.render(this._scene2, this._camera);
+  //   this.update(time);
+
+  //   requestAnimationFrame(this.render2.bind(this));
+  // }
+
   update(time: number) {
     time *= 0.001; // second unit
 
@@ -154,8 +165,10 @@ export class MainCanvas {
   }
 
   _setupModel() {
+    const inven: any[] = [];
     const group: any = [];
     const loader = new GLTFLoader();
+
     // 안눌러도 되는 맵 로드
     loader.load('main/santa.glb', (gltf) => {
       const model = gltf.scene;
@@ -200,7 +213,7 @@ export class MainCanvas {
       model.traverse((child: any) => {
         if (child instanceof THREE.Group) {
           // console.log(child, child.name);
-          group.push(child);
+          // group.push(child);
         }
       });
       model.scale.set(20, 20, 20);
@@ -209,8 +222,9 @@ export class MainCanvas {
         0xff00ff,
       );
       // this._scene.add(model);
-      console.dir(model);
+      // console.dir(model);
       console.log('showcase:', model);
+      inven.push(model);
     });
 
     loader.load('main/lowtree.glb', (gltf) => {
@@ -229,23 +243,27 @@ export class MainCanvas {
         child.name = 'tree';
       });
       this._scene.add(model);
+      inven.push(model);
       console.log('treegltf:', model);
       this._tree = tree;
     });
-
+    const items: any[] = [];
     // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
     this._items.forEach((item, index) => {
       // console.log('item:', item);
-      console.log(index);
+      // console.log(index);
       loader.load(`main/${item}.glb`, (gltf) => {
-        console.log(index);
+        // console.log(index);
         const model = gltf.scene;
-        console.log(`${index}: `, model);
+        // console.log(`${index}: `, model);
         const position = this._position[`${index}`];
         model.position.set(position[0], position[1], position[2]);
-        this._scene.add(model);
+        items.push(model);
+        // this._scene.add(model);
       });
     });
+    this._items = items;
+    this._inven = inven;
 
     // scene에 있는 모든 3dobj 검사
 
@@ -371,7 +389,7 @@ export class MainCanvas {
         }
       }
       console.log('parent:', object);
-      this._zoomFit(object, 60);
+      this._zoomInven(this._inven, 60);
     }
   }
 
@@ -481,6 +499,75 @@ export class MainCanvas {
         );
       },
     });
+  }
+
+  _zoomInven(object3d: any[], viewAngle: number) {
+    console.log(object3d);
+
+    // console.log('zoomfit object3d: ', object3d);
+    //box 는 객체를 담는 최소크기 박스
+    const box1 = new THREE.Box3().setFromObject(object3d[0]);
+    const box2 = new THREE.Box3().setFromObject(object3d[1]);
+    const box = new THREE.Box3().union(box1);
+    box.union(box2);
+    //box를통해 얻을 수있는 가장 긴 모서리 길이
+    const sizeBox = box.getSize(new THREE.Vector3()).length();
+    //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
+    const centerBox = box.getCenter(new THREE.Vector3());
+
+    const direction = new THREE.Vector3(0, 1, 0);
+    direction.applyAxisAngle(
+      new THREE.Vector3(1, 0, 0),
+      THREE.MathUtils.degToRad(viewAngle),
+    );
+
+    const halfSizeModel = sizeBox * 0.5;
+    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
+    const distance = halfSizeModel / Math.tan(halfFov);
+
+    const newPosition = new THREE.Vector3().copy(
+      direction.multiplyScalar(distance).add(centerBox),
+    );
+
+    // this._camera.position.copy(newPosition);
+    // this._controls.target.copy(centerBox);
+
+    //애니메이션 라이브러리 gsap
+    //카메라 위치변경
+    gsap.to(this._camera.position, {
+      duration: 1.5,
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+    });
+
+    //this._controls.target.copy(centerBox);
+    // console.log(this._controls);
+    // console.log(this._controls.target);
+    // 타겟위치변경
+    gsap.to(this._controls.target, {
+      duration: 0.5,
+      x: centerBox.x,
+      y: centerBox.y,
+      z: centerBox.z,
+      onUpdate: () => {
+        //애니메이션 수행중에 깜빡거리는 현상 방지
+        this._camera.lookAt(
+          this._controls.target.x,
+          this._controls.target.y,
+          this._controls.target.z,
+        );
+      },
+    });
+    setTimeout(() => {
+      this._scene.add(object3d[0]);
+      this._scene.add(...this._items);
+    }, 1500);
+
+    // const scene2 = new THREE.Scene();
+    // this._scene2 = scene2;
+    // this._scene2.add(object3d[1]);
+    // this.render2(this._scene2, this._camera);
   }
 
   //zoomout 함수
