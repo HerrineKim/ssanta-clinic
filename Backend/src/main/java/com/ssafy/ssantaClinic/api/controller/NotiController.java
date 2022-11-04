@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,12 @@ public class NotiController {
         // 현재 로그인한 유저의 이메일 가져오기
         String email = JwtUtil.getCurrentUserEmail().orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
         notiService.subscribe(email, lastEventId);
-        return ResponseEntity.ok().build();
+        // 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "text/event-stream");
+        headers.set("Cache-Control", "no-cache");
+        headers.set("Connection", "keep-alive");
+        return ResponseEntity.ok().headers(headers).build();
     }
     @ApiOperation(value = "알림 리스트 조회", notes = "개인의 알림 리스트를 조회한다.")
     @ApiResponses({
@@ -67,10 +73,9 @@ public class NotiController {
          */
         // 현재 로그인한 유저의 이메일 가져오기
         String email = JwtUtil.getCurrentUserEmail().orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
-        List<NotiResponse.GetNotiResponse> notiResponseList = notiService.getNotiListByEmail(email);
-        return ResponseEntity.ok().body(notiResponseList);
+        List<NotiResponse.GetNotiResponse> notiList = notiService.getNotiListByEmail(email);
+        return ResponseEntity.ok().body(notiList);
     }
-
     @ApiOperation(value = "알림 정보 조회", notes = "알림에 해당하는 url로 이동한다.")
     @ApiResponses({
             @ApiResponse(code = 201, message = "조회 성공"),
@@ -83,9 +88,9 @@ public class NotiController {
          * @Method 설명 : 알림에 해당하는 url로 이동한다.
          */
         // 현재 로그인한 유저의 이메일 가져오기
-        String email = JwtUtil.getCurrentUserEmail().orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
+        String email = JwtUtil.getCurrentUserEmail()
+                .orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
         NotiResponse.GetNotiResponse noti = notiService.getNotiById(notiId, email);
         return ResponseEntity.created(URI.create(noti.getUrl())).build();
     }
-
 }
