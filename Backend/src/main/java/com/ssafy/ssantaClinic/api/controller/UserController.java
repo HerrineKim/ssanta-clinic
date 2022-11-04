@@ -154,7 +154,8 @@ public class UserController {
          * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
          */
 
-        return ResponseEntity.ok().body(UserResponse.findPasswordResponse.builder()
+        return ResponseEntity.ok().body(
+                UserResponse.findPasswordResponse.builder()
                 .findPasswordNum(userService.getFindPasswordNum(formRequest.getEmail()))
                 .build());
     }
