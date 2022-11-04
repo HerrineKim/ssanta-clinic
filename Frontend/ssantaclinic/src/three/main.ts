@@ -110,13 +110,14 @@ export class MainCanvas {
     this._setupLight();
     this._setupModel();
     this._setupCamera();
+
+    const scene2 = scene;
+    this._scene2 = scene2;
+
     this._setupControls();
     this._setupPicking();
     // this._setupClick();
     this._setupHover();
-
-    const scene2 = scene;
-    this._scene2 = scene2;
 
     window.onresize = this.resize.bind(this);
     this.resize();
@@ -187,6 +188,7 @@ export class MainCanvas {
       const stats = Stats();
       this._canvasContainer.appendChild(stats.dom);
       this._fps = stats;
+      console.log('setoucontrols111');
     } else {
       // 트리 위주로 돌릴 수 있게
       // 드래그앤 드롭
@@ -339,50 +341,90 @@ export class MainCanvas {
 
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
+    console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
   }
+
+  //scene 2를 위한 setuppicking
+
+  // _onClick2(event: any) {
+  //   console.log('onclick2');
+  //   const width = this._canvasContainer.clientWidth;
+  //   const height = this._canvasContainer.clientHeight;
+  //   console.log(event);
+  //   console.log(event.offsetX);
+  //   console.log(event.offsetY);
+
+  //   const xy = {
+  //     x: (event.offsetX / width) * 2 - 1,
+  //     y: -(event.offsetY / height) * 2 + 1,
+  //   };
+
+  //   //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
+  //   //  and Y components should be between -1 and 1.
+  //   this._raycaster.setFromCamera(xy, this._camera);
+  // }
   //클릭 함수
   _onClick(event: any) {
-    const width = this._canvasContainer.clientWidth;
-    const height = this._canvasContainer.clientHeight;
-    console.log(event);
-    console.log(event.offsetX);
-    console.log(event.offsetY);
+    if (this._scenenumber === 1) {
+      console.log('onclick111');
+      const width = this._canvasContainer.clientWidth;
+      const height = this._canvasContainer.clientHeight;
+      console.log(event);
+      console.log(event.offsetX);
+      console.log(event.offsetY);
 
-    const xy = {
-      x: (event.offsetX / width) * 2 - 1,
-      y: -(event.offsetY / height) * 2 + 1,
-    };
-    console.log(xy);
-    //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
-    //  and Y components should be between -1 and 1.
-    this._raycaster.setFromCamera(xy, this._camera);
+      const xy = {
+        x: (event.offsetX / width) * 2 - 1,
+        y: -(event.offsetY / height) * 2 + 1,
+      };
+      console.log(xy);
+      //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
+      //  and Y components should be between -1 and 1.
+      this._raycaster.setFromCamera(xy, this._camera);
 
-    // 모든 3d 돌면서 더블클릭된 객체 zoomfit
-    console.log('click함수 실행:', this._group);
-    const targets = this._raycaster.intersectObjects(this._group);
-    // const target = this._raycaster.intersectObject(this._group[11]);
-    // console.log('target : ', target);
-    console.log('targets: ', targets);
-    if (targets.length > 0) {
-      if (targets[0].object.name === 'tree') {
-        console.log('tree!!!!!');
-        // 트리 줌인 후에 꾸밀수 있도록 인벤토리
-        this._zoomFit(targets[0].object.parent, 60);
-        setTimeout(() => {
-          this._setupTreeModal();
-        }, 1600);
-      } else if (targets[0].object.name === 'house') {
-        console.log('house!!!!!!!!');
-        this._zoomFit(targets[0].object.parent, 60);
-        setTimeout(() => {
-          this._setupAlert();
-        }, 1500);
-      } else if (targets[0].object.name === 'ball1') {
-        console.log('ball1!!!!!!!!!!!!!!');
+      // 모든 3d 돌면서 더블클릭된 객체 zoomfit
+      console.log('click함수 실행:', this._group);
+      const targets = this._raycaster.intersectObjects(this._group);
+      // const target = this._raycaster.intersectObject(this._group[11]);
+      // console.log('target : ', target);
+      console.log('targets: ', targets);
+      if (targets.length > 0) {
+        if (targets[0].object.name === 'tree') {
+          console.log('tree!!!!!');
+          // 트리 줌인 후에 꾸밀수 있도록 인벤토리
+          // this._zoomFit(targets[0].object.parent, 60);
+          // setTimeout(() => {
+          // }, 1600);
+          // this._setupTreeModal();
+        } else if (targets[0].object.name === 'house') {
+          console.log('house!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
+          setTimeout(() => {
+            this._setupAlert();
+          }, 1500);
+        } else if (targets[0].object.name === 'ball1') {
+          console.log('ball1!!!!!!!!!!!!!!');
+        } else {
+          if (this._isAlert) {
+            this._removeAlert();
+          }
+
+          if (this._isTreeModal) {
+            this._removeTreeModal();
+          }
+          this._scenenumber = 1;
+
+          this._removeModal();
+          setTimeout(() => {
+            // this._setupControls();
+            this._zoomFit(this._model, 60);
+          }, 100);
+        }
       } else {
+        this._scenenumber = 1;
         if (this._isAlert) {
           this._removeAlert();
         }
@@ -393,50 +435,52 @@ export class MainCanvas {
 
         this._removeModal();
         setTimeout(() => {
+          // this._setupControls();
           this._zoomFit(this._model, 60);
         }, 100);
-        this._scenenumber = 1;
+      }
+
+      const targets2 = this._raycaster.intersectObjects(this._tree);
+      if (targets2.length > 0) {
+        let object = targets2[0].object;
+        while (object.parent) {
+          object = object.parent;
+          if (object instanceof THREE.Group) {
+            break;
+          }
+        }
+        console.log('parent:', object);
+        this._isTreeModal = true;
+        this._zoomInven(this._inven, 80);
       }
     } else {
-      this._scenenumber = 1;
-      if (this._isAlert) {
-        this._removeAlert();
-      }
+      console.log('onclick2');
+      const width = this._canvasContainer.clientWidth;
+      const height = this._canvasContainer.clientHeight;
+      console.log(event);
+      console.log(event.offsetX);
+      console.log(event.offsetY);
 
-      if (this._isTreeModal) {
-        this._removeTreeModal();
-      }
+      const xy = {
+        x: (event.offsetX / width) * 2 - 1,
+        y: -(event.offsetY / height) * 2 + 1,
+      };
 
-      this._removeModal();
-      setTimeout(() => {
-        this._zoomFit(this._model, 60);
-      }, 100);
-    }
-
-    const targets2 = this._raycaster.intersectObjects(this._tree);
-    if (targets2.length > 0) {
-      let object = targets2[0].object;
-      while (object.parent) {
-        object = object.parent;
-        if (object instanceof THREE.Group) {
-          break;
-        }
-      }
-      console.log('parent:', object);
-      this._isTreeModal = true;
-      this._zoomInven(this._inven, 80);
+      //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
+      //  and Y components should be between -1 and 1.
+      this._raycaster.setFromCamera(xy, this._camera);
     }
   }
 
-  _setupTreeModal() {
-    const treeModal = document.querySelector(
-      '.treemodal',
-    ) as HTMLElement | null;
-    if (treeModal !== null) {
-      treeModal.style.display = 'flex';
-    }
-    this._isTreeModal = true;
-  }
+  // _setupTreeModal() {
+  //   const treeModal = document.querySelector(
+  //     '.treemodal',
+  //   ) as HTMLElement | null;
+  //   if (treeModal !== null) {
+  //     treeModal.style.display = 'flex';
+  //   }
+  //   this._isTreeModal = true;
+  // }
 
   _removeTreeModal() {
     this._scene.remove(this._showcase);
@@ -592,12 +636,8 @@ export class MainCanvas {
       this._scene2.add(...this._items);
       this._scenenumber = 2;
       this._setupControls();
+      this._setupPicking();
     }, 1500);
-
-    // const scene2 = new THREE.Scene();
-    // this._scene2 = scene2;
-    // this._scene2.add(object3d[1]);
-    // this.render2(this._scene2, this._camera);
   }
 
   //zoomout 함수
