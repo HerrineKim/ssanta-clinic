@@ -18,12 +18,6 @@ import java.util.stream.Collectors;
 public class NotiResponse {
     @Data
     @Builder
-    public static class GetNotiListReponse {
-        private List<GetNotiResponse> notiList;
-    }
-
-    @Data
-    @Builder
     @AllArgsConstructor
     public static class GetNotiResponse {
         private int notiId;

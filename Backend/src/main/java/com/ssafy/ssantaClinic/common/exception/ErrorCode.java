@@ -35,8 +35,9 @@ public enum ErrorCode {
     CHRISTMAS_IS_OVER(HttpStatus.BAD_REQUEST, "400", "1일에서 25일까지만 선물 가능합니다."),
 
     // SSE
-    SSE_SEND_ERROR(HttpStatus.BAD_REQUEST, "400", "SSE 전송 오류");
-
+    SSE_SEND_ERROR(HttpStatus.BAD_REQUEST, "400", "SSE 전송 오류"),
+    NOTI_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 알림이 존재하지 않습니다.");
+    
     private final HttpStatus status;
     private final String errorCode;
     private final String errorMessage;

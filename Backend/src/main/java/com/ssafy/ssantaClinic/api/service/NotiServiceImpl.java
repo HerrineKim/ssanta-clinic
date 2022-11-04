@@ -7,13 +7,17 @@ import com.ssafy.ssantaClinic.db.entity.Notification;
 import com.ssafy.ssantaClinic.db.entity.Type;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.EmitterRepository;
+import com.ssafy.ssantaClinic.db.repository.NotiRepository;
+import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @FileName : NotiServiceImpl
@@ -25,6 +29,8 @@ import java.util.Map;
 public class NotiServiceImpl implements NotiService {
     private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 60; // 1시간
     private final EmitterRepository emitterRepository;
+    private final NotiRepository notiRepository;
+    private final UserRepository userRepository;
 
     @Override
     public SseEmitter subscribe(String email, String lastEventId) {
@@ -103,4 +109,27 @@ public class NotiServiceImpl implements NotiService {
                 .isRead(false)
                 .build();
     }
+
+    @Override
+    public List<NotiResponse.GetNotiResponse> getNotiListByEmail(String email) {
+        /**
+         * @Method Name :  getNotiListByEmail
+         * @Method 설명 :  회원 이메일을 이용해 회원의 알림 리스트를 조회한다.
+         */
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        return notiRepository.findAllByUserId(user.getUserId())
+                .stream().map(NotiResponse.GetNotiResponse::new).collect(Collectors.toList());
+    }
+
+    @Override
+    public NotiResponse.GetNotiResponse getNotiById(int notiId) {
+        /**
+         * @Method Name :  getNotiById
+         * @Method 설명 :  알림 아이디를 이용해 알림을 조회한다.
+         */
+        Notification noti = notiRepository.findById(notiId).orElseThrow(() -> new CustomException(ErrorCode.NOTI_NOT_FOUND));
+        return new NotiResponse.GetNotiResponse(noti);
+    }
+
 }
