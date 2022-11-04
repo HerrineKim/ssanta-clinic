@@ -445,8 +445,8 @@ export class MainCanvas {
       // drag & drop 구현
 
       // x누르면 다시 돌아가는거 구현
-      console.log('close:', this._close);
-      console.log('raycaster:', this._raycaster);
+      // console.log('close:', this._close);
+      // console.log('raycaster:', this._raycaster);
       const closeTarget = this._raycaster.intersectObject(this._close);
       const treeTarget = this._raycaster.intersectObjects(this._tree);
       const itemTarget = this._raycaster.intersectObjects(this._items);
@@ -463,6 +463,9 @@ export class MainCanvas {
           this._zoomFit(this._model, 60);
         }, 100);
       }
+      // if (itemTarget.length > 0) {
+      //   this._setupDrag(itemTarget[0]);
+      // }
       console.log('treetarget:', treeTarget);
       console.log('itemTarget:', itemTarget);
     }
@@ -471,7 +474,7 @@ export class MainCanvas {
   _setupRotate(event: any) {
     if (this._scenenumber === 2) {
       event.preventDefault();
-      console.log('rotate', this._tree);
+      // console.log('rotate', this._tree);
       this._tree[0].rotateY(event.deltaY * 0.0005);
     }
   }
@@ -486,20 +489,16 @@ export class MainCanvas {
   // }
 
   _setupDrag() {
-    this._items.forEach((item) => {
+    console.log(this._items);
+    this._items.forEach((child) => {
       const controls = new DragControls(
-        item,
+        [child],
         this._camera,
         this._renderer.domElement,
       );
-      controls.addEventListener('dragstart', function (event) {
-        event.object.material.emissive.set(0xaaaaaa);
-      });
-
-      controls.addEventListener('dragend', function (event) {
-        event.object.material.emissive.set(0x000000);
-      });
+      controls.transformGroup = true;
     });
+    // controls1.transformGroup = true;
 
     // add event listener to highlight dragged objects
   }
