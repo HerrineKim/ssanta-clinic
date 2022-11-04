@@ -108,7 +108,7 @@
 }
 
 .memory-board {
-  overflow: hidden;
+  /* overflow: hidden; */
   display: flex;
   flex-direction: column;
   width: 80vmin;
