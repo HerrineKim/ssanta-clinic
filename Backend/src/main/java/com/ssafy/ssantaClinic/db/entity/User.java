@@ -33,7 +33,6 @@ public class User {
     @Column(length=30)
     private String nickName;
 
-    @NotBlank
     @Builder.Default
     @Column(length=30)
     @JsonIgnore
@@ -44,7 +43,6 @@ public class User {
     @JsonIgnore
     private String findPasswordNum;
 
-    @NotBlank
     @ColumnDefault("0")
     private int money;
 
