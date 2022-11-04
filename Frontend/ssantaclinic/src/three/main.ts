@@ -61,6 +61,7 @@ export class MainCanvas {
   _items: number[];
   _position: any[];
   _showcase: any;
+  _close: any;
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
@@ -116,7 +117,6 @@ export class MainCanvas {
 
     this._setupControls();
     this._setupPicking();
-    // this._setupClick();
     this._setupHover();
 
     window.onresize = this.resize.bind(this);
@@ -138,14 +138,6 @@ export class MainCanvas {
       requestAnimationFrame(this.render.bind(this));
     }
   }
-
-  //inven 볼때의 render
-  // render2(time: number) {
-  //   this._renderer.render(this._scene2, this._camera);
-  //   this.update(time);
-
-  //   requestAnimationFrame(this.render2.bind(this));
-  // }
 
   update2(time: number) {
     time *= 0.001;
@@ -296,6 +288,17 @@ export class MainCanvas {
         // this._scene.add(model);
       });
     });
+
+    // x button load
+    loader.load('main/close.glb', (gltf) => {
+      const model: any = gltf.scene;
+      this._close = model;
+
+      // model.position.set(10, 5, -4.5);
+      model.position.set(1, 1, 1);
+      model.name = 'close';
+    });
+
     this._items = items;
     this._inven = inven;
 
@@ -368,25 +371,23 @@ export class MainCanvas {
   // }
   //클릭 함수
   _onClick(event: any) {
+    const width = this._canvasContainer.clientWidth;
+    const height = this._canvasContainer.clientHeight;
+    console.log(event);
+    console.log(event.offsetX);
+    console.log(event.offsetY);
+
+    const xy = {
+      x: (event.offsetX / width) * 2 - 1,
+      y: -(event.offsetY / height) * 2 + 1,
+    };
+
+    //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
+    //  and Y components should be between -1 and 1.
+    this._raycaster.setFromCamera(xy, this._camera);
     if (this._scenenumber === 1) {
-      console.log('onclick111');
-      const width = this._canvasContainer.clientWidth;
-      const height = this._canvasContainer.clientHeight;
-      console.log(event);
-      console.log(event.offsetX);
-      console.log(event.offsetY);
-
-      const xy = {
-        x: (event.offsetX / width) * 2 - 1,
-        y: -(event.offsetY / height) * 2 + 1,
-      };
-      console.log(xy);
-      //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
-      //  and Y components should be between -1 and 1.
-      this._raycaster.setFromCamera(xy, this._camera);
-
       // 모든 3d 돌면서 더블클릭된 객체 zoomfit
-      console.log('click함수 실행:', this._group);
+      // console.log('click함수 실행:', this._group);    클릭한것 검사
       const targets = this._raycaster.intersectObjects(this._group);
       // const target = this._raycaster.intersectObject(this._group[11]);
       // console.log('target : ', target);
@@ -454,21 +455,13 @@ export class MainCanvas {
         this._zoomInven(this._inven, 80);
       }
     } else {
-      console.log('onclick2');
-      const width = this._canvasContainer.clientWidth;
-      const height = this._canvasContainer.clientHeight;
-      console.log(event);
-      console.log(event.offsetX);
-      console.log(event.offsetY);
-
-      const xy = {
-        x: (event.offsetX / width) * 2 - 1,
-        y: -(event.offsetY / height) * 2 + 1,
-      };
-
-      //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
-      //  and Y components should be between -1 and 1.
-      this._raycaster.setFromCamera(xy, this._camera);
+      // console.log('onclick2');
+      // drag & drop 구현
+      // x누르면 다시 돌아가는거 구현
+      const closeTarget = this._raycaster.intersectObjects(this._close);
+      if (closeTarget.length > 0) {
+        // scene1으롣 돌아가기
+      }
     }
   }
 
@@ -634,6 +627,7 @@ export class MainCanvas {
     setTimeout(() => {
       this._scene2.add(object3d[0]);
       this._scene2.add(...this._items);
+      this._scene2.add(this._close);
       this._scenenumber = 2;
       this._setupControls();
       this._setupPicking();
