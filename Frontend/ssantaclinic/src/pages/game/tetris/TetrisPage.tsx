@@ -1,5 +1,6 @@
 import React from 'react';
 import { createStage, isColliding } from './gameHelpers';
+import YouTube, { YouTubeProps } from 'react-youtube';
 
 // Custom hooks
 import { useInterval } from '../../../hooks/tetris/useInterval';
@@ -20,6 +21,26 @@ import {
 } from './TetrisPage.styles';
 
 const TetrisPage: React.FC = () => {
+  // YouTube example
+  // const onPlayerReady: YouTubeProps['onReady'] = (event) => {
+  //   // access to player in all event handlers via event.target
+  //   event.target.pauseVideo();
+  // };
+  const opts: YouTubeProps['opts'] = {
+    height: '100',
+    width: '100',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+      listType: 'playlist',
+      list: 'OLAK5uy_lt7KMCvK3ZUc8gkRdaHBwxS8B8dDAMbk4',
+      disablekb: 1,
+      // controls: 0,
+      fs: 0,
+      modestbranding: 1,
+    },
+  };
+
   const [dropTime, setDroptime] = React.useState<null | number>(null);
   const [gameOver, setGameOver] = React.useState(true);
 
@@ -107,6 +128,15 @@ const TetrisPage: React.FC = () => {
 
   return (
     <GlobalStyles>
+      <div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+        }}
+      >
+        <YouTube opts={opts} />
+      </div>
       <StyledTetrisWrapper
         role="button"
         tabIndex={0}
