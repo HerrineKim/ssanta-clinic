@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.db.entity;
 
+import com.ssafy.ssantaClinic.api.response.StoreResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,5 +31,14 @@ public class Item {
 
     @NotNull
     private int price;
+
+    public static StoreResponse.StoreItemListResponse EntityToDto(Item item) {
+        return StoreResponse.StoreItemListResponse.builder()
+                .itemId(item.getItemId())
+                .imgUrl(item.getImgUrl())
+                .itemName(item.getItemName())
+                .price(item.getPrice())
+                .build();
+    }
 
 }
