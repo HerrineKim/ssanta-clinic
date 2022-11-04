@@ -62,6 +62,10 @@ export class MainCanvas {
   _position: any[];
   _showcase: any;
 
+  // 보여줘야하는 scene 이어떤건지 결정
+  // 1이 기본, 2가 트리꾸미는 scene
+  _scenenumber = 1;
+
   constructor(items: number[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
     this._position = [
@@ -111,15 +115,28 @@ export class MainCanvas {
     // this._setupClick();
     this._setupHover();
 
+    const scene2 = scene;
+    this._scene2 = scene2;
+
     window.onresize = this.resize.bind(this);
     this.resize();
   }
 
   render(time: number) {
-    this._renderer.render(this._scene, this._camera);
-    this.update(time);
+    // console.log('!!!!');
+    if (this._scenenumber === 1) {
+      this._renderer.render(this._scene, this._camera);
+      this.update(time);
 
-    requestAnimationFrame(this.render.bind(this));
+      requestAnimationFrame(this.render.bind(this));
+    } else {
+      // inven scene
+      this._renderer.render(this._scene2, this._camera);
+      this.update2(time);
+
+      requestAnimationFrame(this.render.bind(this));
+      console.log(222);
+    }
   }
 
   //inven 볼때의 render
@@ -129,6 +146,11 @@ export class MainCanvas {
 
   //   requestAnimationFrame(this.render2.bind(this));
   // }
+
+  update2(time: number) {
+    time *= 0.001;
+    console.log('updaete2');
+  }
 
   update(time: number) {
     time *= 0.001; // second unit
@@ -392,7 +414,7 @@ export class MainCanvas {
       }
       console.log('parent:', object);
       this._isTreeModal = true;
-      this._zoomInven(this._inven, 60);
+      this._zoomInven(this._inven, 80);
     }
   }
 
@@ -500,8 +522,6 @@ export class MainCanvas {
   }
 
   _zoomInven(object3d: any[], viewAngle: number) {
-    console.log(object3d);
-
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
     const box1 = new THREE.Box3().setFromObject(object3d[0]);
@@ -558,8 +578,9 @@ export class MainCanvas {
       },
     });
     setTimeout(() => {
-      this._scene.add(object3d[0]);
-      this._scene.add(...this._items);
+      this._scene2.add(object3d[0]);
+      this._scene2.add(...this._items);
+      this._scenenumber = 2;
     }, 1500);
 
     // const scene2 = new THREE.Scene();
