@@ -43,7 +43,7 @@ public class User {
     @JsonIgnore
     private String findPasswordNum;
 
-    @ColumnDefault("0")
+    //@ColumnDefault("0")
     private int money;
 
     @OneToMany(mappedBy = "parent")
