@@ -60,6 +60,7 @@ export class MainCanvas {
   _tree: any;
   _items: number[];
   _position: any[];
+  _showcase: any;
 
   constructor(items: number[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
@@ -224,6 +225,7 @@ export class MainCanvas {
       // this._scene.add(model);
       // console.dir(model);
       console.log('showcase:', model);
+      this._showcase = model;
       inven.push(model);
     });
 
@@ -389,6 +391,7 @@ export class MainCanvas {
         }
       }
       console.log('parent:', object);
+      this._isTreeModal = true;
       this._zoomInven(this._inven, 60);
     }
   }
@@ -404,13 +407,8 @@ export class MainCanvas {
   }
 
   _removeTreeModal() {
-    const treeModal = document.querySelector(
-      '.treemodal',
-    ) as HTMLElement | null;
-    if (treeModal !== null) {
-      treeModal.style.display = 'none';
-    }
-    this._isTreeModal = false;
+    this._scene.remove(this._showcase);
+    this._scene.remove(...this._items);
   }
 
   _removeAlert() {
