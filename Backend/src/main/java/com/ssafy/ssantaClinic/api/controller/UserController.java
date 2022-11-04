@@ -125,10 +125,7 @@ public class UserController {
          * @Method 설명 : nickname을 받아서 중복된 nickname이 존재하는지 확인한다.
          */
 
-        return ResponseEntity.ok().body(
-                    UserResponse.DuplicatedResponse.builder()
-                            .duplicated(userService.isDuplicatedNickName(formRequest.getNickName()))
-                            .build());
+        return ResponseEntity.ok().body(userService.isDuplicatedNickName(formRequest.getNickName()));
     }
 
     @ApiOperation(value = "이메일 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
@@ -139,10 +136,7 @@ public class UserController {
          * @Method 설명 : email을 받아서 중복된 email이 존재하는지 확인한다.
          */
 
-        return ResponseEntity.ok().body(
-                UserResponse.DuplicatedResponse.builder()
-                        .duplicated(userService.isDuplicatedEmail(formRequest.getEmail()))
-                        .build());
+        return ResponseEntity.ok().body(userService.isDuplicatedEmail(formRequest.getEmail()));
     }
 
 
@@ -154,10 +148,7 @@ public class UserController {
          * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
          */
 
-        return ResponseEntity.ok().body(
-                UserResponse.findPasswordResponse.builder()
-                .findPasswordNum(userService.getFindPasswordNum(formRequest.getEmail()))
-                .build());
+        return ResponseEntity.ok().body(userService.getFindPasswordNum(formRequest.getEmail()));
     }
     @ApiOperation(value = "비밀번호재설정 url 전송", notes="회원 고유값을 포함한 비밀번호 재설정 url 메일 전송", httpMethod = "POST")
     @PostMapping("/find/password/url")
