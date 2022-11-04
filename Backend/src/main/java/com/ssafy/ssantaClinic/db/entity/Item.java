@@ -21,11 +21,11 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int itemId;
 
-    @NotBlank
+    @NotBlank(message = "최소 1개 이상의 문자로 이루어져야 합니다")
     @Column(length=50 ,unique = true)
     private String itemName;
 
-    @NotBlank
+    @NotBlank(message = "최소 1개 이상의 문자로 이루어져야 합니다")
     @Column(length=100)
     private String imgUrl;
 
