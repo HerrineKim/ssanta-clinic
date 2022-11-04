@@ -3,7 +3,7 @@ import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { MyRoomContainer } from './styled';
-
+import NotificationPage from '../../pages/NotificationPage';
 export const MyRoom = () => {
   // const TOKEN = useRecoilValue(selectToken);
   const NICKNAME = useRecoilValue(selectUserNickname);
@@ -24,14 +24,11 @@ export const MyRoom = () => {
         console.log(err.resonse);
       });
   });
+
   return (
     <MyRoomContainer>
       <h1>마이 룸</h1>
-      <h2>
-        안녕하세요 {ID}번 째 유저인 {NICKNAME}님
-      </h2>
-      <h3>당신의 토큰은 {TOKEN}이네요 야미~</h3>
-      <div></div>
+      <NotificationPage />
     </MyRoomContainer>
   );
 };
