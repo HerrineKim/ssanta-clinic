@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -21,18 +22,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @Column(length=100, nullable = false, unique = true)
+    @NotBlank
+    @Column(length=100, unique = true)
     private String email;
-
-    @Column(length=100, nullable = false)
+    @NotBlank
+    @Column(length=100)
     @JsonIgnore
     private String password;
-
-    @Column(length=30, nullable = false)
+    @NotBlank
+    @Column(length=30)
     private String nickName;
 
+    @NotBlank
     @Builder.Default
-    @Column(length=30, nullable = false)
+    @Column(length=30)
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
@@ -41,6 +44,7 @@ public class User {
     @JsonIgnore
     private String findPasswordNum;
 
+    @NotBlank
     @ColumnDefault("0")
     private int money;
 
