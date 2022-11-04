@@ -22,14 +22,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    @NotBlank
+    @NotBlank(message = "최소 1개 이상의 문자로 이루어져야 합니다")
     @Column(length=100, unique = true)
     private String email;
-    @NotBlank
+    @NotBlank(message = "최소 1개 이상의 문자로 이루어져야 합니다")
     @Column(length=100)
     @JsonIgnore
     private String password;
-    @NotBlank
+    @NotBlank(message = "최소 1개 이상의 문자로 이루어져야 합니다")
     @Column(length=30)
     private String nickName;
 
