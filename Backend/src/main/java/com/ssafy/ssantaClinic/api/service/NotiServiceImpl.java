@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NotiServiceImpl implements NotiService {
     private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 60; // 1시간
+    private static final String BASE_URL = "http://localhost:8080";
     private final EmitterRepository emitterRepository;
     private final NotiRepository notiRepository;
     private final UserRepository userRepository;
@@ -60,7 +61,6 @@ public class NotiServiceImpl implements NotiService {
         }
         return emitter;
     }
-
     @Override
     public void sendToClient(SseEmitter emitter, String id, Object data) {
         /**
@@ -101,12 +101,12 @@ public class NotiServiceImpl implements NotiService {
          * @Method Name :  createNotification
          * @Method 설명 :  알림 객체를 생성한다.
          */
-        String url = "/";
+        String url = BASE_URL;
         if(type.getType().equals(Type.GIFT.getType())){
-            url = "/api/calendar/" + id;
+            url += "/api/calendar/" + id;
         }
         else if(type.getType().equals(Type.REPLY.getType())){
-            url = "/api/letter/" + id;
+            url += "/api/letter/" + id;
         } else {
             throw new CustomException(ErrorCode.WRONG_NOTI_TYPE_ERROR);
         }
