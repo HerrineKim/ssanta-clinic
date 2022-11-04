@@ -118,7 +118,6 @@ public class NotiServiceImpl implements NotiService {
                 .isRead(false)
                 .build();
     }
-
     @Override
     public List<NotiResponse.GetNotiResponse> getNotiListByEmail(String email) {
         /**
@@ -130,7 +129,6 @@ public class NotiServiceImpl implements NotiService {
         return notiRepository.findAllByUserId(user.getUserId())
                 .stream().map(NotiResponse.GetNotiResponse::new).collect(Collectors.toList());
     }
-
     @Override
     public NotiResponse.GetNotiResponse getNotiById(int notiId, String email) {
         /**
@@ -142,7 +140,7 @@ public class NotiServiceImpl implements NotiService {
         if(!noti.getUser().getEmail().equals(email)){
             throw new CustomException(ErrorCode.NOTI_ACCESS_ERROR);
         }
+        notiRepository.deleteById(notiId);
         return new NotiResponse.GetNotiResponse(noti);
     }
-
 }
