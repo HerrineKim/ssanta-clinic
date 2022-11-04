@@ -505,6 +505,12 @@ export class MainCanvas {
 
       controls.addEventListener('dragend', function (event) {
         event.object.children[0].children[0].material.emissive.set(0x000000);
+
+        //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
+
+        //만난다면 장식품을 tree에 붙이고 종속시킴
+
+        //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
       });
 
       controls.addEventListener('drag', function (event) {
@@ -824,7 +830,3 @@ export class MainCanvas {
     this._renderer.setSize(width, height);
   }
 }
-
-// window.onload = function () {
-//   new App();
-// };
