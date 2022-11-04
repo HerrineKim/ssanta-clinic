@@ -36,7 +36,9 @@ public enum ErrorCode {
 
     // SSE
     SSE_SEND_ERROR(HttpStatus.BAD_REQUEST, "400", "SSE 전송 오류"),
-    NOTI_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 알림이 존재하지 않습니다.");
+    NOTI_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 알림이 존재하지 않습니다."),
+    NOTI_ACCESS_ERROR(HttpStatus.FORBIDDEN, "403", "알림 당사자만 알림을 조회할 수 있습니다."),
+    WRONG_NOTI_TYPE_ERROR(HttpStatus.BAD_REQUEST, "400", "잘못된 알림 타입입니다.");
     
     private final HttpStatus status;
     private final String errorCode;

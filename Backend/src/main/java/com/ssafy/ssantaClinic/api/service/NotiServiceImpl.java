@@ -76,12 +76,12 @@ public class NotiServiceImpl implements NotiService {
         }
     }
     @Override
-    public void send(User receiver, Type type, String message) {
+    public void send(User receiver, Type type, String message, int id) {
         /**
          * @Method Name :  send
          * @Method 설명 :  알림 생성부터 데이터 전송까지 관련된 모든 로직을 처리한다.
          */
-        Notification notification = createNotification(receiver, type, message);
+        Notification notification = createNotification(receiver, type, message, id);
         String email = receiver.getEmail();
 
         // 로그인 한 유저의 SseEmitter 모두 가져오기
@@ -96,14 +96,23 @@ public class NotiServiceImpl implements NotiService {
         );
     }
     @Override
-    public Notification createNotification(User receiver, Type type, String message) {
+    public Notification createNotification(User receiver, Type type, String message, int id) {
         /**
          * @Method Name :  createNotification
          * @Method 설명 :  알림 객체를 생성한다.
          */
+        String url = "/";
+        if(type.getType().equals(Type.GIFT.getType())){
+            url = "/api/calendar/" + id;
+        }
+        else if(type.getType().equals(Type.REPLY.getType())){
+            url = "/api/letter/" + id;
+        } else {
+            throw new CustomException(ErrorCode.WRONG_NOTI_TYPE_ERROR);
+        }
         return Notification.builder()
                 .user(receiver)
-                .url("/")
+                .url(url)
                 .message(message)
                 .type(type)
                 .isRead(false)
@@ -123,12 +132,16 @@ public class NotiServiceImpl implements NotiService {
     }
 
     @Override
-    public NotiResponse.GetNotiResponse getNotiById(int notiId) {
+    public NotiResponse.GetNotiResponse getNotiById(int notiId, String email) {
         /**
          * @Method Name :  getNotiById
          * @Method 설명 :  알림 아이디를 이용해 알림을 조회한다.
          */
         Notification noti = notiRepository.findById(notiId).orElseThrow(() -> new CustomException(ErrorCode.NOTI_NOT_FOUND));
+        // jwt 토큰 이메일과 알림 수신자의 이메일 비교
+        if(!noti.getUser().getEmail().equals(email)){
+            throw new CustomException(ErrorCode.NOTI_ACCESS_ERROR);
+        }
         return new NotiResponse.GetNotiResponse(noti);
     }
 

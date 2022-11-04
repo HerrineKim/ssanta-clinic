@@ -84,7 +84,7 @@ public class NotiController {
          */
         // 현재 로그인한 유저의 이메일 가져오기
         String email = JwtUtil.getCurrentUserEmail().orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
-        NotiResponse.GetNotiResponse noti = notiService.getNotiById(notiId);
+        NotiResponse.GetNotiResponse noti = notiService.getNotiById(notiId, email);
         return ResponseEntity.created(URI.create(noti.getUrl())).build();
     }
 

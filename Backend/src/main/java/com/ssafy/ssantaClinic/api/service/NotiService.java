@@ -11,8 +11,8 @@ import java.util.List;
 public interface NotiService {
     SseEmitter subscribe(String email, String lastEventId);
     void sendToClient(SseEmitter emitter, String id, Object data);
-    void send(User receiver, Type type, String message);
-    Notification createNotification(User receiver, Type type, String message);
+    void send(User receiver, Type type, String message, int id);
+    Notification createNotification(User receiver, Type type, String message, int id);
     List<NotiResponse.GetNotiResponse> getNotiListByEmail(String email);
-    NotiResponse.GetNotiResponse getNotiById(int notiId);
+    NotiResponse.GetNotiResponse getNotiById(int notiId, String email);
 }
