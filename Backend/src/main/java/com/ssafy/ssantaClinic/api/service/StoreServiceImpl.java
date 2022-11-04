@@ -32,16 +32,19 @@ public class StoreServiceImpl implements StoreService{
     private final UserRepository userRepository;
 
     @Override
-    public List<Item> getItemList() {
+    public List<StoreResponse.StoreItemListResponse> getItemList() {
         /**
          * @Method Name : getItemList
          * @Method 설명 : store에서 전시할 모든 아이템 목록을 가져온다.
          */
-        return itemRepository.findAll();
+        List<Item> items = itemRepository.findAll();
+        return items.stream()
+                .map(Item::EntityToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public int buyItem(int userId, int itemId, int count) {
+    public StoreResponse.BuyItemResponse buyItem(int userId, int itemId, int count) {
         /**
          * @Method Name : buyItem
          * @Method 설명 : store에서 아이템을 구매한다. => 회원 아이템 목록에 구매한 아이템을 추가하고 회원 잔고를 갱신한다.
@@ -63,9 +66,7 @@ public class StoreServiceImpl implements StoreService{
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
         int leftMoney = user.getMoney() - totalPrice;
-        System.out.println(user.getMoney());
-        System.out.println(totalPrice);
-        System.out.println(leftMoney);
+
         // 잔고가 0보다 작으면 살 수 없으므로 Error, 아니면 회원 잔고 갱신
         if ( leftMoney >= 0) {
             user.changeMoney(leftMoney);
@@ -90,8 +91,9 @@ public class StoreServiceImpl implements StoreService{
             // 기존에 가지고 있는 아이템에 count ++
             userItemBox.get().changeCount(userItemBox.get().getCount() + count);
         }
-
-        return leftMoney;
+        return StoreResponse.BuyItemResponse.builder()
+                .money(leftMoney)
+                .build();
     }
 
     @Override
@@ -106,10 +108,9 @@ public class StoreServiceImpl implements StoreService{
         // item 목록 형변환, serialize
         // 할 일) item 이미지 url도 responseDto에 추가해야함
         List<UserItemBox> userItemBoxes = userItemBoxRepository.findAllByUser_UserId(userId);
-        List<StoreResponse.UserItemListResponse> userItemList = userItemBoxes.stream()
+
+        return userItemBoxes.stream()
                 .map(UserItemBox::EntityToDto)
                 .collect(Collectors.toList());
-
-        return userItemList;
     }
 }
