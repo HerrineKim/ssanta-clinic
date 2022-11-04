@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,6 +28,7 @@ public class UserItemBox {
     @JoinColumn(name="item_id")
     private Item item;
 
+    @NotNull
     private int count;
 
     public void changeCount(int count){

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class Item {
     @Column(length=100)
     private String imgUrl;
 
-    @NotBlank
+    @NotNull
     private int price;
 
 }
