@@ -350,25 +350,6 @@ export class MainCanvas {
     this._raycaster = raycaster;
   }
 
-  //scene 2를 위한 setuppicking
-
-  // _onClick2(event: any) {
-  //   console.log('onclick2');
-  //   const width = this._canvasContainer.clientWidth;
-  //   const height = this._canvasContainer.clientHeight;
-  //   console.log(event);
-  //   console.log(event.offsetX);
-  //   console.log(event.offsetY);
-
-  //   const xy = {
-  //     x: (event.offsetX / width) * 2 - 1,
-  //     y: -(event.offsetY / height) * 2 + 1,
-  //   };
-
-  //   //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
-  //   //  and Y components should be between -1 and 1.
-  //   this._raycaster.setFromCamera(xy, this._camera);
-  // }
   //클릭 함수
   _onClick(event: any) {
     const width = this._canvasContainer.clientWidth;
@@ -458,9 +439,21 @@ export class MainCanvas {
       // console.log('onclick2');
       // drag & drop 구현
       // x누르면 다시 돌아가는거 구현
-      const closeTarget = this._raycaster.intersectObjects(this._close);
+      console.log('close:', this._close);
+      console.log('raycaster:', this._raycaster);
+      const closeTarget = this._raycaster.intersectObject(this._close);
+      console.log('closeTarget:', closeTarget);
       if (closeTarget.length > 0) {
         // scene1으롣 돌아가기
+
+        this._scene2.remove(this._showcase);
+        this._scene2.remove(...this._items);
+        this._scene2.remove(this._close);
+        this._scenenumber = 1;
+        this._setupControls();
+        setTimeout(() => {
+          this._zoomFit(this._model, 60);
+        }, 100);
       }
     }
   }
