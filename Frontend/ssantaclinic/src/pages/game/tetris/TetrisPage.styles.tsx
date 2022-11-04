@@ -12,6 +12,7 @@ export const StyledTetris = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 5px;
   padding-left: 40px;
   padding-right: 40px;
   margin: 0 auto;
@@ -25,7 +26,6 @@ export const StyledTetris = styled.div`
 
 export const GlobalStyles = styled.div`
   margin: 0;
-  padding: 20px;
   background: url(${bgImage}) #000;
   background-size: cover;
   background-position: center;
