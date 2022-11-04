@@ -2,10 +2,10 @@ import React, { useCallback, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import { SignUpContainer } from './styled';
-import { Button } from './styled';
-import { Input } from './styled';
-import { CheckButton } from './styled';
+import { SignUpContainer } from './styles';
+import { Button } from './styles';
+import { Input } from './styles';
+import { CheckButton } from './styles';
 
 export const SignUp = () => {
   const [email, setEmail] = useState<string>('');
