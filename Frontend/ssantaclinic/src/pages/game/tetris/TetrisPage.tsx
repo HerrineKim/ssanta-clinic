@@ -13,7 +13,11 @@ import Display from '../../../components/game/tetris/Display/Display';
 import StartButton from '../../../components/game/tetris/StartButton/StartButton';
 
 // Styles
-import { StyledTetrisWrapper, StyledTetris } from './TetrisPage.styles';
+import {
+  StyledTetrisWrapper,
+  StyledTetris,
+  GlobalStyles,
+} from './TetrisPage.styles';
 
 const TetrisPage: React.FC = () => {
   const [dropTime, setDroptime] = React.useState<null | number>(null);
@@ -102,7 +106,7 @@ const TetrisPage: React.FC = () => {
   }, dropTime);
 
   return (
-    <body>
+    <GlobalStyles>
       <StyledTetrisWrapper
         role="button"
         tabIndex={0}
@@ -128,7 +132,7 @@ const TetrisPage: React.FC = () => {
           <Stage stage={stage} />
         </StyledTetris>
       </StyledTetrisWrapper>
-    </body>
+    </GlobalStyles>
   );
 };
 
