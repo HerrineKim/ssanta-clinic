@@ -247,6 +247,7 @@ export class MainCanvas {
       model.children[0].children[0].children[0].children[0].children[0].material.color.set(
         0xff00ff,
       );
+
       // this._scene.add(model);
       // console.dir(model);
       console.log('showcase:', model);
@@ -283,12 +284,26 @@ export class MainCanvas {
         // console.log(index);
         const model = gltf.scene;
         // console.log(`${index}: `, model);
+        model.scale.set(0.01, 0.01, 0.01);
         const position = this._position[`${index}`];
         model.position.set(position[0], position[1], position[2]);
         items.push(model);
         // this._scene.add(model);
       });
     });
+
+    // loader.load('main/11.glb', (gltf) => {
+    //   // console.log(index);
+    //   const model = gltf.scene;
+    //   // console.log(`${index}: `, model);
+    //   model.scale.set(0.01, 0.01, 0.01);
+    //   model.position.set(9, 5, -3);
+    //   // model.position.set(position[0], position[1], position[2]);
+
+    //   items.push(model);
+    //   console.log('10번:', model);
+    //   this._scene.add(model);
+    // });
 
     // x button load
     loader.load('main/close.glb', (gltf) => {
@@ -357,6 +372,9 @@ export class MainCanvas {
 
   //클릭 함수
   _onClick(event: any) {
+    // if (event.target) {
+    //   console.log('onclick event target', event);
+    // }
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
     console.log('click event:', event);
@@ -372,6 +390,7 @@ export class MainCanvas {
     //  and Y components should be between -1 and 1.
     this._raycaster.setFromCamera(xy, this._camera);
     if (this._scenenumber === 1) {
+      // console.log('scenenumber1 _camera:', this._camera);
       // 모든 3d 돌면서 더블클릭된 객체 zoomfit
       // console.log('click함수 실행:', this._group);    클릭한것 검사
       const targets = this._raycaster.intersectObjects(this._group);
@@ -438,9 +457,10 @@ export class MainCanvas {
         }
         console.log('parent:', object);
         this._isTreeModal = true;
-        this._zoomInven(this._inven, 80);
+        this._zoomInven(this._inven, 90);
       }
     } else {
+      // console.log('scenenumber2 _camera:', this._camera);
       // scenenumber == 2 일때
       // console.log('onclick2');
       // drag & drop 구현
@@ -475,7 +495,7 @@ export class MainCanvas {
   _setupRotate(event: any) {
     if (this._scenenumber === 2) {
       event.preventDefault();
-      // console.log('rotate', this._tree);
+      console.log('rotate', this._tree);
       this._tree[0].rotateY(event.deltaY * 0.0005);
     }
   }
@@ -490,7 +510,8 @@ export class MainCanvas {
   // }
 
   _setupDrag() {
-    // console.log(this._items);
+    console.log(this._items);
+    console.log(this._tree);
     const positions = this._position;
     const tree = this._tree;
     // const raycaster = this._raycaster;
@@ -516,22 +537,27 @@ export class MainCanvas {
         // console.log('dragend event:', event);
         // console.log('drag raycaster intersect:', targets);
         //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
+        // console.log('world position:', event.object.getWorldPosition());
         const targets = controls.getRaycaster().intersectObjects(tree);
         if (targets.length > 0) {
           if (targets[0].object.name === 'tree') {
             //만난다면 장식품을 tree에 붙이고 종속시킴
-            console.log('tree 장식!');
+            console.log('tree 장식!', event.object);
+
+            event.object.position.setX(targets[0].point.x);
+            event.object.position.setY(targets[0].point.y);
+            event.object.position.setZ(targets[0].point.z);
           } else {
-            event.object.position.x = positions[child.name][0];
-            event.object.position.y = positions[child.name][1];
-            event.object.position.z = positions[child.name][2];
+            event.object.position.setX(positions[child.name][0]);
+            event.object.position.setY(positions[child.name][1]);
+            event.object.position.setZ(positions[child.name][2]);
           }
         } else {
           // console.log('else event:', event);
           console.log(positions[child.name][0]);
-          event.object.position.x = positions[child.name][0];
-          event.object.position.y = positions[child.name][1];
-          event.object.position.z = positions[child.name][2];
+          event.object.position.setX(positions[child.name][0]);
+          event.object.position.setY(positions[child.name][1]);
+          event.object.position.setZ(positions[child.name][2]);
           console.log(event.object.position);
         }
 
