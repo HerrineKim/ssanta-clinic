@@ -5,7 +5,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기
 //충돌 감지 를 위한 모듈들
 import { Octree } from 'three/examples/jsm/math/Octree.js';
 // import { Capsule } from 'three/examples/jsm/math/Capsule.js';
-import { Mesh } from 'three';
+import { Mesh, Vector3 } from 'three';
 import { gsap } from 'gsap';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { threadId } from 'worker_threads';
@@ -359,9 +359,9 @@ export class MainCanvas {
   _onClick(event: any) {
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
-    console.log(event);
-    console.log(event.offsetX);
-    console.log(event.offsetY);
+    console.log('click event:', event);
+    // console.log(event.offsetX);
+    // console.log(event.offsetY);
 
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
@@ -441,6 +441,7 @@ export class MainCanvas {
         this._zoomInven(this._inven, 80);
       }
     } else {
+      // scenenumber == 2 일때
       // console.log('onclick2');
       // drag & drop 구현
 
@@ -450,7 +451,7 @@ export class MainCanvas {
       const closeTarget = this._raycaster.intersectObject(this._close);
       const treeTarget = this._raycaster.intersectObjects(this._tree);
       const itemTarget = this._raycaster.intersectObjects(this._items);
-      console.log('closeTarget:', closeTarget);
+      // console.log('closeTarget:', closeTarget);
       if (closeTarget.length > 0) {
         // scene1으롣 돌아가기
 
@@ -490,7 +491,13 @@ export class MainCanvas {
 
   _setupDrag() {
     // console.log(this._items);
-    this._items.forEach((child) => {
+    const positions = this._position;
+    const tree = this._tree;
+    // const raycaster = this._raycaster;
+
+    this._items.forEach((child, index) => {
+      // console.log('item child:', child);
+      child.name = index;
       const controls = new DragControls(
         [child],
         this._camera,
@@ -499,22 +506,40 @@ export class MainCanvas {
       controls.transformGroup = true;
 
       controls.addEventListener('dragstart', function (event) {
-        // console.log(event.object);
+        // console.log('event.object:', event.object);
+
         event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
       });
 
       controls.addEventListener('dragend', function (event) {
         event.object.children[0].children[0].material.emissive.set(0x000000);
-
+        // console.log('dragend event:', event);
+        // console.log('drag raycaster intersect:', targets);
         //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
-
-        //만난다면 장식품을 tree에 붙이고 종속시킴
+        const targets = controls.getRaycaster().intersectObjects(tree);
+        if (targets.length > 0) {
+          if (targets[0].object.name === 'tree') {
+            //만난다면 장식품을 tree에 붙이고 종속시킴
+            console.log('tree 장식!');
+          } else {
+            event.object.position.x = positions[child.name][0];
+            event.object.position.y = positions[child.name][1];
+            event.object.position.z = positions[child.name][2];
+          }
+        } else {
+          // console.log('else event:', event);
+          console.log(positions[child.name][0]);
+          event.object.position.x = positions[child.name][0];
+          event.object.position.y = positions[child.name][1];
+          event.object.position.z = positions[child.name][2];
+          console.log(event.object.position);
+        }
 
         //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
       });
 
       controls.addEventListener('drag', function (event) {
-        console.log('drag');
+        // console.log('drag position:', position);
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
     });
@@ -614,6 +639,10 @@ export class MainCanvas {
   }
 
   _zoomInven(object3d: any[], viewAngle: number) {
+    const positions: any[] = [];
+    this._items.forEach((child) => {
+      positions.push(child.position);
+    });
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
     const box1 = new THREE.Box3().setFromObject(object3d[0]);
