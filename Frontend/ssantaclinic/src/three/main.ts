@@ -495,7 +495,7 @@ export class MainCanvas {
   _setupRotate(event: any) {
     if (this._scenenumber === 2) {
       event.preventDefault();
-      console.log('rotate', this._tree);
+      console.log('rotate', this._tree[0]);
       this._tree[0].rotateY(event.deltaY * 0.0005);
     }
   }
@@ -510,8 +510,8 @@ export class MainCanvas {
   // }
 
   _setupDrag() {
-    console.log(this._items);
-    console.log(this._tree);
+    console.log('items:', this._items);
+    console.log('tree:', this._tree);
     const positions = this._position;
     const tree = this._tree;
     // const raycaster = this._raycaster;
@@ -543,16 +543,28 @@ export class MainCanvas {
           if (targets[0].object.name === 'tree') {
             //만난다면 장식품을 tree에 붙이고 종속시킴
             console.log('tree 장식!', event.object);
-
             event.object.position.setX(targets[0].point.x);
             event.object.position.setY(targets[0].point.y);
             event.object.position.setZ(targets[0].point.z);
+            let object = targets[0].object;
+            while (object.parent) {
+              object = object.parent;
+              if (object instanceof THREE.Group) {
+                break;
+              }
+            }
+            console.log(object);
+            tree.push(event.object);
+            object.attach(event.object);
           } else {
+            // 나눌 필요 있음
+            console.log('tree가 아닌것 raycast');
             event.object.position.setX(positions[child.name][0]);
             event.object.position.setY(positions[child.name][1]);
             event.object.position.setZ(positions[child.name][2]);
           }
         } else {
+          console.log('target.length === 0');
           // console.log('else event:', event);
           console.log(positions[child.name][0]);
           event.object.position.setX(positions[child.name][0]);
@@ -569,6 +581,7 @@ export class MainCanvas {
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
     });
+    this._tree = tree;
   }
 
   _removeTreeModal() {
