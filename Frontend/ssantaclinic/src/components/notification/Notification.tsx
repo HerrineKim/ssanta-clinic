@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Input } from '../notification/NotiInput';
-import { NotiListState } from '../../store/store';
-import { useRecoilState } from 'recoil';
+// import { Input } from '../notification/NotiInput';
+// import { NotiListState } from '../../store/store';
+// import { useRecoilState } from 'recoil';
 import { NotiContainer } from './styled';
 
 export const Notification = () => {
@@ -26,7 +26,7 @@ export const Notification = () => {
         // notiList.set('John', 40);
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   });
 
