@@ -1,5 +1,8 @@
 package com.ssafy.ssantaClinic.common.auth.util;
 
+import com.ssafy.ssantaClinic.common.auth.UserSecurity;
+import com.ssafy.ssantaClinic.common.exception.CustomException;
+import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.Authentication;
@@ -49,6 +52,29 @@ public class JwtUtil {
         }
 
         return Optional.ofNullable(username);
+    }
+
+    /**
+     * @Method Name : getCurrentUserId
+     * @Method 설명 : Security Context의 Authentication 객체를 이용해 현재 로그인된 사용자의 userID를 반환한다.
+     */
+    public static int getCurrentUserId() {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) {
+            throw new CustomException(ErrorCode.SPRING_SECURITY_AUTHENTICATION_NOT_FOUND);
+        }
+        UserSecurity user = (UserSecurity) (authentication.getPrincipal());
+
+        return user.getUserId();
+    }
+
+    public static String getCurrentNickname(){
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null) {
+            throw new CustomException(ErrorCode.SPRING_SECURITY_AUTHENTICATION_NOT_FOUND);
+        }
+        UserSecurity user = (UserSecurity) (authentication.getPrincipal());
+        return user.getNickName();
     }
 
     /**
