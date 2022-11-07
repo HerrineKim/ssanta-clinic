@@ -44,7 +44,7 @@ public class NotiController {
     })
     @GetMapping(value = "/sub",
                 produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<?> subscribe(HttpServletRequest request,
+    public ResponseEntity<SseEmitter> subscribe(HttpServletRequest request,
                                        @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         /**
          * @Method Name : subscribe
@@ -52,13 +52,8 @@ public class NotiController {
          */
         // 현재 로그인한 유저의 이메일 가져오기
         String email = JwtUtil.getCurrentUserEmail().orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
-        notiService.subscribe(email, lastEventId);
-        // 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "text/event-stream");
-        headers.set("Cache-Control", "no-cache");
-        headers.set("Connection", "keep-alive");
-        return ResponseEntity.ok().headers(headers).build();
+        SseEmitter emitter = notiService.subscribe(email, lastEventId);
+        return ResponseEntity.ok(emitter);
     }
     @ApiOperation(value = "알림 리스트 조회", notes = "개인의 알림 리스트를 조회한다.")
     @ApiResponses({
