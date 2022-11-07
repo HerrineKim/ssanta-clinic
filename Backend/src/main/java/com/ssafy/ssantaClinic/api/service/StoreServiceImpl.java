@@ -14,6 +14,7 @@ import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -98,7 +99,7 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public List<StoreResponse.UserItemListResponse> getUserItemList(int userId) {
+    public StoreResponse.UserItemListResponse getUserItemList(int userId) {
         /**
          * @Method Name : getUserItemList
          * @Method 설명 : 개인이 보유하고 있는 아이템 목록을 조회한다.
@@ -109,9 +110,15 @@ public class StoreServiceImpl implements StoreService{
         // item 목록 형변환, serialize
         // 할 일) item 이미지 url도 responseDto에 추가해야함
         List<UserItemBox> userItemBoxes = userItemBoxRepository.findAllByUser_UserId(userId);
+        List<Integer> itemList = new ArrayList<>();
 
-        return userItemBoxes.stream()
-                .map(UserItemBox::EntityToDto)
-                .collect(Collectors.toList());
+        for (int i=0;i<userItemBoxes.size();i++){
+            for (int j=0;j<userItemBoxes.get(i).getCount();j++) {
+                itemList.add(userItemBoxes.get(i).getItem().getItemId());
+            }
+        }
+        return StoreResponse.UserItemListResponse.builder()
+                .itemList(itemList)
+                .build();
     }
 }
