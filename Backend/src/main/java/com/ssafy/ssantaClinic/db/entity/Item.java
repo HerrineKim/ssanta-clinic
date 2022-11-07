@@ -25,17 +25,12 @@ public class Item {
     @Column(length=50 ,unique = true)
     private String itemName;
 
-    @NotBlank(message = "최소 1개 이상의 문자로 이루어져야 합니다")
-    @Column(length=100)
-    private String imgUrl;
-
     @NotNull
     private int price;
 
     public static StoreResponse.StoreItemListResponse EntityToDto(Item item) {
         return StoreResponse.StoreItemListResponse.builder()
                 .itemId(item.getItemId())
-                .imgUrl(item.getImgUrl())
                 .itemName(item.getItemName())
                 .price(item.getPrice())
                 .build();
