@@ -9,6 +9,9 @@ import { Mesh, Vector3 } from 'three';
 import { gsap } from 'gsap';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { threadId } from 'worker_threads';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import axios from 'axios';
+
 // import { chdir } from 'process';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
@@ -373,11 +376,14 @@ export class MainCanvas {
 
   //클릭 함수
   _onClick(event: any) {
-    // console.log('event:', event);
-    // event.target.removeEventListener('click', this._onClick.bind(this));
-    // if (event.target) {
-    //   console.log('onclick event target', event);
-    // }
+    function saveArrayBuffer(buffer: any) {
+      const file = new Blob([buffer], { type: 'application/octet-stream' });
+      console.log('saveArray:', file);
+      return file;
+    }
+
+    let glbFile: Blob;
+
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
     // console.log('click event:', event);
@@ -463,6 +469,8 @@ export class MainCanvas {
         this._zoomInven(this._inven, 90);
       }
     } else {
+      const exporter = new GLTFExporter();
+
       // console.log('scenenumber2 _camera:', this._camera);
       // scenenumber == 2 일때
       // console.log('onclick2');
@@ -473,10 +481,45 @@ export class MainCanvas {
       // console.log('raycaster:', this._raycaster);
       const closeTarget = this._raycaster.intersectObject(this._close);
       const treeTarget = this._raycaster.intersectObjects(this._tree);
+
+      console.log('asdfasdf', this._tree);
+      // object = treeTarget[0].object;
+      // while (object.parent) {
+      //   object = object.parent;
+      //   if (object instanceof THREE.Group && object.name === 'tree') {
+      //     break;
+      //   }
+      // }
+
       const itemTarget = this._raycaster.intersectObjects(this._items);
+      const formData = new FormData();
       // console.log('closeTarget:', closeTarget);
       if (closeTarget.length > 0) {
         // scene1으롣 돌아가기
+        let glbFile: Blob;
+        exporter.parse(
+          this._tree[0],
+          function (result) {
+            console.log('result:', result);
+            glbFile = saveArrayBuffer(result);
+            formData.append('glbfile', glbFile);
+            console.log('result : ', glbFile);
+
+            axios({
+              url: 'http://localhost:8080/api/test',
+              method: 'post',
+              data: formData,
+            }).then((res) => {
+              console.log(res);
+            });
+          },
+          function (error) {
+            console.log(error);
+          },
+          { binary: true },
+        );
+
+        // 백에 glb 보내기
 
         this._scene2.remove(this._showcase);
         this._scene2.remove(...this._items);
@@ -484,6 +527,7 @@ export class MainCanvas {
         this._dragControls.forEach((control) => {
           control.deactivate();
         });
+
         this._scenenumber = 1;
         this._setupControls();
         setTimeout(() => {
@@ -493,7 +537,7 @@ export class MainCanvas {
       // if (itemTarget.length > 0) {
       //   this._setupDrag(itemTarget[0]);
       // }
-      // console.log('treetarget:', treeTarget);
+      console.log('treetarget:', treeTarget);
       // console.log('itemTarget:', itemTarget);
     }
   }
