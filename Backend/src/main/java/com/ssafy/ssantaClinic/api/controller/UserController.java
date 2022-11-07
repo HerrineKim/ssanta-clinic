@@ -119,7 +119,7 @@ public class UserController {
     }
     @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping("/check/nickname")
-    public ResponseEntity<?> checkDuplicateNickname(@RequestBody UserRequest.CheckDuplicateNicknameRequest formRequest){
+    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateNickname(@RequestBody UserRequest.CheckDuplicateNicknameRequest formRequest){
         /**
          * @Method Name : checkDuplicateNickname
          * @Method 설명 : nickname을 받아서 중복된 nickname이 존재하는지 확인한다.
@@ -130,7 +130,7 @@ public class UserController {
 
     @ApiOperation(value = "이메일 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping ("/check/email")
-    public ResponseEntity<?> checkDuplicateEmail(@RequestBody UserRequest.EmailRequest formRequest){
+    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateEmail(@RequestBody UserRequest.EmailRequest formRequest){
         /**
          * @Method Name : checkDuplicateEmail
          * @Method 설명 : email을 받아서 중복된 email이 존재하는지 확인한다.
@@ -142,7 +142,7 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 찾기", notes="비밀번호 재설정 고유값 반환", httpMethod = "POST")
     @PostMapping ("/find/password")
-    public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
+    public ResponseEntity<UserResponse.findPasswordResponse> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
         /**
          * @Method Name : findPassword
          * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
@@ -167,6 +167,16 @@ public class UserController {
          * @Method 설명 : 새로운 비밀번호를 받아서 수정한다.
          */
         userService.updatePassword(formRequest.getUserId(), formRequest.getPassword());
+    }
+
+    @ApiOperation(value = "회원 잔고 수정", notes="회원 잔고 수정", httpMethod = "PATCH")
+    @PatchMapping("/money")
+    public void updateMoney(@RequestBody UserRequest.UpdateMoneyRequest formRequest) {
+        /**
+         * @Method Name : updateMoney
+         * @Method 설명 : 회원 잔고를 수정한다.
+         */
+        userService.updateMoney(formRequest.getUserId(), formRequest.getMoney());
     }
 
 
