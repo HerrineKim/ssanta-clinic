@@ -39,4 +39,10 @@ public class UserRequest {
         private String password;
         private int userId;
     }
+
+    @Data
+    public static class UpdateMoneyRequest{
+        private int userId;
+        private int money;
+    }
 }
