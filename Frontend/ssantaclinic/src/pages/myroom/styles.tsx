@@ -6,6 +6,6 @@ export const Wrapper = styled.div`
 `;
 
 export const CanvasContainer = styled.div`
-  height: 80%;
+  height: 100%;
   background: #8a2be2;
 `;

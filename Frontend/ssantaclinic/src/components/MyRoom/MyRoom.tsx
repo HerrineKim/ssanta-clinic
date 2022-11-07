@@ -27,8 +27,8 @@ export const MyRoom = () => {
 
   return (
     <MyRoomContainer>
-      <h1>마이 룸</h1>
-      <NotificationPage />
+      {/* <h1>마이 룸</h1>
+      <NotificationPage /> */}
     </MyRoomContainer>
   );
 };
