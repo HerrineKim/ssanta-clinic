@@ -13,5 +13,5 @@ public interface CalendarService {
     AdventCalendar saveBox(String email, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException;
     List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(String email);
     List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(String email, String date);
-    void playAudio(String email, int boxId);
+    void playAudio(String email, int boxId) throws Exception;
 }
