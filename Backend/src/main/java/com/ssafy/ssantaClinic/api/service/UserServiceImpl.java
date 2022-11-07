@@ -143,5 +143,21 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
         user.changePassword(password);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateMoney(int userId, int money) {
+        /**
+         * @Method Name : updateMoney
+         * @Method 설명 : 회원 잔고를 수정한다.
+         */
+        User user = userRepository.getUserByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        user.changeMoney(money);
+
+        userRepository.save(user);
     }
 }

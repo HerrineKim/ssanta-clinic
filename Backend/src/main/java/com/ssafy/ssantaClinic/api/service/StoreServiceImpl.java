@@ -90,6 +90,7 @@ public class StoreServiceImpl implements StoreService{
         } else {
             // 기존에 가지고 있는 아이템에 count ++
             userItemBox.get().changeCount(userItemBox.get().getCount() + count);
+            userItemBoxRepository.save(userItemBox.get());
         }
         return StoreResponse.BuyItemResponse.builder()
                 .money(leftMoney)
