@@ -494,6 +494,7 @@ export class MainCanvas {
       const itemTarget = this._raycaster.intersectObjects(this._items);
       const formData = new FormData();
       // console.log('closeTarget:', closeTarget);
+      const TOKEN = localStorage.getItem('jwt') || '';
       if (closeTarget.length > 0) {
         // scene1으롣 돌아가기
         let glbFile: Blob;
@@ -506,9 +507,12 @@ export class MainCanvas {
             console.log('result : ', glbFile);
 
             axios({
-              url: 'http://localhost:8080/api/test',
+              url: 'http://localhost:8080/api/tree',
               method: 'post',
               data: formData,
+              headers: {
+                Authorization: TOKEN,
+              },
             }).then((res) => {
               console.log(res);
             });
