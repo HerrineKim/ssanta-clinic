@@ -178,6 +178,16 @@ public class UserController {
          */
         userService.updateMoney(formRequest.getUserId(), formRequest.getMoney());
     }
+    @ApiOperation(value = "회원 아이템 리스트 수정", notes="회원 아이템 리스트 수정", httpMethod = "PATCH")
+    @PatchMapping("/items/use")
+    public void updateUserItemList(@RequestBody UserRequest.UpdateUserItemRequest formRequest){
+        /**
+         * @Method Name : updateUserItemList
+         * @Method 설명 : 회원 아이템 리스트를 수정한다.
+         */
+
+        userService.updateUserItemList(formRequest.getUserId(), formRequest.getItemList());
+    }
 
 
 }
