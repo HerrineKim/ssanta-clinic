@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineEvent;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -185,6 +186,11 @@ public class CalendarServiceImpl implements CalendarService{
         try {
             audio = s3Service.downloadFile(audioUrl, boxId + " audio");
             Clip clip = AudioSystem.getClip();
+            clip.addLineListener(event -> {
+                if(LineEvent.Type.STOP.equals(event.getType())) {
+                    clip.close();
+                }
+            });
             stream = AudioSystem.getAudioInputStream(audio);
             clip.open(stream);
             clip.start();
