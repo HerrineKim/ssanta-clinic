@@ -35,10 +35,7 @@ public class UserItemBox {
         this.count = count;
     }
 
-    public static StoreResponse.UserItemListResponse EntityToDto(UserItemBox userItemBox) {
-        return StoreResponse.UserItemListResponse.builder()
-                .ItemId(userItemBox.getItem().getItemId())
-                .count(userItemBox.getCount())
-                .build();
+    public static int EntityToDto(UserItemBox userItemBox) {
+        return userItemBox.getItem().getItemId();
     }
 }
