@@ -224,11 +224,13 @@ export class MainCanvas {
 
     // 안눌러도 되는 맵 로드
     loader.load('main/main_santa.glb', (gltf) => {
-      console.log(gltf);
-      const model = gltf.scene;
+      // console.log(gltf);
+      // console.log(gltf.scene);
+      const originModel = gltf.scene;
+      const model = gltf.scene.children[0];
       console.log('LOAD model:', model);
       this._model = model;
-      this._scene.add(model);
+      this._scene.add(originModel);
       // console.log('model:', model);
 
       // 애니메이션 있을때
@@ -443,6 +445,7 @@ export class MainCanvas {
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
           console.log('shop!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
           // 트리 줌인 후에 꾸밀수 있도록 인벤토리
           // this._zoomFit(targets[0].object.parent, 60);
           // setTimeout(() => {
