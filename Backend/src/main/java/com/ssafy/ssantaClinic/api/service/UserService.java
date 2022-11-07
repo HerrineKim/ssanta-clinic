@@ -5,6 +5,7 @@ import com.ssafy.ssantaClinic.api.response.UserResponse;
 import com.ssafy.ssantaClinic.db.entity.User;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
@@ -27,5 +28,7 @@ public interface UserService {
     void updatePassword(int userId, String password);
 
     void updateMoney(int userId, int money);
+
+    void updateUserItemList(int userId, List<Integer> itemList);
 
 }
