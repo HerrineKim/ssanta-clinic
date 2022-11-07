@@ -12,5 +12,5 @@ public interface StoreService {
 
     StoreResponse.BuyItemResponse buyItem(int userId, int itemId, int count);
 
-    List<StoreResponse.UserItemListResponse> getUserItemList(int userId);
+    StoreResponse.UserItemListResponse getUserItemList(int userId);
 }
