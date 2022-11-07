@@ -26,4 +26,6 @@ public interface UserService {
 
     void updatePassword(int userId, String password);
 
+    void updateMoney(int userId, int money);
+
 }
