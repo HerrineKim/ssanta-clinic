@@ -4,10 +4,15 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기위 한 모듈
 //충돌 감지 를 위한 모듈들
 import { Octree } from 'three/examples/jsm/math/Octree.js';
-import { Capsule } from 'three/examples/jsm/math/Capsule.js';
-import { Mesh } from 'three';
+// import { Capsule } from 'three/examples/jsm/math/Capsule.js';
+import { Mesh, Vector3 } from 'three';
 import { gsap } from 'gsap';
-import { chdir } from 'process';
+import { DragControls } from 'three/examples/jsm/controls/DragControls';
+import { threadId } from 'worker_threads';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
+import axios from 'axios';
+
+// import { chdir } from 'process';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
 // type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
@@ -50,12 +55,39 @@ export class MainCanvas {
   _raycaster: any;
   _group: any;
   _isAlert: boolean;
+  _inven: any;
+  _scene2: any;
 
   _previousTime: any;
   _requestId: any;
+  _isTreeModal: boolean;
+  _tree: any;
+  _items: any[];
+  _position: any[];
+  _showcase: any;
+  _close: any;
 
-  constructor() {
+  // 보여줘야하는 scene 이어떤건지 결정
+  // 1이 기본, 2가 트리꾸미는 scene
+  _scenenumber = 1;
+
+  constructor(items: number[]) {
+    //(9, 0, -4.5);  오른쪽, 위, 앞
+    this._position = [
+      [7, 0.5, -2],
+      [7.5, 0.5, -2],
+      [8, 0.5, -2],
+      [8.5, 0.5, -2],
+      [9, 0.5, -2],
+      [7, 1, -2.5],
+      [7.5, 1, -2.5],
+      [8, 1, -2.5],
+      [8.5, 1, -2.5],
+      [9, 1, -2.5],
+    ];
+    this._items = items;
     this._isAlert = false;
+    this._isTreeModal = false;
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
     console.log('constructor');
@@ -76,13 +108,19 @@ export class MainCanvas {
     const scene = new THREE.Scene();
     this._scene = scene;
 
+    const axesHelper = new THREE.AxesHelper(5);
+    scene.add(axesHelper);
+
     // this._setupOctree();
     this._setupLight();
     this._setupModel();
     this._setupCamera();
+
+    const scene2 = scene;
+    this._scene2 = scene2;
+
     this._setupControls();
     this._setupPicking();
-    // this._setupClick();
     this._setupHover();
 
     window.onresize = this.resize.bind(this);
@@ -90,10 +128,25 @@ export class MainCanvas {
   }
 
   render(time: number) {
-    this._renderer.render(this._scene, this._camera);
-    this.update(time);
+    // console.log('!!!!');
+    if (this._scenenumber === 1) {
+      this._renderer.render(this._scene, this._camera);
+      this.update(time);
 
-    requestAnimationFrame(this.render.bind(this));
+      requestAnimationFrame(this.render.bind(this));
+    } else {
+      // inven scene
+      this._renderer.render(this._scene2, this._camera);
+      this.update2(time);
+
+      requestAnimationFrame(this.render.bind(this));
+    }
+  }
+
+  update2(time: number) {
+    time *= 0.001;
+    // console.log('updaete2');
+    this._controls.update();
   }
 
   update(time: number) {
@@ -108,122 +161,6 @@ export class MainCanvas {
 
     this._fps.update();
 
-    //애니메이션 update
-    // if (this._mixer) {
-    //   // console.log('mixer');  //mixer는 charecter.glb의 animation
-    //   const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
-    //   this._mixer.update(deltaTime);
-
-    //   //카메라 각도 조정
-    //   const angleCameraDirectionAxixsY =
-    //     Math.atan2(
-    //       this._camera.position.x - this._model.position.x,
-    //       this._camera.position.z - this._model.position.z,
-    //     ) + Math.PI;
-
-    //   //모델 회전 후 각도
-    //   const rotateQuarternion = new THREE.Quaternion();
-    //   rotateQuarternion.setFromAxisAngle(
-    //     new THREE.Vector3(0, 1, 0),
-    //     angleCameraDirectionAxixsY,
-    //     //  + this._directionOffset(),
-    //   );
-
-    //   //실제 회전
-    //   this._model.quaternion.rotateTowards(
-    //     rotateQuarternion,
-    //     THREE.MathUtils.degToRad(5),
-    //   );
-
-    //   //모뎅 이동 방향 = 카메라 방향
-    //   const walkDirection = new THREE.Vector3();
-    //   this._camera.getWorldDirection(walkDirection);
-
-    //   //하늘 땅으로 이동 x
-    //   // walkDirection.y = 0;
-    //   walkDirection.y = this._bOnTheGround ? 0 : -1; // 땅위에있으면 0 땅위가 아니라고 판단되면 y축으로 -1로이동(추락)
-    //   walkDirection.normalize();
-
-    //   // //키보드 입력에 대해 각도 회전
-    //   // walkDirection.applyAxisAngle(
-    //   //   new THREE.Vector3(0, 1, 0),
-    //   //   this._directionOffset(),
-    //   // );
-
-    //   //캐릭터 부드럽게 이동하기 위해
-    //   if (this._speed < this._maxSpeed) this._speed += this._acceleration;
-    //   else this._speed -= this._acceleration * 2;
-
-    //   //추락 속도
-    //   if (!this._bOnTheGround) {
-    //     this._fallingAcceleration += 1;
-    //     this._fallingSpeed += Math.pow(this._fallingAcceleration, 2);
-    //   } else {
-    //     this._fallingAcceleration = 0;
-    //     this._fallingSpeed = 0;
-    //   }
-
-    //   const velocity = new THREE.Vector3(
-    //     walkDirection.x * this._speed,
-    //     walkDirection.y * this._fallingSpeed,
-    //     walkDirection.z * this._speed,
-    //   );
-    //   const deltaPosition = velocity.clone().multiplyScalar(deltaTime);
-
-    //   // //이동 거리 계산
-    //   // const moveX = walkDirection.x * (this._speed * deltaTime);
-    //   // const moveZ = walkDirection.z * (this._speed * deltaTime);
-
-    //   // //계산된 거리만큼 이동
-    //   // this._model.position.x += moveX;
-    //   // this._model.position.z += moveZ;
-
-    //   // 이전에는 모델을 직접 움직였지만, 충돌 감지를 위해 캡슐이동후 모델을 그안에 넣는 형식으로 변환
-    //   this._model._capsule.translate(deltaPosition);
-
-    //   //충돌 검사
-    //   const result = this._worldOctree.capsuleIntersect(this._model._capsule);
-    //   if (result) {
-    //     //충돌
-    //     this._model._capsule.translate(
-    //       result.normal.multiplyScalar(result.depth),
-    //     );
-    //     this._bOnTheGround = true;
-    //   } else {
-    //     //충돌 x
-    //     this._bOnTheGround = false;
-    //   }
-
-    //   // 변경전 모델의 위치저장
-    //   const previousPosition = this._model.position.clone();
-    //   const capsuleHeight =
-    //     this._model._capsule.end.y -
-    //     this._model._capsule.start.y +
-    //     this._model._capsule.radius * 2; //캡슐높이
-    //   // 모델의 위치를 캡슐에 맞춤
-    //   this._model.position.set(
-    //     this._model._capsule.start.x,
-    //     this._model._capsule.start.y -
-    //       this._model._capsule.radius +
-    //       capsuleHeight / 2,
-    //     this._model._capsule.start.z,
-    //   );
-
-    //   // //카메라 위치도 모뎅 이동만큼 이동
-    //   // this._camera.position.x += moveX;
-    //   // this._camera.position.z += moveZ;
-
-    //   //카메라도 캡슐에 맞춰
-    //   this._camera.position.x -= previousPosition.x - this._model.position.x;
-    //   this._camera.position.z -= previousPosition.z - this._model.position.z;
-
-    //   //
-    //   this._controls.target.set(
-    //     this._model.position.x,
-    //     this._model.position.y,
-    //     this._model.position.z,
-    //   );
-    // }
     this._previousTime = time;
   }
 
@@ -233,88 +170,48 @@ export class MainCanvas {
     console.dir(this._worldOctree);
   }
 
+  // scene 1을 위한 controls
   _setupControls() {
-    this._controls = new OrbitControls(this._camera, this._canvasContainer);
+    if (this._scenenumber === 1) {
+      this._controls = new OrbitControls(this._camera, this._canvasContainer);
 
-    //캐릭터 카메라 중앙에 변경
-    // this._controls.target.set(0, 100, 0);
+      //orbicontrol shift 기능 없애기
+      this._controls.enablePan = false;
 
-    //orbicontrol shift 기능 없애기
-    this._controls.enablePan = false;
+      //마우스 회전 부드럽게
+      this._controls.enableDamping = true;
 
-    //마우스 회전 부드럽게
-    this._controls.enableDamping = true;
-
-    const stats = Stats();
-    this._canvasContainer.appendChild(stats.dom);
-    this._fps = stats;
+      const stats = Stats();
+      this._canvasContainer.appendChild(stats.dom);
+      this._fps = stats;
+      console.log('setoucontrols111');
+    } else {
+      // 트리 위주로 돌릴 수 있게
+      // 드래그앤 드롭
+      this._controls.enabled = false;
+      console.log('setupcontrols222');
+    }
   }
 
-  //애니메이션 지정하는 함수
-  // _processAniamtion() {
-  //   const previousAnimationAction = this._currentAnimationAction;
-  //   if (
-  //     this._pressedKeys['w'] ||
-  //     this._pressedKeys['a'] ||
-  //     this._pressedKeys['s'] ||
-  //     this._pressedKeys['d']
-  //   ) {
-  //     if (this._pressedKeys['shift']) {
-  //       this._currentAnimationAction = this._animationMap['Run'];
-  //       // this._speed = 350;
-  //       this._maxSpeed = 350;
-  //       this._acceleration = 3;
-  //     } else {
-  //       this._currentAnimationAction = this._animationMap['Walk'];
-  //       // this._speed = 80;
-  //       this._maxSpeed = 80;
-  //       this._acceleration = 3;
-  //     }
-  //   } else {
-  //     this._currentAnimationAction = this._animationMap['Idle'];
-  //     this._speed = 0;
-  //     this._maxSpeed = 0;
-  //     this._acceleration = 0;
-  //   }
-
-  //   if (previousAnimationAction !== this._currentAnimationAction) {
-  //     previousAnimationAction.fadeOut(0.5);
-  //     this._currentAnimationAction.reset().fadeIn(0.5).play();
-  //   }
-  // }
-
   _setupModel() {
-    // const planeGeometry = new THREE.PlaneGeometry(1000, 1000);          // 바닥면 생성
-    // const planeMaterial = new THREE.MeshPhongMaterial({ color: 0x878787 });
-    // const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-
-    // plane.rotation.x = -Math.PI/2;
-
-    // this._scene.add(plane);
-    // plane.receiveShadow = true;  // 평며은 그림자받기만
-
-    // //바닥평면을 옥트리객체에 추가
-    // this._worldOctree.fromGraphNode(plane);
+    const inven: any[] = [];
     const group: any = [];
     const loader = new GLTFLoader();
 
-    loader.load('main/ssanta.glb', (gltf) => {
+    // 안눌러도 되는 맵 로드
+    loader.load('main/santa.glb', (gltf) => {
       const model = gltf.scene;
       this._model = model;
       this._scene.add(model);
       // console.log('model:', model);
-      // model.children.forEach((child) => {
-      //   // model은 그림자 생성 true
-      //   if (child instanceof THREE.Group) {
-      //     // console.log(child, child.name);
-      //     child.castShadow = true;
-      //     child.receiveShadow = true;
-      //     group.push(child);
-      //   }
-      // });
+
       model.traverse((child) => {
         // console.log(child);
         // model은 그림자 생성 true
+
+        if (child instanceof THREE.PointLight) {
+          child.intensity = 2;
+        }
         if (child instanceof THREE.Group) {
           // console.log(child, child.name);
           group.push(child);
@@ -339,6 +236,90 @@ export class MainCanvas {
 
       console.log(model);
     });
+
+    loader.load('main/showcase.glb', (gltf) => {
+      const model: any = gltf.scene;
+      model.traverse((child: any) => {
+        if (child instanceof THREE.Group) {
+          // console.log(child, child.name);
+          // group.push(child);
+        }
+      });
+      model.scale.set(20, 20, 20);
+      model.position.set(9, 0, -4.5);
+      model.children[0].children[0].children[0].children[0].children[0].material.color.set(
+        0xff00ff,
+      );
+
+      // this._scene.add(model);
+      // console.dir(model);
+      console.log('showcase:', model);
+      this._showcase = model;
+      inven.push(model);
+    });
+
+    loader.load('main/lowtree.glb', (gltf) => {
+      const tree: any[] = [];
+      const model: any = gltf.scene;
+      model.traverse((child: any) => {
+        if (child instanceof THREE.Group) {
+          // console.log(child, child.name);
+          group.push(child);
+        }
+      });
+      model.position.set(5, 0, -4.5);
+      model.name = 'tree';
+      model.traverse((child: THREE.Object3D) => {
+        tree.push(child);
+        child.name = 'tree';
+      });
+      this._scene.add(model);
+      inven.push(model);
+      console.log('treegltf:', model);
+      this._tree = tree;
+    });
+    const items: any[] = [];
+    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    this._items.forEach((item, index) => {
+      // console.log('item:', item);
+      // console.log(index);
+      loader.load(`main/${item}.glb`, (gltf) => {
+        // console.log(index);
+        const model = gltf.scene;
+        // console.log(`${index}: `, model);
+        model.scale.set(0.01, 0.01, 0.01);
+        const position = this._position[`${index}`];
+        model.position.set(position[0], position[1], position[2]);
+        items.push(model);
+        // this._scene.add(model);
+      });
+    });
+
+    // loader.load('main/11.glb', (gltf) => {
+    //   // console.log(index);
+    //   const model = gltf.scene;
+    //   // console.log(`${index}: `, model);
+    //   model.scale.set(0.01, 0.01, 0.01);
+    //   model.position.set(9, 5, -3);
+    //   // model.position.set(position[0], position[1], position[2]);
+
+    //   items.push(model);
+    //   console.log('10번:', model);
+    //   this._scene.add(model);
+    // });
+
+    // x button load
+    loader.load('main/close.glb', (gltf) => {
+      const model: any = gltf.scene;
+      this._close = model;
+
+      // model.position.set(10, 5, -4.5);
+      model.position.set(1, 1, 1);
+      model.name = 'close';
+    });
+
+    this._items = items;
+    this._inven = inven;
 
     // scene에 있는 모든 3dobj 검사
 
@@ -380,87 +361,308 @@ export class MainCanvas {
     }
   }
 
-  // _setupClick() {
-  //   const raycaster2 = new THREE.Raycaster();
-  //   this._canvasContainer.addEventListener(
-  //     'dblclick',
-  //     this._setupModal.bind(this),
-  //   );
-  //   this._raycaster2 = raycaster2;
-  // }
-
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
+    console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
+
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
+    this._canvasContainer.addEventListener(
+      'wheel',
+      this._setupRotate.bind(this),
+    );
   }
+
   //클릭 함수
   _onClick(event: any) {
+    function saveArrayBuffer(buffer: any) {
+      const file = new Blob([buffer], { type: 'application/octet-stream' });
+      console.log('saveArray:', file);
+      return file;
+    }
+
+    let glbFile: Blob;
+
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
-    console.log(event);
-    console.log(event.offsetX);
-    console.log(event.offsetY);
+    // console.log('click event:', event);
+    // console.log(event.offsetX);
+    // console.log(event.offsetY);
 
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
       y: -(event.offsetY / height) * 2 + 1,
     };
-    console.log(xy);
+
     //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
     //  and Y components should be between -1 and 1.
     this._raycaster.setFromCamera(xy, this._camera);
+    if (this._scenenumber === 1) {
+      // console.log('scenenumber1 _camera:', this._camera);
+      // 모든 3d 돌면서 더블클릭된 객체 zoomfit
+      // console.log('click함수 실행:', this._group);    클릭한것 검사
+      const targets = this._raycaster.intersectObjects(this._group);
+      // const target = this._raycaster.intersectObject(this._group[11]);
+      // console.log('target : ', target);
+      // console.log('targets: ', targets);
+      if (targets.length > 0) {
+        if (targets[0].object.name === 'tree') {
+          console.log('tree!!!!!');
+          // 트리 줌인 후에 꾸밀수 있도록 인벤토리
+          // this._zoomFit(targets[0].object.parent, 60);
+          // setTimeout(() => {
+          // }, 1600);
+          // this._setupTreeModal();
+        } else if (targets[0].object.name === 'house') {
+          console.log('house!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
+          setTimeout(() => {
+            this._setupAlert();
+          }, 1500);
+        } else if (targets[0].object.name === 'ball1') {
+          console.log('ball1!!!!!!!!!!!!!!');
+        } else {
+          if (this._isAlert) {
+            this._removeAlert();
+          }
 
-    // scene에 있는 모든 3dobj 검사
-    // const cars: any = [];
-    // this._scene.traverse((obj3d: any) => {
-    //   if (obj3d.name === 'car') {
-    //     cars.push(obj3d);
-    //   }
-    // });
-    // this._cars = cars;
-    // console.log(cars);
+          if (this._isTreeModal) {
+            this._removeTreeModal();
+          }
+          this._scenenumber = 1;
 
-    // 모든 3d 돌면서 더블클릭된 객체 zoomfit
-    console.log('click함수 실행:', this._group);
-    const targets = this._raycaster.intersectObjects(this._group);
-    // const target = this._raycaster.intersectObject(this._group[11]);
-    // console.log('target : ', target);
-    console.log('targets: ', targets);
-    if (targets.length > 0) {
-      if (targets[0].object.name === 'tree') {
-        console.log('tree!!!!!');
-        // 트리 줌인 후에 꾸밀수 있도록 인벤토리
-        this._zoomFit(targets[0].object.parent, 60);
-        this._setupModal();
-      } else if (targets[0].object.name === 'house') {
-        console.log('house!!!!!!!!');
-        this._zoomFit(targets[0].object.parent, 60);
-        setTimeout(() => {
-          this._setupAlert();
-        }, 1500);
-      } else if (targets[0].object.name === 'ball1') {
-        console.log('ball1!!!!!!!!!!!!!!');
+          this._removeModal();
+          setTimeout(() => {
+            // this._setupControls();
+            this._zoomFit(this._model, 60);
+          }, 100);
+        }
       } else {
+        this._scenenumber = 1;
         if (this._isAlert) {
           this._removeAlert();
         }
+
+        if (this._isTreeModal) {
+          this._removeTreeModal();
+        }
+
         this._removeModal();
+        setTimeout(() => {
+          // this._setupControls();
+          this._zoomFit(this._model, 60);
+        }, 100);
+      }
+
+      const targets2 = this._raycaster.intersectObjects(this._tree);
+      if (targets2.length > 0) {
+        let object = targets2[0].object;
+        while (object.parent) {
+          object = object.parent;
+          if (object instanceof THREE.Group) {
+            break;
+          }
+        }
+        console.log('parent:', object);
+        this._isTreeModal = true;
+        this._zoomInven(this._inven, 90);
+      }
+    } else {
+      const exporter = new GLTFExporter();
+
+      // console.log('scenenumber2 _camera:', this._camera);
+      // scenenumber == 2 일때
+      // console.log('onclick2');
+      // drag & drop 구현
+
+      // x누르면 다시 돌아가는거 구현
+      // console.log('close:', this._close);
+      // console.log('raycaster:', this._raycaster);
+      const closeTarget = this._raycaster.intersectObject(this._close);
+      const treeTarget = this._raycaster.intersectObjects(this._tree);
+
+      console.log('asdfasdf', this._tree);
+      // object = treeTarget[0].object;
+      // while (object.parent) {
+      //   object = object.parent;
+      //   if (object instanceof THREE.Group && object.name === 'tree') {
+      //     break;
+      //   }
+      // }
+
+      const itemTarget = this._raycaster.intersectObjects(this._items);
+      const formData = new FormData();
+      // console.log('closeTarget:', closeTarget);
+      if (closeTarget.length > 0) {
+        // scene1으롣 돌아가기
+        let glbFile: Blob;
+        exporter.parse(
+          this._tree[0],
+          function (result) {
+            console.log('result:', result);
+            glbFile = saveArrayBuffer(result);
+            formData.append('glbfile', glbFile);
+            console.log('result : ', glbFile);
+
+            axios({
+              url: 'http://localhost:8080/api/test',
+              method: 'post',
+              data: formData,
+            }).then((res) => {
+              console.log(res);
+            });
+          },
+          function (error) {
+            console.log(error);
+          },
+          { binary: true },
+        );
+
+        // 백에 glb 보내기
+
+        this._scene2.remove(this._showcase);
+        this._scene2.remove(...this._items);
+        this._scene2.remove(this._close);
+        this._dragControls.forEach((control) => {
+          control.deactivate();
+        });
+
+        this._scenenumber = 1;
+        this._setupControls();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
         }, 100);
       }
-    } else {
-      if (this._isAlert) {
-        this._removeAlert();
-      }
-      this._removeModal();
-      setTimeout(() => {
-        this._zoomFit(this._model, 60);
-      }, 100);
+      // if (itemTarget.length > 0) {
+      //   this._setupDrag(itemTarget[0]);
+      // }
+      console.log('treetarget:', treeTarget);
+      // console.log('itemTarget:', itemTarget);
     }
   }
+
+  _setupRotate(event: any) {
+    if (this._scenenumber === 2) {
+      event.preventDefault();
+      // console.log('rotate', this._tree[0]);
+      this._tree[0].rotateY(event.deltaY * 0.0005);
+    }
+  }
+  // _setupTreeModal() {
+  //   const treeModal = document.querySelector(
+  //     '.treemodal',
+  //   ) as HTMLElement | null;
+  //   if (treeModal !== null) {
+  //     treeModal.style.display = 'flex';
+  //   }
+  //   this._isTreeModal = true;
+  // }
+  _dragControls: any[] = [];
+  _setupDrag() {
+    console.log('items:', this._items);
+    console.log('tree:', this._tree);
+    const positions = this._position;
+    const tree = this._tree;
+    let items = this._items;
+    // const raycaster = this._raycaster;
+
+    items.forEach((child, index) => {
+      // console.log('item child:', child);
+      child.name = index;
+      const controls = new DragControls(
+        [child],
+        this._camera,
+        this._renderer.domElement,
+      );
+      controls.transformGroup = true;
+
+      controls.addEventListener('dragstart', function (event) {
+        const targets = controls.getRaycaster().intersectObjects(tree);
+        let object;
+        if (targets.length > 0) {
+          object = targets[0].object;
+          while (object.parent) {
+            object = object.parent;
+            if (object instanceof THREE.Group && object.name === 'tree') {
+              break;
+            }
+          }
+        }
+        console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
+        // 장식품이 트리에 붙어있는 것일때
+        if (event.object.parent === object) {
+          console.log('parent = event.object');
+          event.object.removeFromParent();
+        }
+        event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+      });
+
+      controls.addEventListener('dragend', (event) => {
+        const targets = controls.getRaycaster().intersectObjects(tree);
+        console.log('dragend targets:', targets);
+        event.object.children[0].children[0].material.emissive.set(0x000000);
+
+        //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
+        // console.log('world position:', event.object.getWorldPosition());
+
+        if (targets.length > 0) {
+          if (targets[0].object.name === 'tree') {
+            //만난다면 장식품을 tree에 붙이고 종속시킴
+            console.log('tree 장식!', event.object, targets);
+            event.object.position.setX(targets[0].point.x);
+            event.object.position.setY(targets[0].point.y);
+            event.object.position.setZ(targets[0].point.z);
+            let object = targets[0].object;
+            while (object.parent) {
+              object = object.parent;
+              if (object instanceof THREE.Group) {
+                break;
+              }
+            }
+
+            items = items.filter((obj) => obj !== event.object);
+            object.attach(event.object);
+            this._items = items;
+          } else {
+            // 나눌 필요 있음
+            // event.object.removeFromParent();
+            console.log('tree가 아닌것 raycast');
+            event.object.position.setX(positions[child.name][0]);
+            event.object.position.setY(positions[child.name][1]);
+            event.object.position.setZ(positions[child.name][2]);
+          }
+        } else {
+          // event.object.removeFromParent();
+          console.log('remove object:', event.object);
+          console.log('target.length === 0');
+          // console.log('else event:', event);
+          console.log(positions[child.name][0]);
+          event.object.position.setX(positions[child.name][0]);
+          event.object.position.setY(positions[child.name][1]);
+          event.object.position.setZ(positions[child.name][2]);
+          console.log(event.object.position);
+        }
+
+        //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
+      });
+
+      controls.addEventListener('drag', function (event) {
+        // console.log('drag position:', position);
+        event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
+      });
+      this._dragControls.push(controls);
+    });
+    // this._tree = tree;
+
+    // this._items = items;
+  }
+
+  _removeTreeModal() {
+    this._scene.remove(this._showcase);
+    this._scene.remove(...this._items);
+  }
+
   _removeAlert() {
     const alert = document.querySelector('.alert') as HTMLElement | null;
     console.log(alert);
@@ -547,6 +749,77 @@ export class MainCanvas {
         );
       },
     });
+  }
+
+  _zoomInven(object3d: any[], viewAngle: number) {
+    const positions: any[] = [];
+    this._items.forEach((child) => {
+      positions.push(child.position);
+    });
+    // console.log('zoomfit object3d: ', object3d);
+    //box 는 객체를 담는 최소크기 박스
+    const box1 = new THREE.Box3().setFromObject(object3d[0]);
+    const box2 = new THREE.Box3().setFromObject(object3d[1]);
+    const box = new THREE.Box3().union(box1);
+    box.union(box2);
+    //box를통해 얻을 수있는 가장 긴 모서리 길이
+    const sizeBox = box.getSize(new THREE.Vector3()).length();
+    //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
+    const centerBox = box.getCenter(new THREE.Vector3());
+
+    const direction = new THREE.Vector3(0, 1, 0);
+    direction.applyAxisAngle(
+      new THREE.Vector3(1, 0, 0),
+      THREE.MathUtils.degToRad(viewAngle),
+    );
+
+    const halfSizeModel = sizeBox * 0.5;
+    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
+    const distance = halfSizeModel / Math.tan(halfFov);
+
+    const newPosition = new THREE.Vector3().copy(
+      direction.multiplyScalar(distance).add(centerBox),
+    );
+
+    // this._camera.position.copy(newPosition);
+    // this._controls.target.copy(centerBox);
+
+    //애니메이션 라이브러리 gsap
+    //카메라 위치변경
+    gsap.to(this._camera.position, {
+      duration: 1.5,
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+    });
+
+    //this._controls.target.copy(centerBox);
+    // console.log(this._controls);
+    // console.log(this._controls.target);
+    // 타겟위치변경
+    gsap.to(this._controls.target, {
+      duration: 0.5,
+      x: centerBox.x,
+      y: centerBox.y,
+      z: centerBox.z,
+      onUpdate: () => {
+        //애니메이션 수행중에 깜빡거리는 현상 방지
+        this._camera.lookAt(
+          this._controls.target.x,
+          this._controls.target.y,
+          this._controls.target.z,
+        );
+      },
+    });
+    setTimeout(() => {
+      this._scene2.add(object3d[0]);
+      this._scene2.add(...this._items);
+      this._scene2.add(this._close);
+      this._scenenumber = 2;
+      this._setupControls();
+
+      this._setupDrag();
+    }, 1500);
   }
 
   //zoomout 함수
@@ -699,7 +972,3 @@ export class MainCanvas {
     this._renderer.setSize(width, height);
   }
 }
-
-// window.onload = function () {
-//   new App();
-// };
