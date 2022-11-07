@@ -18,6 +18,9 @@ public enum ErrorCode {
     JWT_TOKEN_ACCESS_DENIED(HttpStatus.FORBIDDEN, "403", "접근이 거부되었습니다."),
     JWT_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "401", "JWT 토큰을 찾을 수 없습니다."),
 
+    SPRING_SECURITY_AUTHENTICATION_UNKNOWN_ERROR(HttpStatus.UNAUTHORIZED, "401", "Authentication 객체가 존재하지 않습니다."),
+    SPRING_SECURITY_AUTHENTICATION_NOT_FOUND(HttpStatus.UNAUTHORIZED, "401", "Authentication 객체에 유효한 principal 객체가 존재하지 않습니다."),
+
     // 로그인
     LOGIN_NOT_FOUND_ID(HttpStatus.NOT_FOUND, "404", "해당 아이디를 찾을 수 없습니다"),
     NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "404", "해당 유저가 존재하지 않습니다"),

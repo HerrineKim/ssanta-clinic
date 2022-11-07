@@ -1,11 +1,11 @@
 package com.ssafy.ssantaClinic.common.auth.util;
 
+import com.ssafy.ssantaClinic.common.auth.UserSecurity;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -32,6 +30,7 @@ public class JwtManager implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(JwtManager.class);
     private static final String AUTHORITIES_KEY = "auth";
     private static final String USER_ID = "userId";
+    private static final String NICK_NAME = "nickName";
     private final String secret;
 
     private UserRepository userRepository;
@@ -79,10 +78,12 @@ public class JwtManager implements InitializingBean {
         long now = (new Date()).getTime();
         Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
+        com.ssafy.ssantaClinic.db.entity.User user = userRepository.getUserByEmail(authentication.getName());
         // 토큰 생성
         return Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim(USER_ID, userRepository.getUserByEmail(authentication.getName()).getUserId())
+                .claim(USER_ID, user.getUserId())
+                .claim(NICK_NAME, user.getNickName())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)
@@ -124,8 +125,9 @@ public class JwtManager implements InitializingBean {
 //                        .map(SimpleGrantedAuthority::new)
 //                        .collect(Collectors.toList());
         List<GrantedAuthority> authorities = new ArrayList<>();
-        User principal = new User(claims.getSubject(), "", authorities);
-
+        int userId = claims.get(USER_ID, Integer.class);
+        String nickName = claims.get(NICK_NAME, String.class);
+        UserSecurity principal = new UserSecurity(userId, nickName, claims.getSubject(), "", authorities);
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
     }
 
@@ -162,5 +164,31 @@ public class JwtManager implements InitializingBean {
                 .parseClaimsJws(token)
                 .getBody()
                 .getExpiration();
+    }
+    public int getUserId(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get(USER_ID, Integer.class);
+    }
+
+    public String getEmail(String token){
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+
+    public String getNickName(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get(NICK_NAME, String.class);
     }
 }
