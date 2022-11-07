@@ -36,3 +36,4 @@ src/main/resources/account.properties
 
 ### VS Code ###
 .vscode/
+/src/test/java/com/ssafy/ssantaClinic/**
