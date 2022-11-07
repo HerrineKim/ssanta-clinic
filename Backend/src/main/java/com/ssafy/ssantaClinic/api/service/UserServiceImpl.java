@@ -6,6 +6,9 @@ import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.common.util.SHA256;
 import com.ssafy.ssantaClinic.db.entity.User;
+import com.ssafy.ssantaClinic.db.entity.UserItemBox;
+import com.ssafy.ssantaClinic.db.repository.ItemRepository;
+import com.ssafy.ssantaClinic.db.repository.UserItemBoxRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 /**
  * @FileName : UserServiceImpl
@@ -27,6 +32,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
+    private final UserItemBoxRepository userItemBoxRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final JavaMailSender mailSender;
@@ -159,5 +166,31 @@ public class UserServiceImpl implements UserService{
         user.changeMoney(money);
 
         userRepository.save(user);
+    }
+
+    @Override
+    public void updateUserItemList(int userId, List<Integer> itemList) {
+        /**
+         * @Method Name : updateUserItemList
+         * @Method 설명 : 회원 아이템 리스트를 수정한다.
+         */
+
+        HashMap<Integer,Integer> userItemMap = new HashMap<>();
+
+        for (int i=0; i<itemList.size();i++) {
+            int item = itemList.get(i);
+            userItemMap.put(item, userItemMap.containsKey(item) ? userItemMap.get(item) + 1 : 1);
+        }
+
+        userItemMap.forEach((itemId, count) -> {
+            int userItemBoxId = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId,itemId).get().getUserItemBoxId();
+            UserItemBox userItemBox = UserItemBox.builder()
+                    .userItemBoxId(userItemBoxId)
+                    .user(userRepository.getUserByUserId(userId).get())
+                    .item(itemRepository.getItemByItemId(itemId).get())
+                    .count(count)
+                    .build();
+            userItemBoxRepository.save(userItemBox);
+        });
     }
 }
