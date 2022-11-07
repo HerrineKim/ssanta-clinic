@@ -66,6 +66,14 @@ export class MainCanvas {
   _position: any[];
   _showcase: any;
   _close: any;
+  // _snow: boolean;
+  _shop: THREE.Object3D[];
+  _game1: THREE.Object3D[];
+  _game2: THREE.Object3D[];
+  _game3: THREE.Object3D[];
+  _game4: THREE.Object3D[];
+  _letter: THREE.Object3D[];
+  _home: THREE.Object3D[];
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
@@ -88,6 +96,14 @@ export class MainCanvas {
     this._items = items;
     this._isAlert = false;
     this._isTreeModal = false;
+    this._shop = [];
+    this._game1 = [];
+    this._game2 = [];
+    this._game3 = [];
+    this._game4 = [];
+    this._letter = [];
+    this._home = [];
+
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
     console.log('constructor');
@@ -154,6 +170,13 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
+    // if (this._snow) {
+    //   if (this._mixer) {
+    //     // console.log('mixer');  //mixer는 charecter.glb의 animation
+    //     const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
+    //     this._mixer.update(deltaTime);
+    //   }
+    // }
 
     // 모델이 움직일때마다 모델박스 바껴야 하므로
     if (this._boxHelper) {
@@ -200,7 +223,7 @@ export class MainCanvas {
     const loader = new GLTFLoader();
 
     // 안눌러도 되는 맵 로드
-    loader.load('main/main_santa.gltf', (gltf) => {
+    loader.load('main/main_santa.glb', (gltf) => {
       console.log(gltf);
       const model = gltf.scene;
       console.log('LOAD model:', model);
@@ -208,41 +231,40 @@ export class MainCanvas {
       this._scene.add(model);
       // console.log('model:', model);
 
+      // 애니메이션 있을때
+      // const animationClips = gltf.animations; //THREE.AnimationCLip []
+      // const mixer = new THREE.AnimationMixer(model);
+      // const animationMap: any = {};
+      // animationClips.forEach((clip) => {
+      //   const name = clip?.name;
+      //   console.log(name);
+      //   animationMap[name] = mixer.clipAction(clip); //THREE.AnimationAction
+      // });
+      // this._mixer = mixer;
+      // this._animationMap = animationMap;
+      // this._currentAnimationAction = this._animationMap['Take 001'];
+      // this._currentAnimationAction.play();
+
       model.traverse((child) => {
         // console.log(child);
-        // model은 그림자 생성 true
-
-        // if (child instanceof THREE.PointLight) {
-        //   child.intensity = 2;
-        // }
-        if (child instanceof THREE.Group) {
-          console.log('group:', child);
-          group.push(child);
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if (child.name === 'shop') {
+          this._shop.push(child);
+        } else if (child.name === 'game1') {
+          this._game1.push(child);
+        } else if (child.name === 'game2') {
+          this._game2.push(child);
+        } else if (child.name === 'game3') {
+          this._game3.push(child);
+        } else if (child.name === 'game4') {
+          this._game4.push(child);
+        } else if (child.name === 'letter') {
+          this._letter.push(child);
+        } else if (child.name === 'home') {
+          this._home.push(child);
         }
-        if (child instanceof THREE.Camera) {
-          console.log('camera:', child);
-          // group.push(child);
-        }
-        if (child instanceof THREE.PointLight) {
-          console.log('pointlight:', child);
-          // group.push(child);
-        }
-        if (child instanceof THREE.SpotLight) {
-          console.log('spotlight:', child);
-          // group.push(child);
-        }
-        if (child instanceof THREE.AmbientLight) {
-          console.log('ambientlight:', child);
-          // group.push(child);
-        }
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          // console.log('mesh: ', child);
-          if (child.parent) {
-            child.name = child.parent.name;
-          }
-        }
+        // console.log('mesh', child.name);
       });
 
       this._setupOctree(model);
@@ -419,21 +441,29 @@ export class MainCanvas {
       // console.log('target : ', target);
       // console.log('targets: ', targets);
       if (targets.length > 0) {
-        if (targets[0].object.name === 'tree') {
-          console.log('tree!!!!!');
+        if (targets[0].object.name === 'shop') {
+          console.log('shop!!!!!');
           // 트리 줌인 후에 꾸밀수 있도록 인벤토리
           // this._zoomFit(targets[0].object.parent, 60);
           // setTimeout(() => {
           // }, 1600);
           // this._setupTreeModal();
-        } else if (targets[0].object.name === 'house') {
-          console.log('house!!!!!!!!');
+        } else if (targets[0].object.name === 'home') {
+          console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
           setTimeout(() => {
             this._setupAlert();
           }, 1500);
-        } else if (targets[0].object.name === 'ball1') {
-          console.log('ball1!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game1') {
+          console.log('game1!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game2') {
+          console.log('game2!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game3') {
+          console.log('game3!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game4') {
+          console.log('game4!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'letter') {
+          console.log('letter!!!!!!!!!!!!!!');
         } else {
           if (this._isAlert) {
             this._removeAlert();
