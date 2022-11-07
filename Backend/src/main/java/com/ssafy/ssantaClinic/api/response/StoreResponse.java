@@ -11,7 +11,6 @@ public class StoreResponse {
     @Builder
     public static class StoreItemListResponse {
         private int itemId;
-        private String imgUrl;
         private String itemName;
         private int price;
     }
