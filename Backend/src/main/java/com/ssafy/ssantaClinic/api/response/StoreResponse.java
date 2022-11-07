@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class StoreResponse {
 
@@ -23,7 +24,6 @@ public class StoreResponse {
     @Data
     @Builder
     public static class UserItemListResponse {
-        private int ItemId;
-        private int count;
+        private List<Integer> itemList;
     }
 }
