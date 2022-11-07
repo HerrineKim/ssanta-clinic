@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
 // 좌측 상단
@@ -48,6 +50,47 @@ import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
 
 export function CalendarPage() {
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+
+  const [content, setContent] = useState<string>('');
+  const [audioUrl, setAudioUrl] = useState<string>('');
+  const [imges, setImges] = useState<[]>([]);
+  const [sender, setSender] = useState<string>('');
+
+  const getBoxInfo = () => {
+    axios
+      .get('http://localhost:8080/api/calendar?boxId=3', {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setContent(res.data.content);
+        setAudioUrl(res.data.audioUrl);
+        setImges(res.data.imges);
+        setSender(res.data.sender);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+  // 녹음 재생(api/calendar/play?boxId=1)
+  const play = () => {
+    axios
+      .get('http://localhost:8080/api/calendar/play?boxId=' + '3', {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
   // 모달창 노출 여부
   // const [calendarOpen, setCalendarOpen] = React.useState<boolean>(false);
   // // 모달창 노출
@@ -56,6 +99,26 @@ export function CalendarPage() {
   // };
   return (
     <CalendarPageContainer>
+      {/* 녹음 불러오는 버튼 */}
+      <button
+        onClick={() => {
+          play();
+        }}
+      >
+        재생
+      </button>
+      <button
+        onClick={() => {
+          getBoxInfo();
+        }}
+      >
+        박스 정보
+      </button>
+      {/* 박스 내용  */}
+      <div>{content}</div>
+      <div>{audioUrl}</div>
+      <div>{imges}</div>
+      <div>{sender}</div>
       <CalendarLeftContainer>
         <MiniContainerOne>
           <BoxOne>1</BoxOne>
