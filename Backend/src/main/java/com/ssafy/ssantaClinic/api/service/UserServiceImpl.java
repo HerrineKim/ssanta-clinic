@@ -20,6 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -121,7 +123,7 @@ public class UserServiceImpl implements UserService{
         SHA256 sha256 = new SHA256();
 
         return UserResponse.findPasswordResponse.builder()
-                .findPasswordNum(sha256.encrypt(user.getEmail()))
+                .findPasswordNum(sha256.encrypt(user.getEmail()+LocalTime.now(ZoneId.of("Asia/Seoul"))))
                 .build();
     }
 
