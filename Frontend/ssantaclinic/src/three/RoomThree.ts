@@ -40,22 +40,26 @@ export class RoomThree {
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      10000,
+      1000,
     );
 
-    camera.position.set(11.094, 5.998, -2.705);
-    camera.rotation.set(-114.28, 59.33, 117.67);
+    camera.position.set(4.866, 3.138, 4.918);
+    camera.rotation.set(-32.54, 39.83, 22.23);
     this._camera = camera;
   }
   _setupLight() {
-    const color = '#BB9C8B';
-    const intensity = 1.5;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(4.624, 10.0, 0.451);
-    this._scene.add(light);
+    const color1 = '#5F02B0';
+    const color2 = '#BC9DD7';
+    const intensity = 2;
+    const light1 = new THREE.PointLight(color1, intensity);
+    const light2 = new THREE.PointLight(color2, intensity);
+    light1.position.set(0.0, 3.595, 4.786);
+    light2.position.set(4.241, 3.184, 0);
+    this._scene.add(light1);
+    this._scene.add(light2);
   }
   _setupModel() {
-    new GLTFLoader().load('/room/town2.glb', (gltf) => {
+    new GLTFLoader().load('/room/my_room_base.glb', (gltf) => {
       const model = gltf.scene;
       this._scene.add(model);
 
