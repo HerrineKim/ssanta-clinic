@@ -50,13 +50,17 @@ export class RoomThree {
   _setupLight() {
     const color1 = '#5F02B0';
     const color2 = '#BC9DD7';
+    const color3 = '#CCA333';
     const intensity = 2;
     const light1 = new THREE.PointLight(color1, intensity);
     const light2 = new THREE.PointLight(color2, intensity);
+    const light3 = new THREE.PointLight(color3, intensity);
     light1.position.set(0.0, 3.595, 4.786);
     light2.position.set(4.241, 3.184, 0);
+    light2.position.set(-1.47, 0.0, 3.85);
     this._scene.add(light1);
     this._scene.add(light2);
+    this._scene.add(light3);
   }
   _setupModel() {
     new GLTFLoader().load('/room/my_room_base.glb', (gltf) => {
