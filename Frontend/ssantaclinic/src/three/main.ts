@@ -481,6 +481,9 @@ export class MainCanvas {
         this._scene2.remove(this._showcase);
         this._scene2.remove(...this._items);
         this._scene2.remove(this._close);
+        this._dragControls.forEach((control) => {
+          control.deactivate();
+        });
         this._scenenumber = 1;
         this._setupControls();
         setTimeout(() => {
@@ -511,7 +514,7 @@ export class MainCanvas {
   //   }
   //   this._isTreeModal = true;
   // }
-
+  _dragControls: any[] = [];
   _setupDrag() {
     console.log('items:', this._items);
     console.log('tree:', this._tree);
@@ -553,7 +556,7 @@ export class MainCanvas {
 
       controls.addEventListener('dragend', (event) => {
         const targets = controls.getRaycaster().intersectObjects(tree);
-
+        console.log('dragend targets:', targets);
         event.object.children[0].children[0].material.emissive.set(0x000000);
 
         //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
@@ -604,6 +607,7 @@ export class MainCanvas {
         // console.log('drag position:', position);
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
+      this._dragControls.push(controls);
     });
     // this._tree = tree;
 
