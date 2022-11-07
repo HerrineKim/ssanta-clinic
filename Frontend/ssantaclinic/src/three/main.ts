@@ -399,7 +399,7 @@ export class MainCanvas {
       const targets = this._raycaster.intersectObjects(this._group);
       // const target = this._raycaster.intersectObject(this._group[11]);
       // console.log('target : ', target);
-      console.log('targets: ', targets);
+      // console.log('targets: ', targets);
       if (targets.length > 0) {
         if (targets[0].object.name === 'tree') {
           console.log('tree!!!!!');
@@ -490,8 +490,8 @@ export class MainCanvas {
       // if (itemTarget.length > 0) {
       //   this._setupDrag(itemTarget[0]);
       // }
-      console.log('treetarget:', treeTarget);
-      console.log('itemTarget:', itemTarget);
+      // console.log('treetarget:', treeTarget);
+      // console.log('itemTarget:', itemTarget);
     }
   }
 
@@ -520,7 +520,7 @@ export class MainCanvas {
     let items = this._items;
     // const raycaster = this._raycaster;
 
-    this._items.forEach((child, index) => {
+    items.forEach((child, index) => {
       // console.log('item child:', child);
       child.name = index;
       const controls = new DragControls(
@@ -542,7 +542,6 @@ export class MainCanvas {
             }
           }
         }
-
         console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
         // 장식품이 트리에 붙어있는 것일때
         if (event.object.parent === object) {
@@ -552,13 +551,11 @@ export class MainCanvas {
         event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
       });
 
-      controls.addEventListener('dragend', function (event) {
+      controls.addEventListener('dragend', (event) => {
         const targets = controls.getRaycaster().intersectObjects(tree);
 
         event.object.children[0].children[0].material.emissive.set(0x000000);
-        // console.log('dragend!!!!!!!!!!!!!!!!!!!!!', targets);
-        // console.log('dragend event:', event);
-        // console.log('drag raycaster intersect:', targets);
+
         //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
         // console.log('world position:', event.object.getWorldPosition());
 
@@ -576,11 +573,10 @@ export class MainCanvas {
                 break;
               }
             }
-            console.log(object);
-            console.log(items);
+
             items = items.filter((obj) => obj !== event.object);
-            console.log(items);
             object.attach(event.object);
+            this._items = items;
           } else {
             // 나눌 필요 있음
             // event.object.removeFromParent();
@@ -609,8 +605,9 @@ export class MainCanvas {
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
     });
-    this._tree = tree;
-    this._items = items;
+    // this._tree = tree;
+
+    // this._items = items;
   }
 
   _removeTreeModal() {
