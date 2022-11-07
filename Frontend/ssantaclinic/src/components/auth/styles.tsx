@@ -5,7 +5,7 @@ export const SignUpContainer = styled.div`
   height: 100%;
 `;
 
-export const SignUpbButton = styled.button`
+export const Button = styled.button`
   width: 100px;
   height: 50px;
   color: white;
@@ -14,7 +14,7 @@ export const SignUpbButton = styled.button`
   margin: 5px;
 `;
 
-export const SignUpInput = styled.input`
+export const Input = styled.input`
   width: 200px;
   height: 50px;
   border-radius: 10px;
@@ -27,4 +27,10 @@ export const CheckButton = styled.button`
   height: 50px;
   background: #ccffcc;
   border-radius: 10px;
+`;
+
+export const LoginContainer = styled.div`
+  h1 {
+    color: white;
+  }
 `;

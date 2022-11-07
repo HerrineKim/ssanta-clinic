@@ -1,6 +1,7 @@
 package com.ssafy.ssantaClinic.api.service;
 
 import com.ssafy.ssantaClinic.api.request.UserRequest;
+import com.ssafy.ssantaClinic.api.response.UserResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.common.util.SHA256;
@@ -42,14 +43,6 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
-    @Override
-    public void save(User user) {
-        /**
-         * @Method Name : save
-         * @Method 설명 : 회원가입 정보를 받아 저장한다.
-         */
-        userRepository.save(user);
-    }
 
     @Override
     public User getUserByUserId(int userId) {
@@ -74,17 +67,9 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
-    @Override
-    public Optional<User> findByNickName(String nickname) {
-        /**
-         * @Method Name : findByNickName
-         * @Method 설명 : nickname을 받아 해당하는 유저를 반환한다. 없으면 Empty.
-         */
-        return userRepository.findByNickName(nickname);
-    }
 
     @Override
-    public boolean isDuplicatedNickName(String nickname) {
+    public UserResponse.DuplicatedResponse isDuplicatedNickName(String nickname) {
         /**
          * @Method Name : isDuplicatedNickName
          * @Method 설명 : nickname을 받아 boolean 반환. 중복이면 true 아니면 false
@@ -94,11 +79,13 @@ public class UserServiceImpl implements UserService{
         if (user.isEmpty()) {
             isDuplicated = false;
         }
-        return isDuplicated;
+        return UserResponse.DuplicatedResponse.builder()
+                .duplicated(isDuplicated)
+                .build();
     }
 
     @Override
-    public boolean isDuplicatedEmail(String email) {
+    public UserResponse.DuplicatedResponse isDuplicatedEmail(String email) {
         /**
          * @Method Name : isDuplicatedEmail
          * @Method 설명 : email을 받아 boolean 반환. 중복이면 true 아니면 false
@@ -108,20 +95,13 @@ public class UserServiceImpl implements UserService{
         if (user.isEmpty()) {
             isDuplicated = false;
         }
-        return isDuplicated;
+        return UserResponse.DuplicatedResponse.builder()
+                .duplicated(isDuplicated)
+                .build();
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        /**
-         * @Method Name : findByEmail
-         * @Method 설명 : email을 받아 해당하는 유저를 반환한다. 없으면 Empty.
-         */
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public String getFindPasswordNum(String email) throws NoSuchAlgorithmException {
+    public UserResponse.findPasswordResponse getFindPasswordNum(String email) throws NoSuchAlgorithmException {
         /**
          * @Method Name : getFindPasswordNum
          * @Method 설명 : email을 받아 유저 존재를 확인한 뒤, 있으면 고유값을 없으면 null을 반환
@@ -133,7 +113,9 @@ public class UserServiceImpl implements UserService{
         // userId를 이용하여 sha256 변환
         SHA256 sha256 = new SHA256();
 
-        return sha256.encrypt(user.getEmail());
+        return UserResponse.findPasswordResponse.builder()
+                .findPasswordNum(sha256.encrypt(user.getEmail()))
+                .build();
     }
 
     @Override
@@ -161,5 +143,21 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
         user.changePassword(password);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateMoney(int userId, int money) {
+        /**
+         * @Method Name : updateMoney
+         * @Method 설명 : 회원 잔고를 수정한다.
+         */
+        User user = userRepository.getUserByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        user.changeMoney(money);
+
+        userRepository.save(user);
     }
 }

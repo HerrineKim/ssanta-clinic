@@ -1,9 +1,11 @@
 package com.ssafy.ssantaClinic.common.auth.util;
 
+import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +31,10 @@ import java.util.stream.Collectors;
 public class JwtManager implements InitializingBean {
     private final Logger logger = LoggerFactory.getLogger(JwtManager.class);
     private static final String AUTHORITIES_KEY = "auth";
+    private static final String USER_ID = "userId";
     private final String secret;
+
+    private UserRepository userRepository;
     private final long tokenValidityInMilliseconds;
     private Key key;
 
@@ -43,9 +48,10 @@ public class JwtManager implements InitializingBean {
      * @Method Name : JwtManager 생성자
      * @Method 설명 :  account.properties 파일에서 JWT 관련 설정값을 가져온다.
      */
-    public JwtManager(@Value("${jwt.secret}") String secret, @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds) {
+    public JwtManager(@Value("${jwt.secret}") String secret, @Value("${jwt.token-validity-in-seconds}") long tokenValidityInMilliseconds, UserRepository userRepository) {
         this.secret = secret;
         this.tokenValidityInMilliseconds = tokenValidityInMilliseconds * 1000;
+        this.userRepository = userRepository;
     }
 
     /**
@@ -76,6 +82,7 @@ public class JwtManager implements InitializingBean {
         // 토큰 생성
         return Jwts.builder()
                 .setSubject(authentication.getName())
+                .claim(USER_ID, userRepository.getUserByEmail(authentication.getName()).getUserId())
                 .claim(AUTHORITIES_KEY, authorities)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .setExpiration(validity)

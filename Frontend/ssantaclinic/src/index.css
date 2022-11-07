@@ -18,7 +18,7 @@ code {
 }
 
 body {
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 #main-canvas {
