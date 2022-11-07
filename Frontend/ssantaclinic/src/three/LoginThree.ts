@@ -39,29 +39,35 @@ export class LoginThree {
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      100,
+      1200,
     );
 
-    camera.position.set(-49.173, 45.059, -0.363);
-    camera.rotation.set(-85.8, -56.09, -83.74);
+    camera.position.set(-0.004, 0.05, 0.7);
+    camera.rotation.set(-26.07, -0.19, -0.09);
     this._camera = camera;
   }
   _setupLight() {
     const color = '#FFFFFF';
-    const intensity = 2;
-    const light = new THREE.DirectionalLight(color, intensity);
-    light.position.set(-30.299, 26.655, -2.589);
-    this._scene.add(light);
+    const intensity = 1;
+    const light1 = new THREE.DirectionalLight(color, intensity);
+    const light2 = new THREE.PointLight(color, intensity);
+    light1.position.set(-30.299, 26.655, -2.589);
+    light2.position.set(0.191, 0.268, 0.455);
+    this._scene.add(light1);
+    this._scene.add(light2);
   }
   _setupModel() {
-    new GLTFLoader().load('/login/roodolf_ssanta.glb', (gltf) => {
+    new GLTFLoader().load('/login/login_santa_penguin.glb', (gltf) => {
       const model = gltf.scene;
       this._scene.add(model);
 
       const clips = gltf.animations;
       const mixer = new THREE.AnimationMixer(model);
-      const clip1 = THREE.AnimationClip.findByName(clips, 'Rig.001|Rig|Dance');
-      const clip2 = THREE.AnimationClip.findByName(clips, 'Animation');
+      const clip1 = THREE.AnimationClip.findByName(
+        clips,
+        'Armature|mixamo.com|Layer0',
+      );
+      const clip2 = THREE.AnimationClip.findByName(clips, 'Scene');
       const action1 = mixer.clipAction(clip1);
       const action2 = mixer.clipAction(clip2);
       action1.play();
