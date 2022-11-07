@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.api.service;
 
+import com.ssafy.ssantaClinic.common.auth.UserSecurity;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,19 +30,31 @@ public class AuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.getUserByEmail(username);
         try{
-            return createUser(user.getNickName(), user);
+            return createUser(user);
         }catch (Exception e){
             throw new UsernameNotFoundException(username + " -> 데이터베이스에서 찾을 수 없습니다.");
         }
     }
 
-    private org.springframework.security.core.userdetails.User createUser(String username, User user) {
+    private org.springframework.security.core.userdetails.User createUser(User user) {
         // 현재는 일반 사용자 <-> 관리자 구분이 없는 만큼, 이 부분은 주석 처리 했습니다.
 //        List<GrantedAuthority> grantedAuthorities = user.getAuthorities().stream()
 //                .map(authority -> new SimpleGrantedAuthority(authority.getAuthorityName()))
 //                .collect(Collectors.toList());
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+
+        boolean enabled = true;
+        boolean accountNonExpired = true;
+        boolean credentialsNonExpired = true;
+        boolean accountNonLocked = true;
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+        return new UserSecurity(user.getUserId(),
+                user.getNickName(),
+                user.getEmail(),
                 user.getPassword(),
-                new ArrayList<GrantedAuthority>());
+                enabled,
+                accountNonExpired,
+                credentialsNonExpired,
+                accountNonLocked,
+                grantedAuthorities);
     }
 }
