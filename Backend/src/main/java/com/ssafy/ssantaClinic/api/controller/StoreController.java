@@ -47,7 +47,7 @@ public class StoreController {
 
     @ApiOperation(value = "개인 아이템 조회", notes="개인이 보유하고 있는 아이템 목록 조회", httpMethod = "GET")
     @GetMapping("/items/{userId}")
-    public ResponseEntity<List<StoreResponse.UserItemListResponse>> getUserItemList(@PathVariable int userId) {
+    public ResponseEntity<StoreResponse.UserItemListResponse> getUserItemList(@PathVariable int userId) {
         /**
          * @Method Name : getUserItemList
          * @Method 설명 : 개인이 보유하고 있는 아이템 목록을 조회한다.
