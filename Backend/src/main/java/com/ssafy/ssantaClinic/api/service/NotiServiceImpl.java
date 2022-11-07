@@ -102,13 +102,10 @@ public class NotiServiceImpl implements NotiService {
          * @Method 설명 :  알림 객체를 생성한다.
          */
         String url = BASE_URL;
-        if(type.getType().equals(Type.GIFT.getType())){
-            url += "/api/calendar/" + id;
-        }
-        else if(type.getType().equals(Type.REPLY.getType())){
-            url += "/api/letter/" + id;
-        } else {
+        if(!type.getType().equals(Type.REPLY.getType()) || !type.getType().equals(Type.GIFT.getType())){
             throw new CustomException(ErrorCode.WRONG_NOTI_TYPE_ERROR);
+        } else {
+            url += "/api/" + type.getUrl() + "/" + id;
         }
         return Notification.builder()
                 .user(receiver)
@@ -126,7 +123,7 @@ public class NotiServiceImpl implements NotiService {
          */
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        return notiRepository.findAllByUserId(user.getUserId())
+        return notiRepository.findAllByUserUserId(user.getUserId())
                 .stream().map(NotiResponse.GetNotiResponse::new).collect(Collectors.toList());
     }
     @Override
