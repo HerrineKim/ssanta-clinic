@@ -169,5 +169,15 @@ public class UserController {
         userService.updatePassword(formRequest.getUserId(), formRequest.getPassword());
     }
 
+    @ApiOperation(value = "회원 잔고 수정", notes="회원 잔고 수정", httpMethod = "PATCH")
+    @PatchMapping("/money")
+    public void updateMoney(@RequestBody UserRequest.UpdateMoneyRequest formRequest) {
+        /**
+         * @Method Name : updateMoney
+         * @Method 설명 : 회원 잔고를 수정한다.
+         */
+        userService.updateMoney(formRequest.getUserId(), formRequest.getMoney());
+    }
+
 
 }
