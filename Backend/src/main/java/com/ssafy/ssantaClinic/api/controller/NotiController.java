@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotiController {
     private final NotiService notiService;
-    private SseEmitter sseEmitter;
+    private static final Logger logger = LoggerFactory.getLogger(NotiController.class);
 
     @ApiOperation(value = "SSE 구독", notes = "SSE 서버에 접속한다.")
     @ApiResponses({

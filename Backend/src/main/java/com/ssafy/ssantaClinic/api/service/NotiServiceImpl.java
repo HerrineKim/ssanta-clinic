@@ -11,6 +11,10 @@ import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -24,7 +28,6 @@ import java.util.stream.Collectors;
  * @Class 설명 : SSE 관련 비즈니스 처리 로직을 위한 서비스 구현 정의
  */
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class NotiServiceImpl implements NotiService {
     private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 60; // 1시간
@@ -32,6 +35,9 @@ public class NotiServiceImpl implements NotiService {
     private final EmitterRepository emitterRepository;
     private final NotiRepository notiRepository;
     private final UserRepository userRepository;
+    private final RedisMessageListenerContainer redisContainer;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private static Logger logger = LoggerFactory.getLogger(NotiService.class);
 
     @Override
     public SseEmitter subscribe(String email, String lastEventId) {
