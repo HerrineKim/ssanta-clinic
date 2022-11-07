@@ -89,7 +89,7 @@ public class CalendarController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping("/play")
-    public ResponseEntity<?> playVoiceMessage(HttpServletRequest request, @RequestParam(value = "boxId") int boxId) {
+    public ResponseEntity<?> playVoiceMessage(HttpServletRequest request, @RequestParam(value = "boxId") int boxId) throws Exception {
         /**
          * @Method Name : playVoiceMessage
          * @Method 설명 : 상자의 음성 메세지를 재생한다.
