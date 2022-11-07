@@ -362,6 +362,7 @@ export class MainCanvas {
     // raycaster로 뭘 눌렀는지 판단해야함
     console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
+
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
     this._canvasContainer.addEventListener(
@@ -372,12 +373,14 @@ export class MainCanvas {
 
   //클릭 함수
   _onClick(event: any) {
+    // console.log('event:', event);
+    // event.target.removeEventListener('click', this._onClick.bind(this));
     // if (event.target) {
     //   console.log('onclick event target', event);
     // }
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
-    console.log('click event:', event);
+    // console.log('click event:', event);
     // console.log(event.offsetX);
     // console.log(event.offsetY);
 
@@ -495,7 +498,7 @@ export class MainCanvas {
   _setupRotate(event: any) {
     if (this._scenenumber === 2) {
       event.preventDefault();
-      console.log('rotate', this._tree[0]);
+      // console.log('rotate', this._tree[0]);
       this._tree[0].rotateY(event.deltaY * 0.0005);
     }
   }
@@ -514,6 +517,7 @@ export class MainCanvas {
     console.log('tree:', this._tree);
     const positions = this._position;
     const tree = this._tree;
+    let items = this._items;
     // const raycaster = this._raycaster;
 
     this._items.forEach((child, index) => {
@@ -527,22 +531,41 @@ export class MainCanvas {
       controls.transformGroup = true;
 
       controls.addEventListener('dragstart', function (event) {
-        // console.log('event.object:', event.object);
+        const targets = controls.getRaycaster().intersectObjects(tree);
+        let object;
+        if (targets.length > 0) {
+          object = targets[0].object;
+          while (object.parent) {
+            object = object.parent;
+            if (object instanceof THREE.Group && object.name === 'tree') {
+              break;
+            }
+          }
+        }
 
+        console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
+        // 장식품이 트리에 붙어있는 것일때
+        if (event.object.parent === object) {
+          console.log('parent = event.object');
+          event.object.removeFromParent();
+        }
         event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
       });
 
       controls.addEventListener('dragend', function (event) {
+        const targets = controls.getRaycaster().intersectObjects(tree);
+
         event.object.children[0].children[0].material.emissive.set(0x000000);
+        // console.log('dragend!!!!!!!!!!!!!!!!!!!!!', targets);
         // console.log('dragend event:', event);
         // console.log('drag raycaster intersect:', targets);
         //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
         // console.log('world position:', event.object.getWorldPosition());
-        const targets = controls.getRaycaster().intersectObjects(tree);
+
         if (targets.length > 0) {
           if (targets[0].object.name === 'tree') {
             //만난다면 장식품을 tree에 붙이고 종속시킴
-            console.log('tree 장식!', event.object);
+            console.log('tree 장식!', event.object, targets);
             event.object.position.setX(targets[0].point.x);
             event.object.position.setY(targets[0].point.y);
             event.object.position.setZ(targets[0].point.z);
@@ -554,16 +577,21 @@ export class MainCanvas {
               }
             }
             console.log(object);
-            tree.push(event.object);
+            console.log(items);
+            items = items.filter((obj) => obj !== event.object);
+            console.log(items);
             object.attach(event.object);
           } else {
             // 나눌 필요 있음
+            // event.object.removeFromParent();
             console.log('tree가 아닌것 raycast');
             event.object.position.setX(positions[child.name][0]);
             event.object.position.setY(positions[child.name][1]);
             event.object.position.setZ(positions[child.name][2]);
           }
         } else {
+          // event.object.removeFromParent();
+          console.log('remove object:', event.object);
           console.log('target.length === 0');
           // console.log('else event:', event);
           console.log(positions[child.name][0]);
@@ -582,6 +610,7 @@ export class MainCanvas {
       });
     });
     this._tree = tree;
+    this._items = items;
   }
 
   _removeTreeModal() {
@@ -743,7 +772,7 @@ export class MainCanvas {
       this._scene2.add(this._close);
       this._scenenumber = 2;
       this._setupControls();
-      this._setupPicking();
+
       this._setupDrag();
     }, 1500);
   }
