@@ -11,7 +11,7 @@ export function Alert(props: any) {
   return (
     <Div className="alert">
       들어갈래?
-      <Link to="/wits">
+      <Link to="/shop">
         <button>ㅇㅇ</button>
       </Link>
     </Div>
