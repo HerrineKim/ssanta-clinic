@@ -15,6 +15,7 @@ export default function ShopAlert(props: Iprops[]) {
   // const [itemId, setItemId] = useState<number>(0);
   const [count, setCount] = useState<number>(0);
   const [data, setData] = useState<Request>();
+  const TOKEN = localStorage.getItem('jwt') || '';
   console.log('shopalert:', props);
 
   function send(event: any) {
@@ -22,6 +23,9 @@ export default function ShopAlert(props: Iprops[]) {
       url: 'https://k7a201.p.ssafy.io/api/store/buy',
       method: 'post',
       data: data,
+      headers: {
+        Authorization: TOKEN,
+      },
     }).then((res) => {
       console.log(res);
     });
