@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShopCanvas } from '../../three/shop';
 import { Div, ModalDiv } from './styles';
+import ShopAlert from '../../components/shop';
 
 export default function ShopPage() {
   console.log('shop');
@@ -13,5 +14,10 @@ export default function ShopPage() {
 
     return () => cancelAnimationFrame(requestId);
   }, []);
-  return <Div id="shop-canvas"></Div>;
+  return (
+    <Div>
+      <ShopAlert></ShopAlert>
+      <Div id="shop-canvas"></Div>;
+    </Div>
+  );
 }

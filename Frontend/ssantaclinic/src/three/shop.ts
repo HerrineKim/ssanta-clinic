@@ -51,6 +51,18 @@ export class ShopCanvas {
   _isAlert: any;
 
   constructor() {
+    this._position = [
+      [3, 7.5, 7],
+      [1.5, 7.5, 7],
+      [0, 7.5, 7],
+      [-1.5, 7.5, 7],
+      [-3, 7.5, 7],
+      [-4.5, 7.5, 7],
+      [3, 5.5, 6.3],
+      [1.5, 5.5, 6.3],
+      [0, 5.5, 6.3],
+      [-1.5, 5.5, 6.3],
+    ];
     console.log('constructor');
     const canvasContainer = document.querySelector('#shop-canvas');
     this._canvasContainer = canvasContainer;
@@ -95,8 +107,10 @@ export class ShopCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
+    // this._fps.update();
 
-    this._fps.update();
+    // console.log(this._camera.position);
+    // console.log(this._camera);
 
     this._previousTime = time;
   }
@@ -105,11 +119,11 @@ export class ShopCanvas {
   _setupControls() {
     this._controls = new OrbitControls(this._camera, this._canvasContainer);
 
-    //orbicontrol shift 기능 없애기
-    this._controls.enablePan = false;
+    // //orbicontrol shift 기능 없애기
+    // this._controls.enablePan = false;
 
-    //마우스 회전 부드럽게
-    this._controls.enableDamping = true;
+    // //마우스 회전 부드럽게
+    // this._controls.enableDamping = true;
 
     const stats = Stats();
     this._canvasContainer.appendChild(stats.dom);
@@ -123,29 +137,34 @@ export class ShopCanvas {
     const loader = new GLTFLoader();
 
     // showcase load 부분 => 나중에 showcase 파일 변경
-    loader.load('shop/mainshop.glb', (gltf) => {
+    loader.load('/shop/shop2.glb', (gltf) => {
+      console.log(gltf);
       const model: any = gltf.scene;
-
+      model.scale.set(0.05, 0.05, 0.05);
       console.log('showcase:', model);
+      this._scene.add(model);
     });
 
     // item load 부분
     const items: any[] = [];
-    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
-    // this._items.forEach((item: any, index: number) => {
-    //   // console.log('item:', item);
-    //   // console.log(index);
-    //   loader.load(`main/${item}.glb`, (gltf) => {
-    //     // console.log(index);
-    //     const model = gltf.scene;
-    //     // console.log(`${index}: `, model);
-    //     model.scale.set(0.01, 0.01, 0.01);
-    //     const position = this._position[`${index}`];
-    //     model.position.set(position[0], position[1], position[2]);
-    //     items.push(model);
-    //     // this._scene.add(model);
-    //   });
-    // });
+    // 모든 아이템 load
+    for (let i = 1; i < 9; i++) {
+      loader.load(`/main/${i}.glb`, (gltf) => {
+        // console.log(index);
+        const model = gltf.scene;
+        model.name = `${i}`;
+        model.traverse((child) => {
+          child.name = `${i}`;
+        });
+        // console.log(`${index}: `, model);
+        model.scale.set(0.03, 0.03, 0.03);
+        const position = this._position[`${i - 1}`];
+        model.position.set(position[0], position[1], position[2]);
+        items.push(model);
+        this._scene.add(model);
+      });
+    }
+    this._items = items;
 
     // x button load
     // loader.load('main/close.glb', (gltf) => {
@@ -188,11 +207,14 @@ export class ShopCanvas {
     this._raycaster.setFromCamera(xy, this._camera);
 
     console.log('click!!', this._model);
-    const targets = this._raycaster.intersectObject(this._model);
+
+    const targets = this._raycaster.intersectObjects(this._items);
     console.log('raycaaster target:', targets);
-    // const target = this._raycaster.intersectObject(this._group[11]);
-    // console.log('target : ', target);
-    // console.log('targets: ', targets);
+    if (targets.length > 0) {
+      this._setupAlert(targets[0].object.name);
+    } else {
+      this._removeAlert();
+    }
   }
 
   _setupRotate(event: any) {
@@ -209,9 +231,12 @@ export class ShopCanvas {
     }
     this._isAlert = false;
   }
-  _setupAlert() {
+  _setupAlert(itemId: string) {
     const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.log(alert);
+    console.dir(alert);
+    if (alert !== null) {
+      alert.dataset.code = itemId;
+    }
     if (alert !== null) {
       console.log('alert');
       alert.style.display = 'flex';
@@ -232,63 +257,6 @@ export class ShopCanvas {
     }
   }
 
-  // https://www.youtube.com/watch?v=OgC3kGKKb7A
-  // viewangle 은 수직축으로의 각도 90 도면 평면과 평행하게 바라봄. 0 도면 위에서 바라봄.
-  _zoomFit(object3d: any, viewAngle: number) {
-    // console.log('zoomfit object3d: ', object3d);
-    //box 는 객체를 담는 최소크기 박스
-    const box = new THREE.Box3().setFromObject(object3d);
-    //box를통해 얻을 수있는 가장 긴 모서리 길이
-    const sizeBox = box.getSize(new THREE.Vector3()).length();
-    //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
-    const centerBox = box.getCenter(new THREE.Vector3());
-
-    const direction = new THREE.Vector3(0, 1, 0);
-    direction.applyAxisAngle(
-      new THREE.Vector3(1, 0, 0),
-      THREE.MathUtils.degToRad(viewAngle),
-    );
-
-    const halfSizeModel = sizeBox * 0.5;
-    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
-    const distance = halfSizeModel / Math.tan(halfFov);
-
-    const newPosition = new THREE.Vector3().copy(
-      direction.multiplyScalar(distance).add(centerBox),
-    );
-
-    // this._camera.position.copy(newPosition);
-    // this._controls.target.copy(centerBox);
-
-    //애니메이션 라이브러리 gsap
-    //카메라 위치변경
-    gsap.to(this._camera.position, {
-      duration: 1.5,
-      x: newPosition.x,
-      y: newPosition.y,
-      z: newPosition.z,
-    });
-
-    //this._controls.target.copy(centerBox);
-    // console.log(this._controls);
-    // console.log(this._controls.target);
-    // 타겟위치변경
-    gsap.to(this._controls.target, {
-      duration: 0.5,
-      x: centerBox.x,
-      y: centerBox.y,
-      z: centerBox.z,
-      onUpdate: () => {
-        //애니메이션 수행중에 깜빡거리는 현상 방지
-        this._camera.lookAt(
-          this._controls.target.x,
-          this._controls.target.y,
-          this._controls.target.z,
-        );
-      },
-    });
-  }
-
   _setupCamera() {
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -297,8 +265,9 @@ export class ShopCanvas {
       500,
     );
     console.log('camera');
-    camera.position.set(-40, 29, -46);
-    camera.getWorldDirection(new THREE.Vector3(0, 0, 0));
+    camera.position.set(0, 9, -20);
+    // camera.lookAt(0, 9, -20);
+    // camera.getWorldDirection(new THREE.Vector3(0, 0, 0));
     // camera.lookAt(target);
 
     // const cameraHelper = new THREE.CameraHelper(camera);
@@ -327,7 +296,7 @@ export class ShopCanvas {
   }
 
   _setupLight() {
-    const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 3);
     this._scene.add(ambientLight);
 
     const shadowLight = new THREE.DirectionalLight(0xffffff, 0.2);
