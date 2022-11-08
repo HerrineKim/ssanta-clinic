@@ -3,9 +3,11 @@ package com.ssafy.ssantaClinic.api.service;
 import com.ssafy.ssantaClinic.api.response.NotiResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
+import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
 import com.ssafy.ssantaClinic.db.entity.Notification;
 import com.ssafy.ssantaClinic.db.entity.Type;
 import com.ssafy.ssantaClinic.db.entity.User;
+import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
 import com.ssafy.ssantaClinic.db.repository.EmitterRepository;
 import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -29,9 +33,10 @@ import java.util.stream.Collectors;
 public class NotiServiceImpl implements NotiService {
     private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
     private static final String BASE_URL = "http://localhost:8080";
+    static final int DECEMBER = 12;
     private final EmitterRepository emitterRepository;
-    private final NotiRepository notiRepository;
     private final UserRepository userRepository;
+    private final AdventCalendarRepository calendarRepository;
 
     @Override
     public SseEmitter subscribe(String email, String lastEventId) {
@@ -114,5 +119,25 @@ public class NotiServiceImpl implements NotiService {
                 .type(type)
                 .isRead(false)
                 .build();
+    }
+    @Override
+    public void sendUnOpenedBoxNotification(int userId){
+        /**
+         * @Method Name :  sendUnOpenedBoxNotification
+         * @Method 설명 :  로그인 시 아직 안 연 상자가 있으면 알림을 보낸다.
+         */
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        // 12월만 개봉 가능
+        if(LocalDateTime.now().getMonth().equals(Month.DECEMBER)){
+            int day = LocalDateTime.now().getDayOfMonth();
+            List<AdventCalendar> unOpenedBoxes =
+                    calendarRepository.findAllByReceiverUserIdAndIsReadIsFalse(userId);
+            for(AdventCalendar box : unOpenedBoxes){
+                if(box.getDay() <= day){
+                    send(user, Type.GIFT, "선물이 도착했습니다!", box.getId());
+                }
+            }
+        }
     }
 }

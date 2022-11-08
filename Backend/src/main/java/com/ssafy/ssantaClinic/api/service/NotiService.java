@@ -13,4 +13,5 @@ public interface NotiService {
     void sendToClient(SseEmitter emitter, String id, Object data);
     void send(User receiver, Type type, String message, int id);
     Notification createNotification(User receiver, Type type, String message, int id);
+    void sendUnOpenedBoxNotification(int userId);
 }
