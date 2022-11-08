@@ -39,7 +39,7 @@ public class UserRequest {
     @Data
     public static class UpdatePasswordRequest{
         private String password;
-        private int userId;
+        private String findPasswordNum;
     }
 
     @Data

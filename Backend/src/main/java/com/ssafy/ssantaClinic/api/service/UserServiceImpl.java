@@ -121,9 +121,14 @@ public class UserServiceImpl implements UserService{
 
         // userId를 이용하여 sha256 변환
         SHA256 sha256 = new SHA256();
+        String findpasswordNum = sha256.encrypt(user.getEmail()+LocalTime.now(ZoneId.of("Asia/Seoul")));
+
+        // table에 findPasswordNum저장
+        user.changeFindPasswordNum(findpasswordNum);
+        userRepository.save(user);
 
         return UserResponse.findPasswordResponse.builder()
-                .findPasswordNum(sha256.encrypt(user.getEmail()+LocalTime.now(ZoneId.of("Asia/Seoul"))))
+                .findPasswordNum(findpasswordNum)
                 .build();
     }
 
@@ -143,12 +148,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updatePassword(int userId, String password) {
+    public void updatePassword(String findPasswordNum, String password) {
         /**
          * @Method Name : updatePassword
          * @Method 설명 : 새로운 비밀번호를 받아서 회원 비밀번호를 재설정한다.
          */
-        User user = userRepository.getUserByUserId(userId)
+        User user = userRepository.findByFindPasswordNum(findPasswordNum)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
         user.changePassword(password);
