@@ -879,33 +879,7 @@ export class MainCanvas {
 
   //zoomout 함수
   _zoomOut(viewAngle: number) {
-    // console.log('zoomfit object3d: ', object3d);
-    //box 는 객체를 담는 최소크기 박스
-    // const box = new THREE.Box3().setFromObject(object3d);
-    // //box를통해 얻을 수있는 가장 긴 모서리 길이
-    // const sizeBox = box.getSize(new THREE.Vector3()).length();
-    // //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
-    // const centerBox = box.getCenter(new THREE.Vector3());
-
-    // const direction = new THREE.Vector3(0, 1, 0);
-    // direction.applyAxisAngle(
-    //   new THREE.Vector3(1, 0, 0),
-    //   THREE.MathUtils.degToRad(viewAngle),
-    // );
-
-    // const halfSizeModel = sizeBox * 0.5;
-    // const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
-    // const distance = halfSizeModel / Math.tan(halfFov);
-
-    // const newPosition = new THREE.Vector3().copy(
-    //   direction.multiplyScalar(distance).add(centerBox),
-    // );
-
-    // this._camera.position.copy(newPosition);
-    // this._controls.target.copy(centerBox);
-
-    //애니메이션 라이브러리 gsap
-    //카메라 위치변경
+    this._isZoom = false;
 
     gsap.to(this._camera.position, {
       duration: 1.5,
