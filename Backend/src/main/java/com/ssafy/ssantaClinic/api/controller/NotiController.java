@@ -1,9 +1,6 @@
 package com.ssafy.ssantaClinic.api.controller;
 
-import com.ssafy.ssantaClinic.api.response.CalendarResponse;
-import com.ssafy.ssantaClinic.api.response.NotiResponse;
 import com.ssafy.ssantaClinic.api.service.NotiService;
-import com.ssafy.ssantaClinic.api.service.UserService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
@@ -17,11 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URI;
-import java.util.List;
 
 /**
  * @FileName : NotiController
@@ -35,7 +29,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotiController {
     private final NotiService notiService;
-    private SseEmitter sseEmitter;
 
     @ApiOperation(value = "SSE 구독", notes = "SSE 서버에 접속한다.")
     @ApiResponses({
@@ -57,7 +50,6 @@ public class NotiController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "text/event-stream");
         headers.set("Cache-Control", "no-cache");
-        headers.set("Connection", "keep-alive");
         // 리버스 프록시에서의 오동작을 방지
         headers.set("X-Accel-Buffering", "no");
         return ResponseEntity.ok().headers(headers).build();
