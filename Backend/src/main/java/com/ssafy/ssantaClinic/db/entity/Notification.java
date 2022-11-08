@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Getter
@@ -26,20 +27,25 @@ public class Notification {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @Column(length = 300, nullable = false)
+    @Column(length = 300)
+    @NotBlank
     private String url;
 
-    @Column(length = 200, nullable = false)
+    @Column(length = 200)
+    @NotBlank
     private String message;
 
-    @Column(length=20, nullable = false)
+    @Column(length=20)
+    @NotBlank
     @Enumerated(EnumType.STRING)
     private Type type;
 
     @Column(name = "is_read")
+    @NotBlank
     private boolean isRead ;
 
-    @Column(name = "crated_at", nullable = false)
+    @Column(name = "crated_at")
+    @NotBlank
     private LocalDateTime createdAt;
 
     @Builder
