@@ -28,7 +28,7 @@ public class AdventCalendar {
     @NotBlank
     private String sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "receiver_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User receiver;
@@ -51,7 +51,7 @@ public class AdventCalendar {
     @Convert(converter = CryptoConverter.class)
     private String audioUrl;
 
-    @OneToMany(mappedBy = "adventCalendar", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "adventCalendar", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<AdventCalendarImg> imgList;
 
     @Builder
