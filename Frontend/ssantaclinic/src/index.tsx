@@ -4,12 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { RecoilRoot } from 'recoil';
+import GlobalFonts from '../src/assets/font/fonts';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
   <RecoilRoot>
     <App />
+    <GlobalFonts />
   </RecoilRoot>,
 );
 
