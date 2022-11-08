@@ -16,8 +16,7 @@ export default function ShopPage() {
   }, []);
   return (
     <Div>
-      <ShopAlert></ShopAlert>
-      <Div id="shop-canvas"></Div>;
+      <Div id="shop-canvas"></Div>;<Div id="shop"></Div>
     </Div>
   );
 }

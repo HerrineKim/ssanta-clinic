@@ -11,5 +11,6 @@ export const ItemAlert = styled.div`
   background-color: gray;
   border: 1px solid black;
   border-radius: 8px;
-  display: none;
+  flex-direction: column;
+  display: flex;
 `;
