@@ -66,6 +66,14 @@ export class MainCanvas {
   _position: any[];
   _showcase: any;
   _close: any;
+  // _snow: boolean;
+  _shop: THREE.Object3D[];
+  _game1: THREE.Object3D[];
+  _game2: THREE.Object3D[];
+  _game3: THREE.Object3D[];
+  _game4: THREE.Object3D[];
+  _letter: THREE.Object3D[];
+  _home: THREE.Object3D[];
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
@@ -88,6 +96,14 @@ export class MainCanvas {
     this._items = items;
     this._isAlert = false;
     this._isTreeModal = false;
+    this._shop = [];
+    this._game1 = [];
+    this._game2 = [];
+    this._game3 = [];
+    this._game4 = [];
+    this._letter = [];
+    this._home = [];
+
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
     console.log('constructor');
@@ -130,6 +146,7 @@ export class MainCanvas {
   render(time: number) {
     // console.log('!!!!');
     if (this._scenenumber === 1) {
+      // console.log(this._camera.position);
       this._renderer.render(this._scene, this._camera);
       this.update(time);
 
@@ -153,6 +170,13 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
+    // if (this._snow) {
+    //   if (this._mixer) {
+    //     // console.log('mixer');  //mixer는 charecter.glb의 animation
+    //     const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
+    //     this._mixer.update(deltaTime);
+    //   }
+    // }
 
     // 모델이 움직일때마다 모델박스 바껴야 하므로
     if (this._boxHelper) {
@@ -199,31 +223,50 @@ export class MainCanvas {
     const loader = new GLTFLoader();
 
     // 안눌러도 되는 맵 로드
-    loader.load('main/santa.glb', (gltf) => {
-      const model = gltf.scene;
+    loader.load('main/main_santa.glb', (gltf) => {
+      // console.log(gltf);
+      // console.log(gltf.scene);
+      const originModel = gltf.scene;
+      const model = gltf.scene.children[0];
+      console.log('LOAD model:', model);
       this._model = model;
-      this._scene.add(model);
+      this._scene.add(originModel);
       // console.log('model:', model);
+
+      // 애니메이션 있을때
+      // const animationClips = gltf.animations; //THREE.AnimationCLip []
+      // const mixer = new THREE.AnimationMixer(model);
+      // const animationMap: any = {};
+      // animationClips.forEach((clip) => {
+      //   const name = clip?.name;
+      //   console.log(name);
+      //   animationMap[name] = mixer.clipAction(clip); //THREE.AnimationAction
+      // });
+      // this._mixer = mixer;
+      // this._animationMap = animationMap;
+      // this._currentAnimationAction = this._animationMap['Take 001'];
+      // this._currentAnimationAction.play();
 
       model.traverse((child) => {
         // console.log(child);
-        // model은 그림자 생성 true
-
-        if (child instanceof THREE.PointLight) {
-          child.intensity = 2;
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if (child.name === 'shop') {
+          this._shop.push(child);
+        } else if (child.name === 'game1') {
+          this._game1.push(child);
+        } else if (child.name === 'game2') {
+          this._game2.push(child);
+        } else if (child.name === 'game3') {
+          this._game3.push(child);
+        } else if (child.name === 'game4') {
+          this._game4.push(child);
+        } else if (child.name === 'letter') {
+          this._letter.push(child);
+        } else if (child.name === 'home') {
+          this._home.push(child);
         }
-        if (child instanceof THREE.Group) {
-          // console.log(child, child.name);
-          group.push(child);
-        }
-        if (child instanceof THREE.Mesh) {
-          child.castShadow = true;
-          child.receiveShadow = true;
-          // console.log('traverse child: ', child);
-          if (child.parent) {
-            child.name = child.parent.name;
-          }
-        }
+        // console.log('mesh', child.name);
       });
 
       this._setupOctree(model);
@@ -231,95 +274,81 @@ export class MainCanvas {
       group.push(model);
     });
 
-    loader.load('main/camera.glb', (gltf) => {
-      const model: any = gltf.scene;
+    // showcase load 부분 => 나중에 showcase 파일 변경
+    // loader.load('main/showcase.glb', (gltf) => {
+    //   const model: any = gltf.scene;
+    //   model.traverse((child: any) => {
+    //     if (child instanceof THREE.Group) {
+    //       // console.log(child, child.name);
+    //       // group.push(child);
+    //     }
+    //   });
+    //   model.scale.set(20, 20, 20);
+    //   model.position.set(9, 0, -4.5);
+    //   model.children[0].children[0].children[0].children[0].children[0].material.color.set(
+    //     0xff00ff,
+    //   );
 
-      console.log(model);
-    });
+    //   // this._scene.add(model);
+    //   // console.dir(model);
+    //   console.log('showcase:', model);
+    //   this._showcase = model;
+    //   inven.push(model);
+    // });
 
-    loader.load('main/showcase.glb', (gltf) => {
-      const model: any = gltf.scene;
-      model.traverse((child: any) => {
-        if (child instanceof THREE.Group) {
-          // console.log(child, child.name);
-          // group.push(child);
-        }
-      });
-      model.scale.set(20, 20, 20);
-      model.position.set(9, 0, -4.5);
-      model.children[0].children[0].children[0].children[0].children[0].material.color.set(
-        0xff00ff,
-      );
-
-      // this._scene.add(model);
-      // console.dir(model);
-      console.log('showcase:', model);
-      this._showcase = model;
-      inven.push(model);
-    });
-
-    loader.load('main/lowtree.glb', (gltf) => {
-      const tree: any[] = [];
-      const model: any = gltf.scene;
-      model.traverse((child: any) => {
-        if (child instanceof THREE.Group) {
-          // console.log(child, child.name);
-          group.push(child);
-        }
-      });
-      model.position.set(5, 0, -4.5);
-      model.name = 'tree';
-      model.traverse((child: THREE.Object3D) => {
-        tree.push(child);
-        child.name = 'tree';
-      });
-      this._scene.add(model);
-      inven.push(model);
-      console.log('treegltf:', model);
-      this._tree = tree;
-    });
-    const items: any[] = [];
-    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
-    this._items.forEach((item, index) => {
-      // console.log('item:', item);
-      // console.log(index);
-      loader.load(`main/${item}.glb`, (gltf) => {
-        // console.log(index);
-        const model = gltf.scene;
-        // console.log(`${index}: `, model);
-        model.scale.set(0.01, 0.01, 0.01);
-        const position = this._position[`${index}`];
-        model.position.set(position[0], position[1], position[2]);
-        items.push(model);
-        // this._scene.add(model);
-      });
-    });
-
-    // loader.load('main/11.glb', (gltf) => {
-    //   // console.log(index);
-    //   const model = gltf.scene;
-    //   // console.log(`${index}: `, model);
-    //   model.scale.set(0.01, 0.01, 0.01);
-    //   model.position.set(9, 5, -3);
-    //   // model.position.set(position[0], position[1], position[2]);
-
-    //   items.push(model);
-    //   console.log('10번:', model);
+    // tree load 했던 부분 => room으로 이동
+    // loader.load('main/lowtree.glb', (gltf) => {
+    //   const tree: any[] = [];
+    //   const model: any = gltf.scene;
+    //   model.traverse((child: any) => {
+    //     if (child instanceof THREE.Group) {
+    //       // console.log(child, child.name);
+    //       group.push(child);
+    //     }
+    //   });
+    //   model.position.set(5, 0, -4.5);
+    //   model.name = 'tree';
+    //   model.traverse((child: THREE.Object3D) => {
+    //     tree.push(child);
+    //     child.name = 'tree';
+    //   });
     //   this._scene.add(model);
+    //   inven.push(model);
+    //   console.log('treegltf:', model);
+    //   this._tree = tree;
+    // });
+
+    // item load 부분
+    // const items: any[] = [];
+    // // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    // this._items.forEach((item, index) => {
+    //   // console.log('item:', item);
+    //   // console.log(index);
+    //   loader.load(`main/${item}.glb`, (gltf) => {
+    //     // console.log(index);
+    //     const model = gltf.scene;
+    //     // console.log(`${index}: `, model);
+    //     model.scale.set(0.01, 0.01, 0.01);
+    //     const position = this._position[`${index}`];
+    //     model.position.set(position[0], position[1], position[2]);
+    //     items.push(model);
+    //     // this._scene.add(model);
+    //   });
     // });
 
     // x button load
-    loader.load('main/close.glb', (gltf) => {
-      const model: any = gltf.scene;
-      this._close = model;
+    // loader.load('main/close.glb', (gltf) => {
+    //   const model: any = gltf.scene;
+    //   this._close = model;
 
-      // model.position.set(10, 5, -4.5);
-      model.position.set(1, 1, 1);
-      model.name = 'close';
-    });
+    //   // model.position.set(10, 5, -4.5);
+    //   model.position.set(1, 1, 1);
+    //   model.name = 'close';
+    // });
 
-    this._items = items;
-    this._inven = inven;
+    // 전역변수 설정
+    // this._items = items;
+    // this._inven = inven;
 
     // scene에 있는 모든 3dobj 검사
 
@@ -363,6 +392,7 @@ export class MainCanvas {
 
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
+
     console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
 
@@ -376,6 +406,7 @@ export class MainCanvas {
 
   //클릭 함수
   _onClick(event: any) {
+    console.log('click!!!');
     function saveArrayBuffer(buffer: any) {
       const file = new Blob([buffer], { type: 'application/octet-stream' });
       console.log('saveArray:', file);
@@ -402,26 +433,40 @@ export class MainCanvas {
       // console.log('scenenumber1 _camera:', this._camera);
       // 모든 3d 돌면서 더블클릭된 객체 zoomfit
       // console.log('click함수 실행:', this._group);    클릭한것 검사
-      const targets = this._raycaster.intersectObjects(this._group);
+
+      // 원래 버전
+      // const targets = this._raycaster.intersectObjects(this._group);
+      console.log('click!!', this._model);
+      const targets = this._raycaster.intersectObject(this._model);
+      console.log('raycaaster target:', targets);
       // const target = this._raycaster.intersectObject(this._group[11]);
       // console.log('target : ', target);
       // console.log('targets: ', targets);
       if (targets.length > 0) {
-        if (targets[0].object.name === 'tree') {
-          console.log('tree!!!!!');
+        if (targets[0].object.name === 'shop') {
+          console.log('shop!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
           // 트리 줌인 후에 꾸밀수 있도록 인벤토리
           // this._zoomFit(targets[0].object.parent, 60);
           // setTimeout(() => {
           // }, 1600);
           // this._setupTreeModal();
-        } else if (targets[0].object.name === 'house') {
-          console.log('house!!!!!!!!');
+        } else if (targets[0].object.name === 'home') {
+          console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
           setTimeout(() => {
             this._setupAlert();
           }, 1500);
-        } else if (targets[0].object.name === 'ball1') {
-          console.log('ball1!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game1') {
+          console.log('game1!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game2') {
+          console.log('game2!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game3') {
+          console.log('game3!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'game4') {
+          console.log('game4!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name === 'letter') {
+          console.log('letter!!!!!!!!!!!!!!');
         } else {
           if (this._isAlert) {
             this._removeAlert();
@@ -890,7 +935,7 @@ export class MainCanvas {
       500,
     );
     console.log('camera');
-    camera.position.set(15, 10, 15);
+    camera.position.set(-40, 29, -46);
     camera.getWorldDirection(new THREE.Vector3(0, 0, 0));
     // camera.lookAt(target);
 
@@ -904,7 +949,7 @@ export class MainCanvas {
 
   _addPointLight(x: number, y: number, z: number, helperColr: number) {
     const color = 0xffffff;
-    const intensity = 1.5;
+    const intensity = 0.5;
 
     const pointLight = new THREE.PointLight(color, intensity, 2000);
     pointLight.position.set(x, y, z);
@@ -920,13 +965,13 @@ export class MainCanvas {
   }
 
   _setupLight() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
     this._scene.add(ambientLight);
 
-    this._addPointLight(50, 20, 50, 0xff0000);
-    this._addPointLight(-50, 20, 50, 0xffff00);
-    this._addPointLight(-50, 20, -50, 0x00ff00);
-    this._addPointLight(50, 20, -50, 0x0000ff);
+    // this._addPointLight(50, 20, 50, 0xff0000);
+    // this._addPointLight(-50, 20, 50, 0xffff00);
+    // this._addPointLight(-50, 20, -50, 0x00ff00);
+    // this._addPointLight(50, 20, -50, 0x0000ff);
 
     const shadowLight = new THREE.DirectionalLight(0xffffff, 0.2);
     shadowLight.position.set(20, 50, 20);
