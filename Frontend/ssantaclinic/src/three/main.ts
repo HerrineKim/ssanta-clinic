@@ -172,6 +172,7 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
+    // console.log(this._controls);
     // if (this._snow) {
     //   if (this._mixer) {
     //     // console.log('mixer');  //mixer는 charecter.glb의 animation
@@ -203,6 +204,12 @@ export class MainCanvas {
 
       //orbicontrol shift 기능 없애기
       this._controls.enablePan = false;
+      this._controls.minDistance = 30;
+      this._controls.maxDistance = 80;
+      // this._controls.maxPolarAngle = (Math.PI * 1) / 3;
+      // this._controls.minPolarAngle = (Math.PI * 2) / 3;
+      this._controls.maxAzimuthAngle = 0.1 * Math.PI;
+      this._controls.minAzimuthAngle = -1.5 * Math.PI;
 
       //마우스 회전 부드럽게
       this._controls.enableDamping = true;
@@ -752,6 +759,9 @@ export class MainCanvas {
 
   _zoomFit(object3d: any, viewAngle: number) {
     this._isZoom = true;
+    this._controls.minDistance = 0;
+    this._controls.maxDistance = 80;
+
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
     const box = new THREE.Box3().setFromObject(object3d);
@@ -880,6 +890,8 @@ export class MainCanvas {
   //zoomout 함수
   _zoomOut(viewAngle: number) {
     this._isZoom = false;
+    this._controls.minDistance = 30;
+    this._controls.maxDistance = 80;
 
     gsap.to(this._camera.position, {
       duration: 1.5,
