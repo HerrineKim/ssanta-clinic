@@ -8,6 +8,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Getter
 @NoArgsConstructor
@@ -25,7 +26,8 @@ public class AdventCalendarImg {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private AdventCalendar adventCalendar;
 
-    @Column(length = 300, name = "img_url", nullable = false)
+    @Column(length = 300, name = "img_url")
+    @NotBlank
     private String imgUrl;
 
     @Builder

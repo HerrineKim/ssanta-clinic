@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class AdventCalendar {
     @Column(name = "advent_calendar_id")
     private int id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
+    @NotBlank
     private String sender;
 
     @ManyToOne
@@ -35,12 +37,14 @@ public class AdventCalendar {
     @Convert(converter = CryptoConverter.class)
     private String content;
 
-    @Column(nullable = false, name = "is_read")
+    @Column(name = "is_read")
+    @NotBlank
     private Boolean isRead;
 
     private int day;
 
-    @Column(nullable = false, name = "created_at")
+    @Column(name = "created_at")
+    @NotBlank
     private LocalDateTime createdAt;
 
     @Column(length = 300)
