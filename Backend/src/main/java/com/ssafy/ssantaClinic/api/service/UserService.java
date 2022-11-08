@@ -1,33 +1,34 @@
 package com.ssafy.ssantaClinic.api.service;
 
 import com.ssafy.ssantaClinic.api.request.UserRequest;
+import com.ssafy.ssantaClinic.api.response.UserResponse;
 import com.ssafy.ssantaClinic.db.entity.User;
 
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
 public interface UserService {
 
     void save(UserRequest.JoinRequest joinRequest);
-    void save(User user);
 
     User getUserByUserId(int userId);
 
     User getUserByEmail(String email);
 
-    Optional<User> findByNickName(String nickname);
+    UserResponse.DuplicatedResponse isDuplicatedNickName(String nickname);
 
-    boolean isDuplicatedNickName(String nickname);
+    UserResponse.DuplicatedResponse isDuplicatedEmail(String email);
 
-    boolean isDuplicatedEmail(String email);
-
-    Optional<User> findByEmail(String email);
-
-    String getFindPasswordNum(String email) throws NoSuchAlgorithmException;
+    UserResponse.findPasswordResponse getFindPasswordNum(String email) throws NoSuchAlgorithmException;
 
     void sendMail(String email, String url);
 
-    void updatePassword(int userId, String password);
+    void updatePassword(String findPasswordNum, String password);
+
+    void updateMoney(int userId, int money);
+
+    void updateUserItemList(int userId, List<Integer> itemList);
 
 }

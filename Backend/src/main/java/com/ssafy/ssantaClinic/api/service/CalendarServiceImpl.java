@@ -14,11 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -165,7 +164,7 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public void playAudio(String email, int boxId) {
+    public void playAudio(String email, int boxId) throws Exception {
         /**
          * @Method Name : playAudio
          * @Method 설명 : 상자에 있는 음성을 재생한다.
@@ -180,22 +179,31 @@ public class CalendarServiceImpl implements CalendarService{
         // 오디오 주소 가져오기
         String audioUrl = box.getAudioUrl();
         // 오디오 재생
-        File audio;
-        AudioInputStream stream;
+        URL url = new URL(audioUrl);
+        Clip clip;
+        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
         try {
-            audio = s3Service.downloadFile(audioUrl, boxId + " audio");
-            Clip clip = AudioSystem.getClip();
-            stream = AudioSystem.getAudioInputStream(audio);
-            clip.open(stream);
-            clip.start();
-            while(clip.getMicrosecondLength() != clip.getMicrosecondPosition()){
-                //waiting for sound to be finished
-            }
-            stream.close();
-            clip.close();
-            audio.delete();
-        } catch (Exception e) {
-            e.printStackTrace();
+            AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+                    44100,
+                    16, 2, 4,
+                    AudioSystem.NOT_SPECIFIED, true);
+            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            clip = (Clip) AudioSystem.getLine(info);
+        } catch (LineUnavailableException e) {
+            System.out.println("matching line is not available due to resource restrictions");
+            return;
+        } catch (SecurityException ee) {
+            System.out.println("if a matching line is not available due to security restrictions");
+            return;
+        } catch (IllegalArgumentException eee) {
+            System.out.println("if the system does not support at least one line matching the specified Line.Info object " +
+                    "through any installed mixer");
+            return;
         }
+        clip.open(audioInputStream);
+        clip.start();
+        do {
+            Thread.sleep(100);
+        } while (clip.isRunning());
     }
 }

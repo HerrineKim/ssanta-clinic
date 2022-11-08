@@ -1,10 +1,14 @@
 package com.ssafy.ssantaClinic.api.service;
 
 import com.ssafy.ssantaClinic.api.request.UserRequest;
+import com.ssafy.ssantaClinic.api.response.UserResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.common.util.SHA256;
 import com.ssafy.ssantaClinic.db.entity.User;
+import com.ssafy.ssantaClinic.db.entity.UserItemBox;
+import com.ssafy.ssantaClinic.db.repository.ItemRepository;
+import com.ssafy.ssantaClinic.db.repository.UserItemBoxRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +18,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 /**
  * @FileName : UserServiceImpl
@@ -26,6 +35,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final ItemRepository itemRepository;
+    private final UserItemBoxRepository userItemBoxRepository;
     private final PasswordEncoder passwordEncoder;
 
     private final JavaMailSender mailSender;
@@ -42,14 +53,6 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
-    @Override
-    public void save(User user) {
-        /**
-         * @Method Name : save
-         * @Method 설명 : 회원가입 정보를 받아 저장한다.
-         */
-        userRepository.save(user);
-    }
 
     @Override
     public User getUserByUserId(int userId) {
@@ -74,17 +77,9 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
-    @Override
-    public Optional<User> findByNickName(String nickname) {
-        /**
-         * @Method Name : findByNickName
-         * @Method 설명 : nickname을 받아 해당하는 유저를 반환한다. 없으면 Empty.
-         */
-        return userRepository.findByNickName(nickname);
-    }
 
     @Override
-    public boolean isDuplicatedNickName(String nickname) {
+    public UserResponse.DuplicatedResponse isDuplicatedNickName(String nickname) {
         /**
          * @Method Name : isDuplicatedNickName
          * @Method 설명 : nickname을 받아 boolean 반환. 중복이면 true 아니면 false
@@ -94,11 +89,13 @@ public class UserServiceImpl implements UserService{
         if (user.isEmpty()) {
             isDuplicated = false;
         }
-        return isDuplicated;
+        return UserResponse.DuplicatedResponse.builder()
+                .duplicated(isDuplicated)
+                .build();
     }
 
     @Override
-    public boolean isDuplicatedEmail(String email) {
+    public UserResponse.DuplicatedResponse isDuplicatedEmail(String email) {
         /**
          * @Method Name : isDuplicatedEmail
          * @Method 설명 : email을 받아 boolean 반환. 중복이면 true 아니면 false
@@ -108,20 +105,13 @@ public class UserServiceImpl implements UserService{
         if (user.isEmpty()) {
             isDuplicated = false;
         }
-        return isDuplicated;
+        return UserResponse.DuplicatedResponse.builder()
+                .duplicated(isDuplicated)
+                .build();
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
-        /**
-         * @Method Name : findByEmail
-         * @Method 설명 : email을 받아 해당하는 유저를 반환한다. 없으면 Empty.
-         */
-        return userRepository.findByEmail(email);
-    }
-
-    @Override
-    public String getFindPasswordNum(String email) throws NoSuchAlgorithmException {
+    public UserResponse.findPasswordResponse getFindPasswordNum(String email) throws NoSuchAlgorithmException {
         /**
          * @Method Name : getFindPasswordNum
          * @Method 설명 : email을 받아 유저 존재를 확인한 뒤, 있으면 고유값을 없으면 null을 반환
@@ -132,8 +122,15 @@ public class UserServiceImpl implements UserService{
 
         // userId를 이용하여 sha256 변환
         SHA256 sha256 = new SHA256();
+        String findpasswordNum = sha256.encrypt(user.getEmail()+LocalTime.now(ZoneId.of("Asia/Seoul")));
 
-        return sha256.encrypt(user.getEmail());
+        // table에 findPasswordNum저장
+        user.changeFindPasswordNum(findpasswordNum);
+        userRepository.save(user);
+
+        return UserResponse.findPasswordResponse.builder()
+                .findPasswordNum(findpasswordNum)
+                .build();
     }
 
     @Override
@@ -152,14 +149,61 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void updatePassword(int userId, String password) {
+    public void updatePassword(String findPasswordNum, String password) {
         /**
          * @Method Name : updatePassword
          * @Method 설명 : 새로운 비밀번호를 받아서 회원 비밀번호를 재설정한다.
          */
+        User user = userRepository.findByFindPasswordNum(findPasswordNum)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        user.changePassword(passwordEncoder.encode(password));
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateMoney(int userId, int money) {
+        /**
+         * @Method Name : updateMoney
+         * @Method 설명 : 회원 잔고를 수정한다.
+         */
         User user = userRepository.getUserByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
-        user.changePassword(password);
+        user.changeMoney(money);
+
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void updateUserItemList(int userId, List<Integer> itemList) {
+        /**
+         * @Method Name : updateUserItemList
+         * @Method 설명 : 회원 아이템 리스트를 수정한다.
+         */
+
+        HashMap<Integer,Integer> userItemMap = new HashMap<>();
+
+        for (int i=0; i<itemList.size();i++) {
+            int item = itemList.get(i);
+            userItemMap.put(item, userItemMap.containsKey(item) ? userItemMap.get(item) + 1 : 1);
+        }
+
+        userItemMap.forEach((itemId, count) -> {
+            UserItemBox userItemBox = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId,itemId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ITEM_INFO));
+
+            // 변경된 개수가 0보다 작으면 오류
+            int updatedCount = userItemBox.getCount() - count;
+            if (updatedCount < 0) {
+                throw new CustomException(ErrorCode.ITEM_COUNT_UNDER_ZERO_ERROR);
+            }
+
+            // count 갱신 후 저장
+            userItemBox.changeCount(updatedCount);
+            userItemBoxRepository.save(userItemBox);
+        });
     }
 }

@@ -7,6 +7,7 @@ export interface IUser {
   email: string;
   id: string;
   nickname: string;
+  noti: Array<string>;
   // jwt: string;
 }
 
@@ -16,6 +17,7 @@ export const currentUser = atom<IUser>({
     email: '',
     id: '',
     nickname: '',
+    noti: [],
     // jwt: '',
   },
   effects_UNSTABLE: [persistAtom],
@@ -51,4 +53,9 @@ export const selectUserNickname = selector<string>({
     const user = get(currentUser);
     return user.nickname;
   },
+});
+
+export const NotiListState = atom({
+  key: 'NotiList',
+  default: [],
 });

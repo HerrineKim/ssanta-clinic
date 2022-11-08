@@ -1,22 +1,26 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect } from 'react';
 import { MyRoom } from '../../components/MyRoom/MyRoom';
-import { Wrapper, CanvasContainer } from './styled';
-import { Test } from '../../three/basic';
+import { Wrapper, CanvasContainer } from './styles';
+import { RoomThree } from '../../three/RoomThree';
+
 export const MyRoomPage = () => {
   useEffect(() => {
-    const homeCanvas = new Test();
-    // const canvas = document.querySelector('canvas');
-    // console.log(canvas);
-    console.log('useeffect');
-    const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
+    const roomCanvas = new RoomThree();
 
-    return () => cancelAnimationFrame(requestId);
+    console.log('useeffect');
+    const requestId1 = requestAnimationFrame(
+      roomCanvas.render.bind(roomCanvas),
+    );
+
+    return () => {
+      cancelAnimationFrame(requestId1);
+    };
   }, []);
   return (
     <Wrapper>
       <MyRoom />
-      <CanvasContainer id="canvas"></CanvasContainer>
+      <CanvasContainer id="room-canvas"></CanvasContainer>
     </Wrapper>
   );
 };
