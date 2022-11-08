@@ -62,6 +62,14 @@ export function CalendarPage() {
   const [imges, setImges] = useState<[]>([]);
   const [sender, setSender] = useState<string>('');
 
+  // 어드벤트 캘린더 박스 클릭했는데 오늘이 2022년 12월 25일 이전이면 이동 되지 않고 경고창 띄우기
+  const notYet = () => {
+    // 만약 오늘이 2022년 12월 25일 이전이면 경고창 띄우기
+    if (new Date().getTime() < new Date('2022-12-25').getTime()) {
+      alert('아직 열어볼 수 없어요!');
+    }
+  };
+
   // Christmas Countdown renderer
   const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
     if (completed) {
