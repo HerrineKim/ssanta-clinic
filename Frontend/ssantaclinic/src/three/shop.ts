@@ -2,15 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기위 한 모듈
-//충돌 감지 를 위한 모듈들
-import { Octree } from 'three/examples/jsm/math/Octree.js';
-// import { Capsule } from 'three/examples/jsm/math/Capsule.js';
-import { Mesh, Vector3 } from 'three';
-import { gsap } from 'gsap';
-import { DragControls } from 'three/examples/jsm/controls/DragControls';
-import { threadId } from 'worker_threads';
-import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
-import axios from 'axios';
+import { Mesh } from 'three';
 
 // import { chdir } from 'process';
 
