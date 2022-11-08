@@ -82,6 +82,7 @@ export const MiniContainerTwo = styled.div`
   justify-content: space-around;
   height: 40vh;
   width: 40vw;
+  padding-left: 0.5vw;
   // background-color: brown;
 `;
 
@@ -133,7 +134,7 @@ export const BoxTen = styled.div`
   align-items: space-around;
   justify-content: space-around;
   height: 18vh;
-  width: 18vw;
+  width: 19vw;
   background-color: yellow;
   border-radius: 8px;
 `;
@@ -186,7 +187,7 @@ export const MiniContainerThree = styled.div`
   flex-direction: row;
   align-items: space-around;
   justify-content: space-around;
-  height: 20vh;
+  height: 19vh;
   width: 40vw;
   // background-color: mintcream;
 `;
@@ -232,7 +233,6 @@ export const CalendarMiddleContainer = styled.div`
   justify-content: space-between;
   height: 78vh;
   width: 10vw;
-  padding-bottom: 1vh;
   // background-color: yellowgreen;
 `;
 
@@ -270,7 +270,7 @@ export const MiniContainerFour = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 20vh;
   width: 40vw;
   // background-color: orange;
@@ -308,7 +308,7 @@ export const MiniContainerFive = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 20vh;
   width: 40vw;
   // background-color: grey;
@@ -318,7 +318,7 @@ export const BoxEleven = styled.div`
   align-items: center;
   justify-content: center;
   height: 18vh;
-  width: 18vw;
+  width: 20vw;
   background-color: purple;
   border-radius: 8px;
 `;
@@ -327,7 +327,7 @@ export const BoxTwelve = styled.div`
   align-items: center;
   justify-content: center;
   height: 18vh;
-  width: 18vw;
+  width: 19vw;
   background-color: skyblue;
   border-radius: 8px;
 `;
@@ -336,8 +336,8 @@ export const BoxTwelve = styled.div`
 export const MiniContainerSix = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: space-around;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: space-between;
   height: 40vh;
   width: 40vw;
   // background-color: pink;
@@ -376,8 +376,8 @@ export const MiniContainerEight = styled.div`
   flex-direction: column;
   align-items: space-around;
   justify-content: space-around;
-  height: 40vh;
-  width: 10vw;
+  height: 39vh;
+  width: 9vw;
   background-color: blue;
   border-radius: 8px;
 `;
@@ -397,6 +397,7 @@ export const BoxNineteen = styled.div`
   justify-content: center;
   height: 18vh;
   width: 9vw;
+  margin-left: 0.5vw;
   background-color: pink;
   border-radius: 8px;
 `;
@@ -406,6 +407,7 @@ export const BoxTwentyFive = styled.div`
   justify-content: center;
   height: 18vh;
   width: 9vw;
+  margin-left: 0.5vw;
   background-color: skyblue;
   border-radius: 8px;
 `;
@@ -413,10 +415,10 @@ export const BoxTwentyFive = styled.div`
 export const MiniContainerTen = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: space-around;
+  align-items: center;
   justify-content: space-around;
-  height: 40vh;
-  width: 10vw;
+  height: 38vh;
+  width: 9vw;
   background-color: red;
   border-radius: 8px;
 `;
