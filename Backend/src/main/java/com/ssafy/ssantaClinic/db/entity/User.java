@@ -39,11 +39,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
-//    @Column(length=64)
-//    @JsonIgnore
-//    private String findPasswordNum;
+    @Column(length=64)
+    @JsonIgnore
+    private String findPasswordNum;
 
-    //@ColumnDefault("0")
     private int money;
 
     @OneToMany(mappedBy = "parent")
@@ -65,5 +64,9 @@ public class User {
     
     public void changeMoney(int money) {
         this.money = money;
+    }
+
+    public void changeFindPasswordNum(String findPasswordNum) {
+        this.findPasswordNum = findPasswordNum;
     }
 }

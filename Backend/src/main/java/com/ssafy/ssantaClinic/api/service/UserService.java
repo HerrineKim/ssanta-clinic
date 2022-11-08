@@ -25,7 +25,7 @@ public interface UserService {
 
     void sendMail(String email, String url);
 
-    void updatePassword(int userId, String password);
+    void updatePassword(String findPasswordNum, String password);
 
     void updateMoney(int userId, int money);
 
