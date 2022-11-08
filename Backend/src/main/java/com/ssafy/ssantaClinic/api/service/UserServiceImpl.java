@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByFindPasswordNum(findPasswordNum)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
 
-        user.changePassword(password);
+        user.changePassword(passwordEncoder.encode(password));
 
         userRepository.save(user);
     }
