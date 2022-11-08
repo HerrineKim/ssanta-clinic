@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import YouTube, { YouTubeProps } from 'react-youtube';
 
+import Countdown from 'react-countdown';
+import { TopContainer } from './styles';
 import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
 // 좌측 상단
+import { CalendarTitle } from './styles';
 import { MiniContainerOne } from './styles';
 import { BoxOne } from './styles';
 import { BoxTwo } from './styles';
@@ -58,6 +61,37 @@ export function CalendarPage() {
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [imges, setImges] = useState<[]>([]);
   const [sender, setSender] = useState<string>('');
+
+  // Christmas Countdown renderer
+  const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
+    if (completed) {
+      // Render a completed state
+      return <span>🎄🎄🎄</span>;
+    } else {
+      // Render a countdown
+      return (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'end',
+            alignItems: 'end',
+            fontSize: '2rem',
+            color: 'white',
+            fontFamily: 'Cafe24Ssurround',
+            width: '100%',
+          }}
+        >
+          <span>
+            {days}일 {hours}시간 {minutes}분 {seconds}초
+          </span>
+          <span role="img" aria-label="christmas_tree">
+            🎄
+          </span>
+        </div>
+      );
+    }
+  };
 
   // bgm
   const opts: YouTubeProps['opts'] = {
@@ -119,12 +153,24 @@ export function CalendarPage() {
       <div
         style={{
           position: 'fixed',
-          top: 0,
+          bottom: 0,
           left: 0,
         }}
       >
         <YouTube videoId="GslqG1EjEI0" opts={opts} />
       </div>
+      <TopContainer>
+        <CalendarTitle>OO님의 2022년 어드벤트 캘린더</CalendarTitle>
+        {/* 크리스마스 카운터 */}
+        <Countdown
+          date={
+            // 2022년 12월 25일 00시 00분 00초
+            new Date(2022, 11, 25, 0, 0, 0)
+          }
+          renderer={renderer}
+        />
+        ,
+      </TopContainer>
       <CalendarPageContainer>
         {/* 녹음 불러오는 버튼
         <button
@@ -153,9 +199,7 @@ export function CalendarPage() {
             <BoxThree>3</BoxThree>
           </MiniContainerOne>
           <MiniContainerTwo>
-            <MiniContainerEight>
-              <BoxEight>8</BoxEight>
-            </MiniContainerEight>
+            <BoxEight>8</BoxEight>
             <MiniContainerTwoRight>
               <MiniContainerTwoTop>
                 <BoxNine>9</BoxNine>
