@@ -172,6 +172,7 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
+    // console.log(this._controls.PolarAngle, this._controls.minPolarAngle);
     // console.log(this._controls);
     // if (this._snow) {
     //   if (this._mixer) {
@@ -206,8 +207,8 @@ export class MainCanvas {
       this._controls.enablePan = false;
       this._controls.minDistance = 30;
       this._controls.maxDistance = 80;
-      // this._controls.maxPolarAngle = (Math.PI * 1) / 3;
-      // this._controls.minPolarAngle = (Math.PI * 2) / 3;
+      this._controls.maxPolarAngle = (Math.PI * 2) / 5;
+      // this._controls.minPolarAngle = 0;
       this._controls.maxAzimuthAngle = 0.1 * Math.PI;
       this._controls.minAzimuthAngle = -1.5 * Math.PI;
 
