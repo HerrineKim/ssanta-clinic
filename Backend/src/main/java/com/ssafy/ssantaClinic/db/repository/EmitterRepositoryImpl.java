@@ -69,6 +69,7 @@ public class EmitterRepositoryImpl implements EmitterRepository {
         );
     }
 
+    @Override
     public int getConcurrentUsers() {
         Set<String> emails = new HashSet<>();
         sseEmitterCache.forEach(
