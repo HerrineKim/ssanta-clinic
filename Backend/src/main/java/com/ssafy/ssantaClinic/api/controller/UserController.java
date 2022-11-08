@@ -21,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
@@ -63,7 +65,7 @@ public class UserController {
                 .body(joinedUser);
     }
 
-    @ApiOperation(value = "로그인", notes="로그인에 성공하면 header에 Authorization success, 아니면 fail", httpMethod = "POST")
+    @ApiOperation(value = "로그인", notes="로그인에 성공하면 header에 Authorization 추가, 아니면 fail", httpMethod = "POST")
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -78,6 +80,22 @@ public class UserController {
         return ResponseEntity.ok()
                 .header(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt)
                 .body(userService.getUserByEmail(loginDto.getEmail()));
+    }
+
+    @ApiOperation(value = "로그아웃", notes="로그아웃 요청, 성공하면 200 code 반환 아니면 fail", httpMethod = "GET")
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        String jwtToken = JwtUtil.resolveToken(request);
+        if (jwtToken == null) {
+            throw new CustomException(ErrorCode.JWT_TOKEN_WRONG_FORM);
+        }
+    
+        // 해당 jwt 토큰을 blacklist에 추가한다.
+        jwtManager.deleteToken(jwtToken);
+        
+        // response에 토큰을 삭제한다.
+        response.reset();
+        return ResponseEntity.ok().body("success");
     }
 
     /**
@@ -101,44 +119,36 @@ public class UserController {
     }
     @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping("/check/nickname")
-    public ResponseEntity<?> checkDuplicateNickname(@RequestBody UserRequest.CheckDuplicateNicknameRequest formRequest){
+    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateNickname(@RequestBody UserRequest.CheckDuplicateNicknameRequest formRequest){
         /**
          * @Method Name : checkDuplicateNickname
          * @Method 설명 : nickname을 받아서 중복된 nickname이 존재하는지 확인한다.
          */
 
-        return ResponseEntity.ok().body(
-                    UserResponse.DuplicatedResponse.builder()
-                            .duplicated(userService.isDuplicatedNickName(formRequest.getNickName()))
-                            .build());
+        return ResponseEntity.ok().body(userService.isDuplicatedNickName(formRequest.getNickName()));
     }
 
     @ApiOperation(value = "이메일 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping ("/check/email")
-    public ResponseEntity<?> checkDuplicateEmail(@RequestBody UserRequest.EmailRequest formRequest){
+    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateEmail(@RequestBody UserRequest.EmailRequest formRequest){
         /**
          * @Method Name : checkDuplicateEmail
          * @Method 설명 : email을 받아서 중복된 email이 존재하는지 확인한다.
          */
 
-        return ResponseEntity.ok().body(
-                UserResponse.DuplicatedResponse.builder()
-                        .duplicated(userService.isDuplicatedEmail(formRequest.getEmail()))
-                        .build());
+        return ResponseEntity.ok().body(userService.isDuplicatedEmail(formRequest.getEmail()));
     }
 
 
     @ApiOperation(value = "비밀번호 찾기", notes="비밀번호 재설정 고유값 반환", httpMethod = "POST")
     @PostMapping ("/find/password")
-    public ResponseEntity<?> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
+    public ResponseEntity<UserResponse.findPasswordResponse> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
         /**
          * @Method Name : findPassword
          * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
          */
 
-        return ResponseEntity.ok().body(UserResponse.findPasswordResponse.builder()
-                .findPasswordNum(userService.getFindPasswordNum(formRequest.getEmail()))
-                .build());
+        return ResponseEntity.ok().body(userService.getFindPasswordNum(formRequest.getEmail()));
     }
     @ApiOperation(value = "비밀번호재설정 url 전송", notes="회원 고유값을 포함한 비밀번호 재설정 url 메일 전송", httpMethod = "POST")
     @PostMapping("/find/password/url")
@@ -156,7 +166,27 @@ public class UserController {
          * @Method Name : updatePassword
          * @Method 설명 : 새로운 비밀번호를 받아서 수정한다.
          */
-        userService.updatePassword(formRequest.getUserId(), formRequest.getPassword());
+        userService.updatePassword(formRequest.getFindPasswordNum(), formRequest.getPassword());
+    }
+
+    @ApiOperation(value = "회원 잔고 수정", notes="회원 잔고 수정", httpMethod = "PATCH")
+    @PatchMapping("/money")
+    public void updateMoney(@RequestBody UserRequest.UpdateMoneyRequest formRequest) {
+        /**
+         * @Method Name : updateMoney
+         * @Method 설명 : 회원 잔고를 수정한다.
+         */
+        userService.updateMoney(formRequest.getUserId(), formRequest.getMoney());
+    }
+    @ApiOperation(value = "회원 아이템 리스트 수정", notes="회원 아이템 리스트 수정", httpMethod = "PATCH")
+    @PatchMapping("/items/use")
+    public void updateUserItemList(@RequestBody UserRequest.UpdateUserItemRequest formRequest){
+        /**
+         * @Method Name : updateUserItemList
+         * @Method 설명 : 회원 아이템 리스트를 수정한다.
+         */
+
+        userService.updateUserItemList(formRequest.getUserId(), formRequest.getItemList());
     }
 
 

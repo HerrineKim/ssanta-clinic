@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ReactMediaRecorder } from 'react-media-recorder';
+import { selectUserId, selectUserNickname } from '../../../store/store';
+import { useRecoilValue } from 'recoil';
 const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
 export function BoxCreate() {
   // 상자 보내기 (/api/calendar)
@@ -10,6 +12,7 @@ export function BoxCreate() {
   const [createdAt, setCreatedAt] = useState<string>('');
   const [day, setDay] = useState<number>(1);
   const [receiverId, setReceiverId] = useState<number>(1);
+  const userId = useRecoilValue(selectUserId);
 
   // 자동으로 현재 날짜 및 시간 yyyy-mm-dd hh:mm:ss 형태로 가져오기
   useEffect(() => {
@@ -65,6 +68,10 @@ export function BoxCreate() {
         'Content-Type': 'multipart/form-data',
       },
       data: boxFormData,
+      params: {
+        userId: userId,
+        day: day,
+      },
     };
 
     axios(config)

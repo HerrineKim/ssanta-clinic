@@ -3,7 +3,13 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { selectUserNickname, selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
-import { Link } from 'react-router-dom';
+import {
+  LetterWriteContainer,
+  Button,
+  TitleInput,
+  MessageInput,
+  CheckButton,
+} from './styles';
 
 type Keyword = '취업' | '진로';
 
@@ -11,11 +17,12 @@ export const WriteLetter = () => {
   const [message, setMessage] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const [button, setButton] = useState<boolean>(true);
-  const [isJobSelect, setIsJobSelect] = useState<boolean>(false);
+  const [isJobSelect, setIsJobSelect] = useState<boolean>(true);
   const [isFutureSelect, setIsFutureSelect] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<Keyword>('취업');
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
-  // const ID = useRecoilValue(selectUserId);
+  const ID = useRecoilValue(selectUserId);
+  const NICNAME = useRecoilValue(selectUserNickname);
   const navigate = useNavigate();
 
   const handleSubmit = (e: any) => {
@@ -44,71 +51,80 @@ export const WriteLetter = () => {
       });
   };
   const toggleJob = () => {
-    setIsJobSelect((isJobSelect) => !isJobSelect); // on,off 개념 boolean
+    setIsJobSelect(!isJobSelect);
+    setIsFutureSelect(!isFutureSelect);
+    if (isJobSelect) {
+      setKeyword('취업');
+    }
+
+    console.log(isJobSelect, isFutureSelect);
   };
+
   const toggleFuture = () => {
-    setIsFutureSelect((isFutureSelect) => !isFutureSelect); // on,off 개념 boolean
+    setIsFutureSelect(!isFutureSelect);
+    setIsJobSelect(!isJobSelect);
+    if (isJobSelect) {
+      setKeyword('진로');
+    }
+
+    console.log(isJobSelect, isFutureSelect);
   };
   function changeButton() {
     message.length >= 10 ? setButton(false) : setButton(true);
   }
   const handleChangeTitle = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setTitle(e.target.value);
     },
     [],
   );
 
   const handleChangeMessage = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    (e: React.ChangeEvent<HTMLInputElement>) => {
       setMessage(e.target.value);
     },
     [],
   );
 
   return (
-    <div id="write-letter-container">
-      <div>
-        <h1>어떤 고민이 있니</h1>
+    <LetterWriteContainer id="write-letter-container">
+      <div id="header">
+        <h1>{NICNAME}님은 어떤 고민이 있나요?</h1>
       </div>
-      <div>
-        <h2>고민 고르기</h2>
-        <Link to="/room">내 방으로 가기</Link>
-        <div>
-          <button onClick={toggleJob}>
-            {isJobSelect ? '취업' : '취업 선택됨'}
-          </button>
-          <button onClick={toggleFuture}>
-            {isFutureSelect ? '진로' : '진로 선택됨'}
-          </button>
-        </div>
+      <div id="set-category">
+        <CheckButton onClick={toggleJob}>
+          {isJobSelect ? '취업 선택됨' : 'X'}
+        </CheckButton>
+        <CheckButton onClick={toggleFuture}>
+          {isFutureSelect ? '진로 선택됨' : 'X'}
+        </CheckButton>
       </div>
       <div>
         <form onSubmit={handleSubmit}>
-          <div>
-            <h3>제목</h3>
-            <textarea
+          <div id="title-container">
+            <h3 id="title">제목</h3>
+            <TitleInput
               name="title"
-              id="title"
+              id="title-input"
               onChange={handleChangeTitle}
               required
-            ></textarea>
+            ></TitleInput>
           </div>
-          <div>
-            <h3>편지</h3>
-            <textarea
+          <div id="message-container">
+            <h3 id="message-input">편지</h3>
+            <MessageInput
               name="message"
-              id="message"
+              id="message-input"
               onChange={handleChangeMessage}
               onKeyUp={changeButton}
-            ></textarea>
+            ></MessageInput>
           </div>
 
-          <button type="submit" className="letterButton" disabled={button}>
+          <Button type="submit" className="letterButton" disabled={button}>
             산타한테 보내기
-          </button>
+          </Button>
         </form>
       </div>
-    </div>
+    </LetterWriteContainer>
   );
 };

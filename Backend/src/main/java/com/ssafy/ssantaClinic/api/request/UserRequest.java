@@ -2,6 +2,8 @@ package com.ssafy.ssantaClinic.api.request;
 
 import lombok.Data;
 
+import java.util.List;
+
 public class UserRequest {
 
     @Data
@@ -37,6 +39,18 @@ public class UserRequest {
     @Data
     public static class UpdatePasswordRequest{
         private String password;
+        private String findPasswordNum;
+    }
+
+    @Data
+    public static class UpdateMoneyRequest{
         private int userId;
+        private int money;
+    }
+
+    @Data
+    public static class UpdateUserItemRequest{
+        private int userId;
+        private List<Integer> itemList;
     }
 }

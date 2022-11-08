@@ -62,6 +62,33 @@ public class S3Service {
         return url;
     }
 
+    public String uploadGlb(MultipartFile uploadFile) throws IOException {
+        /**
+         * @Method Name : upload
+         * @Method 설명 : 파일 업로드를 위한 로직
+         */
+        String url;
+        try {
+            // 파일이름 암호화
+            final String saveFileName = getUuid() + ".glb";
+            // 파일 객체 생성
+            // System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
+            File file = new File(System.getProperty("user.dir") + saveFileName);
+            // 파일 변환
+            uploadFile.transferTo(file);
+            // S3 파일 업로드
+            uploadOnS3(saveFileName, file);
+            // 주소 할당
+            url = defaultUrl + saveFileName;
+            // 파일 삭제
+            file.delete();
+        } catch (IOException e) {
+            throw new CustomException(ErrorCode.IMAGE_UPLOAD_ERROR);
+        }
+        System.out.println("url = " + url);
+        return url;
+    }
+
     public List<String> uploadImges(List<MultipartFile> multipartFile) throws IOException {
         /**
          * @Method Name : uploadImges
