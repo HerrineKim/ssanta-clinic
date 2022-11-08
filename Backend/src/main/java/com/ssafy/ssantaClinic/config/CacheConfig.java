@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig {
     private final Environment environment;
 
-    @Bean(name = "cacheManager")
+    @Bean
     public EmbeddedCacheManager cacheManager() {
         /**
          * @Method Name : cacheManager
@@ -38,7 +38,7 @@ public class CacheConfig {
         return new DefaultCacheManager(new ConfigurationBuilderHolder(Thread.currentThread().getContextClassLoader(), global), true);
     }
 
-    @Bean("sseEmitterCache")
+    @Bean
     public Cache<String, SseEmitter> sseEmitterCache(
             @Qualifier("cacheManager") EmbeddedCacheManager cacheManager) {
         /**
@@ -59,8 +59,8 @@ public class CacheConfig {
         return cacheManager.getCache("sse-emitter-cache");
     }
 
-    @Bean("sseEventCache")
-    public Cache<String, String> sseEventCache(
+    @Bean
+    public Cache<String, Object> sseEventCache(
             @Qualifier("cacheManager") EmbeddedCacheManager cacheManager) {
         /**
          * @Method Name : sseEventCache
