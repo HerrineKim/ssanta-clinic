@@ -6,10 +6,14 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import { FXAAShader } from 'three/examples/jsm/shaders/FXAAShader';
+
 export class LoginThree {
   _model2: any;
   _bloomPass: any;
   _composer: any;
+  _finalComposer: any;
   _divContainer: any;
   _renderer: any;
   _scene: any;
@@ -25,13 +29,14 @@ export class LoginThree {
     this._setupPostprocess();
     this._setupControls();
     this._setupEvents();
+    // this._setupEvents2();
   }
   _setupPostprocess() {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.5,
-      0.1,
+      0.8,
+      1,
       0.1,
     );
     const composer = new EffectComposer(this._renderer);
@@ -127,6 +132,13 @@ export class LoginThree {
     this._clock = new THREE.Clock();
     requestAnimationFrame(this.render.bind(this));
   }
+  // _setupEvents2() {
+  //   window.onresize = this.resize.bind(this);
+  //   this.resize();
+
+  //   this._clock = new THREE.Clock();
+  //   requestAnimationFrame(this.render.bind(this));
+  // }
 
   update() {
     const delta = this._clock.getDelta();
@@ -136,12 +148,18 @@ export class LoginThree {
   }
 
   render() {
-    // this._renderer.render(this._scene, this._camera);
+    // this._renderer.render(this._scene1, this._camera);
     this._composer.render();
+    // this._finalComposer.render();
     this.update();
-
     requestAnimationFrame(this.render.bind(this));
   }
+  // render2() {
+  //   this._renderer.render(this._scene, this._camera);
+  //   // this._composer.render();
+  //   this.update();
+  //   requestAnimationFrame(this.render2.bind(this));
+  // }
 
   resize() {
     const width = this._divContainer.clientWidth;
