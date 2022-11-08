@@ -6,6 +6,7 @@ import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
 // 좌측 상단
+import { CalendarTitle } from './styles';
 import { MiniContainerOne } from './styles';
 import { BoxOne } from './styles';
 import { BoxTwo } from './styles';
@@ -119,12 +120,14 @@ export function CalendarPage() {
       <div
         style={{
           position: 'fixed',
-          top: 0,
+          bottom: 0,
           left: 0,
         }}
       >
         <YouTube videoId="GslqG1EjEI0" opts={opts} />
       </div>
+      <CalendarTitle>OO님의 2022년 어드벤트 캘린더</CalendarTitle>
+
       <CalendarPageContainer>
         {/* 녹음 불러오는 버튼
         <button
