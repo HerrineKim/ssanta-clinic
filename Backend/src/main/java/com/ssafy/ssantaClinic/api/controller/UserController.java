@@ -166,7 +166,7 @@ public class UserController {
          * @Method Name : updatePassword
          * @Method 설명 : 새로운 비밀번호를 받아서 수정한다.
          */
-        userService.updatePassword(formRequest.getUserId(), formRequest.getPassword());
+        userService.updatePassword(formRequest.getFindPasswordNum(), formRequest.getPassword());
     }
 
     @ApiOperation(value = "회원 잔고 수정", notes="회원 잔고 수정", httpMethod = "PATCH")
