@@ -5,9 +5,7 @@ import org.infinispan.Cache;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -71,4 +69,14 @@ public class EmitterRepositoryImpl implements EmitterRepository {
         );
     }
 
+    public int getConcurrentUsers() {
+        Set<String> emails = new HashSet<>();
+        sseEmitterCache.forEach(
+                (key, emitter) -> {
+                    StringTokenizer stk = new StringTokenizer(key, "_");
+                    emails.add(stk.nextToken());
+                }
+        );
+        return emails.size();
+    }
 }
