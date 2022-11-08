@@ -12,4 +12,5 @@ public interface EmitterRepository {
     void deleteById(String id);
     void deleteAllEmitterStartWithEmail(String email);
     void deleteAllEventCacheStartWithEmail(String email);
+    int getConcurrentUsers();
 }
