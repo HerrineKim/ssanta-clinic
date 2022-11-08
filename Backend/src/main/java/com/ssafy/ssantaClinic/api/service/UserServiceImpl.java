@@ -18,6 +18,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
@@ -176,6 +177,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void updateUserItemList(int userId, List<Integer> itemList) {
         /**
          * @Method Name : updateUserItemList
@@ -190,13 +192,17 @@ public class UserServiceImpl implements UserService{
         }
 
         userItemMap.forEach((itemId, count) -> {
-            int userItemBoxId = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId,itemId).get().getUserItemBoxId();
-            UserItemBox userItemBox = UserItemBox.builder()
-                    .userItemBoxId(userItemBoxId)
-                    .user(userRepository.getUserByUserId(userId).get())
-                    .item(itemRepository.getItemByItemId(itemId).get())
-                    .count(count)
-                    .build();
+            UserItemBox userItemBox = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId,itemId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_ITEM_INFO));
+
+            // 변경된 개수가 0보다 작으면 오류
+            int updatedCount = userItemBox.getCount() - count;
+            if (updatedCount < 0) {
+                throw new CustomException(ErrorCode.ITEM_COUNT_UNDER_ZERO_ERROR);
+            }
+
+            // count 갱신 후 저장
+            userItemBox.changeCount(updatedCount);
             userItemBoxRepository.save(userItemBox);
         });
     }
