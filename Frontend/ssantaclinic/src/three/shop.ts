@@ -3,7 +3,9 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기위 한 모듈
 import { Mesh } from 'three';
-
+import ShopAlert from '../components/shop';
+import React from 'react';
+import * as ReactDOM from 'react-dom/client';
 // import { chdir } from 'process';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
@@ -216,36 +218,31 @@ export class ShopCanvas {
   }
 
   _removeAlert() {
-    const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.log(alert);
-    if (alert !== null) {
-      alert.style.display = 'none';
+    const shop = document.getElementById('shop');
+    if (shop !== null) {
+      const root = ReactDOM.createRoot(shop);
+      console.log('unmount');
+      root.unmount();
     }
-    this._isAlert = false;
   }
   _setupAlert(itemId: string) {
-    const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.dir(alert);
-    if (alert !== null) {
-      alert.dataset.code = itemId;
-    }
-    if (alert !== null) {
-      console.log('alert');
-      alert.style.display = 'flex';
-    }
-    this._isAlert = true;
-  }
+    // const alert = document.querySelector('.alert') as HTMLElement | null;
+    // console.dir(alert);
+    // if (alert !== null) {
+    //   alert.dataset.code = itemId;
+    // }
+    // if (alert !== null) {
+    //   console.log('alert');
+    //   alert.style.display = 'flex';
+    // }
+    // this._isAlert = true;
+    const item = parseInt(itemId);
+    const e = React.createElement;
+    const shop = document.getElementById('shop');
+    if (shop !== null) {
+      const root = ReactDOM.createRoot(shop);
 
-  _removeModal() {
-    const modal = document.querySelector('.modal') as HTMLElement | null;
-    if (modal !== null) {
-      modal.style.display = 'none';
-    }
-  }
-  _setupModal() {
-    const modal = document.querySelector('.modal') as HTMLElement | null;
-    if (modal !== null) {
-      modal.style.display = 'block';
+      root.render(e(ShopAlert, [{ item: item }], null));
     }
   }
 
