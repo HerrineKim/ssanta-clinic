@@ -58,39 +58,8 @@ public class NotiController {
         headers.set("Content-Type", "text/event-stream");
         headers.set("Cache-Control", "no-cache");
         headers.set("Connection", "keep-alive");
+        // 리버스 프록시에서의 오동작을 방지
+        headers.set("X-Accel-Buffering", "no");
         return ResponseEntity.ok().headers(headers).build();
-    }
-    @ApiOperation(value = "알림 리스트 조회", notes = "개인의 알림 리스트를 조회한다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
-            @ApiResponse(code = 500, message = "서버 에러 발생")
-    })
-    @GetMapping
-    public ResponseEntity<?> getAlarmList(HttpServletRequest request) {
-        /**
-         * @Method Name : getAlarmList
-         * @Method 설명 : 개인의 알림 리스트를 조회한다.
-         */
-        // 현재 로그인한 유저의 이메일 가져오기
-        String email = JwtUtil.getCurrentUserEmail().orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
-        List<NotiResponse.GetNotiResponse> notiList = notiService.getNotiListByEmail(email);
-        return ResponseEntity.ok().body(notiList);
-    }
-    @ApiOperation(value = "알림 정보 조회", notes = "알림에 해당하는 url로 이동한다.")
-    @ApiResponses({
-            @ApiResponse(code = 201, message = "조회 성공"),
-            @ApiResponse(code = 500, message = "서버 에러 발생")
-    })
-    @PostMapping(params = {"notiId"})
-    public ResponseEntity<?> getNotiInfo (HttpServletRequest request, @RequestParam(value = "notiId") int notiId) {
-        /**
-         * @Method Name : getNotiInfo
-         * @Method 설명 : 알림에 해당하는 url로 이동한다.
-         */
-        // 현재 로그인한 유저의 이메일 가져오기
-        String email = JwtUtil.getCurrentUserEmail()
-                .orElseThrow(() -> new CustomException(ErrorCode.JWT_TOKEN_NOT_FOUND));
-        NotiResponse.GetNotiResponse noti = notiService.getNotiById(notiId, email);
-        return ResponseEntity.created(URI.create(noti.getUrl())).build();
     }
 }

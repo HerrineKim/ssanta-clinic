@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class NotiServiceImpl implements NotiService {
-    private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 60; // 1시간
+    private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
     private static final String BASE_URL = "http://localhost:8080";
     private final EmitterRepository emitterRepository;
     private final NotiRepository notiRepository;
@@ -102,7 +102,7 @@ public class NotiServiceImpl implements NotiService {
          * @Method 설명 :  알림 객체를 생성한다.
          */
         String url = BASE_URL;
-        if(!type.getType().equals(Type.REPLY.getType()) || !type.getType().equals(Type.GIFT.getType())){
+        if (!type.getType().equals(Type.REPLY.getType()) || !type.getType().equals(Type.GIFT.getType())) {
             throw new CustomException(ErrorCode.WRONG_NOTI_TYPE_ERROR);
         } else {
             url += "/api/" + type.getUrl() + "/" + id;
@@ -114,30 +114,5 @@ public class NotiServiceImpl implements NotiService {
                 .type(type)
                 .isRead(false)
                 .build();
-    }
-    @Override
-    public List<NotiResponse.GetNotiResponse> getNotiListByEmail(String email) {
-        /**
-         * @Method Name :  getNotiListByEmail
-         * @Method 설명 :  회원 이메일을 이용해 회원의 알림 리스트를 조회한다.
-         */
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        return notiRepository.findAllByUserUserId(user.getUserId())
-                .stream().map(NotiResponse.GetNotiResponse::new).collect(Collectors.toList());
-    }
-    @Override
-    public NotiResponse.GetNotiResponse getNotiById(int notiId, String email) {
-        /**
-         * @Method Name :  getNotiById
-         * @Method 설명 :  알림 아이디를 이용해 알림을 조회한다.
-         */
-        Notification noti = notiRepository.findById(notiId).orElseThrow(() -> new CustomException(ErrorCode.NOTI_NOT_FOUND));
-        // jwt 토큰 이메일과 알림 수신자의 이메일 비교
-        if(!noti.getUser().getEmail().equals(email)){
-            throw new CustomException(ErrorCode.NOTI_ACCESS_ERROR);
-        }
-        notiRepository.deleteById(notiId);
-        return new NotiResponse.GetNotiResponse(noti);
     }
 }
