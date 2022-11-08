@@ -1,55 +1,60 @@
 package com.ssafy.ssantaClinic.db.repository;
 
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.infinispan.Cache;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Repository
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class EmitterRepositoryImpl implements EmitterRepository {
-    private final Map<String, SseEmitter> emitters = new ConcurrentHashMap<>();
-    private final Map<String, Object> eventCache = new ConcurrentHashMap<>();
+    // 생성된 EventStream 목록을 저장하기 위한 로컬 캐시
+    private final Cache<String, SseEmitter> sseEmitterCache;
+    // 전송된 Event 목록을 임시 저장하기 위한 분산 캐시
+    private final Cache<String, Object> sseEventCache;
 
     @Override
     public SseEmitter save(String emitterId, SseEmitter sseEmitter) {
-        emitters.put(emitterId, sseEmitter);
+        sseEmitterCache.put(emitterId, sseEmitter);
         return sseEmitter;
     }
 
     @Override
     public void saveEventCache(String eventCacheId, Object event) {
-        eventCache.put(eventCacheId, event);
+        sseEventCache.put(eventCacheId, event);
     }
 
     @Override
     public Map<String, SseEmitter> findAllEmitterStartWithByEmail(String email) {
-        return emitters.entrySet().stream()
+        return sseEmitterCache.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(email))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
     public Map<String, Object> findAllEventCacheStartWithByEmail(String email) {
-        return eventCache.entrySet().stream()
+        return sseEventCache.entrySet().stream()
                 .filter(entry -> entry.getKey().startsWith(email))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
     public void deleteById(String id) {
-        emitters.remove(id);
+        sseEmitterCache.remove(id);
     }
 
     @Override
     public void deleteAllEmitterStartWithEmail(String email) {
-        emitters.forEach(
+        sseEmitterCache.forEach(
                 (key, emitter) -> {
                     if (key.startsWith(email)) {
-                        emitters.remove(key);
+                        sseEmitterCache.remove(key);
                     }
                 }
         );
@@ -57,12 +62,13 @@ public class EmitterRepositoryImpl implements EmitterRepository {
 
     @Override
     public void deleteAllEventCacheStartWithEmail(String email) {
-        eventCache.forEach(
+        sseEventCache.forEach(
                 (key, emitter) -> {
                     if (key.startsWith(email)) {
-                        eventCache.remove(key);
+                        sseEventCache.remove(key);
                     }
                 }
         );
     }
+
 }
