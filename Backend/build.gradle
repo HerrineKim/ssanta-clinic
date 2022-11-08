@@ -54,6 +54,11 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
+	//JBoss
+	testImplementation 'org.infinispan:infinispan-core:14.0.2.Final'
+	testImplementation 'org.infinispan:infinispan-commons:14.0.2.Final'
+	implementation 'org.infinispan:infinispan-marshaller-protostuff:14.0.2.Final'
+	implementation 'org.jboss.marshalling:jboss-marshalling-osgi:2.0.12.Final'
 }
 
 tasks.named('test') {
