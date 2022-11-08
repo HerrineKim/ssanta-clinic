@@ -446,11 +446,9 @@ export class MainCanvas {
         if (targets[0].object.name === 'shop') {
           console.log('shop!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
-          // 트리 줌인 후에 꾸밀수 있도록 인벤토리
-          // this._zoomFit(targets[0].object.parent, 60);
-          // setTimeout(() => {
-          // }, 1600);
-          // this._setupTreeModal();
+          setTimeout(() => {
+            this._setupAlert();
+          }, 1500);
         } else if (targets[0].object.name === 'home') {
           console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
