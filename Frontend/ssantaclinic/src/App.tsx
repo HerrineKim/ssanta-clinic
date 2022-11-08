@@ -18,6 +18,7 @@ import { MyRoomPage } from './pages/myroom/MyRoomPage';
 import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
 import NotificationPage from './pages/NotificationPage';
 import { ResetTokenPage } from './pages/ResetTokenPage';
+import ShopPage from './pages/shop/ShopPage';
 
 function App() {
   console.log('APP');
@@ -25,6 +26,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
+        <Route path="/shop" element={<ShopPage />}></Route>
         <Route path="/friend" element={<FriendPage />}></Route>
         {/* 회원관련 */}
         <Route path="/signup" element={<SignUpPage />}></Route>
