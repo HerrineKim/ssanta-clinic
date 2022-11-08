@@ -21,7 +21,7 @@ public class AdventCalendarImg {
     @Column(name = "image_id")
     private int imageId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "advent_calendar_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private AdventCalendar adventCalendar;
