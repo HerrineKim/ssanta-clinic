@@ -10,6 +10,14 @@ export const CalendarBackground = styled.div`
   justify-content: center;
 `;
 
+export const TopContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90vw;
+  padding: 0 20px;
+`;
+
 export const CalendarPageContainer = styled.div`
   display: flex;
   flex-direction: ;
@@ -326,10 +334,10 @@ export const BoxFifteen = styled.div`
 export const MiniContainerThree = styled.div`
   display: flex;
   flex-direction: row;
-  align-items: space-around;
-  justify-content: space-around;
+  align-items: center;
+  justify-content: space-between;
   height: 19vh;
-  width: 40vw;
+  width: 39vw;
   // background-color: mintcream;
 `;
 
@@ -344,7 +352,8 @@ export const BoxTwentyOne = styled.div`
   align-items: center;
   justify-content: center;
   height: 18vh;
-  width: 18vw;
+  width: 19vw;
+  margin-left: 0.5vw;
   background-color: blue;
   border-radius: 8px;
   font-size: 4rem;
@@ -531,6 +540,11 @@ export const BoxSix = styled.div`
 `;
 
 export const BoxSeven = styled.div`
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+  }
   display: flex;
   align-items: start;
   justify-content: start;
