@@ -117,6 +117,19 @@ public class UserController {
 
         return ResponseEntity.ok().body(user);
     }
+
+    /**
+     * @Method Name : getUserByNickName
+     * @Method 설명 : userNickName을 받아 해당하는 유저의 회원 상세정보를 반환한다.
+     */
+    @ApiOperation(value = "유저 상세정보", notes="요청한 닉네임의 유저 상세정보를 제공한다.", httpMethod = "POST")
+    @PostMapping("/search")
+    public ResponseEntity<UserResponse.UserDataResponse> getUserByNickName(@RequestBody UserRequest.CheckDuplicateNicknameRequest request){
+        User user = userService.getUserByNickName(request.getNickName());
+        UserResponse.UserDataResponse result = UserResponse.UserDataResponse.builder().userId(user.getUserId()).email(user.getEmail()).nickName(user.getNickName()).build();
+        return ResponseEntity.ok().body(result);
+    }
+
     @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping("/check/nickname")
     public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateNickname(@RequestBody UserRequest.CheckDuplicateNicknameRequest formRequest){
