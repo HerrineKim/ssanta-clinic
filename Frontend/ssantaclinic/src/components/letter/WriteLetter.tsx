@@ -19,6 +19,7 @@ export const WriteLetter = () => {
   const [button, setButton] = useState<boolean>(true);
   const [isJobSelect, setIsJobSelect] = useState<boolean>(true);
   const [isFutureSelect, setIsFutureSelect] = useState<boolean>(false);
+  const [isChristmasSelect, setIsCristmasSelect] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<Keyword>('취업');
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const ID = useRecoilValue(selectUserId);
@@ -53,6 +54,7 @@ export const WriteLetter = () => {
   const toggleJob = () => {
     setIsJobSelect(!isJobSelect);
     setIsFutureSelect(!isFutureSelect);
+    setIsCristmasSelect(!isChristmasSelect);
     if (isJobSelect) {
       setKeyword('취업');
     }
@@ -63,6 +65,17 @@ export const WriteLetter = () => {
   const toggleFuture = () => {
     setIsFutureSelect(!isFutureSelect);
     setIsJobSelect(!isJobSelect);
+    setIsCristmasSelect(!isChristmasSelect);
+    if (isJobSelect) {
+      setKeyword('진로');
+    }
+
+    console.log(isJobSelect, isFutureSelect);
+  };
+  const toggleCristmas = () => {
+    setIsFutureSelect(!isFutureSelect);
+    setIsJobSelect(!isJobSelect);
+    setIsCristmasSelect(!isChristmasSelect);
     if (isJobSelect) {
       setKeyword('진로');
     }
@@ -93,15 +106,18 @@ export const WriteLetter = () => {
       </div>
       <div id="set-category">
         <CheckButton onClick={toggleJob}>
-          {isJobSelect ? '취업 선택됨' : 'X'}
+          {isJobSelect ? '취업' : 'X'}
         </CheckButton>
         <CheckButton onClick={toggleFuture}>
-          {isFutureSelect ? '진로 선택됨' : 'X'}
+          {isFutureSelect ? '진로' : 'X'}
+        </CheckButton>
+        <CheckButton onClick={toggleCristmas}>
+          {isChristmasSelect ? '크리스마스' : 'X'}
         </CheckButton>
       </div>
       <div>
         <form onSubmit={handleSubmit}>
-          <div id="title-container">
+          {/* <div id="title-container">
             <h3 id="title">제목</h3>
             <TitleInput
               name="title"
@@ -109,9 +125,8 @@ export const WriteLetter = () => {
               onChange={handleChangeTitle}
               required
             ></TitleInput>
-          </div>
+          </div> */}
           <div id="message-container">
-            <h3 id="message-input">편지</h3>
             <MessageInput
               name="message"
               id="message-input"
@@ -120,8 +135,8 @@ export const WriteLetter = () => {
             ></MessageInput>
           </div>
 
-          <Button type="submit" className="letterButton" disabled={button}>
-            산타한테 보내기
+          <Button type="submit" className="send-button" disabled={button}>
+            보내기
           </Button>
         </form>
       </div>
