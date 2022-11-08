@@ -153,9 +153,7 @@ export function CalendarPage() {
             <BoxThree>3</BoxThree>
           </MiniContainerOne>
           <MiniContainerTwo>
-            <MiniContainerEight>
-              <BoxEight>8</BoxEight>
-            </MiniContainerEight>
+            <BoxEight>8</BoxEight>
             <MiniContainerTwoRight>
               <MiniContainerTwoTop>
                 <BoxNine>9</BoxNine>
