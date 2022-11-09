@@ -67,10 +67,6 @@ public class AdventCalendar {
         this.imgList = imgList;
     }
 
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
-
     public void isOpened() {
         this.isRead = true;
     }
