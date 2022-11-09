@@ -130,7 +130,7 @@ public class UserController {
 
     @ApiOperation(value = "닉네임 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping("/check/nickname")
-    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateNickname(@RequestBody UserRequest.NicknameRequest formRequest){
+    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateNickname(@RequestBody @Valid UserRequest.NicknameRequest formRequest){
         /**
          * @Method Name : checkDuplicateNickname
          * @Method 설명 : nickname을 받아서 중복된 nickname이 존재하는지 확인한다.
@@ -141,7 +141,7 @@ public class UserController {
 
     @ApiOperation(value = "이메일 중복체크", notes="중복이면 true, 아니면 false", httpMethod = "POST")
     @PostMapping ("/check/email")
-    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateEmail(@RequestBody UserRequest.EmailRequest formRequest){
+    public ResponseEntity<UserResponse.DuplicatedResponse> checkDuplicateEmail(@RequestBody @Valid UserRequest.EmailRequest formRequest){
         /**
          * @Method Name : checkDuplicateEmail
          * @Method 설명 : email을 받아서 중복된 email이 존재하는지 확인한다.
@@ -153,7 +153,7 @@ public class UserController {
 
     @ApiOperation(value = "비밀번호 찾기", notes="비밀번호 재설정 고유값 반환", httpMethod = "POST")
     @PostMapping ("/find/password")
-    public ResponseEntity<UserResponse.findPasswordResponse> findPassword(@RequestBody UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
+    public ResponseEntity<UserResponse.findPasswordResponse> findPassword(@RequestBody @Valid UserRequest.EmailRequest formRequest) throws NoSuchAlgorithmException {
         /**
          * @Method Name : findPassword
          * @Method 설명 : email을 받아서 회원 존재 확인한 뒤, 비밀번호 재설정을 위한 회원 고유값을 반환.(sha256)
@@ -163,7 +163,7 @@ public class UserController {
     }
     @ApiOperation(value = "비밀번호재설정 url 전송", notes="회원 고유값을 포함한 비밀번호 재설정 url 메일 전송", httpMethod = "POST")
     @PostMapping("/find/password/url")
-    public void sendUrl(@RequestBody UserRequest.UrlRequest formRequest) {
+    public void sendUrl(@RequestBody @Valid UserRequest.UrlRequest formRequest) {
         /**
          * @Method Name : sendUrl
          * @Method 설명 : 비밀번호 재설정 url을 받아서 회원 이메일로 전송한다.
@@ -172,7 +172,7 @@ public class UserController {
     }
     @ApiOperation(value = "회원 비밀번호 수정", notes="회원 비밀번호 수정", httpMethod = "PATCH")
     @PatchMapping("/find/password/update")
-    public void updatePassword(@RequestBody UserRequest.UpdatePasswordRequest formRequest) {
+    public void updatePassword(@RequestBody @Valid UserRequest.UpdatePasswordRequest formRequest) {
         /**
          * @Method Name : updatePassword
          * @Method 설명 : 새로운 비밀번호를 받아서 수정한다.
@@ -182,16 +182,17 @@ public class UserController {
 
     @ApiOperation(value = "회원 잔고 수정", notes="회원 잔고 수정", httpMethod = "PATCH")
     @PatchMapping("/money")
-    public void updateMoney(@RequestBody UserRequest.UpdateMoneyRequest formRequest) {
+    public void updateMoney(@RequestBody @Valid UserRequest.UpdateMoneyRequest formRequest) {
         /**
          * @Method Name : updateMoney
          * @Method 설명 : 회원 잔고를 수정한다.
          */
+
         userService.updateMoney(formRequest.getUserId(), formRequest.getMoney());
     }
     @ApiOperation(value = "회원 아이템 리스트 수정", notes="회원 아이템 리스트 수정", httpMethod = "PATCH")
     @PatchMapping("/items/use")
-    public void updateUserItemList(@RequestBody UserRequest.UpdateUserItemRequest formRequest){
+    public void updateUserItemList(@RequestBody @Valid UserRequest.UpdateUserItemRequest formRequest){
         /**
          * @Method Name : updateUserItemList
          * @Method 설명 : 회원 아이템 리스트를 수정한다.

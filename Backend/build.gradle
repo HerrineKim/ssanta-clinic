@@ -72,6 +72,7 @@ dependencies {
 	testImplementation 'org.infinispan:infinispan-commons:14.0.2.Final'
 	implementation 'org.infinispan:infinispan-marshaller-protostuff:14.0.2.Final'
 	implementation 'org.jboss.marshalling:jboss-marshalling-osgi:2.0.12.Final'
+	compileOnly 'org.infinispan:infinispan-component-annotations:10.1.8.Final'
 }
 
 tasks.named('test') {
