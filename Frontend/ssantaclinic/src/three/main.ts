@@ -74,6 +74,7 @@ export class MainCanvas {
   _game4: THREE.Object3D[];
   _letter: THREE.Object3D[];
   _home: THREE.Object3D[];
+  _isZoom: boolean;
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
@@ -95,6 +96,7 @@ export class MainCanvas {
     ];
     this._items = items;
     this._isAlert = false;
+    this._isZoom = false;
     this._isTreeModal = false;
     this._shop = [];
     this._game1 = [];
@@ -170,6 +172,8 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
+    // console.log(this._controls.PolarAngle, this._controls.minPolarAngle);
+    // console.log(this._controls);
     // if (this._snow) {
     //   if (this._mixer) {
     //     // console.log('mixer');  //mixer는 charecter.glb의 animation
@@ -201,6 +205,12 @@ export class MainCanvas {
 
       //orbicontrol shift 기능 없애기
       this._controls.enablePan = false;
+      this._controls.minDistance = 30;
+      this._controls.maxDistance = 80;
+      this._controls.maxPolarAngle = (Math.PI * 2) / 5;
+      // this._controls.minPolarAngle = 0;
+      this._controls.maxAzimuthAngle = 0.1 * Math.PI;
+      this._controls.minAzimuthAngle = -1.5 * Math.PI;
 
       //마우스 회전 부드럽게
       this._controls.enableDamping = true;
@@ -476,10 +486,12 @@ export class MainCanvas {
           this._scenenumber = 1;
 
           this._removeModal();
-          setTimeout(() => {
-            // this._setupControls();
-            this._zoomFit(this._model, 60);
-          }, 100);
+          if (this._isZoom) {
+            setTimeout(() => {
+              // this._setupControls();
+              this._zoomOut(60);
+            }, 100);
+          }
         }
       } else {
         this._scenenumber = 1;
@@ -492,10 +504,12 @@ export class MainCanvas {
         }
 
         this._removeModal();
-        setTimeout(() => {
-          // this._setupControls();
-          this._zoomFit(this._model, 60);
-        }, 100);
+        if (this._isZoom) {
+          setTimeout(() => {
+            // this._setupControls();
+            this._zoomOut(60);
+          }, 100);
+        }
       }
 
       const targets2 = this._raycaster.intersectObjects(this._tree);
@@ -743,7 +757,12 @@ export class MainCanvas {
 
   // https://www.youtube.com/watch?v=OgC3kGKKb7A
   // viewangle 은 수직축으로의 각도 90 도면 평면과 평행하게 바라봄. 0 도면 위에서 바라봄.
+
   _zoomFit(object3d: any, viewAngle: number) {
+    this._isZoom = true;
+    this._controls.minDistance = 0;
+    this._controls.maxDistance = 80;
+
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
     const box = new THREE.Box3().setFromObject(object3d);
@@ -870,39 +889,16 @@ export class MainCanvas {
   }
 
   //zoomout 함수
-  _zoomOut(object3d: any, viewAngle: number) {
-    // console.log('zoomfit object3d: ', object3d);
-    //box 는 객체를 담는 최소크기 박스
-    const box = new THREE.Box3().setFromObject(object3d);
-    //box를통해 얻을 수있는 가장 긴 모서리 길이
-    const sizeBox = box.getSize(new THREE.Vector3()).length();
-    //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
-    const centerBox = box.getCenter(new THREE.Vector3());
+  _zoomOut(viewAngle: number) {
+    this._isZoom = false;
+    this._controls.minDistance = 30;
+    this._controls.maxDistance = 80;
 
-    const direction = new THREE.Vector3(0, 1, 0);
-    direction.applyAxisAngle(
-      new THREE.Vector3(1, 0, 0),
-      THREE.MathUtils.degToRad(viewAngle),
-    );
-
-    const halfSizeModel = sizeBox * 0.5;
-    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
-    const distance = halfSizeModel / Math.tan(halfFov);
-
-    const newPosition = new THREE.Vector3().copy(
-      direction.multiplyScalar(distance).add(centerBox),
-    );
-
-    // this._camera.position.copy(newPosition);
-    // this._controls.target.copy(centerBox);
-
-    //애니메이션 라이브러리 gsap
-    //카메라 위치변경
     gsap.to(this._camera.position, {
       duration: 1.5,
-      x: newPosition.x,
-      y: newPosition.y,
-      z: newPosition.z,
+      x: -40,
+      y: 29,
+      z: -46,
     });
 
     //this._controls.target.copy(centerBox);
@@ -911,9 +907,9 @@ export class MainCanvas {
     // 타겟위치변경
     gsap.to(this._controls.target, {
       duration: 0.5,
-      x: centerBox.x,
-      y: centerBox.y,
-      z: centerBox.z,
+      x: 0,
+      y: 0,
+      z: 0,
       onUpdate: () => {
         //애니메이션 수행중에 깜빡거리는 현상 방지
         this._camera.lookAt(
