@@ -36,9 +36,8 @@ export const FriendButton = styled.button`
   cursor: pointer;
   display: inline-block;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 1.5rem;
   padding: 0 18px;
-  line-height: 50px;
   text-align: center;
   text-decoration: none;
   user-select: none;
@@ -59,6 +58,6 @@ export const FriendButton = styled.button`
   @media (min-width: 768px) {
   {
     min-width: 40px;
-    padding: 0 25px;
+    padding: 0 20px;
   }
 `;
