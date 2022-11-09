@@ -151,6 +151,7 @@ export class MainCanvas {
       // console.log(this._camera.position);
       this._renderer.render(this._scene, this._camera);
       this.update(time);
+      // console.log('!');
 
       requestAnimationFrame(this.render.bind(this));
     } else {
