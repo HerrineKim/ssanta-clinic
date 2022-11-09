@@ -15,7 +15,7 @@ public class UserRequest {
     }
 
     @Data
-    public static class CheckDuplicateNicknameRequest{
+    public static class NicknameRequest {
         private String nickName;
     }
 
