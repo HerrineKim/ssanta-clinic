@@ -74,7 +74,7 @@ public class UserController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String jwt = jwtManager.createToken(authentication);
-
+        userService.updateLastLoginAt(JwtUtil.getCurrentUserId());
         return ResponseEntity.ok()
                 .header(JwtUtil.AUTHORIZATION_HEADER, "Bearer " + jwt)
                 .body(userService.getUserByEmail(loginDto.getEmail()));
