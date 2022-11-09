@@ -48,8 +48,16 @@ export class LetterWrite {
       1000,
     );
 
-    camera.position.set(0, 1.764, 0.284);
-    camera.rotation.set(-90, 0, 0);
+    camera.position.set(
+      3.673020023484643e-22,
+      1.7867154222191401,
+      0.0000017867948404755238,
+    );
+    camera.rotation.set(
+      -1.5707953267504475,
+      2.0557386909291645e-22,
+      2.0556473190314887e-16,
+    );
     this._camera = camera;
   }
   _setupLight() {
@@ -82,6 +90,7 @@ export class LetterWrite {
   }
 
   update() {
+    console.log(this._camera);
     this._orbitControls.update();
   }
 

@@ -19,7 +19,8 @@ import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
 import NotificationPage from './pages/NotificationPage';
 import { ResetTokenPage } from './pages/ResetTokenPage';
 import ShopPage from './pages/shop/ShopPage';
-
+import { NotFound } from './pages/NotFoundPage';
+import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
 function App() {
   console.log('APP');
   return (
@@ -42,13 +43,15 @@ function App() {
         <Route path="/calendar" element={<CalendarPage />}></Route>
         <Route path="/boxCreate" element={<BoxCreate />}></Route>
         <Route path="/letter/write" element={<WriteLetterPage />}></Route>
-        <Route path="/room/:id" element={<MyRoomPage />}></Route>
-        {/* 여기 룸 뒤에 사용자 아이디 시용예정 */}
+        <Route path="/myroom/:id" element={<MyRoomPage />}></Route>
+        <Route path="/otherroom/:id" element={<OtherRoomPage />}></Route>
         <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route>
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
         <Route path="/notification" element={<NotificationPage />}></Route>
         <Route path="/tetris" element={<TetrisPage />}></Route>
         <Route path="/resettoken" element={<ResetTokenPage />}></Route>
+        <Route path={'*'} element={<NotFound />}></Route>
+        <Route path="/404" element={<NotFound />}></Route>
       </Routes>
     </Router>
   );
