@@ -4,7 +4,7 @@ import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
-import FriendModal from '../../components/friend/FriendModal';
+import FriendModal from './FriendModal';
 import { FriendButton } from './styles';
 
 export default function Home() {
@@ -45,21 +45,37 @@ export default function Home() {
   }, []);
   return (
     <Div>
+      {/* <div className="container">
+        <div className="interior">
+          <a className="btn" href="#open-modal">
+            👋 Basic CSS-Only Modal
+          </a>
+        </div>
+      </div> */}
+      <div id="open-modal" className="modal-window">
+        <div>
+          <a href="#" title="Close" className="modal-close">
+            Close
+          </a>
+          <h1>Voilà!</h1>
+          <div>
+            A CSS-only modal based on the :target pseudo-class. Hope you find it
+            helpful.
+          </div>
+          <div>
+            <small>Check out 👇</small>
+          </div>
+        </div>
+      </div>
       {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
-      {/* 버튼들 */}
-      <FriendButton
-        onClick={() => {
-          showFriendModal();
-        }}
-      >
-        {friendModalOpen && (
-          <FriendModal setFriendModalOpen={setFriendModalOpen} />
-        )}
-        친구
-      </FriendButton>
+      <a href="#open-modal">
+        <FriendButton>친구</FriendButton>
+      </a>
+      {friendModalOpen && <FriendModal />}
+
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
     </Div>
