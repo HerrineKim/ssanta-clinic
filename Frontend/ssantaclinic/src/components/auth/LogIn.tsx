@@ -5,7 +5,7 @@ import { useSetRecoilState } from 'recoil';
 import { currentUser } from '../../store/store';
 import { Button, LoginContainer } from './styles';
 import { Input } from './styles';
-
+import { motion } from 'framer-motion';
 export const LogIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -51,7 +51,9 @@ export const LogIn = () => {
       ? setButton(false)
       : setButton(true);
   }
-
+  function goSignUp() {
+    navigate('/signup');
+  }
   const handleChangeEmail = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
@@ -66,9 +68,6 @@ export const LogIn = () => {
   );
   return (
     <LoginContainer id="login-container">
-      <div id="login">
-        <h1>로그인</h1>
-      </div>
       <form onSubmit={handleSubmit}>
         <Input
           name="email"
@@ -87,10 +86,24 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
-        <Button type="submit" className="loginButton" disabled={button}>
+        <motion.button
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          type="submit"
+          id="login-button"
+          disabled={button}
+        >
           로그인
-        </Button>
+        </motion.button>
       </form>
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        id="signup-button"
+        onClick={goSignUp}
+      >
+        회원가입
+      </motion.button>
     </LoginContainer>
   );
 };
