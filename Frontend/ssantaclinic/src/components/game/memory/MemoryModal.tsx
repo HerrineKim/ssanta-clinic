@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './game.css';
 import { gsap } from 'gsap';
 
-export default function MemoryPage() {
+export default function MemoryModal() {
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);
   // 카드 엘리먼트 배열

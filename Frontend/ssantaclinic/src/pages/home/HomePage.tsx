@@ -5,6 +5,7 @@ import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 import { HomeAlert } from '../../components/main/homealert';
 import { TreeModal } from '../../components/tree/index';
+import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
 
 export default function Home() {
   // const firstCanvas = document.getElementById('main-canvas');
@@ -40,6 +41,7 @@ export default function Home() {
     <Div>
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
+      <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
