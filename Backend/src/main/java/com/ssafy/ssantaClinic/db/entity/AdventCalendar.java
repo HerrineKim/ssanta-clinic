@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,10 +24,11 @@ public class AdventCalendar {
     @Column(name = "advent_calendar_id")
     private int id;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 100)
+    @NotBlank
     private String sender;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "receiver_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User receiver;
@@ -35,19 +37,21 @@ public class AdventCalendar {
     @Convert(converter = CryptoConverter.class)
     private String content;
 
-    @Column(nullable = false, name = "is_read")
+    @Column(name = "is_read")
+    @NotBlank
     private Boolean isRead;
 
     private int day;
 
-    @Column(nullable = false, name = "created_at")
+    @Column(name = "created_at")
+    @NotBlank
     private LocalDateTime createdAt;
 
     @Column(length = 300)
     @Convert(converter = CryptoConverter.class)
     private String audioUrl;
 
-    @OneToMany(mappedBy = "adventCalendar", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "adventCalendar", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<AdventCalendarImg> imgList;
 
     @Builder
@@ -61,10 +65,6 @@ public class AdventCalendar {
         this.createdAt = createdAt;
         this.audioUrl = audioUrl;
         this.imgList = imgList;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
     }
 
     public void isOpened() {

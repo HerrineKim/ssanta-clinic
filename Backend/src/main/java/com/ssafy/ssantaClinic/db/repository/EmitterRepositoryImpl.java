@@ -28,16 +28,16 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     }
 
     @Override
-    public Map<String, SseEmitter> findAllEmitterStartWithByEmail(String email) {
+    public Map<String, SseEmitter> findAllEmitterStartWithByUserId(int userId) {
         return sseEmitterCache.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(email))
+                .filter(entry -> entry.getKey().startsWith(String.valueOf(userId)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
-    public Map<String, Object> findAllEventCacheStartWithByEmail(String email) {
+    public Map<String, Object> findAllEventCacheStartWithByUserId(int userId) {
         return sseEventCache.entrySet().stream()
-                .filter(entry -> entry.getKey().startsWith(email))
+                .filter(entry -> entry.getKey().startsWith(String.valueOf(userId)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
@@ -47,10 +47,10 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     }
 
     @Override
-    public void deleteAllEmitterStartWithEmail(String email) {
+    public void deleteAllEmitterStartWithUserId(int userId) {
         sseEmitterCache.forEach(
                 (key, emitter) -> {
-                    if (key.startsWith(email)) {
+                    if (key.startsWith(String.valueOf(userId))) {
                         sseEmitterCache.remove(key);
                     }
                 }
@@ -58,10 +58,10 @@ public class EmitterRepositoryImpl implements EmitterRepository {
     }
 
     @Override
-    public void deleteAllEventCacheStartWithEmail(String email) {
+    public void deleteAllEventCacheStartWithUserId(int userId) {
         sseEventCache.forEach(
                 (key, emitter) -> {
-                    if (key.startsWith(email)) {
+                    if (key.startsWith(String.valueOf(userId))) {
                         sseEventCache.remove(key);
                     }
                 }
