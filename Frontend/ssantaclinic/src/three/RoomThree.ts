@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
+import gsap from 'gsap';
 
 import axios from 'axios';
 
@@ -17,7 +18,7 @@ export class RoomThree {
   _clock: any;
   _orbitControls: any;
   _raycaster: any;
-  _scenenumber: any;
+  _scenenumber: number;
   _model: any;
   _close: any;
   _tree: any;
@@ -28,8 +29,13 @@ export class RoomThree {
   _isZoom: any;
   _controls: any;
   _position: any;
+  _inven: any;
+  _isTreeModal: boolean;
 
-  constructor() {
+  constructor(items: number[]) {
+    this._scenenumber = 1;
+    this._isTreeModal = false;
+    this._items = items;
     this._setupThreeJs();
     this._setupCamera();
     this._setupLight();
@@ -53,6 +59,37 @@ export class RoomThree {
       this._scene = scene;
     }
   }
+  _setupEvents() {
+    window.onresize = this.resize.bind(this);
+    this.resize();
+
+    this._clock = new THREE.Clock();
+    requestAnimationFrame(this.render.bind(this));
+  }
+
+  update() {
+    const delta = this._clock.getDelta();
+    this._orbitControls.update();
+    if (this._mixer) this._mixer.update(delta);
+  }
+
+  render() {
+    this._renderer.render(this._scene, this._camera);
+    this.update();
+    // console.log(this._camera.position);
+
+    requestAnimationFrame(this.render.bind(this));
+  }
+
+  resize() {
+    const width = this._divContainer.clientWidth;
+    const height = this._divContainer.clientHeight;
+
+    this._camera.aspect = width / height;
+    this._camera.updateProjectionMatrix();
+
+    this._renderer.setSize(width, height);
+  }
   _setupCamera() {
     // const camera = new THREE.PerspectiveCamera(
     //   75,
@@ -61,20 +98,22 @@ export class RoomThree {
     //   1000,
     // );
     const aspect = window.innerWidth / window.innerHeight;
-    const camera = new THREE.OrthographicCamera(
-      -10 * aspect,
-      10 * aspect,
-      10,
-      -10,
+    // const camera = new THREE.OrthographicCamera(
+    //   -10 * aspect,
+    //   10 * aspect,
+    //   10,
+    //   -10,
+    //   1,
+    //   1000,
+    // );
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      window.innerWidth / window.innerHeight,
       1,
-      1000,
+      500,
     );
 
-    camera.position.set(
-      5.296593567175951,
-      5.924396820350731,
-      4.516279656418997,
-    );
+    camera.position.set(7.382013649990576, 5.62568011018224, 7.322713694518906);
     camera.rotation.set(
       -0.8316913746184987,
       0.5939123123275776,
@@ -116,23 +155,66 @@ export class RoomThree {
     this._scene.add(light2);
   }
   _setupModel() {
-    new GLTFLoader().load('/room/my_room.glb', (gltf) => {
+    const inven: any[] = [];
+    const loader = new GLTFLoader();
+    loader.load('/room/room.glb', (gltf) => {
       const model = gltf.scene;
       this._scene.add(model);
       const children: any[] = [];
       model.traverse((child) => {
         children.push(child);
       });
-      console.log(children);
-
-      // const clips = gltf.animations;
-      // const mixer = new THREE.AnimationMixer(model);
-      // const clip = THREE.AnimationClip.findByName(clips, '');
-      // const action = mixer.clipAction(clip);
-      // action.play();
-
-      // this._mixer = mixer;
+      // console.log(children);
+      this._model = model;
     });
+
+    loader.load('/room/tree.glb', (gltf) => {
+      const tree: any[] = [];
+      const model: any = gltf.scene;
+      // model.traverse((child: any) => {
+      //   if (child instanceof THREE.Group) {
+      //     // console.log(child, child.name);
+      //     group.push(child);
+      //   }
+      // });
+      // model.position.set(5, 0, -4.5);
+      model.name = 'tree';
+      model.traverse((child: THREE.Object3D) => {
+        tree.push(child);
+        child.name = 'tree';
+      });
+      this._scene.add(model);
+      inven.push(model);
+      console.log('treegltf:', model);
+      this._tree = tree;
+    });
+
+    loader.load('/room/showcase.glb', (gltf) => {
+      const model: any = gltf.scene;
+      this._scene.add(model);
+      console.log('showcase:', model);
+      this._showcase = model;
+      inven.push(model);
+    });
+    this._inven = inven;
+
+    // item load 부분
+    // const items: any[] = [];
+    // // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    // this._items.forEach((item, index) => {
+    //   // console.log('item:', item);
+    //   // console.log(index);
+    //   loader.load(`main/${item}.glb`, (gltf) => {
+    //     // console.log(index);
+    //     const model = gltf.scene;
+    //     // console.log(`${index}: `, model);
+    //     model.scale.set(0.01, 0.01, 0.01);
+    //     const position = this._position[`${index}`];
+    //     model.position.set(position[0], position[1], position[2]);
+    //     items.push(model);
+    //     // this._scene.add(model);
+    //   });
+    // });
   }
   _setupControls() {
     this._orbitControls = new OrbitControls(this._camera, this._divContainer);
@@ -171,28 +253,27 @@ export class RoomThree {
       console.log('click!!', this._model);
       const targets = this._raycaster.intersectObject(this._model);
       console.log('raycaaster target:', targets);
-      // const target = this._raycaster.intersectObject(this._group[11]);
-      // console.log('target : ', target);
-      // console.log('targets: ', targets);
+
       if (targets.length > 0) {
+        console.log(targets);
         console.log('scenenumber 1');
       } else {
         console.log('아무것도업슴');
       }
 
-      // const targets2 = this._raycaster.intersectObjects(this._tree);
-      // if (targets2.length > 0) {
-      //   let object = targets2[0].object;
-      //   while (object.parent) {
-      //     object = object.parent;
-      //     if (object instanceof THREE.Group) {
-      //       break;
-      //     }
-      //   }
-      //   console.log('parent:', object);
-      //   this._isTreeModal = true;
-      //   this._zoomInven(this._inven, 90);
-      // }
+      const trees = this._raycaster.intersectObjects(this._tree);
+      if (trees.length > 0) {
+        let object = trees[0].object;
+        while (object.parent) {
+          object = object.parent;
+          if (object instanceof THREE.Group) {
+            break;
+          }
+        }
+        console.log('parent:', object);
+        this._isTreeModal = true;
+        this._zoomInven(this._inven, 90);
+      }
     } else {
       // scenenumber == 2 일때
       const exporter = new GLTFExporter();
@@ -259,7 +340,7 @@ export class RoomThree {
         });
 
         this._scenenumber = 1;
-        this._setupControls();
+        // this._setupControls();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
         }, 100);
@@ -273,7 +354,9 @@ export class RoomThree {
   }
 
   _zoomInven(object3d: any[], viewAngle: number) {
+    console.log(object3d);
     const positions: any[] = [];
+
     this._items.forEach((child: any) => {
       positions.push(child.position);
     });
@@ -337,7 +420,7 @@ export class RoomThree {
       this._scene2.add(...this._items);
       this._scene2.add(this._close);
       this._scenenumber = 2;
-      this._setupControls();
+      // this._setupControls();
 
       this._setupDrag();
     }, 1500);
@@ -536,36 +619,5 @@ export class RoomThree {
       // console.log('rotate', this._tree[0]);
       this._tree[0].rotateY(event.deltaY * 0.0005);
     }
-  }
-
-  _setupEvents() {
-    window.onresize = this.resize.bind(this);
-    this.resize();
-
-    this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
-  }
-
-  update() {
-    const delta = this._clock.getDelta();
-    this._orbitControls.update();
-    if (this._mixer) this._mixer.update(delta);
-  }
-
-  render() {
-    this._renderer.render(this._scene, this._camera);
-    this.update();
-
-    requestAnimationFrame(this.render.bind(this));
-  }
-
-  resize() {
-    const width = this._divContainer.clientWidth;
-    const height = this._divContainer.clientHeight;
-
-    this._camera.aspect = width / height;
-    this._camera.updateProjectionMatrix();
-
-    this._renderer.setSize(width, height);
   }
 }
