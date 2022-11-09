@@ -512,24 +512,24 @@ export class MainCanvas {
         }
       }
 
-      const targets2 = this._raycaster.intersectObjects(this._tree);
-      if (targets2.length > 0) {
-        let object = targets2[0].object;
-        while (object.parent) {
-          object = object.parent;
-          if (object instanceof THREE.Group) {
-            break;
-          }
-        }
-        console.log('parent:', object);
-        this._isTreeModal = true;
-        this._zoomInven(this._inven, 90);
-      }
+      // const targets2 = this._raycaster.intersectObjects(this._tree);
+      // if (targets2.length > 0) {
+      //   let object = targets2[0].object;
+      //   while (object.parent) {
+      //     object = object.parent;
+      //     if (object instanceof THREE.Group) {
+      //       break;
+      //     }
+      //   }
+      //   console.log('parent:', object);
+      //   this._isTreeModal = true;
+      //   this._zoomInven(this._inven, 90);
+      // }
     } else {
+      // scenenumber == 2 일때
       const exporter = new GLTFExporter();
 
       // console.log('scenenumber2 _camera:', this._camera);
-      // scenenumber == 2 일때
       // console.log('onclick2');
       // drag & drop 구현
 
@@ -762,6 +762,10 @@ export class MainCanvas {
     this._isZoom = true;
     this._controls.minDistance = 0;
     this._controls.maxDistance = 80;
+    this._controls.maxPolarAngle = Math.PI / 2;
+    // this._controls.minPolarAngle = 0;
+    this._controls.maxAzimuthAngle = Infinity;
+    this._controls.minAzimuthAngle = Infinity;
 
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
@@ -893,6 +897,10 @@ export class MainCanvas {
     this._isZoom = false;
     this._controls.minDistance = 30;
     this._controls.maxDistance = 80;
+    this._controls.maxPolarAngle = (Math.PI * 2) / 5;
+    // this._controls.minPolarAngle = 0;
+    this._controls.maxAzimuthAngle = 0.1 * Math.PI;
+    this._controls.minAzimuthAngle = -1.5 * Math.PI;
 
     gsap.to(this._camera.position, {
       duration: 1.5,
