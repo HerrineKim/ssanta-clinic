@@ -6,7 +6,7 @@ import com.ssafy.ssantaClinic.db.entity.User;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface NotiService {
-    SseEmitter subscribe(String email, String lastEventId);
+    SseEmitter subscribe(int userId, String lastEventId);
     void sendToClient(SseEmitter emitter, String id, Object data);
     void send(User receiver, Type type, String message, int id);
     Notification createNotification(User receiver, Type type, String message, int id);
