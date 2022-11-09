@@ -37,8 +37,7 @@ export const LogIn = () => {
           nickname: res.data.nickName,
           noti: [],
         });
-        const myRoomPath = '/room/' + res.data.userId;
-        navigate(myRoomPath); // Login 성공하면 일단 내 방으로
+        navigate('/logintohome'); // Login 성공하면 일단 내 방으로
       })
       .catch((err) => {
         console.log(err.response);
