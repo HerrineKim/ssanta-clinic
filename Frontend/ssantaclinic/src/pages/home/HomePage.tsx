@@ -28,10 +28,13 @@ export default function Home() {
     const homeCanvas = new MainCanvas(items);
     // const canvas = document.querySelector('canvas');
     // console.log(canvas);
-    console.log('useeffect');
+    // console.log('useeffect');
     const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
 
-    return () => cancelAnimationFrame(requestId);
+    return () => {
+      cancelAnimationFrame(requestId);
+      console.log('canvas 끝!');
+    };
   }, []);
   return (
     <Div>
