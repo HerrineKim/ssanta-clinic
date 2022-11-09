@@ -467,16 +467,24 @@ export class MainCanvas {
           }, 1500);
         } else if (targets[0].object.name.includes('game1')) {
           console.log('game1!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 80);
         } else if (targets[0].object.name.includes('game2')) {
           console.log('game2!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name.includes('game3')) {
-          console.log('game3!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name.includes('game4')) {
+          this._zoomFit(targets[0].object.parent, 80);
+        }
+        // else if (targets[0].object.name.includes('game3')) {
+        //   console.log('game3!!!!!!!!!!!!!!');
+        //   this._zoomFit(targets[0].object.parent, 80);
+        // }
+        else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
         } else if (targets[0].object.name.includes('playground')) {
           console.log('ground!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
         } else if (targets[0].object.name === 'letter') {
           console.log('letter!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
         } else {
           if (this._isAlert) {
             this._removeAlert();
@@ -763,7 +771,7 @@ export class MainCanvas {
   _zoomFit(object3d: any, viewAngle: number) {
     this._isZoom = true;
     this._controls.minDistance = 0;
-    this._controls.maxDistance = 80;
+    this._controls.maxDistance = Infinity;
     this._controls.maxPolarAngle = Math.PI / 2;
     // this._controls.minPolarAngle = 0;
     this._controls.maxAzimuthAngle = Infinity;
@@ -778,10 +786,36 @@ export class MainCanvas {
     const centerBox = box.getCenter(new THREE.Vector3());
 
     const direction = new THREE.Vector3(0, 1, 0);
-    direction.applyAxisAngle(
-      new THREE.Vector3(1, 0, 0),
-      THREE.MathUtils.degToRad(viewAngle),
-    );
+
+    // console.log(object3d);
+    const newVec = new THREE.Vector3(0, 0, 0);
+    if (object3d.name === 'game2' || object3d.name === 'game4') {
+      newVec.z = 1;
+    } else if (object3d.name.includes('letter')) {
+      newVec.x = -1;
+    } else if (object3d.name.includes('shop')) {
+      newVec.x = 1;
+    } else if (object3d.children[0].name === 'home') {
+      newVec.x = 1;
+      newVec.z = -1;
+    } else if (object3d.name === 'game1') {
+      newVec.x = 1;
+      // newVec.z = -1;
+    }
+    // else if (object3d.name === 'game3') {
+    //   newVec.x = -1;
+    //   newVec.z = 1;
+    // }
+    else if (object3d.name === 'playground') {
+      newVec.x = -1;
+      newVec.z = 1;
+    }
+    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
+    //   newVec.x = 1;
+    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
+    //   newVec.x = 1;
+    // }
+    direction.applyAxisAngle(newVec, THREE.MathUtils.degToRad(viewAngle));
 
     const halfSizeModel = sizeBox * 0.5;
     const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
