@@ -44,17 +44,6 @@ public class UserServiceImpl implements UserService{
     private static final String FROM_ADDRESS = "ssantaa201@gmail.com";
 
     @Override
-    public void save(UserRequest.JoinRequest joinRequest) {
-        User user = User.builder()
-                .email(joinRequest.getEmail())
-                .password(passwordEncoder.encode(joinRequest.getPassword()))
-                .nickName(joinRequest.getNickName())
-                .build();
-        userRepository.save(user);
-    }
-
-
-    @Override
     public User getUserByUserId(int userId) {
         /**
          * @Method Name : getUserByUserId
@@ -143,6 +132,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    public void save(UserRequest.JoinRequest joinRequest) {
+        User user = User.builder()
+                .email(joinRequest.getEmail())
+                .password(passwordEncoder.encode(joinRequest.getPassword()))
+                .nickName(joinRequest.getNickName())
+                .build();
+        userRepository.save(user);
+    }
+
+    @Override
     public void sendMail(String email, String url) {
         /**
          * @Method Name : sendMail
@@ -214,5 +213,19 @@ public class UserServiceImpl implements UserService{
             userItemBox.changeCount(updatedCount);
             userItemBoxRepository.save(userItemBox);
         });
+    }
+
+    @Override
+    @Transactional
+    public void updateLastLoginAt(int userId){
+        /**
+         * @Method Name : updateLastLoginDate
+         * @Method 설명 : 회원 마지막 로그인 시간을 수정한다.
+         */
+        User user = userRepository.getUserByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        user.updateLastLoginAt();
+
+//        userRepository.save(user);
     }
 }
