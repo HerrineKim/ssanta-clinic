@@ -3,10 +3,20 @@ import React, { useState, useEffect } from 'react';
 import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
-import { TreeModal } from '../../components/tree/index';
+// import { TreeModal } from '../../components/tree/index';
+import FriendModal from '../../components/friend/FriendModal';
 import { FriendButton } from './styles';
 
 export default function Home() {
+  // 친구 모달 관리
+  // 모달창 노출 여부 state
+  const [friendModalOpen, setFriendModalOpen] = useState<boolean>(false);
+
+  // 모달창 노출
+  const showFriendModal = () => {
+    setFriendModalOpen(!friendModalOpen);
+  };
+
   // const firstCanvas = document.getElementById('main-canvas');
   // const canvasRef = useRef<HTMLCanvasElement>(null);
   // const canvasCon = document.getElementById('main-canvas');
@@ -35,10 +45,21 @@ export default function Home() {
   }, []);
   return (
     <Div>
-      {/* 버튼들 */}
-      <FriendButton>친구</FriendButton>
+      {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       {/* <TreeModal data={data}></TreeModal> */}
+      {/* 버튼들 */}
+      {/* 버튼들 */}
+      <FriendButton
+        onClick={() => {
+          showFriendModal();
+        }}
+      >
+        {friendModalOpen && (
+          <FriendModal setFriendModalOpen={setFriendModalOpen} />
+        )}
+        친구
+      </FriendButton>
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
     </Div>

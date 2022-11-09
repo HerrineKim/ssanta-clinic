@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 
 export const Canvas = styled.canvas`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 `;
 
 export const Div = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 `;
 
 export const ModalDiv = styled.div`
@@ -22,16 +24,17 @@ export const ModalDiv = styled.div`
 `;
 
 export const FriendButton = styled.button`
-  position: fixed;
-  bottom: 200px;
-  right: 200px;
+  z-index: 4;
+  position: absolute;
+  bottom: 4vh;
+  right: 2vw;
   background-color: #fbeee0;
   border: 2px solid #422800;
   border-radius: 30px;
   box-shadow: #422800 4px 4px 0 0;
   color: #422800;
   cursor: pointer;
-  // display: inline-block;
+  display: inline-block;
   font-weight: 600;
   font-size: 18px;
   padding: 0 18px;
@@ -41,6 +44,7 @@ export const FriendButton = styled.button`
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  font-family: 'Cafe24Ssurround';
   }
 
   :hover {
@@ -54,7 +58,7 @@ export const FriendButton = styled.button`
 
   @media (min-width: 768px) {
   {
-    min-width: 120px;
+    min-width: 40px;
     padding: 0 25px;
   }
 `;
