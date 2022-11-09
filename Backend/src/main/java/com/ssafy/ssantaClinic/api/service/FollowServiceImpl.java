@@ -1,6 +1,5 @@
 package com.ssafy.ssantaClinic.api.service;
 
-import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.Follow;
@@ -45,24 +44,28 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
+    @Transactional
     public List<User> getFollowerList(int userId) {
         User user = userRepository.getUserByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowers().stream().map(Follow::getChild).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<User> getFollowerList(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowers().stream().map(Follow::getChild).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<User> getFollowingList(int userId) {
         User user = userRepository.getUserByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowings().stream().map(Follow::getParent).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<User> getFollowingList(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowings().stream().map(Follow::getParent).collect(Collectors.toList());
