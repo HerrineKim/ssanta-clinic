@@ -762,6 +762,10 @@ export class MainCanvas {
     this._isZoom = true;
     this._controls.minDistance = 0;
     this._controls.maxDistance = 80;
+    this._controls.maxPolarAngle = Math.PI / 2;
+    // this._controls.minPolarAngle = 0;
+    this._controls.maxAzimuthAngle = Infinity;
+    this._controls.minAzimuthAngle = Infinity;
 
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
@@ -893,6 +897,10 @@ export class MainCanvas {
     this._isZoom = false;
     this._controls.minDistance = 30;
     this._controls.maxDistance = 80;
+    this._controls.maxPolarAngle = (Math.PI * 2) / 5;
+    // this._controls.minPolarAngle = 0;
+    this._controls.maxAzimuthAngle = 0.1 * Math.PI;
+    this._controls.minAzimuthAngle = -1.5 * Math.PI;
 
     gsap.to(this._camera.position, {
       duration: 1.5,
