@@ -1,7 +1,11 @@
 plugins {
 	id 'org.springframework.boot' version '2.7.4'
-	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id 'java'
+
+	// querydsl 플러그인
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	id "org.sonarqube" version "3.4.0.2513"
 }
 
 group = 'com.ssafy'
@@ -14,22 +18,93 @@ configurations {
 	}
 }
 
+sonarqube {
+	properties {
+		property "sonar.host.url", "http://localhost:9000/"
+		property "sonar.projectKey", "A201"
+		property "sonar.projectName", "SsantaClinic"
+		property "sonar.projectVersion", "1.0"
+		property "sonar.sourceEncoding", "UTF-8"
+		property "sonar.login", "bfe7b0de187762f16b4faff62b0dafe192500c3f"
+		property "sonar.host.url", "https://sonarqube.ssafy.com"
+	}
+}
+
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+	implementation 'com.querydsl:querydsl-apt:5.0.0'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'io.springfox:springfox-boot-starter:3.0.0' // swagger 설정
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+	//aws
+	implementation("org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE")
+	implementation("org.springframework.cloud:spring-cloud-aws-context:2.2.6.RELEASE")
+	implementation("org.springframework.cloud:spring-cloud-aws-autoconfigure:2.2.6.RELEASE")
+	implementation("com.amazonaws:aws-java-sdk-core:1.12.275")
+	implementation("com.amazonaws:aws-java-sdk-s3:1.12.267")
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.findify:s3mock_2.13:0.2.6'
+	testCompileOnly 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	// spring security, jwt
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.security:spring-security-test'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+
+	//JBoss
+	testImplementation 'org.infinispan:infinispan-core:14.0.2.Final'
+	testImplementation 'org.infinispan:infinispan-commons:14.0.2.Final'
+	implementation 'org.infinispan:infinispan-marshaller-protostuff:14.0.2.Final'
+	implementation 'org.jboss.marshalling:jboss-marshalling-osgi:2.0.12.Final'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+jar {
+	enabled=false
+}
+
+// querydsl 사용할 경로 지정
+def querydslDir = "$buildDir/generated/'querydsl'"
+
+// JPA 사용여부 및 사용 경로 설정
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+// build시 사용할 sourceSet 추가 설정
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+// querydsl 컴파일 시 사용할 옵션 설정
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+
+// querydsl이 compileClassPath를 상속하도록 설정
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }
