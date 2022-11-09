@@ -465,14 +465,16 @@ export class MainCanvas {
           setTimeout(() => {
             this._setupAlert();
           }, 1500);
-        } else if (targets[0].object.name === 'game1') {
+        } else if (targets[0].object.name.includes('game1')) {
           console.log('game1!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name === 'game2') {
+        } else if (targets[0].object.name.includes('game2')) {
           console.log('game2!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name === 'game3') {
+        } else if (targets[0].object.name.includes('game3')) {
           console.log('game3!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name === 'game4') {
+        } else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
+        } else if (targets[0].object.name.includes('playground')) {
+          console.log('ground!!!!!!!!!!!!!!');
         } else if (targets[0].object.name === 'letter') {
           console.log('letter!!!!!!!!!!!!!!');
         } else {
