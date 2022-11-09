@@ -1,15 +1,9 @@
 package com.ssafy.ssantaClinic.api.response;
 
-import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
-import com.ssafy.ssantaClinic.db.entity.AdventCalendarImg;
 import com.ssafy.ssantaClinic.db.entity.Notification;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @FileName : NotiResponse

@@ -85,12 +85,12 @@ export const WriteLetter = () => {
   function changeButton() {
     message.length >= 10 ? setButton(false) : setButton(true);
   }
-  const handleChangeTitle = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setTitle(e.target.value);
-    },
-    [],
-  );
+  // const handleChangeTitle = useCallback(
+  //   (e: React.ChangeEvent<HTMLInputElement>) => {
+  //     setTitle(e.target.value);
+  //   },
+  //   [],
+  // );
 
   const handleChangeMessage = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -17,6 +17,8 @@ public interface UserService {
 
     User getUserByEmail(String email);
 
+    User getUserByNickName(String nickName);
+
     UserResponse.DuplicatedResponse isDuplicatedNickName(String nickname);
 
     UserResponse.DuplicatedResponse isDuplicatedEmail(String email);

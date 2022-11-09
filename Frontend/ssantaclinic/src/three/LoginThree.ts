@@ -35,7 +35,7 @@ export class LoginThree {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.8,
+      0.6,
       1,
       0.1,
     );
@@ -82,13 +82,16 @@ export class LoginThree {
     const color2 = '#00D9FF';
     const light1 = new THREE.PointLight(color1, 1);
     const light2 = new THREE.PointLight(color2, 2.3);
+    const light3 = new THREE.PointLight(color1, 1);
     light1.position.set(0, 1.212, 1.951);
     light2.position.set(-31.85, 0.0, 0);
+    light3.position.set(-0.633, 0.502, -0.436);
     this._scene.add(light1);
     this._scene.add(light2);
+    this._scene.add(light3);
   }
   _setupModel() {
-    new GLTFLoader().load('/login/santa_elf_text.glb', (gltf) => {
+    new GLTFLoader().load('/login/santa_elf_text_deer.glb', (gltf) => {
       const model1 = gltf.scene;
       this._scene.add(model1);
 
