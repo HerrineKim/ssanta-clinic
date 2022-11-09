@@ -151,6 +151,7 @@ export class MainCanvas {
       // console.log(this._camera.position);
       this._renderer.render(this._scene, this._camera);
       this.update(time);
+      // console.log('!');
 
       requestAnimationFrame(this.render.bind(this));
     } else {
@@ -463,21 +464,36 @@ export class MainCanvas {
           console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
           setTimeout(() => {
-            this._setupAlert();
+            this._setupHomeAlert();
           }, 1500);
-        } else if (targets[0].object.name === 'game1') {
+        } else if (targets[0].object.name.includes('game1')) {
           console.log('game1!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name === 'game2') {
+          this._zoomFit(targets[0].object.parent, 80);
+        } else if (targets[0].object.name.includes('game2')) {
           console.log('game2!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name === 'game3') {
-          console.log('game3!!!!!!!!!!!!!!');
-        } else if (targets[0].object.name === 'game4') {
+          this._zoomFit(targets[0].object.parent, 80);
+        }
+        // else if (targets[0].object.name.includes('game3')) {
+        //   console.log('game3!!!!!!!!!!!!!!');
+        //   this._zoomFit(targets[0].object.parent, 80);
+        // }
+        else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
+          setTimeout(() => {
+            this._setupMemory();
+          }, 1500);
+        } else if (targets[0].object.name.includes('playground')) {
+          console.log('ground!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
         } else if (targets[0].object.name === 'letter') {
           console.log('letter!!!!!!!!!!!!!!');
+          this._zoomFit(targets[0].object.parent, 60);
         } else {
           if (this._isAlert) {
             this._removeAlert();
+            this._removeHomeAlert();
+            this._removeMemory();
           }
 
           if (this._isTreeModal) {
@@ -497,6 +513,8 @@ export class MainCanvas {
         this._scenenumber = 1;
         if (this._isAlert) {
           this._removeAlert();
+          this._removeHomeAlert();
+          this._removeMemory();
         }
 
         if (this._isTreeModal) {
@@ -732,14 +750,56 @@ export class MainCanvas {
     }
     this._isAlert = false;
   }
+
   _setupAlert() {
     const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.log(alert);
+    // console.log(alert);
     if (alert !== null) {
       console.log('alert');
       alert.style.display = 'flex';
     }
     this._isAlert = true;
+  }
+
+  _removeHomeAlert() {
+    const home = document.querySelector('.home') as HTMLElement | null;
+
+    if (home !== null) {
+      home.style.display = 'none';
+    }
+    this._isAlert = false;
+  }
+
+  _setupHomeAlert() {
+    const home = document.querySelector('.home') as HTMLElement | null;
+
+    if (home !== null) {
+      console.log('alert');
+      home.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+
+  _setupMemory() {
+    const memoryAlert = document.querySelector(
+      '.memoryAlert',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (memoryAlert !== null) {
+      console.log('memoryAlert');
+      memoryAlert.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+  _removeMemory() {
+    const memoryAlert = document.querySelector(
+      '.memoryAlert',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (memoryAlert !== null) {
+      memoryAlert.style.display = 'none';
+    }
+    this._isAlert = false;
   }
 
   _removeModal() {
@@ -748,6 +808,7 @@ export class MainCanvas {
       modal.style.display = 'none';
     }
   }
+
   _setupModal() {
     const modal = document.querySelector('.modal') as HTMLElement | null;
     if (modal !== null) {
@@ -761,7 +822,7 @@ export class MainCanvas {
   _zoomFit(object3d: any, viewAngle: number) {
     this._isZoom = true;
     this._controls.minDistance = 0;
-    this._controls.maxDistance = 80;
+    this._controls.maxDistance = Infinity;
     this._controls.maxPolarAngle = Math.PI / 2;
     // this._controls.minPolarAngle = 0;
     this._controls.maxAzimuthAngle = Infinity;
@@ -776,10 +837,36 @@ export class MainCanvas {
     const centerBox = box.getCenter(new THREE.Vector3());
 
     const direction = new THREE.Vector3(0, 1, 0);
-    direction.applyAxisAngle(
-      new THREE.Vector3(1, 0, 0),
-      THREE.MathUtils.degToRad(viewAngle),
-    );
+
+    // console.log(object3d);
+    const newVec = new THREE.Vector3(0, 0, 0);
+    if (object3d.name === 'game2' || object3d.name === 'game4') {
+      newVec.z = 1;
+    } else if (object3d.name.includes('letter')) {
+      newVec.x = -1;
+    } else if (object3d.name.includes('shop')) {
+      newVec.x = 1;
+    } else if (object3d.children[0].name === 'home') {
+      newVec.x = 1;
+      newVec.z = -1;
+    } else if (object3d.name === 'game1') {
+      newVec.x = 1;
+      // newVec.z = -1;
+    }
+    // else if (object3d.name === 'game3') {
+    //   newVec.x = -1;
+    //   newVec.z = 1;
+    // }
+    else if (object3d.name === 'playground') {
+      newVec.x = -1;
+      newVec.z = 1;
+    }
+    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
+    //   newVec.x = 1;
+    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
+    //   newVec.x = 1;
+    // }
+    direction.applyAxisAngle(newVec, THREE.MathUtils.degToRad(viewAngle));
 
     const halfSizeModel = sizeBox * 0.5;
     const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);

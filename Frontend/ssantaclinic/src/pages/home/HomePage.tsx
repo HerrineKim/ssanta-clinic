@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
-// import { TreeModal } from '../../components/tree/index';
+import { TreeModal } from '../../components/tree/index';
+import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
+import { HomeAlert } from '../../components/main/homealert';
 import FriendModal from './friendModal/FriendModal';
 import { FriendButton } from './styles';
 import { GiThreeFriends } from 'react-icons/gi';
@@ -118,10 +120,13 @@ export default function Home() {
     const homeCanvas = new MainCanvas(items);
     // const canvas = document.querySelector('canvas');
     // console.log(canvas);
-    console.log('useeffect');
+    // console.log('useeffect');
     const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
 
-    return () => cancelAnimationFrame(requestId);
+    return () => {
+      cancelAnimationFrame(requestId);
+      console.log('canvas 끝!');
+    };
   }, []);
   return (
     <Div>
@@ -148,6 +153,8 @@ export default function Home() {
       </div>
       {/* 모달들 */}
       <Alert>들어갈래?</Alert>
+      <HomeAlert>집으로 들어갈래?</HomeAlert>
+      <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
       <a href="#open-modal">
