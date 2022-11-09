@@ -77,6 +77,15 @@ public class UserServiceImpl implements UserService{
         return user;
     }
 
+    @Override
+    public User getUserByNickName(String nickName) {
+        /**
+         * @Method Name : getUserByNickName
+         * @Method 설명 : nickName에 해당하는 유저 객체를 반환한다.
+         */
+        return userRepository.findByNickName(nickName).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+    }
+
 
     @Override
     public UserResponse.DuplicatedResponse isDuplicatedNickName(String nickname) {
