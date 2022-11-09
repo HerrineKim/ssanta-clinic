@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.api.controller;
 
+import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.NotiService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import io.swagger.annotations.Api;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  * @FileName : NotiController
  * @Class 설명 : 알림 관련 요청을 처리하는 Controller
  */
-@Api(value = "알림 관련 API", tags = {"NotiController"}, description = "알림 관련 컨트롤러")
+@Api(value = "알림 관련 API", tags = {"NotiController"})
 @RestController
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -34,7 +35,7 @@ public class NotiController {
     })
     @GetMapping(value = "/sub",
                 produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<?> subscribe(
+    public ResponseEntity<SimpleMessageResponse> subscribe(
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         /**
          * @Method Name : subscribe
@@ -49,6 +50,6 @@ public class NotiController {
         headers.set("Cache-Control", "no-cache");
         // 리버스 프록시에서의 오동작을 방지
         headers.set("X-Accel-Buffering", "no");
-        return ResponseEntity.ok().headers(headers).build();
+        return ResponseEntity.ok().headers(headers).body(SimpleMessageResponse.builder().Result("success").build());
     }
 }

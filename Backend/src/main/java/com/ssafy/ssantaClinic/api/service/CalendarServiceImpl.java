@@ -87,7 +87,7 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public AdventCalendar saveBox(int userId, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException {
+    public int saveBox(int userId, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException {
         /**
          * @Method Name : saveBox
          * @Method 설명 : 상자를 등록한다.
@@ -118,7 +118,7 @@ public class CalendarServiceImpl implements CalendarService{
                 imgRepository.save(img);
             }
         }
-        return calendar;
+        return calendar.getId();
     }
 
     @Override

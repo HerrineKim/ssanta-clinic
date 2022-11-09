@@ -2,6 +2,7 @@ package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
+import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
 import com.ssafy.ssantaClinic.api.service.S3Service;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
@@ -46,7 +47,7 @@ public class CalendarController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
-    public ResponseEntity<?> getTodayBoxList() {
+    public ResponseEntity<List<CalendarResponse.GetBoxResponse>> getTodayBoxList() {
         /**
          * @Method Name : getTodayBoxList
          * @Method 설명 : 오늘 열람가능한 상자 목록을 조회한다.
@@ -68,7 +69,7 @@ public class CalendarController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping(params = {"boxId"})
-    public ResponseEntity<?> getBox(@RequestParam(value = "boxId") int boxId) {
+    public ResponseEntity<CalendarResponse.GetBoxDetailResponse> getBox(@RequestParam(value = "boxId") int boxId) {
         /**
          * @Method Name : getBox
          * @Method 설명 : 상자 상세 정보를 조회한다.
@@ -85,7 +86,7 @@ public class CalendarController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping("/play")
-    public ResponseEntity<?> playVoiceMessage(@RequestParam(value = "boxId") int boxId) throws Exception {
+    public ResponseEntity<SimpleMessageResponse> playVoiceMessage(@RequestParam(value = "boxId") int boxId) throws Exception {
         /**
          * @Method Name : playVoiceMessage
          * @Method 설명 : 상자의 음성 메세지를 재생한다.
@@ -93,7 +94,7 @@ public class CalendarController {
         // 현재 로그인한 유저의 아이디 가져오기
         int userId = JwtUtil.getCurrentUserId();
         calendarService.playAudio(userId, boxId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(SimpleMessageResponse.builder().Result("success").build());
     }
 
     @ApiOperation(value = "상자 선물하기", notes = "상자를 선물한다.")
@@ -107,7 +108,7 @@ public class CalendarController {
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE }
             )
-    public ResponseEntity<?> sendBox(@RequestParam(value = "userId") int userId,
+    public ResponseEntity<SimpleMessageResponse> sendBox(@RequestParam(value = "userId") int userId,
                                      @RequestParam(value = "day") int day,
                                      @RequestPart(required = false) List<MultipartFile> imges,
                                      @RequestPart(required = false) MultipartFile audio,
@@ -136,8 +137,9 @@ public class CalendarController {
         if(imges != null){
             imgUrls = s3Service.uploadImges(imges);
         }
-        AdventCalendar box = calendarService.saveBox(userId, imgUrls, audioUrl, boxRequest);
-        return ResponseEntity.created(URI.create("/"+box.getId())).build();
+        int boxId = calendarService.saveBox(userId, imgUrls, audioUrl, boxRequest);
+        return ResponseEntity.created(URI.create("/"+boxId))
+                .body(SimpleMessageResponse.builder().Result("success").build());
     }
 
     @ApiOperation(value = "어드벤트 캘린더 전체 조회", notes = "회원의 어드벤트 캘린더 정보를 조회한다.")
@@ -147,7 +149,8 @@ public class CalendarController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping(params = {"userId"})
-    public ResponseEntity<?> getAdventCalendarInfo(@RequestParam(value = "userId") int userId) {
+    public ResponseEntity<List<CalendarResponse.GetCalendarResponse>> getAdventCalendarInfo
+            (@RequestParam(value = "userId") int userId) {
         /**
          * @Method Name : getAdventCalendarInfo
          * @Method 설명 : 회원의 어드벤트 캘린더 정보를 조회한다.
@@ -165,7 +168,8 @@ public class CalendarController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping(params = {"date"})
-    public ResponseEntity<?> getBoxListByDate(@RequestParam(value = "date") String date) {
+    public ResponseEntity<List<CalendarResponse.GetBoxResponse>> getBoxListByDate
+            (@RequestParam(value = "date") String date) {
         /**
          * @Method Name : getBoxListByDate
          * @Method 설명 : 해당 날짜의 회원의 어드벤트 캘린더 정보를 조회한다.
