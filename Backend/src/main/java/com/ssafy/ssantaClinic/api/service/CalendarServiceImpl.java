@@ -15,10 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.sound.sampled.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -42,31 +40,31 @@ public class CalendarServiceImpl implements CalendarService{
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     static final int D_MONTH = Calendar.DECEMBER;
     @Override
-    public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(String email) {
+    public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId) {
         /**
          * @Method Name : findAllTodayBoxes
          * @Method 설명 : 오늘 날짜에 열 수 있는 상자 목록을 조회한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         int month = now.get(Calendar.MONTH);
         if(month != D_MONTH){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
         int day = now.get(Calendar.DATE);
-        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverEmailAndDay(email, day)
+        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
         return boxes;
     }
 
     @Override
-    public CalendarResponse.GetBoxDetailResponse findBox(String email, int boxId) {
+    public CalendarResponse.GetBoxDetailResponse findBox(int userId, int boxId) {
         /**
          * @Method Name : findBox
          * @Method 설명 : 상자를 상세 조회한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 존재하는 상자인지 확인
         AdventCalendar box = calendarRepository.findById(boxId)
                 .orElseThrow(()-> new CustomException(ErrorCode.BOX_NOT_FOUND));
@@ -76,7 +74,7 @@ public class CalendarServiceImpl implements CalendarService{
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
         // 접근 권한 확인
-        if(!box.getReceiver().getEmail().equals(email)){
+        if(box.getReceiver().getUserId() != userId){
             throw new CustomException(ErrorCode.NOT_YOUR_BOX);
         }
         // 상자 열림 표시
@@ -89,7 +87,7 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public AdventCalendar saveBox(String email, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException {
+    public AdventCalendar saveBox(int userId, List<String> imgUrls, String audioUrl, CalendarRequest.sendRequest box) throws IOException {
         /**
          * @Method Name : saveBox
          * @Method 설명 : 상자를 등록한다.
@@ -97,10 +95,6 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 회원인지 확인
         User receiver = userRepository.findById(box.getReceiverId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        // 자기 자신에게 선물하면 오류
-        if(receiver.getEmail().equals(email)){
-            throw new CustomException(ErrorCode.SELF_GIFT_ERROR);
-        }
         // String -> LocalDateTime
         LocalDateTime createdAt;
         try {
@@ -128,29 +122,29 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(String email) {
+    public List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(int userId) {
         /**
          * @Method Name : findAdventCalendarByUserId
          * @Method 설명 : 회원이 보유한 어드벤트 캘린더 정보를 반환한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         List<CalendarResponse.GetCalendarResponse> result = new ArrayList<>();
         for(int i = 1; i <= 25; i++){
-            int cnt = (int) calendarRepository.countByReceiverEmailAndDay(email, i);
+            int cnt = (int) calendarRepository.countByReceiverUserIdAndDay(userId, i);
             result.add(CalendarResponse.GetCalendarResponse.builder().date(i).cnt(cnt).build());
         }
         return result;
     }
 
     @Override
-    public List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(String email, String date) {
+    public List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(int userId, String date) {
         /**
          * @Method Name : findAllBoxesByDate
          * @Method 설명 : 해당 날짜에 회원이 보유한 상자 목록을 반환한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 날짜 변환
         int day = Integer.parseInt(date);
         // 개봉 날짜가 지났는지 확인
@@ -158,13 +152,13 @@ public class CalendarServiceImpl implements CalendarService{
         if(nowDate < day){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
-        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverEmailAndDay(email, day)
+        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
         return boxes;
     }
 
     @Override
-    public void playAudio(String email, int boxId) throws Exception {
+    public void playAudio(int userId, int boxId) throws Exception {
         /**
          * @Method Name : playAudio
          * @Method 설명 : 상자에 있는 음성을 재생한다.
@@ -172,9 +166,9 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 상자인지 확인
         AdventCalendar box = calendarRepository.findById(boxId).orElseThrow(() -> new CustomException(ErrorCode.BOX_NOT_FOUND));
         // 존재하는 회원인지 확인
-        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 열람 권한 확인
-        if(user.getUserId() != box.getReceiver().getUserId())
+        if(userId != box.getReceiver().getUserId())
             throw new CustomException(ErrorCode.NOT_YOUR_BOX);
         // 오디오 주소 가져오기
         String audioUrl = box.getAudioUrl();
