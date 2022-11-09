@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
+import { HomeAlert } from '../../components/main/homealert';
 import { TreeModal } from '../../components/tree/index';
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
   return (
     <Div>
       <Alert>들어갈래?</Alert>
+      <HomeAlert>집으로 들어갈래?</HomeAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
