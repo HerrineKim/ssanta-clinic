@@ -4,7 +4,6 @@ import com.ssafy.ssantaClinic.api.request.CalendarRequest;
 import com.ssafy.ssantaClinic.api.response.CalendarResponse;
 import com.ssafy.ssantaClinic.api.service.CalendarService;
 import com.ssafy.ssantaClinic.api.service.S3Service;
-import com.ssafy.ssantaClinic.api.service.UserService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
@@ -20,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -109,8 +107,7 @@ public class CalendarController {
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE }
             )
-    public ResponseEntity<?> sendBox(HttpServletRequest request,
-                                     @RequestParam(value = "userId") int userId,
+    public ResponseEntity<?> sendBox(@RequestParam(value = "userId") int userId,
                                      @RequestParam(value = "day") int day,
                                      @RequestPart(required = false) List<MultipartFile> imges,
                                      @RequestPart(required = false) MultipartFile audio,
