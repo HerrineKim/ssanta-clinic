@@ -27,6 +27,7 @@ export class RoomThree {
   _showcase: any;
   _isZoom: any;
   _controls: any;
+  _position: any;
 
   constructor() {
     this._setupThreeJs();
@@ -269,6 +270,176 @@ export class RoomThree {
       console.log('treetarget:', treeTarget);
       // console.log('itemTarget:', itemTarget);
     }
+  }
+
+  _zoomInven(object3d: any[], viewAngle: number) {
+    const positions: any[] = [];
+    this._items.forEach((child: any) => {
+      positions.push(child.position);
+    });
+    // console.log('zoomfit object3d: ', object3d);
+    //box 는 객체를 담는 최소크기 박스
+    const box1 = new THREE.Box3().setFromObject(object3d[0]);
+    const box2 = new THREE.Box3().setFromObject(object3d[1]);
+    const box = new THREE.Box3().union(box1);
+    box.union(box2);
+    //box를통해 얻을 수있는 가장 긴 모서리 길이
+    const sizeBox = box.getSize(new THREE.Vector3()).length();
+    //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
+    const centerBox = box.getCenter(new THREE.Vector3());
+
+    const direction = new THREE.Vector3(0, 1, 0);
+    direction.applyAxisAngle(
+      new THREE.Vector3(1, 0, 0),
+      THREE.MathUtils.degToRad(viewAngle),
+    );
+
+    const halfSizeModel = sizeBox * 0.5;
+    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
+    const distance = halfSizeModel / Math.tan(halfFov);
+
+    const newPosition = new THREE.Vector3().copy(
+      direction.multiplyScalar(distance).add(centerBox),
+    );
+
+    // this._camera.position.copy(newPosition);
+    // this._controls.target.copy(centerBox);
+
+    //애니메이션 라이브러리 gsap
+    //카메라 위치변경
+    gsap.to(this._camera.position, {
+      duration: 1.5,
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+    });
+
+    //this._controls.target.copy(centerBox);
+    // console.log(this._controls);
+    // console.log(this._controls.target);
+    // 타겟위치변경
+    gsap.to(this._controls.target, {
+      duration: 0.5,
+      x: centerBox.x,
+      y: centerBox.y,
+      z: centerBox.z,
+      onUpdate: () => {
+        //애니메이션 수행중에 깜빡거리는 현상 방지
+        this._camera.lookAt(
+          this._controls.target.x,
+          this._controls.target.y,
+          this._controls.target.z,
+        );
+      },
+    });
+    setTimeout(() => {
+      this._scene2.add(object3d[0]);
+      this._scene2.add(...this._items);
+      this._scene2.add(this._close);
+      this._scenenumber = 2;
+      this._setupControls();
+
+      this._setupDrag();
+    }, 1500);
+  }
+
+  _setupDrag() {
+    console.log('items:', this._items);
+    console.log('tree:', this._tree);
+    const positions = this._position;
+    const tree = this._tree;
+    let items = this._items;
+    // const raycaster = this._raycaster;
+
+    items.forEach((child: any, index: number) => {
+      // console.log('item child:', child);
+      child.name = index;
+      const controls = new DragControls(
+        [child],
+        this._camera,
+        this._renderer.domElement,
+      );
+      controls.transformGroup = true;
+
+      controls.addEventListener('dragstart', function (event) {
+        const targets = controls.getRaycaster().intersectObjects(tree);
+        let object;
+        if (targets.length > 0) {
+          object = targets[0].object;
+          while (object.parent) {
+            object = object.parent;
+            if (object instanceof THREE.Group && object.name === 'tree') {
+              break;
+            }
+          }
+        }
+        console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
+        // 장식품이 트리에 붙어있는 것일때
+        if (event.object.parent === object) {
+          console.log('parent = event.object');
+          event.object.removeFromParent();
+        }
+        event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+      });
+
+      controls.addEventListener('dragend', (event) => {
+        const targets = controls.getRaycaster().intersectObjects(tree);
+        console.log('dragend targets:', targets);
+        event.object.children[0].children[0].material.emissive.set(0x000000);
+
+        //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
+        // console.log('world position:', event.object.getWorldPosition());
+
+        if (targets.length > 0) {
+          if (targets[0].object.name === 'tree') {
+            //만난다면 장식품을 tree에 붙이고 종속시킴
+            console.log('tree 장식!', event.object, targets);
+            event.object.position.setX(targets[0].point.x);
+            event.object.position.setY(targets[0].point.y);
+            event.object.position.setZ(targets[0].point.z);
+            let object = targets[0].object;
+            while (object.parent) {
+              object = object.parent;
+              if (object instanceof THREE.Group) {
+                break;
+              }
+            }
+
+            items = items.filter((obj: any) => obj !== event.object);
+            object.attach(event.object);
+            this._items = items;
+          } else {
+            // 나눌 필요 있음
+            // event.object.removeFromParent();
+            console.log('tree가 아닌것 raycast');
+            event.object.position.setX(positions[child.name][0]);
+            event.object.position.setY(positions[child.name][1]);
+            event.object.position.setZ(positions[child.name][2]);
+          }
+        } else {
+          // event.object.removeFromParent();
+          console.log('remove object:', event.object);
+          console.log('target.length === 0');
+          // console.log('else event:', event);
+          console.log(positions[child.name][0]);
+          event.object.position.setX(positions[child.name][0]);
+          event.object.position.setY(positions[child.name][1]);
+          event.object.position.setZ(positions[child.name][2]);
+          console.log(event.object.position);
+        }
+
+        //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
+      });
+
+      controls.addEventListener('drag', function (event) {
+        // console.log('drag position:', position);
+        event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
+      });
+      this._dragControls.push(controls);
+    });
+    // this._tree = tree;
+
+    // this._items = items;
   }
 
   _zoomFit(object3d: any, viewAngle: number) {
