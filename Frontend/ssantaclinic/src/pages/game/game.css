@@ -3,7 +3,7 @@
 }
 
 @supports (-webkit-touch-callout: none) {
-  .memory-container{
+  .memory-container {
     height: -webkit-fill-available;
   }
 }
@@ -35,7 +35,6 @@
   font-size: 20px;
 }
 
-
 .memory-content {
   position: relative;
 }
@@ -65,7 +64,6 @@
   transform: scale(1.1);
 }
 
-      
 .memory-clear {
   font-weight: 700;
   font-size: 12vmin;
@@ -85,8 +83,7 @@
   text-align: center;
   margin-bottom: 5vmin;
 }
-      
-    
+
 .memory-status {
   opacity: 0.8;
   position: absolute;
@@ -133,7 +130,6 @@
   background-color: whitesmoke;
   margin: 1%;
 }
-
 
 .game-container {
   width: 600px;
