@@ -116,7 +116,6 @@ export class RoomThree {
   update() {
     const delta = this._clock.getDelta();
     this._orbitControls.update();
-    console.log(this._camera);
     if (this._mixer) this._mixer.update(delta);
   }
 
