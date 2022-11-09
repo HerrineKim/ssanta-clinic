@@ -512,24 +512,24 @@ export class MainCanvas {
         }
       }
 
-      const targets2 = this._raycaster.intersectObjects(this._tree);
-      if (targets2.length > 0) {
-        let object = targets2[0].object;
-        while (object.parent) {
-          object = object.parent;
-          if (object instanceof THREE.Group) {
-            break;
-          }
-        }
-        console.log('parent:', object);
-        this._isTreeModal = true;
-        this._zoomInven(this._inven, 90);
-      }
+      // const targets2 = this._raycaster.intersectObjects(this._tree);
+      // if (targets2.length > 0) {
+      //   let object = targets2[0].object;
+      //   while (object.parent) {
+      //     object = object.parent;
+      //     if (object instanceof THREE.Group) {
+      //       break;
+      //     }
+      //   }
+      //   console.log('parent:', object);
+      //   this._isTreeModal = true;
+      //   this._zoomInven(this._inven, 90);
+      // }
     } else {
+      // scenenumber == 2 일때
       const exporter = new GLTFExporter();
 
       // console.log('scenenumber2 _camera:', this._camera);
-      // scenenumber == 2 일때
       // console.log('onclick2');
       // drag & drop 구현
 
