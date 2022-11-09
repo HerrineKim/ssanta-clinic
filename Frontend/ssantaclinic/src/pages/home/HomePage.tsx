@@ -11,7 +11,7 @@ import axios from 'axios';
 
 export default function Home() {
   // 친구 모달 관리
-  const ACCESS_TOKEN = localStorage.getItem('accessToken');
+  const ACCESS_TOKEN = localStorage.getItem('jwt');
   const [friendList, setFriendList] = React.useState([]);
   const [followingList, setFollowingList] = React.useState([]);
   const [followerList, setFollowerList] = React.useState([]);
@@ -68,7 +68,7 @@ export default function Home() {
     getFriendList();
     getFollowingList();
     getFollowerList();
-  }, [ACCESS_TOKEN, friendList, followingList, followerList, searchList]);
+  }, []);
 
   // 팔로우 & 언팔로우(/api/friend/follow)
   const follow = (friendId: number) => {
