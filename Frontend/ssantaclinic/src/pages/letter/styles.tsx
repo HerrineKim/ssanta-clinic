@@ -10,7 +10,7 @@ export const CanvasContainer = styled.div`
 `;
 export const LetterContainer = styled.div`
   position: absolute;
-  width: 100%;
-  left: 27.7%;
-  bottom: 3%;
+  width: 65vw;
+  left: 30.7%;
+  bottom: 7%;
 `;

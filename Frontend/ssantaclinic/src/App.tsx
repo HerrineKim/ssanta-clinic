@@ -21,6 +21,7 @@ import { ResetTokenPage } from './pages/ResetTokenPage';
 import ShopPage from './pages/shop/ShopPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
+import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
 function App() {
   console.log('APP');
   return (
@@ -32,6 +33,7 @@ function App() {
         {/* 회원관련 */}
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LogInPage />}></Route>
+        <Route path="/logintohome" element={<LogInToHomePage />}></Route>
         <Route path="/logout" element={<LogOutPage />}></Route>
         <Route path="/findPassword" element={<FindPasswordPage />}></Route>
         <Route
