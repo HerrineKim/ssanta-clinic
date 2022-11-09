@@ -463,7 +463,7 @@ export class MainCanvas {
           console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
           setTimeout(() => {
-            this._setupAlert();
+            this._setupHomeAlert();
           }, 1500);
         } else if (targets[0].object.name.includes('game1')) {
           console.log('game1!!!!!!!!!!!!!!');
@@ -488,6 +488,7 @@ export class MainCanvas {
         } else {
           if (this._isAlert) {
             this._removeAlert();
+            this._removeHomeAlert();
           }
 
           if (this._isTreeModal) {
@@ -507,6 +508,7 @@ export class MainCanvas {
         this._scenenumber = 1;
         if (this._isAlert) {
           this._removeAlert();
+          this._removeHomeAlert();
         }
 
         if (this._isTreeModal) {
@@ -742,12 +744,32 @@ export class MainCanvas {
     }
     this._isAlert = false;
   }
+
   _setupAlert() {
     const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.log(alert);
+    // console.log(alert);
     if (alert !== null) {
       console.log('alert');
       alert.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+
+  _removeHomeAlert() {
+    const home = document.querySelector('.home') as HTMLElement | null;
+
+    if (home !== null) {
+      home.style.display = 'none';
+    }
+    this._isAlert = false;
+  }
+
+  _setupHomeAlert() {
+    const home = document.querySelector('.home') as HTMLElement | null;
+
+    if (home !== null) {
+      console.log('alert');
+      home.style.display = 'flex';
     }
     this._isAlert = true;
   }
@@ -758,6 +780,7 @@ export class MainCanvas {
       modal.style.display = 'none';
     }
   }
+
   _setupModal() {
     const modal = document.querySelector('.modal') as HTMLElement | null;
     if (modal !== null) {
