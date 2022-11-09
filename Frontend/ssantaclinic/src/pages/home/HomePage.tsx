@@ -4,18 +4,98 @@ import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
-import FriendModal from './FriendModal';
+import FriendModal from './friendModal/FriendModal';
 import { FriendButton } from './styles';
+import { GiThreeFriends } from 'react-icons/gi';
+import axios from 'axios';
 
 export default function Home() {
   // 친구 모달 관리
+  const ACCESS_TOKEN = localStorage.getItem('accessToken');
+  const [friendList, setFriendList] = React.useState([]);
+  const [followingList, setFollowingList] = React.useState([]);
+  const [followerList, setFollowerList] = React.useState([]);
+  const [searchList, setSearchList] = React.useState([]);
+  useEffect(() => {
+    // 추천 친구 목록 불러오기(api/friend/recommend)
+    const getFriendList = () => {
+      axios
+        .get('http://localhost:8080/api/friend/recommend', {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setFriendList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    };
+    // 팔로잉 목록(api/friend/followings)
+    const getFollowingList = () => {
+      axios
+        .get('http://localhost:8080/api/friend/followings', {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setFollowingList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    };
+    // 팔로워 목록(api/friend/followers)
+    const getFollowerList = () => {
+      axios
+        .get('http://localhost:8080/api/friend/followers', {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setFollowerList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    };
+    getFriendList();
+    getFollowingList();
+    getFollowerList();
+  }, [ACCESS_TOKEN, friendList, followingList, followerList, searchList]);
+
+  // 팔로우 & 언팔로우(/api/friend/follow)
+  const follow = (friendId: number) => {
+    axios
+      .post(
+        'http://localhost:8080/api/friend/follow',
+        {
+          friendId: friendId,
+        },
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        // setIsFollowed(true);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  // 친구 검색: 추후 구현
   // 모달창 노출 여부 state
   const [friendModalOpen, setFriendModalOpen] = useState<boolean>(false);
-
-  // 모달창 노출
-  const showFriendModal = () => {
-    setFriendModalOpen(!friendModalOpen);
-  };
 
   // const firstCanvas = document.getElementById('main-canvas');
   // const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -45,25 +125,24 @@ export default function Home() {
   }, []);
   return (
     <Div>
-      {/* <div className="container">
-        <div className="interior">
-          <a className="btn" href="#open-modal">
-            👋 Basic CSS-Only Modal
-          </a>
-        </div>
-      </div> */}
       <div id="open-modal" className="modal-window">
         <div>
           <a href="#" title="Close" className="modal-close">
-            Close
+            X
           </a>
-          <h1>Voilà!</h1>
+          {/* 팔로워 리스트 */}
           <div>
-            A CSS-only modal based on the :target pseudo-class. Hope you find it
-            helpful.
-          </div>
-          <div>
-            <small>Check out 👇</small>
+            <h2>팔로워</h2>
+            <ul>
+              {followerList.map((follower: any) => (
+                <li key={follower.userId}>
+                  {/* userId와 nickName 출력 */}
+                  <ul>{follower.userId}</ul>
+                  <ul>{follower.nickName}</ul>
+                  <button onClick={() => follow(follower.id)}>팔로우</button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
@@ -72,10 +151,11 @@ export default function Home() {
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
       <a href="#open-modal">
-        <FriendButton>친구</FriendButton>
+        <FriendButton>
+          <GiThreeFriends />
+        </FriendButton>
       </a>
       {friendModalOpen && <FriendModal />}
-
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
     </Div>
