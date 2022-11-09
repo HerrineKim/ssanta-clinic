@@ -480,6 +480,9 @@ export class MainCanvas {
         else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
+          setTimeout(() => {
+            this._setupMemory();
+          }, 1500);
         } else if (targets[0].object.name.includes('playground')) {
           console.log('ground!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
@@ -490,6 +493,7 @@ export class MainCanvas {
           if (this._isAlert) {
             this._removeAlert();
             this._removeHomeAlert();
+            this._removeMemory();
           }
 
           if (this._isTreeModal) {
@@ -510,6 +514,7 @@ export class MainCanvas {
         if (this._isAlert) {
           this._removeAlert();
           this._removeHomeAlert();
+          this._removeMemory();
         }
 
         if (this._isTreeModal) {
@@ -773,6 +778,28 @@ export class MainCanvas {
       home.style.display = 'flex';
     }
     this._isAlert = true;
+  }
+
+  _setupMemory() {
+    const memoryAlert = document.querySelector(
+      '.memoryAlert',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (memoryAlert !== null) {
+      console.log('memoryAlert');
+      memoryAlert.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+  _removeMemory() {
+    const memoryAlert = document.querySelector(
+      '.memoryAlert',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (memoryAlert !== null) {
+      memoryAlert.style.display = 'none';
+    }
+    this._isAlert = false;
   }
 
   _removeModal() {

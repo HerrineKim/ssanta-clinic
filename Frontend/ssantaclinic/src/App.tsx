@@ -8,7 +8,7 @@ import { LogOutPage } from './pages/auth/LogOutPage';
 import HomePage from './pages/home/HomePage';
 import TetrisPage from './pages/game/tetris/TetrisPage';
 import WitsPage from './pages/game/WitsPage';
-import MemoryPage from './pages/game/MemoryPage';
+// import MemoryPage from './pages/game/MemoryPage';
 import { CalendarPage } from './pages/calendar/calendarPage';
 import { BoxCreate } from './pages/calendar/boxCreate';
 import FindPasswordPage from './pages/auth/FindPasswordPage';
@@ -38,7 +38,7 @@ function App() {
           element={<ChangePasswordPage />}
         ></Route>
         <Route path="/wits" element={<WitsPage />}></Route>
-        <Route path="/memory" element={<MemoryPage />}></Route>
+        {/* <Route path="/memory" element={<MemoryPage />}></Route> */}
         <Route path="/calendar" element={<CalendarPage />}></Route>
         <Route path="/boxCreate" element={<BoxCreate />}></Route>
         <Route path="/letter/write" element={<WriteLetterPage />}></Route>
