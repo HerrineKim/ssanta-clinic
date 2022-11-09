@@ -4,11 +4,10 @@ package com.ssafy.ssantaClinic.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -42,6 +41,14 @@ public class User {
     @Column(length=64)
     @JsonIgnore
     private String findPasswordNum;
+
+    @JsonIgnore
+    @Builder.Default
+    private LocalDateTime lastLoginAt = LocalDateTime.now();
+
+    public void updateLastLoginAt() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
 
     private int money;
 
