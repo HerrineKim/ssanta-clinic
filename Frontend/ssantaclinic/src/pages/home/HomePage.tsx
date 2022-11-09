@@ -4,6 +4,7 @@ import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 import { TreeModal } from '../../components/tree/index';
+import { FriendButton } from './styles';
 
 export default function Home() {
   // const firstCanvas = document.getElementById('main-canvas');
@@ -34,6 +35,8 @@ export default function Home() {
   }, []);
   return (
     <Div>
+      {/* 버튼들 */}
+      <FriendButton>친구</FriendButton>
       <Alert>들어갈래?</Alert>
       {/* <TreeModal data={data}></TreeModal> */}
       <ModalDiv className="modal"></ModalDiv>
