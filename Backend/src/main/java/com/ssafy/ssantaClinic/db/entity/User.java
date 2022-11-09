@@ -43,10 +43,9 @@ public class User {
     private String findPasswordNum;
 
     @JsonIgnore
-    private
-    LocalDateTime lastLoginAt;
-    @PrePersist
-    @JsonIgnore
+    @Builder.Default
+    private LocalDateTime lastLoginAt = LocalDateTime.now();
+
     public void updateLastLoginAt() {
         this.lastLoginAt = LocalDateTime.now();
     }
