@@ -64,7 +64,7 @@ export class MainCanvas {
   _isTreeModal: boolean;
   _tree: any;
   _items: any[];
-  _position: any[];
+
   _showcase: any[];
   _close: any;
   // _snow: boolean;
@@ -76,6 +76,13 @@ export class MainCanvas {
   _letter: THREE.Object3D[];
   _home: THREE.Object3D[];
   _isZoom: boolean;
+  _isShop: boolean;
+  _isHome: boolean;
+  _isGame1: boolean;
+  _isGame2: boolean;
+  _isGame3: boolean;
+  _isGame4: boolean;
+
   _arrow: any;
 
   // 보여줘야하는 scene 이어떤건지 결정
@@ -84,21 +91,16 @@ export class MainCanvas {
 
   constructor(items: number[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
-    this._position = [
-      [7, 0.5, -2],
-      [7.5, 0.5, -2],
-      [8, 0.5, -2],
-      [8.5, 0.5, -2],
-      [9, 0.5, -2],
-      [7, 1, -2.5],
-      [7.5, 1, -2.5],
-      [8, 1, -2.5],
-      [8.5, 1, -2.5],
-      [9, 1, -2.5],
-    ];
+
     this._items = items;
     this._isAlert = false;
     this._isZoom = false;
+    this._isShop = false;
+    this._isHome = false;
+    this._isGame1 = false;
+    this._isGame2 = false;
+    this._isGame3 = false;
+    this._isGame4 = false;
     this._isTreeModal = false;
     this._shop = [];
     this._game1 = [];
@@ -142,7 +144,6 @@ export class MainCanvas {
 
     this._setupControls();
     this._setupPicking();
-    this._setupHover();
 
     window.onresize = this.resize.bind(this);
     this.resize();
@@ -187,9 +188,9 @@ export class MainCanvas {
     // }
 
     // 모델이 움직일때마다 모델박스 바껴야 하므로
-    if (this._boxHelper) {
-      this._boxHelper.update();
-    }
+    // if (this._boxHelper) {
+    //   this._boxHelper.update();
+    // }
 
     this._fps.update();
 
@@ -233,7 +234,6 @@ export class MainCanvas {
   }
 
   _setupModel() {
-    const inven: any[] = [];
     const group: any = [];
     const loader = new GLTFLoader();
 
@@ -262,28 +262,14 @@ export class MainCanvas {
       this._model = model;
       this._scene.add(originModel);
 
-      // console.log('model:', model);
-
-      // 애니메이션 있을때
-      // const animationClips = gltf.animations; //THREE.AnimationCLip []
-      // const mixer = new THREE.AnimationMixer(model);
-      // const animationMap: any = {};
-      // animationClips.forEach((clip) => {
-      //   const name = clip?.name;
-      //   console.log(name);
-      //   animationMap[name] = mixer.clipAction(clip); //THREE.AnimationAction
-      // });
-      // this._mixer = mixer;
-      // this._animationMap = animationMap;
-      // this._currentAnimationAction = this._animationMap['Take 001'];
-      // this._currentAnimationAction.play();
-
       model.traverse((child) => {
         // console.log(child);
         child.castShadow = true;
         child.receiveShadow = true;
         if (child.name === 'shop') {
-          this._shop.push(child);
+          if (child.parent) {
+            this._shop.push(child.parent);
+          }
         } else if (child.name === 'game1') {
           this._game1.push(child);
         } else if (child.name === 'game2') {
@@ -300,7 +286,6 @@ export class MainCanvas {
         // console.log('mesh', child.name);
       });
 
-      this._setupOctree(model);
       // console.log(dumpObject(model, [], true, '').join('\n'));
       group.push(model);
     });
@@ -368,14 +353,13 @@ export class MainCanvas {
     // });
 
     // x button load
-    // loader.load('main/close.glb', (gltf) => {
-    //   const model: any = gltf.scene;
-    //   this._close = model;
+    loader.load('main/shopclose.glb', (gltf) => {
+      const model: any = gltf.scene;
 
-    //   // model.position.set(10, 5, -4.5);
-    //   model.position.set(1, 1, 1);
-    //   model.name = 'close';
-    // });
+      this._close = model;
+      this._scene2.add(model);
+      model.name = 'close';
+    });
 
     // arrow
     loader.load('main/arrow.glb', (gltf) => {
@@ -395,40 +379,6 @@ export class MainCanvas {
     console.log(group);
   }
 
-  _setupHover() {
-    const raycaster3 = new THREE.Raycaster();
-    this._canvasContainer.addEventListener(
-      'mouseover',
-      this._setTest.bind(this),
-    );
-    this._raycaster3 = raycaster3;
-  }
-  _setTest(event: any) {
-    const width = this._canvasContainer.clientWidth;
-    const height = this._canvasContainer.clientHeight;
-    const xy = {
-      x: (event.offsetX / width) * 2 - 1,
-      y: -(event.offsetY / height) * 2 + 1,
-    };
-    this._raycaster3.setFromCamera(xy, this._camera);
-
-    const cars: any = [];
-    this._scene.traverse((obj3d: any) => {
-      if (obj3d.name === 'car') {
-        cars.push(obj3d);
-      }
-    });
-
-    for (let i = 0; i < cars.length; i++) {
-      const car = cars[i];
-      const targets = this._raycaster3.intersectObject(car, true);
-      if (targets.length > 0) {
-        console.log('!!!');
-        return;
-      }
-    }
-  }
-
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
 
@@ -437,22 +387,22 @@ export class MainCanvas {
 
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
-    this._canvasContainer.addEventListener(
-      'wheel',
-      this._setupRotate.bind(this),
-    );
+    // this._canvasContainer.addEventListener(
+    //   'wheel',
+    //   this._setupRotate.bind(this),
+    // );
   }
 
   //클릭 함수
   _onClick(event: any) {
     console.log('click!!!');
-    function saveArrayBuffer(buffer: any) {
-      const file = new Blob([buffer], { type: 'application/octet-stream' });
-      console.log('saveArray:', file);
-      return file;
-    }
+    // function saveArrayBuffer(buffer: any) {
+    //   const file = new Blob([buffer], { type: 'application/octet-stream' });
+    //   console.log('saveArray:', file);
+    //   return file;
+    // }
 
-    let glbFile: Blob;
+    // let glbFile: Blob;
 
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
@@ -465,8 +415,6 @@ export class MainCanvas {
       y: -(event.offsetY / height) * 2 + 1,
     };
 
-    //xy : coords — 2D coordinates of the mouse, in normalized device coordinates (NDC)---X
-    //  and Y components should be between -1 and 1.
     this._raycaster.setFromCamera(xy, this._camera);
     if (this._scenenumber === 1) {
       // console.log('scenenumber1 _camera:', this._camera);
@@ -477,6 +425,7 @@ export class MainCanvas {
         this._zoomInven(this._showcase, 70);
         return;
       }
+      this._scene.remove(this._arrow);
 
       // 원래 버전
       // const targets = this._raycaster.intersectObjects(this._group);
@@ -530,9 +479,6 @@ export class MainCanvas {
             this._removeMemory();
           }
 
-          if (this._isTreeModal) {
-            this._removeTreeModal();
-          }
           this._scenenumber = 1;
 
           this._removeModal();
@@ -549,10 +495,6 @@ export class MainCanvas {
           this._removeAlert();
           this._removeHomeAlert();
           this._removeMemory();
-        }
-
-        if (this._isTreeModal) {
-          this._removeTreeModal();
         }
 
         this._removeModal();
@@ -577,9 +519,8 @@ export class MainCanvas {
       //   this._isTreeModal = true;
       //   this._zoomInven(this._inven, 90);
       // }
-    } else {
+    } else if (this._scenenumber === 2) {
       // scenenumber == 2 일때
-      const exporter = new GLTFExporter();
 
       // console.log('scenenumber2 _camera:', this._camera);
       // console.log('onclick2');
@@ -587,11 +528,21 @@ export class MainCanvas {
 
       // x누르면 다시 돌아가는거 구현
       // console.log('close:', this._close);
-      // console.log('raycaster:', this._raycaster);
-      const closeTarget = this._raycaster.intersectObject(this._close);
-      const treeTarget = this._raycaster.intersectObjects(this._tree);
 
-      console.log('asdfasdf', this._tree);
+      const closeTarget = this._raycaster.intersectObject(this._close);
+      if (closeTarget.length > 0) {
+        this._scenenumber = 1;
+        // this._setupControls();
+        console.log(this._shop);
+        // setTimeout(() => {
+        //   this._zoomFit(this._shop[0].parent, 60);
+        // }, 100);
+        setTimeout(() => {
+          this._zoomOut(60);
+        }, 100);
+      }
+    } else {
+      // const exporter = new GLTFExporter();
       // object = treeTarget[0].object;
       // while (object.parent) {
       //   object = object.parent;
@@ -599,69 +550,63 @@ export class MainCanvas {
       //     break;
       //   }
       // }
-
       // const itemTarget = this._raycaster.intersectObjects(this._items);
-      const formData = new FormData();
-      // console.log('closeTarget:', closeTarget);
-      const TOKEN = localStorage.getItem('jwt') || '';
-      if (closeTarget.length > 0) {
-        // scene1으롣 돌아가기
-        let glbFile: Blob;
-        exporter.parse(
-          this._tree[0],
-          function (result) {
-            console.log('result:', result);
-            glbFile = saveArrayBuffer(result);
-            formData.append('glbfile', glbFile);
-            console.log('result : ', glbFile);
-
-            axios({
-              url: 'http://localhost:8080/api/tree',
-              method: 'post',
-              data: formData,
-              headers: {
-                Authorization: TOKEN,
-              },
-            }).then((res) => {
-              console.log(res);
-            });
-          },
-          function (error) {
-            console.log(error);
-          },
-          { binary: true },
-        );
-
-        // 백에 glb 보내기
-
-        this._scene2.remove(this._showcase);
-        this._scene2.remove(...this._items);
-        this._scene2.remove(this._close);
-        this._dragControls.forEach((control) => {
-          control.deactivate();
-        });
-
-        this._scenenumber = 1;
-        this._setupControls();
-        setTimeout(() => {
-          this._zoomFit(this._model, 60);
-        }, 100);
-      }
+      // const formData = new FormData();
+      // const TOKEN = localStorage.getItem('jwt') || '';
+      // if (closeTarget.length > 0) {
+      //   // scene1으롣 돌아가기
+      //   let glbFile: Blob;
+      //   exporter.parse(
+      //     this._tree[0],
+      //     function (result) {
+      //       console.log('result:', result);
+      //       glbFile = saveArrayBuffer(result);
+      //       formData.append('glbfile', glbFile);
+      //       console.log('result : ', glbFile);
+      //       axios({
+      //         url: 'http://localhost:8080/api/tree',
+      //         method: 'post',
+      //         data: formData,
+      //         headers: {
+      //           Authorization: TOKEN,
+      //         },
+      //       }).then((res) => {
+      //         console.log(res);
+      //       });
+      //     },
+      //     function (error) {
+      //       console.log(error);
+      //     },
+      //     { binary: true },
+      //   );
+      //   this._scene2.remove(this._showcase);
+      //   this._scene2.remove(...this._items);
+      //   this._scene2.remove(this._close);
+      //   this._dragControls.forEach((control) => {
+      //     control.deactivate();
+      //   });
+      //   this._scenenumber = 1;
+      //   this._setupControls();
+      //   setTimeout(() => {
+      //     this._zoomFit(this._model, 60);
+      //   }, 100);
+      // }
       // if (itemTarget.length > 0) {
       //   this._setupDrag(itemTarget[0]);
       // }
-      console.log('treetarget:', treeTarget);
+      // console.log('treetarget:', treeTarget);
       // console.log('itemTarget:', itemTarget);
     }
   }
 
-  _setupRotate(event: any) {
-    if (this._scenenumber === 2) {
-      event.preventDefault();
-      // console.log('rotate', this._tree[0]);
-      this._tree[0].rotateY(event.deltaY * 0.0005);
-    }
-  }
+  // _setupRotate(event: any) {
+  //   if (this._scenenumber === 2) {
+  //     event.preventDefault();
+  //     // console.log('rotate', this._tree[0]);
+  //     this._tree[0].rotateY(event.deltaY * 0.0005);
+  //   }
+  // }
+
   // _setupTreeModal() {
   //   const treeModal = document.querySelector(
   //     '.treemodal',
@@ -672,109 +617,109 @@ export class MainCanvas {
   //   this._isTreeModal = true;
   // }
   _dragControls: any[] = [];
-  _setupDrag() {
-    console.log('items:', this._items);
-    console.log('tree:', this._tree);
-    const positions = this._position;
-    const tree = this._tree;
-    let items = this._items;
-    // const raycaster = this._raycaster;
+  // _setupDrag() {
+  //   console.log('items:', this._items);
+  //   console.log('tree:', this._tree);
+  //   const positions = this._position;
+  //   const tree = this._tree;
+  //   let items = this._items;
+  //   // const raycaster = this._raycaster;
 
-    items.forEach((child, index) => {
-      // console.log('item child:', child);
-      child.name = index;
-      const controls = new DragControls(
-        [child],
-        this._camera,
-        this._renderer.domElement,
-      );
-      controls.transformGroup = true;
+  //   items.forEach((child, index) => {
+  //     // console.log('item child:', child);
+  //     child.name = index;
+  //     const controls = new DragControls(
+  //       [child],
+  //       this._camera,
+  //       this._renderer.domElement,
+  //     );
+  //     controls.transformGroup = true;
 
-      controls.addEventListener('dragstart', function (event) {
-        const targets = controls.getRaycaster().intersectObjects(tree);
-        let object;
-        if (targets.length > 0) {
-          object = targets[0].object;
-          while (object.parent) {
-            object = object.parent;
-            if (object instanceof THREE.Group && object.name === 'tree') {
-              break;
-            }
-          }
-        }
-        console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
-        // 장식품이 트리에 붙어있는 것일때
-        if (event.object.parent === object) {
-          console.log('parent = event.object');
-          event.object.removeFromParent();
-        }
-        event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
-      });
+  //     controls.addEventListener('dragstart', function (event) {
+  //       const targets = controls.getRaycaster().intersectObjects(tree);
+  //       let object;
+  //       if (targets.length > 0) {
+  //         object = targets[0].object;
+  //         while (object.parent) {
+  //           object = object.parent;
+  //           if (object instanceof THREE.Group && object.name === 'tree') {
+  //             break;
+  //           }
+  //         }
+  //       }
+  //       console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
+  //       // 장식품이 트리에 붙어있는 것일때
+  //       if (event.object.parent === object) {
+  //         console.log('parent = event.object');
+  //         event.object.removeFromParent();
+  //       }
+  //       event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+  //     });
 
-      controls.addEventListener('dragend', (event) => {
-        const targets = controls.getRaycaster().intersectObjects(tree);
-        console.log('dragend targets:', targets);
-        event.object.children[0].children[0].material.emissive.set(0x000000);
+  //     controls.addEventListener('dragend', (event) => {
+  //       const targets = controls.getRaycaster().intersectObjects(tree);
+  //       console.log('dragend targets:', targets);
+  //       event.object.children[0].children[0].material.emissive.set(0x000000);
 
-        //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
-        // console.log('world position:', event.object.getWorldPosition());
+  //       //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
+  //       // console.log('world position:', event.object.getWorldPosition());
 
-        if (targets.length > 0) {
-          if (targets[0].object.name === 'tree') {
-            //만난다면 장식품을 tree에 붙이고 종속시킴
-            console.log('tree 장식!', event.object, targets);
-            event.object.position.setX(targets[0].point.x);
-            event.object.position.setY(targets[0].point.y);
-            event.object.position.setZ(targets[0].point.z);
-            let object = targets[0].object;
-            while (object.parent) {
-              object = object.parent;
-              if (object instanceof THREE.Group) {
-                break;
-              }
-            }
+  //       if (targets.length > 0) {
+  //         if (targets[0].object.name === 'tree') {
+  //           //만난다면 장식품을 tree에 붙이고 종속시킴
+  //           console.log('tree 장식!', event.object, targets);
+  //           event.object.position.setX(targets[0].point.x);
+  //           event.object.position.setY(targets[0].point.y);
+  //           event.object.position.setZ(targets[0].point.z);
+  //           let object = targets[0].object;
+  //           while (object.parent) {
+  //             object = object.parent;
+  //             if (object instanceof THREE.Group) {
+  //               break;
+  //             }
+  //           }
 
-            items = items.filter((obj) => obj !== event.object);
-            object.attach(event.object);
-            this._items = items;
-          } else {
-            // 나눌 필요 있음
-            // event.object.removeFromParent();
-            console.log('tree가 아닌것 raycast');
-            event.object.position.setX(positions[child.name][0]);
-            event.object.position.setY(positions[child.name][1]);
-            event.object.position.setZ(positions[child.name][2]);
-          }
-        } else {
-          // event.object.removeFromParent();
-          console.log('remove object:', event.object);
-          console.log('target.length === 0');
-          // console.log('else event:', event);
-          console.log(positions[child.name][0]);
-          event.object.position.setX(positions[child.name][0]);
-          event.object.position.setY(positions[child.name][1]);
-          event.object.position.setZ(positions[child.name][2]);
-          console.log(event.object.position);
-        }
+  //           items = items.filter((obj) => obj !== event.object);
+  //           object.attach(event.object);
+  //           this._items = items;
+  //         } else {
+  //           // 나눌 필요 있음
+  //           // event.object.removeFromParent();
+  //           console.log('tree가 아닌것 raycast');
+  //           event.object.position.setX(positions[child.name][0]);
+  //           event.object.position.setY(positions[child.name][1]);
+  //           event.object.position.setZ(positions[child.name][2]);
+  //         }
+  //       } else {
+  //         // event.object.removeFromParent();
+  //         console.log('remove object:', event.object);
+  //         console.log('target.length === 0');
+  //         // console.log('else event:', event);
+  //         console.log(positions[child.name][0]);
+  //         event.object.position.setX(positions[child.name][0]);
+  //         event.object.position.setY(positions[child.name][1]);
+  //         event.object.position.setZ(positions[child.name][2]);
+  //         console.log(event.object.position);
+  //       }
 
-        //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
-      });
+  //       //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
+  //     });
 
-      controls.addEventListener('drag', function (event) {
-        // console.log('drag position:', position);
-        event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
-      });
-      this._dragControls.push(controls);
-    });
-    // this._tree = tree;
+  //     controls.addEventListener('drag', function (event) {
+  //       // console.log('drag position:', position);
+  //       event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
+  //     });
+  //     this._dragControls.push(controls);
+  //   });
+  //   // this._tree = tree;
 
-    // this._items = items;
-  }
+  //   // this._items = items;
+  // }
 
-  _removeTreeModal() {
-    this._scene.remove(this._showcase);
-    this._scene.remove(...this._items);
-  }
+  // _removeTreeModal() {
+  //   this._scene.remove(this._showcase);
+  //   this._scene.remove(...this._items);
+  // }
 
   _removeAlert() {
     const alert = document.querySelector('.alert') as HTMLElement | null;
@@ -814,6 +759,7 @@ export class MainCanvas {
     this._isAlert = true;
   }
 
+  // 기억력게임
   _setupMemory() {
     const memoryAlert = document.querySelector(
       '.memoryAlert',
@@ -951,10 +897,6 @@ export class MainCanvas {
     this._controls.maxAzimuthAngle = Infinity;
     this._controls.minAzimuthAngle = Infinity;
 
-    const positions: any[] = [];
-    this._items.forEach((child) => {
-      positions.push(child.position);
-    });
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
     const box1 = new THREE.Box3().setFromObject(object3d[0]);
@@ -1015,12 +957,8 @@ export class MainCanvas {
       },
     });
     setTimeout(() => {
-      // this._scene2.add(object3d[0]);
-      // this._scene2.add(...this._items);
-      // this._scene2.add(this._close);
       this._scenenumber = 2;
       this._setupControls();
-      // this._setupDrag();
     }, 1500);
   }
 
@@ -1137,9 +1075,9 @@ export class MainCanvas {
   _previousDirectionOffset = 0;
 
   //초기 속도
-  _speed = 0;
-  _maxSpeed = 0;
-  _acceleration = 0;
+  // _speed = 0;
+  // _maxSpeed = 0;
+  // _acceleration = 0;
 
   _bOnTheGround = false; //모델이 바닥위에 있는지 여부체크
   _fallingAcceleration = 0;
