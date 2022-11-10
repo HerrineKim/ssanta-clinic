@@ -530,12 +530,12 @@ export class RoomThree {
   }
   _dragControls: any[] = [];
   _setupDrag() {
-    console.log('items:', this._items);
-    console.log('tree:', this._tree);
+    // console.log('items:', this._items);
+    // console.log('tree:', this._tree);
     const positions = this._position;
     const tree = this._tree;
     let items = this._items;
-    console.log(items);
+    // console.log(items);
     // const raycaster = this._raycaster;
 
     items.forEach((child: any, index: any) => {
@@ -550,9 +550,11 @@ export class RoomThree {
 
       controls.addEventListener('dragstart', function (event) {
         // child.position.z = 1.5;
+        // 이미 걸려있는 것 처리
         const targets = controls.getRaycaster().intersectObjects(tree);
         let object;
         if (targets.length > 0) {
+          console.log('이미 걸려있음');
           object = targets[0].object;
           while (object.parent) {
             object = object.parent;
@@ -609,7 +611,7 @@ export class RoomThree {
           console.log('remove object:', event.object);
           console.log('target.length === 0');
           // console.log('else event:', event);
-          console.log(positions[child.name][0]);
+          console.log(child, positions[child.name][0]);
           event.object.position.setX(positions[child.name][0]);
           event.object.position.setY(positions[child.name][1]);
           event.object.position.setZ(positions[child.name][2]);
@@ -618,10 +620,12 @@ export class RoomThree {
 
         //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
       });
-
+      // ###########  item 에서 삭제되면 앞으로 한칸씩 밀리는 거였다.
+      // => 해결해야한다.
       controls.addEventListener('drag', function (event) {
         // console.log('drag position:', position);
-        console.log(child.position.z);
+        // console.log(child.position);
+        // console.log(event.object.position);
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
       this._dragControls.push(controls);
@@ -697,7 +701,7 @@ export class RoomThree {
   _setupRotate(event: any) {
     if (this._scenenumber === 2) {
       event.preventDefault();
-      // console.log('rotate', this._tree[0]);
+      // console.log('rotate', this._tree, this._tree[0]);
       this._tree[0].rotateY(event.deltaY * 0.0005);
     }
   }
