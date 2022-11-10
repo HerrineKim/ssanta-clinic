@@ -31,36 +31,37 @@ export class RoomThree {
   _position: any;
   _inven: any;
   _isTreeModal: boolean;
+  _check: any;
 
   constructor(items: number[]) {
     this._scenenumber = 1;
     this._isTreeModal = false;
     this._items = items;
     this._position = [
-      [1.8, 3.6, 1],
-      [2.2, 3.6, 1],
-      [2.6, 3.6, 1],
-      [3, 3.6, 1],
-      [1.8, 2.9, 1],
-      [2.2, 2.9, 1],
-      [2.6, 2.9, 1],
-      [3, 2.9, 1],
-      [1.8, 2, 1],
-      [2.2, 2, 1],
-      [2.6, 2, 1],
-      [3, 2, 1],
-      [4, 3.6, 1],
-      [4.4, 3.6, 1],
-      [4.8, 3.6, 1],
-      [5.2, 3.6, 1],
-      [4, 2.9, 1],
-      [4.4, 2.9, 1],
-      [4.8, 2.9, 1],
-      [5.2, 2.9, 1],
-      [4, 2, 1],
-      [4.4, 2, 1],
-      [4.8, 2, 1],
-      [5.2, 2, 1],
+      [1.8, 3.6, 1.2],
+      [2.2, 3.6, 1.2],
+      [2.6, 3.6, 1.2],
+      [3, 3.6, 1.2],
+      [1.8, 2.9, 1.2],
+      [2.2, 2.9, 1.2],
+      [2.6, 2.9, 1.2],
+      [3, 2.9, 1.2],
+      [1.8, 2, 1.2],
+      [2.2, 2, 1.2],
+      [2.6, 2, 1.2],
+      [3, 2, 1.2],
+      [4, 3.6, 1.2],
+      [4.4, 3.6, 1.2],
+      [4.8, 3.6, 1.2],
+      [5.2, 3.6, 1.2],
+      [4, 2.9, 1.2],
+      [4.4, 2.9, 1.2],
+      [4.8, 2.9, 1.2],
+      [5.2, 2.9, 1.2],
+      [4, 2, 1.2],
+      [4.4, 2, 1.2],
+      [4.8, 2, 1.2],
+      [5.2, 2, 1.2],
     ];
 
     this._setupThreeJs();
@@ -219,6 +220,24 @@ export class RoomThree {
       // console.log(children);
       this._model = model;
     });
+    // x button load
+    loader.load('/room/close.glb', (gltf) => {
+      const model: any = gltf.scene;
+      this._close = model;
+
+      // model.position.set(10, 5, -4.5);
+
+      // model.name = 'close';
+    });
+    // check load
+    loader.load('/room/check.glb', (gltf) => {
+      const model: any = gltf.scene;
+      this._check = model;
+
+      // model.position.set(10, 5, -4.5);
+
+      // model.name = 'close';
+    });
 
     loader.load('/room/tree.glb', (gltf) => {
       const tree: any[] = [];
@@ -247,6 +266,7 @@ export class RoomThree {
       const model: any = gltf.scene;
       // this._scene.add(model);
       // console.log('showcase:', model);
+      model.position.setZ(model.position.z + 1);
       this._showcase = model;
       inven.push(model);
       // console.log('loadshowcase inven:', inven);
@@ -368,8 +388,7 @@ export class RoomThree {
       // console.log('raycaster:', this._raycaster);
       const closeTarget = this._raycaster.intersectObject(this._close);
       const treeTarget = this._raycaster.intersectObjects(this._tree);
-
-      console.log('asdfasdf', this._tree);
+      const checkTarget = this._raycaster.intersectObject(this._check);
       // object = treeTarget[0].object;
       // while (object.parent) {
       //   object = object.parent;
@@ -377,13 +396,9 @@ export class RoomThree {
       //     break;
       //   }
       // }
-
-      const itemTarget = this._raycaster.intersectObjects(this._items);
       const formData = new FormData();
-      // console.log('closeTarget:', closeTarget);
       const TOKEN = localStorage.getItem('jwt') || '';
-      if (closeTarget.length > 0) {
-        // scene1으롣 돌아가기
+      if (checkTarget.length > 0) {
         let glbFile: Blob;
         exporter.parse(
           this._tree[0],
@@ -409,8 +424,13 @@ export class RoomThree {
           },
           { binary: true },
         );
+      }
+
+      if (closeTarget.length > 0) {
+        // scene1으롣 돌아가기
 
         // 백에 glb 보내기
+        this._scene2.remove(this._check);
 
         this._scene2.remove(this._showcase);
         this._scene2.remove(...this._items);
@@ -500,7 +520,8 @@ export class RoomThree {
     setTimeout(() => {
       this._scene2.add(object3d[1]);
       this._scene2.add(...this._items);
-      // this._scene2.add(this._close);
+      this._scene2.add(this._close);
+      this._scene2.add(this._check);
       this._scenenumber = 2;
       this._setupControls();
 
@@ -528,6 +549,7 @@ export class RoomThree {
       controls.transformGroup = true;
 
       controls.addEventListener('dragstart', function (event) {
+        // child.position.z = 1.5;
         const targets = controls.getRaycaster().intersectObjects(tree);
         let object;
         if (targets.length > 0) {
@@ -599,6 +621,7 @@ export class RoomThree {
 
       controls.addEventListener('drag', function (event) {
         // console.log('drag position:', position);
+        console.log(child.position.z);
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
       this._dragControls.push(controls);
@@ -609,13 +632,12 @@ export class RoomThree {
   }
 
   _zoomFit(object3d: any, viewAngle: number) {
-    this._isZoom = true;
-    this._orbitControls.minDistance = 0;
-    this._orbitControls.maxDistance = Infinity;
-    this._orbitControls.maxPolarAngle = Math.PI / 2;
-    // this._orbitControls.minPolarAngle = 0;
-    this._orbitControls.maxAzimuthAngle = Infinity;
-    this._orbitControls.minAzimuthAngle = Infinity;
+    // this._orbitControls.minDistance = 0;
+    // this._orbitControls.maxDistance = Infinity;
+    // this._orbitControls.maxPolarAngle = Math.PI / 2;
+    // // this._orbitControls.minPolarAngle = 0;
+    // this._orbitControls.maxAzimuthAngle = Infinity;
+    // this._orbitControls.minAzimuthAngle = Infinity;
 
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
@@ -627,35 +649,10 @@ export class RoomThree {
 
     const direction = new THREE.Vector3(0, 1, 0);
 
-    // console.log(object3d);
-    const newVec = new THREE.Vector3(0, 0, 0);
-    if (object3d.name === 'game2' || object3d.name === 'game4') {
-      newVec.z = 1;
-    } else if (object3d.name.includes('letter')) {
-      newVec.x = -1;
-    } else if (object3d.name.includes('shop')) {
-      newVec.x = 1;
-    } else if (object3d.children[0].name === 'home') {
-      newVec.x = 1;
-      newVec.z = -1;
-    } else if (object3d.name === 'game1') {
-      newVec.x = 1;
-      // newVec.z = -1;
-    }
-    // else if (object3d.name === 'game3') {
-    //   newVec.x = -1;
-    //   newVec.z = 1;
-    // }
-    else if (object3d.name === 'playground') {
-      newVec.x = -1;
-      newVec.z = 1;
-    }
-    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
-    //   newVec.x = 1;
-    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
-    //   newVec.x = 1;
-    // }
-    direction.applyAxisAngle(newVec, THREE.MathUtils.degToRad(viewAngle));
+    direction.applyAxisAngle(
+      new THREE.Vector3(0, 0, 1),
+      THREE.MathUtils.degToRad(viewAngle),
+    );
 
     const halfSizeModel = sizeBox * 0.5;
     const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
@@ -670,11 +667,12 @@ export class RoomThree {
 
     //애니메이션 라이브러리 gsap
     //카메라 위치변경
+    // camera.position.set(7.382013649990576, 5.62568011018224, 7.322713694518906);
     gsap.to(this._camera.position, {
       duration: 1.5,
-      x: newPosition.x,
-      y: newPosition.y,
-      z: newPosition.z,
+      x: 7.382013649990576,
+      y: 5.62568011018224,
+      z: 7.322713694518906,
     });
 
     //this._orbitControls.target.copy(centerBox);
