@@ -9,11 +9,14 @@ import { Link } from 'react-router-dom';
 // }
 
 export function HomeAlert(props: any) {
-  const userId = useRecoilValue(selectUserId);
+  const Id = useRecoilValue(selectUserId);
+  const userId = '1';
+  const url = '/myroom/' + userId;
+  console.log(url);
   return (
     <Div className="home">
       집으로 들어갈래?
-      <Link to="/room/:userId">
+      <Link to={url}>
         <button>ㅇㅇ</button>
       </Link>
     </Div>
