@@ -236,6 +236,7 @@ export class MainCanvas {
   _setupModel() {
     const group: any = [];
     const loader = new GLTFLoader();
+    const items: any = [];
 
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
@@ -245,6 +246,17 @@ export class MainCanvas {
       // console.log(gltf.scene);
       const m = gltf.scene;
       m.traverse((child) => {
+        try {
+          if (
+            1 <= parseInt(child.name) &&
+            parseInt(child.name) <= 55 &&
+            child.type !== 'Object3D'
+          ) {
+            items.push(child);
+          }
+        } catch (error) {
+          console.log(error);
+        }
         if (child.name.includes('showcase2') && child instanceof THREE.Mesh) {
           showcase2 = child;
           this._showcase.push(showcase2);
@@ -254,6 +266,7 @@ export class MainCanvas {
           this._showcase.push(showcase1);
         }
       });
+      this._items = items;
       // console.log(showcase1, showcase2);
       // console.log(m);
       const originModel = gltf.scene;
@@ -521,13 +534,8 @@ export class MainCanvas {
       // }
     } else if (this._scenenumber === 2) {
       // scenenumber == 2 일때
-
-      // console.log('scenenumber2 _camera:', this._camera);
-      // console.log('onclick2');
-      // drag & drop 구현
-
-      // x누르면 다시 돌아가는거 구현
-      // console.log('close:', this._close);
+      const itemTarget = this._raycaster.intersectObjects(this._items);
+      console.log(itemTarget);
 
       const closeTarget = this._raycaster.intersectObject(this._close);
       if (closeTarget.length > 0) {
