@@ -5,8 +5,12 @@ import { Wrapper, CanvasContainer } from './styles';
 import { RoomThree } from '../../three/RoomThree';
 
 export const MyRoomPage = () => {
+  const items: number[] = [];
+  for (let i = 1; i < 25; i++) {
+    items.push(1);
+  }
   useEffect(() => {
-    const roomCanvas = new RoomThree();
+    const roomCanvas = new RoomThree(items);
 
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
