@@ -27,7 +27,7 @@ export class RoomThree {
   _dragControls: any;
   _showcase: any;
   _isZoom: any;
-  _controls: any;
+
   _position: any;
   _inven: any;
   _isTreeModal: boolean;
@@ -36,13 +36,17 @@ export class RoomThree {
     this._scenenumber = 1;
     this._isTreeModal = false;
     this._items = items;
+
+    const scene2 = new THREE.Scene();
     this._setupThreeJs();
     this._setupCamera();
     this._setupLight();
     this._setupModel();
+    this._scene2 = scene2;
+
     this._setupControls();
-    this._setupEvents();
     this._setupPicking();
+    this._setupEvents();
   }
   _setupThreeJs() {
     const divContainer = document.querySelector('#room-canvas');
@@ -56,6 +60,8 @@ export class RoomThree {
       this._renderer = renderer;
 
       const scene = new THREE.Scene();
+      const axesHelper = new THREE.AxesHelper(20);
+      scene.add(axesHelper);
       this._scene = scene;
     }
   }
@@ -72,13 +78,31 @@ export class RoomThree {
     this._orbitControls.update();
     if (this._mixer) this._mixer.update(delta);
   }
+  update2() {
+    // console.log('updaete2');
+    this._orbitControls.update();
+  }
 
   render() {
-    this._renderer.render(this._scene, this._camera);
-    this.update();
-    // console.log(this._camera.position);
+    if (this._scenenumber === 1) {
+      // console.log(this._camera.position);
+      this._renderer.render(this._scene, this._camera);
+      this.update();
+      // console.log('!');
 
-    requestAnimationFrame(this.render.bind(this));
+      requestAnimationFrame(this.render.bind(this));
+    } else {
+      // inven scene
+      this._renderer.render(this._scene2, this._camera);
+      this.update2();
+
+      requestAnimationFrame(this.render.bind(this));
+    }
+    // this._renderer.render(this._scene, this._camera);
+    // this.update();
+    // // console.log(this._camera.position);
+
+    // requestAnimationFrame(this.render.bind(this));
   }
 
   resize() {
@@ -157,7 +181,7 @@ export class RoomThree {
   _setupModel() {
     const inven: any[] = [];
     const loader = new GLTFLoader();
-    loader.load('/room/room.glb', (gltf) => {
+    loader.load('/room/smallroom2.glb', (gltf) => {
       const model = gltf.scene;
       this._scene.add(model);
       const children: any[] = [];
@@ -185,18 +209,21 @@ export class RoomThree {
       });
       this._scene.add(model);
       inven.push(model);
-      console.log('treegltf:', model);
+      // console.log('loadtree inven:', inven);
+      // console.log('treegltf:', model);
       this._tree = tree;
+      this._inven = inven;
     });
 
     loader.load('/room/showcase.glb', (gltf) => {
       const model: any = gltf.scene;
       this._scene.add(model);
-      console.log('showcase:', model);
+      // console.log('showcase:', model);
       this._showcase = model;
       inven.push(model);
+      // console.log('loadshowcase inven:', inven);
+      this._inven = inven;
     });
-    this._inven = inven;
 
     // item load 부분
     // const items: any[] = [];
@@ -272,6 +299,7 @@ export class RoomThree {
         }
         console.log('parent:', object);
         this._isTreeModal = true;
+        console.log('onclick inven:', this._inven);
         this._zoomInven(this._inven, 90);
       }
     } else {
@@ -366,6 +394,7 @@ export class RoomThree {
     const box2 = new THREE.Box3().setFromObject(object3d[1]);
     const box = new THREE.Box3().union(box1);
     box.union(box2);
+    console.log('zoominven box', box);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
     const sizeBox = box.getSize(new THREE.Vector3()).length();
     //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
@@ -386,7 +415,7 @@ export class RoomThree {
     );
 
     // this._camera.position.copy(newPosition);
-    // this._controls.target.copy(centerBox);
+    // this._orbitControls.target.copy(centerBox);
 
     //애니메이션 라이브러리 gsap
     //카메라 위치변경
@@ -397,11 +426,11 @@ export class RoomThree {
       z: newPosition.z,
     });
 
-    //this._controls.target.copy(centerBox);
-    // console.log(this._controls);
-    // console.log(this._controls.target);
+    //this._orbitControls.target.copy(centerBox);
+    // console.log(this._orbitControls);
+    // console.log(this._orbitControls.target);
     // 타겟위치변경
-    gsap.to(this._controls.target, {
+    gsap.to(this._orbitControls.target, {
       duration: 0.5,
       x: centerBox.x,
       y: centerBox.y,
@@ -409,9 +438,9 @@ export class RoomThree {
       onUpdate: () => {
         //애니메이션 수행중에 깜빡거리는 현상 방지
         this._camera.lookAt(
-          this._controls.target.x,
-          this._controls.target.y,
-          this._controls.target.z,
+          this._orbitControls.target.x,
+          this._orbitControls.target.y,
+          this._orbitControls.target.z,
         );
       },
     });
@@ -527,12 +556,12 @@ export class RoomThree {
 
   _zoomFit(object3d: any, viewAngle: number) {
     this._isZoom = true;
-    this._controls.minDistance = 0;
-    this._controls.maxDistance = Infinity;
-    this._controls.maxPolarAngle = Math.PI / 2;
-    // this._controls.minPolarAngle = 0;
-    this._controls.maxAzimuthAngle = Infinity;
-    this._controls.minAzimuthAngle = Infinity;
+    this._orbitControls.minDistance = 0;
+    this._orbitControls.maxDistance = Infinity;
+    this._orbitControls.maxPolarAngle = Math.PI / 2;
+    // this._orbitControls.minPolarAngle = 0;
+    this._orbitControls.maxAzimuthAngle = Infinity;
+    this._orbitControls.minAzimuthAngle = Infinity;
 
     // console.log('zoomfit object3d: ', object3d);
     //box 는 객체를 담는 최소크기 박스
@@ -583,7 +612,7 @@ export class RoomThree {
     );
 
     // this._camera.position.copy(newPosition);
-    // this._controls.target.copy(centerBox);
+    // this._orbitControls.target.copy(centerBox);
 
     //애니메이션 라이브러리 gsap
     //카메라 위치변경
@@ -594,11 +623,11 @@ export class RoomThree {
       z: newPosition.z,
     });
 
-    //this._controls.target.copy(centerBox);
-    // console.log(this._controls);
-    // console.log(this._controls.target);
+    //this._orbitControls.target.copy(centerBox);
+    // console.log(this._orbitControls);
+    // console.log(this._orbitControls.target);
     // 타겟위치변경
-    gsap.to(this._controls.target, {
+    gsap.to(this._orbitControls.target, {
       duration: 0.5,
       x: centerBox.x,
       y: centerBox.y,
@@ -606,9 +635,9 @@ export class RoomThree {
       onUpdate: () => {
         //애니메이션 수행중에 깜빡거리는 현상 방지
         this._camera.lookAt(
-          this._controls.target.x,
-          this._controls.target.y,
-          this._controls.target.z,
+          this._orbitControls.target.x,
+          this._orbitControls.target.y,
+          this._orbitControls.target.z,
         );
       },
     });
