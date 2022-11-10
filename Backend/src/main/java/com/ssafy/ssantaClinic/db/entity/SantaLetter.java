@@ -18,4 +18,10 @@ public class SantaLetter {
     @Column(name = "santa_letter_id")
     private int id;
 
+    private String category;
+
+    private String title;
+
+    private String content;
+
 }

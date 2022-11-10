@@ -3,6 +3,9 @@ package com.ssafy.ssantaClinic.db.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -24,15 +27,20 @@ public class Letter {
     @JoinColumn(name = "santa_letter_id")
     private SantaLetter santaLetter;
 
-    String title;
-    String message;
+    @NotBlank
+    private String title;
+    @NotBlank
+    private String message;
 
     @Column(name = "created_at")
-    Date createAt;
+    @Builder.Default
+    private LocalDateTime regDate = LocalDateTime.now();
 
     @Column(name = "is_read")
-    boolean isRead;
+    @Builder.Default
+    boolean isRead = false;
 
     @Column(name = "is_received")
-    Date isReceived;
+    @Builder.Default
+    private LocalDateTime isReceived = LocalDateTime.now().plusHours(2);
 }
