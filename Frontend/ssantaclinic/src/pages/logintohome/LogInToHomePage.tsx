@@ -1,21 +1,23 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoginToHome } from '../../three/LoginToHome';
 import { Wrapper, CanvasContainer } from './styles';
+import { useNavigate } from 'react-router-dom';
+
 export const LogInToHomePage = () => {
+  const navigate = useNavigate();
   useEffect(() => {
-    const test1Canvas = new LoginToHome();
-    console.log(test1Canvas.render.bind(test1Canvas));
+    // setTimeout(() => {
+    //   navigate('/');
+    // }, 20000);
+    const toHomeCanvas = new LoginToHome();
+    console.log(toHomeCanvas.render.bind(toHomeCanvas));
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
-      test1Canvas.render.bind(test1Canvas),
+      toHomeCanvas.render.bind(toHomeCanvas),
     );
-    // const requestId2 = requestAnimationFrame(
-    //   test1Canvas.render2.bind(test1Canvas),
-    // );
 
     return () => {
       cancelAnimationFrame(requestId1);
-      // cancelAnimationFrame(requestId2);
     };
   }, []);
   return (
