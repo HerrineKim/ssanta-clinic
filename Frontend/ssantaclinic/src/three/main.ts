@@ -11,6 +11,7 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls';
 import { threadId } from 'worker_threads';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import axios from 'axios';
+import { throws } from 'assert';
 
 // import { chdir } from 'process';
 
@@ -64,7 +65,7 @@ export class MainCanvas {
   _tree: any;
   _items: any[];
   _position: any[];
-  _showcase: any;
+  _showcase: any[];
   _close: any;
   // _snow: boolean;
   _shop: THREE.Object3D[];
@@ -105,6 +106,7 @@ export class MainCanvas {
     this._game4 = [];
     this._letter = [];
     this._home = [];
+    this._showcase = [];
 
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
@@ -243,13 +245,15 @@ export class MainCanvas {
       m.traverse((child) => {
         if (child.name.includes('showcase2') && child instanceof THREE.Mesh) {
           showcase2 = child;
+          this._showcase.push(showcase2);
         }
         if (child.name.includes('showcase1') && child instanceof THREE.Mesh) {
           showcase1 = child;
+          this._showcase.push(showcase1);
         }
       });
-      console.log(showcase1, showcase2);
-      console.log(m);
+      // console.log(showcase1, showcase2);
+      // console.log(m);
       const originModel = gltf.scene;
       const model = gltf.scene.children[0];
       console.log('LOAD model:', model);
@@ -470,10 +474,12 @@ export class MainCanvas {
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
           console.log('shop!!!!!');
-          this._zoomFit(targets[0].object.parent, 60);
-          setTimeout(() => {
-            this._setupAlert();
-          }, 1500);
+          console.log(this._showcase);
+          this._zoomInven(this._showcase, 70);
+          // this._zoomFit(targets[0].object.parent, 60);
+          // setTimeout(() => {
+          //   this._setupAlert();
+          // }, 1500);
         } else if (targets[0].object.name === 'home') {
           console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
@@ -923,6 +929,14 @@ export class MainCanvas {
   }
 
   _zoomInven(object3d: any[], viewAngle: number) {
+    // zoom 조건
+    this._controls.minDistance = 0;
+    this._controls.maxDistance = Infinity;
+    this._controls.maxPolarAngle = Math.PI / 2;
+    // this._controls.minPolarAngle = 0;
+    this._controls.maxAzimuthAngle = Infinity;
+    this._controls.minAzimuthAngle = Infinity;
+
     const positions: any[] = [];
     this._items.forEach((child) => {
       positions.push(child.position);
@@ -931,8 +945,12 @@ export class MainCanvas {
     //box 는 객체를 담는 최소크기 박스
     const box1 = new THREE.Box3().setFromObject(object3d[0]);
     const box2 = new THREE.Box3().setFromObject(object3d[1]);
+    const box3 = new THREE.Box3().setFromObject(object3d[2]);
+    const box4 = new THREE.Box3().setFromObject(object3d[3]);
     const box = new THREE.Box3().union(box1);
     box.union(box2);
+    box.union(box3);
+    box.union(box4);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
     const sizeBox = box.getSize(new THREE.Vector3()).length();
     //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
@@ -940,7 +958,7 @@ export class MainCanvas {
 
     const direction = new THREE.Vector3(0, 1, 0);
     direction.applyAxisAngle(
-      new THREE.Vector3(1, 0, 0),
+      new THREE.Vector3(1, 0, -0.5),
       THREE.MathUtils.degToRad(viewAngle),
     );
 
@@ -982,15 +1000,14 @@ export class MainCanvas {
         );
       },
     });
-    setTimeout(() => {
-      this._scene2.add(object3d[0]);
-      this._scene2.add(...this._items);
-      this._scene2.add(this._close);
-      this._scenenumber = 2;
-      this._setupControls();
-
-      this._setupDrag();
-    }, 1500);
+    // setTimeout(() => {
+    //   // this._scene2.add(object3d[0]);
+    //   // this._scene2.add(...this._items);
+    //   // this._scene2.add(this._close);
+    //   // this._scenenumber = 2;
+    //   // this._setupControls();
+    //   // this._setupDrag();
+    // }, 1500);
   }
 
   //zoomout 함수
