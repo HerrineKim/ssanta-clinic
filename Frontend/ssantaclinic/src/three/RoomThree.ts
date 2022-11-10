@@ -24,7 +24,7 @@ export class RoomThree {
   _tree: any;
   _items: any;
   _scene2: any;
-  _dragControls: any;
+
   _showcase: any;
   _isZoom: any;
 
@@ -37,37 +37,37 @@ export class RoomThree {
     this._isTreeModal = false;
     this._items = items;
     this._position = [
-      [1.8, 3.6, 0.05],
-      [2.2, 3.6, 0.05],
-      [2.6, 3.6, 0.05],
-      [3, 3.6, 0.05],
-      [1.8, 2.9, 0.05],
-      [2.2, 2.9, 0.05],
-      [2.6, 2.9, 0.05],
-      [3, 2.9, 0.05],
-      [1.8, 2, 0.05],
-      [2.2, 2, 0.05],
-      [2.6, 2, 0.05],
-      [3, 2, 0.05],
-      [4, 3.6, 0.05],
-      [4.4, 3.6, 0.05],
-      [4.8, 3.6, 0.05],
-      [5.2, 3.6, 0.05],
-      [4, 2.9, 0.05],
-      [4.4, 2.9, 0.05],
-      [4.8, 2.9, 0.05],
-      [5.2, 2.9, 0.05],
-      [4, 2, 0.05],
-      [4.4, 2, 0.05],
-      [4.8, 2, 0.05],
-      [5.2, 2, 0.05],
+      [1.8, 3.6, 1],
+      [2.2, 3.6, 1],
+      [2.6, 3.6, 1],
+      [3, 3.6, 1],
+      [1.8, 2.9, 1],
+      [2.2, 2.9, 1],
+      [2.6, 2.9, 1],
+      [3, 2.9, 1],
+      [1.8, 2, 1],
+      [2.2, 2, 1],
+      [2.6, 2, 1],
+      [3, 2, 1],
+      [4, 3.6, 1],
+      [4.4, 3.6, 1],
+      [4.8, 3.6, 1],
+      [5.2, 3.6, 1],
+      [4, 2.9, 1],
+      [4.4, 2.9, 1],
+      [4.8, 2.9, 1],
+      [5.2, 2.9, 1],
+      [4, 2, 1],
+      [4.4, 2, 1],
+      [4.8, 2, 1],
+      [5.2, 2, 1],
     ];
 
-    const scene2 = new THREE.Scene();
     this._setupThreeJs();
     this._setupCamera();
     this._setupLight();
     this._setupModel();
+    const scene2 = this._scene;
     this._scene2 = scene2;
 
     this._setupControls();
@@ -245,7 +245,7 @@ export class RoomThree {
 
     loader.load('/room/showcase.glb', (gltf) => {
       const model: any = gltf.scene;
-      this._scene.add(model);
+      // this._scene.add(model);
       // console.log('showcase:', model);
       this._showcase = model;
       inven.push(model);
@@ -269,13 +269,35 @@ export class RoomThree {
           // model.position.set(0, 0, 0);
           model.position.set(position[0], position[1], position[2]);
           items.push(model);
-          this._scene.add(model);
+          // this._scene.add(model);
         });
       }
     });
+    this._items = items;
   }
   _setupControls() {
-    this._orbitControls = new OrbitControls(this._camera, this._divContainer);
+    if (this._scenenumber === 1) {
+      this._orbitControls = new OrbitControls(this._camera, this._divContainer);
+
+      // //orbicontrol shift 기능 없애기
+      // this._orbitControls.enablePan = false;
+      // this._orbitControls.minDistance = 30;
+      // this._orbitControls.maxDistance = 80;
+      // this._orbitControls.maxPolarAngle = (Math.PI * 2) / 5;
+      // // this._orbitControls.minPolarAngle = 0;
+      // this._orbitControls.maxAzimuthAngle = 0.1 * Math.PI;
+      // this._orbitControls.minAzimuthAngle = -1.5 * Math.PI;
+
+      //마우스 회전 부드럽게
+      this._orbitControls.enableDamping = true;
+
+      console.log('setoucontrols111');
+    } else {
+      // 트리 위주로 돌릴 수 있게
+      // 드래그앤 드롭
+      this._orbitControls.enabled = false;
+      console.log('setupcontrols222');
+    }
   }
   _onClick(event: any) {
     console.log('click!!!');
@@ -476,25 +498,26 @@ export class RoomThree {
       },
     });
     setTimeout(() => {
-      this._scene2.add(object3d[0]);
+      this._scene2.add(object3d[1]);
       this._scene2.add(...this._items);
-      this._scene2.add(this._close);
+      // this._scene2.add(this._close);
       this._scenenumber = 2;
-      // this._setupControls();
+      this._setupControls();
 
       this._setupDrag();
     }, 1500);
   }
-
+  _dragControls: any[] = [];
   _setupDrag() {
     console.log('items:', this._items);
     console.log('tree:', this._tree);
     const positions = this._position;
     const tree = this._tree;
     let items = this._items;
+    console.log(items);
     // const raycaster = this._raycaster;
 
-    items.forEach((child: any, index: number) => {
+    items.forEach((child: any, index: any) => {
       // console.log('item child:', child);
       child.name = index;
       const controls = new DragControls(
