@@ -4,12 +4,15 @@ import axios from 'axios';
 export const ReceiveLetter = () => {
   const [message, setMessage] = useState<string>('');
   const [title, setTitle] = useState<string>('');
-
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   useEffect(() => {
     axios
       .get('http://localhost:8080' + '/api/letter', {
         params: {
           letterId: 'letterId', // 나중에 Token으로 가져오면 될 듯
+        },
+        headers: {
+          Authorization: ACCESS_TOKEN,
         },
       })
       .then((res) => {
