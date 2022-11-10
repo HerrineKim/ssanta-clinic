@@ -164,6 +164,7 @@ export default function Home() {
       </a>
       {friendModalOpen && <FriendModal />}
       <ModalDiv className="modal"></ModalDiv>
+      <Div id="shop"></Div>
       <Div id="main-canvas"></Div>
     </Div>
   );
