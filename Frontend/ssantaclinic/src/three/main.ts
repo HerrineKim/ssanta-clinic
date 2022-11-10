@@ -76,6 +76,7 @@ export class MainCanvas {
   _letter: THREE.Object3D[];
   _home: THREE.Object3D[];
   _isZoom: boolean;
+  _arrow: any;
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
@@ -226,6 +227,7 @@ export class MainCanvas {
       // 트리 위주로 돌릴 수 있게
       // 드래그앤 드롭
       this._controls.enabled = false;
+      // this._controls.minDistance = 0.3;
       console.log('setupcontrols222');
     }
   }
@@ -375,6 +377,14 @@ export class MainCanvas {
     //   model.name = 'close';
     // });
 
+    // arrow
+    loader.load('main/arrow.glb', (gltf) => {
+      const model: any = gltf.scene;
+      this._arrow = model;
+
+      model.name = 'arrow';
+    });
+
     // 전역변수 설정
     // this._items = items;
     // this._inven = inven;
@@ -462,6 +472,11 @@ export class MainCanvas {
       // console.log('scenenumber1 _camera:', this._camera);
       // 모든 3d 돌면서 더블클릭된 객체 zoomfit
       // console.log('click함수 실행:', this._group);    클릭한것 검사
+      const arrowTarget = this._raycaster.intersectObject(this._arrow);
+      if (arrowTarget.length > 0) {
+        this._zoomInven(this._showcase, 70);
+        return;
+      }
 
       // 원래 버전
       // const targets = this._raycaster.intersectObjects(this._group);
@@ -473,13 +488,12 @@ export class MainCanvas {
       // console.log('targets: ', targets);
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
-          console.log('shop!!!!!');
-          console.log(this._showcase);
-          this._zoomInven(this._showcase, 70);
-          // this._zoomFit(targets[0].object.parent, 60);
-          // setTimeout(() => {
-          //   this._setupAlert();
-          // }, 1500);
+          // this._zoomInven(this._showcase, 70);
+          this._zoomFit(targets[0].object.parent, 75);
+          setTimeout(() => {
+            // this._setupAlert();
+            this._scene.add(this._arrow);
+          }, 1500);
         } else if (targets[0].object.name === 'home') {
           console.log('home!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
@@ -586,7 +600,7 @@ export class MainCanvas {
       //   }
       // }
 
-      const itemTarget = this._raycaster.intersectObjects(this._items);
+      // const itemTarget = this._raycaster.intersectObjects(this._items);
       const formData = new FormData();
       // console.log('closeTarget:', closeTarget);
       const TOKEN = localStorage.getItem('jwt') || '';
@@ -1000,14 +1014,14 @@ export class MainCanvas {
         );
       },
     });
-    // setTimeout(() => {
-    //   // this._scene2.add(object3d[0]);
-    //   // this._scene2.add(...this._items);
-    //   // this._scene2.add(this._close);
-    //   // this._scenenumber = 2;
-    //   // this._setupControls();
-    //   // this._setupDrag();
-    // }, 1500);
+    setTimeout(() => {
+      // this._scene2.add(object3d[0]);
+      // this._scene2.add(...this._items);
+      // this._scene2.add(this._close);
+      this._scenenumber = 2;
+      this._setupControls();
+      // this._setupDrag();
+    }, 1500);
   }
 
   //zoomout 함수
