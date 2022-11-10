@@ -8,6 +8,8 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 export class LoginToHome {
+  _santa: any;
+  _path: any;
   _model2: any;
   _bloomPass: any;
   _composer: any;
@@ -160,6 +162,45 @@ export class LoginToHome {
       action21.play();
 
       this._mixer = mixer;
+
+      const path = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(2000, -1100, -3000),
+        new THREE.Vector3(-500, -900, 500),
+        new THREE.Vector3(-1500, -800, -1500),
+        new THREE.Vector3(1500, -700, -1500),
+
+        new THREE.Vector3(1500, -600, 1500),
+        new THREE.Vector3(-1500, -500, 1500),
+        new THREE.Vector3(-1500, -400, -1500),
+        new THREE.Vector3(1500, -300, -1500),
+
+        new THREE.Vector3(1500, -200, 1500),
+        new THREE.Vector3(-1500, 1500, 3500),
+      ]);
+
+      this._path = path;
+      const points = path.getPoints(1000);
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color: 0x555555 });
+      const pathLine = new THREE.Line(geometry, material);
+      this._scene.add(pathLine);
+
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(7000, 7000),
+        new THREE.MeshStandardMaterial({ color: 0x4f4f4f }),
+      );
+      floor.receiveShadow = true;
+      floor.position.y = -1100;
+      floor.rotation.x = -Math.PI / 2;
+      this._scene.add(floor);
+
+      //this._bird = model;
+
+      model1.rotation.y = -Math.PI / 2;
+      const parent = new THREE.Object3D();
+      parent.add(model1);
+      this._scene.add(parent);
+      this._santa = parent;
     });
     new GLTFLoader().load('/login/login_env.glb', (gltf) => {
       const model2 = gltf.scene;
