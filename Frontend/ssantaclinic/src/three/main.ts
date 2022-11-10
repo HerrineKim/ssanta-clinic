@@ -12,6 +12,9 @@ import { threadId } from 'worker_threads';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import axios from 'axios';
 import { throws } from 'assert';
+import React from 'react';
+import * as ReactDOM from 'react-dom/client';
+import ShopAlert from '../components/shop';
 
 // import { chdir } from 'process';
 
@@ -536,6 +539,11 @@ export class MainCanvas {
       // scenenumber == 2 일때
       const itemTarget = this._raycaster.intersectObjects(this._items);
       console.log(itemTarget);
+      if (itemTarget.length > 0) {
+        this._setupAlert(itemTarget[0].object.name);
+      } else {
+        this._removeAlert();
+      }
 
       const closeTarget = this._raycaster.intersectObject(this._close);
       if (closeTarget.length > 0) {
@@ -728,25 +736,55 @@ export class MainCanvas {
   //   this._scene.remove(this._showcase);
   //   this._scene.remove(...this._items);
   // }
-
   _removeAlert() {
-    const alert = document.querySelector('.alert') as HTMLElement | null;
-    console.log(alert);
-    if (alert !== null) {
-      alert.style.display = 'none';
+    const shop = document.getElementById('shop');
+    if (shop !== null) {
+      const root = ReactDOM.createRoot(shop);
+      console.log('unmount');
+      root.unmount();
     }
-    this._isAlert = false;
+  }
+  _setupAlert(itemId: string) {
+    // const alert = document.querySelector('.alert') as HTMLElement | null;
+    // console.dir(alert);
+    // if (alert !== null) {
+    //   alert.dataset.code = itemId;
+    // }
+    // if (alert !== null) {
+    //   console.log('alert');
+    //   alert.style.display = 'flex';
+    // }
+    // this._isAlert = true;
+    const item = parseInt(itemId);
+    const e = React.createElement;
+    const shop = document.getElementById('shop');
+    if (shop !== null) {
+      console.log(shop);
+      const root = ReactDOM.createRoot(shop);
+
+      root.render(e(ShopAlert, [{ item: item }], null));
+    }
   }
 
-  _setupAlert() {
-    const alert = document.querySelector('.alert') as HTMLElement | null;
-    // console.log(alert);
-    if (alert !== null) {
-      console.log('alert');
-      alert.style.display = 'flex';
-    }
-    this._isAlert = true;
-  }
+  // shop 모달방식
+  // _removeAlert() {
+  //   const alert = document.querySelector('.alert') as HTMLElement | null;
+  //   console.log(alert);
+  //   if (alert !== null) {
+  //     alert.style.display = 'none';
+  //   }
+  //   this._isAlert = false;
+  // }
+
+  // _setupAlert() {
+  //   const alert = document.querySelector('.alert') as HTMLElement | null;
+  //   // console.log(alert);
+  //   if (alert !== null) {
+  //     console.log('alert');
+  //     alert.style.display = 'flex';
+  //   }
+  //   this._isAlert = true;
+  // }
 
   _removeHomeAlert() {
     const home = document.querySelector('.home') as HTMLElement | null;
