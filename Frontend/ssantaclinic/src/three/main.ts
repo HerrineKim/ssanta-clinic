@@ -233,15 +233,29 @@ export class MainCanvas {
     const group: any = [];
     const loader = new GLTFLoader();
 
+    let showcase2: THREE.Mesh | null;
+    let showcase1: THREE.Mesh | null;
     // 안눌러도 되는 맵 로드
-    loader.load('main/main_santa.glb', (gltf) => {
+    loader.load('main/santa2.glb', (gltf) => {
       // console.log(gltf);
       // console.log(gltf.scene);
+      const m = gltf.scene;
+      m.traverse((child) => {
+        if (child.name.includes('showcase2') && child instanceof THREE.Mesh) {
+          showcase2 = child;
+        }
+        if (child.name.includes('showcase1') && child instanceof THREE.Mesh) {
+          showcase1 = child;
+        }
+      });
+      console.log(showcase1, showcase2);
+      console.log(m);
       const originModel = gltf.scene;
       const model = gltf.scene.children[0];
       console.log('LOAD model:', model);
       this._model = model;
       this._scene.add(originModel);
+
       // console.log('model:', model);
 
       // 애니메이션 있을때
