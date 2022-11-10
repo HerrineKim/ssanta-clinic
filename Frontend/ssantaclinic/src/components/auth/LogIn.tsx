@@ -53,7 +53,7 @@ export const LogIn = () => {
           noti: [],
         });
         const TOKEN = localStorage.getItem('jwt');
-        subSSE(TOKEN);
+        // subSSE(TOKEN);
         // navigate('/test'); // Login 성공하면 일단 내 방으로
       })
       .catch((err) => {
@@ -61,34 +61,34 @@ export const LogIn = () => {
       });
   };
 
-  function subSSE(TOKEN: any) {
-    console.log('알림 구독실행');
-    let eventSource: any;
-    const fetchSse = async () => {
-      try {
-        eventSource = new EventSourcePolyfill(LOCAL + '/api/noti/sub', {
-          headers: {
-            Authorization: TOKEN,
-          },
-        });
+  // function subSSE(TOKEN: any) {
+  //   console.log('알림 구독실행');
+  //   let eventSource: any;
+  //   const fetchSse = async () => {
+  //     try {
+  //       eventSource = new EventSourcePolyfill(LOCAL + '/api/noti/sub', {
+  //         headers: {
+  //           Authorization: TOKEN,
+  //         },
+  //       });
 
-        /* EVENTSOURCE ONMESSAGE ---------------------------------------------------- */
-        eventSource.onmessage = async (event: any) => {
-          const res = await event.data;
-          console.log(res);
-        };
+  //       /* EVENTSOURCE ONMESSAGE ---------------------------------------------------- */
+  //       eventSource.onmessage = async (event: any) => {
+  //         const res = await event.data;
+  //         console.log(res);
+  //       };
 
-        /* EVENTSOURCE ONERROR ------------------------------------------------------ */
-        eventSource.onerror = async (event: any) => {
-          console.log(event);
-        };
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchSse();
-    return () => eventSource.close();
-  }
+  //       /* EVENTSOURCE ONERROR ------------------------------------------------------ */
+  //       eventSource.onerror = async (event: any) => {
+  //         console.log(event);
+  //       };
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchSse();
+  //   return () => eventSource.close();
+  // }
 
   //아이디에 '@'가 포함되어 있고, 비밀번호가 5자리 이상일 때 로그인버튼이 활성화되는 기능을 구현해 보자!
   function changeButton() {

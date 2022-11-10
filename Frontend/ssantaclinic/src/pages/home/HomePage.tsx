@@ -7,17 +7,25 @@ import { TreeModal } from '../../components/tree/index';
 import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
 import { HomeAlert } from '../../components/main/homealert';
 import FriendModal from './friendModal/FriendModal';
-import { FriendButton } from './styles';
+import {
+  FriendButton,
+  FriendModalContainer,
+  FriendModalTopContainer,
+  FriendModalBottomContainer,
+  FollowerContainer,
+  FollowingContainer,
+} from './styles';
 import { GiThreeFriends } from 'react-icons/gi';
 import axios from 'axios';
 
 export default function Home() {
   // 친구 모달 관리
   const ACCESS_TOKEN = localStorage.getItem('jwt');
-  const [friendList, setFriendList] = React.useState([]);
-  const [followingList, setFollowingList] = React.useState([]);
-  const [followerList, setFollowerList] = React.useState([]);
-  const [searchList, setSearchList] = React.useState([]);
+  const [friendList, setFriendList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
+  const [searchList, setSearchList] = useState([]);
+  const [buttonClicked, setButtonClicked] = useState(false);
   useEffect(() => {
     // 추천 친구 목록 불러오기(api/friend/recommend)
     const getFriendList = () => {
@@ -70,7 +78,7 @@ export default function Home() {
     getFriendList();
     getFollowingList();
     getFollowerList();
-  }, []);
+  }, [buttonClicked]);
 
   // 팔로우 & 언팔로우(/api/friend/follow)
   const follow = (friendId: number) => {
@@ -96,6 +104,7 @@ export default function Home() {
   };
 
   // 친구 검색: 추후 구현
+
   // 모달창 노출 여부 state
   const [friendModalOpen, setFriendModalOpen] = useState<boolean>(false);
 
@@ -130,28 +139,52 @@ export default function Home() {
   }, []);
   return (
     <Div>
+      {/* 모달들 */}
       <div id="open-modal" className="modal-window">
         <div>
           <a href="#" title="Close" className="modal-close">
             X
           </a>
-          {/* 팔로워 리스트 */}
-          <div>
-            <h2>팔로워</h2>
-            <ul>
-              {followerList.map((follower: any) => (
-                <li key={follower.userId}>
-                  {/* userId와 nickName 출력 */}
-                  <ul>{follower.userId}</ul>
-                  <ul>{follower.nickName}</ul>
-                  <button onClick={() => follow(follower.id)}>팔로우</button>
-                </li>
-              ))}
-            </ul>
-          </div>
+          <FriendModalContainer>
+            {/* 검색창 */}
+            <FriendModalTopContainer></FriendModalTopContainer>
+            {/* 팔로워 리스트 */}
+            <FriendModalBottomContainer>
+              <FollowerContainer>
+                <h2>팔로워</h2>
+                <ul>
+                  {followerList.map((follower: any) => (
+                    <li key={follower.userId}>
+                      {/* userId와 nickName 출력 */}
+                      <ul>{follower.userId}</ul>
+                      <ul>{follower.nickName}</ul>
+                      <button onClick={() => follow(follower.id)}>
+                        팔로우
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </FollowerContainer>
+              <FollowingContainer>
+                {' '}
+                <h2>팔로잉</h2>
+                <ul>
+                  {followingList.map((following: any) => (
+                    <li key={following.userId}>
+                      {/* userId와 nickName 출력 */}
+                      <ul>{following.userId}</ul>
+                      <ul>{following.nickName}</ul>
+                      <button onClick={() => follow(following.id)}>
+                        팔로우
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </FollowingContainer>
+            </FriendModalBottomContainer>
+          </FriendModalContainer>
         </div>
       </div>
-      {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
       <MemoryAlert></MemoryAlert>
@@ -159,7 +192,8 @@ export default function Home() {
       {/* 버튼들 */}
       <a href="#open-modal">
         <FriendButton>
-          <GiThreeFriends />
+          {/* <GiThreeFriends /> */}
+          친구
         </FriendButton>
       </a>
       {friendModalOpen && <FriendModal />}

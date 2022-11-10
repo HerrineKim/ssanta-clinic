@@ -61,3 +61,69 @@ export const FriendButton = styled.button`
     padding: 0 20px;
   }
 `;
+
+// 친구 modal
+export const FriendModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-height: 70vh;
+  overflow: auto;
+  // 스크롤바 기능은 있지만
+  ::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+// 상단 Container
+export const FriendModalTopContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  padding: 0 10px;
+  background-color: green;
+`;
+
+// 하단 Container
+export const FriendModalBottomContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 80%;
+  padding: 0 10px;
+  background-color: #fbeee0;
+`;
+
+// 좌측: 팔로워 Container
+export const FollowerContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  padding: 0 10px;
+  background-color: #fbeee0;
+  border-right: 2px solid #422800;
+`;
+
+// 우측: 팔로잉 Container
+export const FollowingContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+  padding: 0 10px;
+  background-color: #fbeee0;
+`;
