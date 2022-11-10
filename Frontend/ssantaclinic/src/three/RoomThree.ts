@@ -36,6 +36,32 @@ export class RoomThree {
     this._scenenumber = 1;
     this._isTreeModal = false;
     this._items = items;
+    this._position = [
+      [1.8, 3.6, 0.05],
+      [2.2, 3.6, 0.05],
+      [2.6, 3.6, 0.05],
+      [3, 3.6, 0.05],
+      [1.8, 2.9, 0.05],
+      [2.2, 2.9, 0.05],
+      [2.6, 2.9, 0.05],
+      [3, 2.9, 0.05],
+      [1.8, 2, 0.05],
+      [2.2, 2, 0.05],
+      [2.6, 2, 0.05],
+      [3, 2, 0.05],
+      [4, 3.6, 0.05],
+      [4.4, 3.6, 0.05],
+      [4.8, 3.6, 0.05],
+      [5.2, 3.6, 0.05],
+      [4, 2.9, 0.05],
+      [4.4, 2.9, 0.05],
+      [4.8, 2.9, 0.05],
+      [5.2, 2.9, 0.05],
+      [4, 2, 0.05],
+      [4.4, 2, 0.05],
+      [4.8, 2, 0.05],
+      [5.2, 2, 0.05],
+    ];
 
     const scene2 = new THREE.Scene();
     this._setupThreeJs();
@@ -156,6 +182,8 @@ export class RoomThree {
     this._divContainer.addEventListener('wheel', this._setupRotate.bind(this));
   }
   _setupLight() {
+    const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
+    this._scene.add(ambientLight);
     // const color1 = '#5F02B0';
     // const color2 = '#BC9DD7';
     // const color3 = '#CCA333';
@@ -226,22 +254,25 @@ export class RoomThree {
     });
 
     // item load 부분
-    // const items: any[] = [];
-    // // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
-    // this._items.forEach((item, index) => {
-    //   // console.log('item:', item);
-    //   // console.log(index);
-    //   loader.load(`main/${item}.glb`, (gltf) => {
-    //     // console.log(index);
-    //     const model = gltf.scene;
-    //     // console.log(`${index}: `, model);
-    //     model.scale.set(0.01, 0.01, 0.01);
-    //     const position = this._position[`${index}`];
-    //     model.position.set(position[0], position[1], position[2]);
-    //     items.push(model);
-    //     // this._scene.add(model);
-    //   });
-    // });
+    const items: any[] = [];
+    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    this._items.forEach((item: number, index: number) => {
+      // console.log('item:', item);
+      // console.log(index);
+      if (item !== 0) {
+        loader.load(`/main/${item}.glb`, (gltf) => {
+          // console.log(index);
+          const model = gltf.scene;
+          // console.log(`${index}: `, model);
+          model.scale.set(0.01, 0.01, 0.01);
+          const position = this._position[`${index}`];
+          // model.position.set(0, 0, 0);
+          model.position.set(position[0], position[1], position[2]);
+          items.push(model);
+          this._scene.add(model);
+        });
+      }
+    });
   }
   _setupControls() {
     this._orbitControls = new OrbitControls(this._camera, this._divContainer);
