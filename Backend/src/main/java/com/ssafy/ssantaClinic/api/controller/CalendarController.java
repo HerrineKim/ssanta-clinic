@@ -128,7 +128,7 @@ public class CalendarController {
             throw new CustomException(ErrorCode.EMPTY_BOX_ERROR);
         }
         // 오디오 S3 업로드
-        String audioUrl = "";
+        var audioUrl = "";
         if(audio != null){
             audioUrl = s3Service.upload(audio);
         }

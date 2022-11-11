@@ -2,6 +2,8 @@ package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.S3Service;
+import com.ssafy.ssantaClinic.common.exception.CustomException;
+import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -44,7 +46,8 @@ public class TreeController {
          * @Method 설명 : 3D 트리 파일 보내기
          */
         // S3 업로드
-        String url = s3Service.uploadGlb(glbfile);
+        var url = s3Service.uploadGlb(glbfile);
+        if(url.isBlank()) throw new CustomException(ErrorCode.FILE_NAME_BLANK_ERROR);
         return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
     }
 }

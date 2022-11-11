@@ -45,7 +45,7 @@ public class NotiController {
         int userId = JwtUtil.getCurrentUserId();
         notiService.subscribe(userId, lastEventId);
         // 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.set("Content-Type", "text/event-stream");
         headers.set("Cache-Control", "no-cache");
         // 리버스 프록시에서의 오동작을 방지
