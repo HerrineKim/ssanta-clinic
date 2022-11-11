@@ -111,8 +111,8 @@ export default function MemoryModal(props: any) {
         el.style.borderColor = 'orange';
       } else if (answer.indexOf(el.id) !== -1) {
         el.style.backgroundColor = 'whitesmoke';
-        el.style.boxShadow = '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke';
-        el.style.borderColor = '#48cae4';
+        el.style.boxShadow = '0px 0px 15px #12de48, 0px 0px 30px whitesmoke';
+        el.style.borderColor = '#12de48';
       } else if (
         answer.indexOf(el.id) === -1 &&
         clickedCards.indexOf(el.id) !== -1
@@ -166,8 +166,8 @@ export default function MemoryModal(props: any) {
       } else {
         e.target.style.backgroundColor = 'whitesmoke';
         e.target.style.boxShadow =
-          '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke';
-        e.target.style.borderColor = '#48cae4';
+          '0px 0px 15px #12de48, 0px 0px 30px whitesmoke';
+        e.target.style.borderColor = '#12de48';
       }
 
       // 클릭수와 정답개수가 동일하면 다음 라운드, 아닐 경우 계속 클릭 진행
@@ -296,8 +296,8 @@ export default function MemoryModal(props: any) {
       cardEls.forEach((el: any) => {
         if (newAnswer.indexOf(el.id) !== -1) {
           el.style.backgroundColor = 'whitesmoke';
-          el.style.boxShadow = '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke';
-          el.style.borderColor = '#48cae4';
+          el.style.boxShadow = '0px 0px 15px #12de48, 0px 0px 30px whitesmoke';
+          el.style.borderColor = '#12de48';
         } else {
           el.style.backgroundColor = 'black';
           el.style.borderColor = 'black';
@@ -368,8 +368,8 @@ export default function MemoryModal(props: any) {
   //           yoyo: true,
   //           delay: parseInt(el.id) / 10,
   //           backgroundColor: 'whitesmoke',
-  //           borderColor: '#48cae4',
-  //           boxShadow: '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke',
+  //           borderColor: '#12de48',
+  //           boxShadow: '0px 0px 15px #12de48, 0px 0px 30px whitesmoke',
   //         }),
   //       );
   //     });
