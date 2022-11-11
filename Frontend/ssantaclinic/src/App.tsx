@@ -7,7 +7,7 @@ import { LogInPage } from './pages/auth/LogInPage';
 import { LogOutPage } from './pages/auth/LogOutPage';
 import HomePage from './pages/home/HomePage';
 import TetrisPage from './pages/game/tetris/TetrisPage';
-import WitsPage from './pages/game/WitsPage';
+// import WitsPage from './pages/game/WitsPage';
 // import MemoryPage from './pages/game/MemoryPage';
 import { CalendarPage } from './pages/calendar/calendarPage';
 import { BoxCreate } from './pages/calendar/boxCreate';
@@ -42,7 +42,7 @@ function App() {
           path="/changePassword/:UUID"
           element={<ChangePasswordPage />}
         ></Route>
-        <Route path="/wits" element={<WitsPage />}></Route>
+        {/* <Route path="/wits" element={<WitsPage />}></Route> */}
         {/* <Route path="/memory" element={<MemoryPage />}></Route> */}
         <Route path="/calendar" element={<CalendarPage />}></Route>
         <Route path="/boxCreate" element={<BoxCreate />}></Route>
