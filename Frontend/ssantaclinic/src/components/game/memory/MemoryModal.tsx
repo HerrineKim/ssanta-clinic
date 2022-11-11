@@ -2,7 +2,11 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './game.css';
 import { gsap } from 'gsap';
 
-export default function MemoryModal() {
+export default function MemoryModal(props: any) {
+  // const imageStyle: CSSProperties = {
+  //   backgroundImage: url('/assets/image/house/house1.png'),
+  // };
+  const { onClose } = props;
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);
   // 카드 엘리먼트 배열
@@ -50,9 +54,18 @@ export default function MemoryModal() {
   );
   // gsap
   const [animations, setAnimations] = useState<Array<any>>([]);
+  // 시간제한
+  const [timeLimit, setTimeLimit] = useState<number>(10);
+
+  useEffect(() => {
+    if (timeLimit === 0) {
+      gameover();
+    }
+  }, [timeLimit]);
 
   // 게임 클리어
   const clear = useCallback(() => {
+    // 클리어시 돈 받기 axios + 클리어 alert
     setGameClear(true);
     setStart(false);
     setRoundRunning(false);
@@ -80,6 +93,7 @@ export default function MemoryModal() {
 
   // 다음 라운드 진행 전 초기화
   const nextRound = useCallback(() => {
+    setTimeLimit(10);
     clearTimeout(endCountdownClear);
     setClickCount(0);
     setClickedCards([]);
@@ -92,6 +106,9 @@ export default function MemoryModal() {
 
   // 게임오버
   const gameover = useCallback(() => {
+    console.log('gameover!!!!', round - 1);
+    // 게임 오버시 round 만큼 돈 axios + 게임 오버 alert
+
     cardEls.forEach((el: any) => {
       if (answer.indexOf(el.id) !== -1 && clickedCards.indexOf(el.id) === -1) {
         el.style.backgroundColor = 'whitesmoke';
@@ -99,8 +116,8 @@ export default function MemoryModal() {
         el.style.borderColor = 'orange';
       } else if (answer.indexOf(el.id) !== -1) {
         el.style.backgroundColor = 'whitesmoke';
-        el.style.boxShadow = '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke';
-        el.style.borderColor = '#48cae4';
+        el.style.boxShadow = '0px 0px 15px #12de48, 0px 0px 30px whitesmoke';
+        el.style.borderColor = '#12de48';
       } else if (
         answer.indexOf(el.id) === -1 &&
         clickedCards.indexOf(el.id) !== -1
@@ -113,13 +130,16 @@ export default function MemoryModal() {
     setIsFail(true);
     setRoundRunning(false);
     setClickCount(0);
+    setTimeLimit(10);
   }, [answer, cardEls, clickedCards]);
 
   // 카드 클릭 함수
   const onCardClick = useCallback(
     (e: any) => {
+      console.log('1');
       // 라운드 시작 전 or 중복 클릭
       if (!roundRunning || clickedCards.indexOf(e.target.id) !== -1) {
+        console.log('2');
         return;
       }
 
@@ -152,8 +172,8 @@ export default function MemoryModal() {
       } else {
         e.target.style.backgroundColor = 'whitesmoke';
         e.target.style.boxShadow =
-          '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke';
-        e.target.style.borderColor = '#48cae4';
+          '0px 0px 15px #12de48, 0px 0px 30px whitesmoke';
+        e.target.style.borderColor = '#12de48';
       }
 
       // 클릭수와 정답개수가 동일하면 다음 라운드, 아닐 경우 계속 클릭 진행
@@ -282,19 +302,14 @@ export default function MemoryModal() {
       cardEls.forEach((el: any) => {
         if (newAnswer.indexOf(el.id) !== -1) {
           el.style.backgroundColor = 'whitesmoke';
-          el.style.boxShadow = '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke';
-          el.style.borderColor = '#48cae4';
+          el.style.boxShadow = '0px 0px 15px #12de48, 0px 0px 30px whitesmoke';
+          el.style.borderColor = '#12de48';
         } else {
           el.style.backgroundColor = 'black';
           el.style.borderColor = 'black';
         }
       });
     }, 1000 + delay);
-
-    // 시작 카운트다운(출력용)
-    const countdown = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
 
     //  정답 표시 색상 초기화
     const colorTimer = setTimeout(() => {
@@ -304,6 +319,11 @@ export default function MemoryModal() {
         el.style.borderColor = 'whitesmoke';
       });
     }, 3000 + delay);
+
+    // 시작 카운트다운(출력용)
+    const countdown = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
 
     // 시작 카운트다운(계산용)
     const startTimer = setTimeout(() => {
@@ -316,7 +336,12 @@ export default function MemoryModal() {
 
     delay = 0;
 
-    return { colorTimer, startTimer, countdown, delayTimer: prepareTimer };
+    return {
+      colorTimer,
+      startTimer,
+      countdown,
+      delayTimer: prepareTimer,
+    };
   }, [
     answerCount,
     cardEls,
@@ -328,35 +353,56 @@ export default function MemoryModal() {
     start,
   ]);
 
+  // click 시작
+  useEffect(() => {
+    let limitTimeCounter: NodeJS.Timer;
+    if (roundRunning) {
+      limitTimeCounter = setInterval(() => {
+        setTimeLimit((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(limitTimeCounter);
+  }, [roundRunning]);
+
   // 카드 엘리먼트 불러오기
   useEffect(() => {
     setCardEls(document.querySelectorAll('.memory-card'));
   }, [difficulty]);
 
-  // 카드 반짝반짝 효과
   useEffect(() => {
-    if (!start && cardEls.length !== 0) {
-      const animationArr: Array<any> = [];
+    cardEls.forEach((child: any) => {
+      const randomNum = Math.random() * 8;
+      const randomNumFloor = Math.floor(randomNum + 1);
+      child.style.backgroundImage = `url(/game/house/house${randomNumFloor}.png)`;
+      child.style.backgroundSize = 'cover';
+    });
+  }, [cardEls, displayRound]);
 
-      cardEls.forEach((el: any) => {
-        animationArr.push(
-          gsap.to(el, cardEls.length / 10, {
-            repeat: -1,
-            yoyo: true,
-            delay: parseInt(el.id) / 10,
-            backgroundColor: 'whitesmoke',
-            borderColor: '#48cae4',
-            boxShadow: '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke',
-          }),
-        );
-      });
+  // 카드 반짝반짝 효과
+  // useEffect(() => {
+  //   if (!start && cardEls.length !== 0) {
+  //     const animationArr: Array<any> = [];
 
-      setAnimations((prev) => [...prev, ...animationArr]);
-    }
-  }, [cardEls, start]);
+  //     cardEls.forEach((el: any) => {
+  //       animationArr.push(
+  //         gsap.to(el, cardEls.length / 10, {
+  //           repeat: -1,
+  //           yoyo: true,
+  //           delay: parseInt(el.id) / 10,
+  //           backgroundColor: 'whitesmoke',
+  //           borderColor: '#12de48',
+  //           boxShadow: '0px 0px 15px #12de48, 0px 0px 30px whitesmoke',
+  //         }),
+  //       );
+  //     });
+
+  //     setAnimations((prev) => [...prev, ...animationArr]);
+  //   }
+  // }, [cardEls, start]);
 
   // 게임오버 카운트다운 클리어
   useEffect(() => {
+    // console.log('게임오버 카운트다운');
     return () => {
       clearTimeout(endCountdownClear);
       clearTimeout(difficultyUpDelayClear);
@@ -390,6 +436,7 @@ export default function MemoryModal() {
 
       for (let j = 1; j <= difficulty; j++) {
         const id = -difficulty + j + difficulty * i;
+
         cardsReturn.push(
           <div
             id={`${id}`}
@@ -418,8 +465,17 @@ export default function MemoryModal() {
 
   return (
     <div className="memory-container">
+      <button
+        className="outbtn"
+        onClick={() => {
+          onClose(false);
+        }}
+      >
+        나가기
+      </button>
       <div className="memory-header">
         <div className="memory-round">Round {displayRound}</div>
+        <div className="round-counter">{timeLimit}</div>
         <div className="memory-level">
           {displayRound >= 25
             ? 'Expert'
