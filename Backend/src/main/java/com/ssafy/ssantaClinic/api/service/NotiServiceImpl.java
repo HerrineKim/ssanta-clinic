@@ -32,7 +32,6 @@ import java.util.Map;
 public class NotiServiceImpl implements NotiService {
     private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
     private static final String BASE_URL = "http://localhost:8080";
-    static final int DECEMBER = 12;
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
@@ -130,7 +129,8 @@ public class NotiServiceImpl implements NotiService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 12월만 개봉 가능
-        if(LocalDateTime.now().getMonth().equals(Month.DECEMBER)){
+        // 임시로 11월 개봉으로 수정
+        if(LocalDateTime.now().getMonth().equals(Month.NOVEMBER)){
             int day = LocalDateTime.now().getDayOfMonth();
             List<AdventCalendar> unOpenedBoxes =
                     calendarRepository.findAllByReceiverUserIdAndIsReadIsFalse(userId);
