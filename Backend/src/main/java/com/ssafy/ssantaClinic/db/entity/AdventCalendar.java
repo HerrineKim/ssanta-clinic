@@ -38,13 +38,11 @@ public class AdventCalendar {
     private String content;
 
     @Column(name = "is_read")
-    @NotBlank
     private boolean isRead;
 
     private int day;
 
     @Column(name = "created_at")
-    @NotBlank
     private LocalDateTime createdAt;
 
     @Column(length = 300)
