@@ -39,7 +39,7 @@ public class AdventCalendar {
 
     @Column(name = "is_read")
     @NotBlank
-    private Boolean isRead;
+    private boolean isRead;
 
     private int day;
 

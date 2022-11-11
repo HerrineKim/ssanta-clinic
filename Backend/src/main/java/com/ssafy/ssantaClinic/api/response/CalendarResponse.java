@@ -46,7 +46,7 @@ public class CalendarResponse {
             this.imges = calendar.getImgList().stream()
                     .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
             this.sender = calendar.getSender();
-            this.isRead = calendar.getIsRead();
+            this.isRead = calendar.isRead();
         }
     }
 
