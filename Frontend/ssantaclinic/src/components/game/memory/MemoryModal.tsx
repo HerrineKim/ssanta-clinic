@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  CSSProperties,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './game.css';
 import { gsap } from 'gsap';
 
@@ -64,10 +58,6 @@ export default function MemoryModal(props: any) {
   const [timeLimit, setTimeLimit] = useState<number>(10);
 
   useEffect(() => {
-    console.log(roundRunning);
-  });
-
-  useEffect(() => {
     if (timeLimit === 0) {
       gameover();
     }
@@ -75,6 +65,7 @@ export default function MemoryModal(props: any) {
 
   // 게임 클리어
   const clear = useCallback(() => {
+    // 클리어시 돈 받기 axios + 클리어 alert
     setGameClear(true);
     setStart(false);
     setRoundRunning(false);
@@ -115,7 +106,9 @@ export default function MemoryModal(props: any) {
 
   // 게임오버
   const gameover = useCallback(() => {
-    console.log('gameover!!!!');
+    console.log('gameover!!!!', round - 1);
+    // 게임 오버시 round 만큼 돈 axios + 게임 오버 alert
+
     cardEls.forEach((el: any) => {
       if (answer.indexOf(el.id) !== -1 && clickedCards.indexOf(el.id) === -1) {
         el.style.backgroundColor = 'whitesmoke';
@@ -409,7 +402,7 @@ export default function MemoryModal(props: any) {
 
   // 게임오버 카운트다운 클리어
   useEffect(() => {
-    console.log('게임오버 카운트다운');
+    // console.log('게임오버 카운트다운');
     return () => {
       clearTimeout(endCountdownClear);
       clearTimeout(difficultyUpDelayClear);
