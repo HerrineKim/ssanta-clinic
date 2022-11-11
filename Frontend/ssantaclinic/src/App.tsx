@@ -22,6 +22,7 @@ import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
 import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
 import { Test } from './components/notification/SSE';
+import { AniTestPage } from './pages/logintohome/AniTest';
 function App() {
   console.log('APP');
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
         <Route path="/test" element={<Test />}></Route>
+        <Route path="/anitest" element={<AniTestPage />}></Route>
       </Routes>
     </Router>
   );

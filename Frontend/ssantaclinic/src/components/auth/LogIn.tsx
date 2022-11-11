@@ -52,9 +52,10 @@ export const LogIn = () => {
           nickname: res.data.nickName,
           noti: [],
         });
-        const TOKEN = localStorage.getItem('jwt');
+        // const TOKEN = localStorage.getItem('jwt');
         // subSSE(TOKEN);
         // navigate('/test'); // Login 성공하면 일단 내 방으로
+        navigate('/logintohome');
       })
       .catch((err) => {
         console.log(err.response);

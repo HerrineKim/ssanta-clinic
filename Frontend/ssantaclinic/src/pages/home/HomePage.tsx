@@ -147,6 +147,7 @@ export default function Home() {
       </FriendButton>
       <FriendModal isModal={isModal} setIsModal={setIsModal}></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
+      <Div id="shop"></Div>
       <Div id="main-canvas"></Div>
     </Div>
   );
