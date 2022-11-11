@@ -3,20 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
-import { TreeModal } from '../../components/tree/index';
+// import { TreeModal } from '../../components/tree/index';
 import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
 import { HomeAlert } from '../../components/main/homealert';
-import FriendModal from './friendModal/FriendModal';
-import {
-  FriendButton,
-  FriendModalContainer,
-  FriendModalTopContainer,
-  FriendModalBottomContainer,
-  FollowerContainer,
-  FollowingContainer,
-} from './styles';
-import { GiThreeFriends } from 'react-icons/gi';
 import axios from 'axios';
+import { FriendButton } from './styles';
+// 친구 모달
+import FriendModal from '../../components/friendModal/index';
 
 export default function Home() {
   // 친구 모달 관리
@@ -25,7 +18,8 @@ export default function Home() {
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [searchList, setSearchList] = useState([]);
-  const [buttonClicked, setButtonClicked] = useState(false);
+  const [isModal, setIsModal] = useState(false);
+
   useEffect(() => {
     // 추천 친구 목록 불러오기(api/friend/recommend)
     const getFriendList = () => {
@@ -78,7 +72,7 @@ export default function Home() {
     getFriendList();
     getFollowingList();
     getFollowerList();
-  }, [buttonClicked]);
+  }, []);
 
   // 팔로우 & 언팔로우(/api/friend/follow)
   const follow = (friendId: number) => {
@@ -104,9 +98,6 @@ export default function Home() {
   };
 
   // 친구 검색: 추후 구현
-
-  // 모달창 노출 여부 state
-  const [friendModalOpen, setFriendModalOpen] = useState<boolean>(false);
 
   // const firstCanvas = document.getElementById('main-canvas');
   // const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -140,63 +131,21 @@ export default function Home() {
   return (
     <Div>
       {/* 모달들 */}
-      <div id="open-modal" className="modal-window">
-        <div>
-          <a href="#" title="Close" className="modal-close">
-            X
-          </a>
-          <FriendModalContainer>
-            {/* 검색창 */}
-            <FriendModalTopContainer></FriendModalTopContainer>
-            {/* 팔로워 리스트 */}
-            <FriendModalBottomContainer>
-              <FollowerContainer>
-                <h2>팔로워</h2>
-                <ul>
-                  {followerList.map((follower: any) => (
-                    <li key={follower.userId}>
-                      {/* userId와 nickName 출력 */}
-                      <ul>{follower.userId}</ul>
-                      <ul>{follower.nickName}</ul>
-                      <button onClick={() => follow(follower.id)}>
-                        팔로우
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </FollowerContainer>
-              <FollowingContainer>
-                {' '}
-                <h2>팔로잉</h2>
-                <ul>
-                  {followingList.map((following: any) => (
-                    <li key={following.userId}>
-                      {/* userId와 nickName 출력 */}
-                      <ul>{following.userId}</ul>
-                      <ul>{following.nickName}</ul>
-                      <button onClick={() => follow(following.id)}>
-                        팔로우
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </FollowingContainer>
-            </FriendModalBottomContainer>
-          </FriendModalContainer>
-        </div>
-      </div>
+      {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
       <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
-      <a href="#open-modal">
-        <FriendButton>
-          {/* <GiThreeFriends /> */}
-          친구
-        </FriendButton>
-      </a>
-      {friendModalOpen && <FriendModal />}
+      <FriendButton
+        onClick={() => {
+          setIsModal(true);
+        }}
+      >
+        {/* <GiThreeFriends /> */}
+        친구
+      </FriendButton>
+      <FriendModal isModal={isModal} setIsModal={setIsModal}></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
       <Div id="main-canvas"></Div>
     </Div>
