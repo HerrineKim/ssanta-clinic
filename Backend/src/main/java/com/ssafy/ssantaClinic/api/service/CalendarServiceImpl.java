@@ -6,9 +6,11 @@ import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendarImg;
+import com.ssafy.ssantaClinic.db.entity.Notification;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarImgRepository;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
+import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,7 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     private final AdventCalendarImgRepository imgRepository;
+    private final NotiRepository notiRepository;
     private final int DECEMBER = 11;
     static LocalDateTime now = LocalDateTime.now();
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -86,6 +89,11 @@ public class CalendarServiceImpl implements CalendarService{
         // 상자 열림 표시
         box.isOpened();
         calendarRepository.save(box);
+        // 알림 읽음 처리
+        Notification notification = notiRepository.findByUrlEndsWith("calendar/" + boxId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTI_NOT_FOUND));
+        notification.isRead();
+        notiRepository.save(notification);
         List<String> imges = imgRepository.findAllByAdventCalendarId(boxId).stream()
                 .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
         return CalendarResponse.GetBoxDetailResponse.builder().
