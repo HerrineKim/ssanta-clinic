@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -37,6 +38,7 @@ public class NotiServiceImpl implements NotiService {
     private final AdventCalendarRepository calendarRepository;
 
     @Override
+    @Transactional
     public SseEmitter subscribe(int userId, String lastEventId) {
         /**
          * @Method Name :  subscribe
@@ -79,6 +81,7 @@ public class NotiServiceImpl implements NotiService {
         }
     }
     @Override
+    @Transactional
     public void send(User receiver, Type type, String message, int id) {
         /**
          * @Method Name :  send

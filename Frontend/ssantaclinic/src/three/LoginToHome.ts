@@ -8,6 +8,10 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 export class LoginToHome {
+  _model1: any;
+  _model3: any;
+  _santa: any;
+  _path: any;
   _model2: any;
   _bloomPass: any;
   _composer: any;
@@ -33,7 +37,7 @@ export class LoginToHome {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.6,
+      0.5,
       1,
       0.1,
     );
@@ -57,7 +61,9 @@ export class LoginToHome {
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color('#080078');
-      scene.fog = new THREE.FogExp2('#080078', 0.4);
+      // scene.fog = new THREE.FogExp2('#080078', 0.1);
+      const axesHelper = new THREE.AxesHelper(20);
+      scene.add(axesHelper);
       this._scene = scene;
     }
   }
@@ -89,10 +95,10 @@ export class LoginToHome {
     this._scene.add(light3);
   }
   _setupModel() {
-    new GLTFLoader().load('/login/login_to_home.glb', (gltf) => {
+    new GLTFLoader().load('/login/ToHomeMove.glb', (gltf) => {
       const model1 = gltf.scene;
-      this._scene.add(model1);
-
+      // this._scene.add(model1);
+      this._model1 = model1;
       const clips = gltf.animations;
       const mixer = new THREE.AnimationMixer(model1);
       const clip1 = THREE.AnimationClip.findByName(clips, 'Armature.001Action');
@@ -160,12 +166,62 @@ export class LoginToHome {
       action21.play();
 
       this._mixer = mixer;
+
+      const path = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-1, 0, -0.5),
+        new THREE.Vector3(10, 0, -0.5),
+        new THREE.Vector3(-15, -8, -15),
+        new THREE.Vector3(15, -7, -15),
+
+        new THREE.Vector3(15, -6, 15),
+        new THREE.Vector3(-15, -5, 15),
+        new THREE.Vector3(-15, -4, -15),
+        new THREE.Vector3(15, -3, -15),
+
+        new THREE.Vector3(15, -2, 15),
+        new THREE.Vector3(-15, 15, 35),
+      ]);
+
+      this._path = path;
+      // const points = path.getPoints(1000);
+      // const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      // const material = new THREE.LineBasicMaterial({ color: 0x555555 });
+      // const pathLine = new THREE.Line(geometry, material);
+      // this._scene.add(pathLine);
+
+      // const floor = new THREE.Mesh(
+      //   new THREE.PlaneGeometry(7000, 7000),
+      //   new THREE.MeshStandardMaterial({ color: 0x4f4f4f }),
+      // );
+      // floor.receiveShadow = true;
+      // floor.position.y = -100;
+      // floor.rotation.x = -Math.PI / 2;
+      // this._scene.add(floor);
+
+      // this._santa = model1;
+
+      model1.rotation.y = -Math.PI / 2;
+      const parent = new THREE.Object3D();
+      parent.add(model1);
+      this._scene.add(parent);
+      this._santa = parent;
     });
     new GLTFLoader().load('/login/login_env.glb', (gltf) => {
       const model2 = gltf.scene;
       this._model2 = model2;
       this._scene.add(model2);
     });
+    new GLTFLoader().load('/login/ToHomeText.glb', (gltf) => {
+      const model3 = gltf.scene;
+      this._model3 = model3;
+      this._scene.add(model3);
+    });
+    const targetPivot = new THREE.Object3D();
+    const target = new THREE.Object3D();
+    targetPivot.add(target);
+    targetPivot.name = 'targetPivot';
+    target.position.set(0, 0, 1);
+    this._scene.add(targetPivot);
   }
   _setupControls() {
     this._orbitControls = new OrbitControls(this._camera, this._divContainer);
@@ -179,17 +235,44 @@ export class LoginToHome {
     requestAnimationFrame(this.render.bind(this));
   }
 
-  update() {
+  update(t: any) {
+    t += 0.001;
     const delta = this._clock.getDelta();
     this._orbitControls.update();
+    const santaMove = this._scene.children[5];
 
     if (this._mixer) this._mixer.update(delta);
+
+    const time = this._clock.oldTime * 0.00003;
+
+    if (this._path) {
+      const currentPosition = new THREE.Vector3();
+      const nextPosition = new THREE.Vector3();
+
+      this._path.getPointAt(time % 1, currentPosition);
+      this._path.getPointAt((time + 9.001) % 1, nextPosition);
+
+      this._santa.position.copy(currentPosition);
+      this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+      this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+
+      // santaMove.getWorldPosition(this._camera.position);
+      // const targetPivot = this._scene.getObjectByName('targetPivot');
+      // if (targetPivot) {
+      //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
+
+      //   const target = targetPivot.children[0];
+      //   const pt = new THREE.Vector3();
+      //   target.getWorldPosition(pt);
+      //   this._camera.lookAt(pt);
+      // }
+    }
   }
 
-  render() {
+  render(time: any) {
+    // this._renderer.render(this._scene, this._camera);
     this._composer.render();
-
-    this.update();
+    this.update(time);
     requestAnimationFrame(this.render.bind(this));
   }
 
