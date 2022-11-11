@@ -479,6 +479,7 @@ export class MainCanvas {
         else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
+          console.log(targets[0].object.parent);
           setTimeout(() => {
             this._setupMemory();
           }, 1500);
@@ -807,6 +808,8 @@ export class MainCanvas {
 
   // 기억력게임
   _setupMemory() {
+    this._isZoom = true;
+
     const memoryAlert = document.querySelector(
       '.memoryAlert',
     ) as HTMLElement | null;
@@ -1010,6 +1013,7 @@ export class MainCanvas {
 
   //zoomout 함수
   _zoomOut(viewAngle: number) {
+    // this._scenenumber = 1;
     this._isZoom = false;
     this._controls.minDistance = 30;
     this._controls.maxDistance = 80;
@@ -1043,6 +1047,10 @@ export class MainCanvas {
         );
       },
     });
+    setTimeout(() => {
+      this._scenenumber = 1;
+      this._setupControls();
+    }, 1500);
   }
 
   _setupCamera() {
