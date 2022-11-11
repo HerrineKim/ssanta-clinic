@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './game.css';
 import { gsap } from 'gsap';
 
-export default function MemoryModal() {
+export default function MemoryModal(props: any) {
+  const { onClose } = props;
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);
   // 카드 엘리먼트 배열
@@ -418,6 +419,14 @@ export default function MemoryModal() {
 
   return (
     <div className="memory-container">
+      <button
+        className="outbtn"
+        onClick={() => {
+          onClose(false);
+        }}
+      >
+        나가기
+      </button>
       <div className="memory-header">
         <div className="memory-round">Round {displayRound}</div>
         <div className="memory-level">
