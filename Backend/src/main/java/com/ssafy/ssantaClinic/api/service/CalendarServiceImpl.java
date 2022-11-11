@@ -15,9 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.sound.sampled.*;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,41 +37,43 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     private final AdventCalendarImgRepository imgRepository;
-    private final S3Service s3Service;
-    static Calendar now = Calendar.getInstance();
+    static LocalDateTime now = LocalDateTime.now();
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    static final int D_MONTH = Calendar.DECEMBER;
     @Override
+    @Transactional
     public List<CalendarResponse.GetBoxResponse> findAllTodayBoxes(int userId) {
         /**
          * @Method Name : findAllTodayBoxes
          * @Method 설명 : 오늘 날짜에 열 수 있는 상자 목록을 조회한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        int month = now.get(Calendar.MONTH);
-        if(month != D_MONTH){
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+        int month = now.getMonthValue();
+        if(month != 12){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
-        int day = now.get(Calendar.DATE);
+        int day = now.getDayOfMonth();
         List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
         return boxes;
     }
 
     @Override
+    @Transactional
     public CalendarResponse.GetBoxDetailResponse findBox(int userId, int boxId) {
         /**
          * @Method Name : findBox
          * @Method 설명 : 상자를 상세 조회한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
         // 존재하는 상자인지 확인
         AdventCalendar box = calendarRepository.findById(boxId)
                 .orElseThrow(()-> new CustomException(ErrorCode.BOX_NOT_FOUND));
         // 개봉 날짜가 지났는지 확인
-        int day = now.get(Calendar.DATE);
+        int day = now.getDayOfMonth();
         if(day < box.getDay()){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
@@ -122,15 +126,17 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
+    @Transactional
     public List<CalendarResponse.GetCalendarResponse> findAdventCalendarByUserId(int userId) {
         /**
          * @Method Name : findAdventCalendarByUserId
          * @Method 설명 : 회원이 보유한 어드벤트 캘린더 정보를 반환한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
         List<CalendarResponse.GetCalendarResponse> result = new ArrayList<>();
-        for(int i = 1; i <= 25; i++){
+        for(var i = 1; i <= 25; i++){
             int cnt = (int) calendarRepository.countByReceiverUserIdAndDay(userId, i);
             result.add(CalendarResponse.GetCalendarResponse.builder().date(i).cnt(cnt).build());
         }
@@ -138,26 +144,28 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
+    @Transactional
     public List<CalendarResponse.GetBoxResponse> findAllBoxesByDate(int userId, String date) {
         /**
          * @Method Name : findAllBoxesByDate
          * @Method 설명 : 해당 날짜에 회원이 보유한 상자 목록을 반환한다.
          */
         // 존재하는 회원인지 확인
-        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
         // 날짜 변환
-        int day = Integer.parseInt(date);
+        var day = Integer.parseInt(date);
         // 개봉 날짜가 지났는지 확인
-        int nowDate = now.get(Calendar.DATE);
+        int nowDate = now.getDayOfMonth();
         if(nowDate < day){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
-        List<CalendarResponse.GetBoxResponse> boxes = calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
+        return calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
                 .stream().map(CalendarResponse.GetBoxResponse::new).collect(Collectors.toList());
-        return boxes;
     }
 
     @Override
+    @Transactional
     public void playAudio(int userId, int boxId) throws Exception {
         /**
          * @Method Name : playAudio
@@ -166,31 +174,32 @@ public class CalendarServiceImpl implements CalendarService{
         // 존재하는 상자인지 확인
         AdventCalendar box = calendarRepository.findById(boxId).orElseThrow(() -> new CustomException(ErrorCode.BOX_NOT_FOUND));
         // 존재하는 회원인지 확인
-        userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
         // 열람 권한 확인
         if(userId != box.getReceiver().getUserId())
             throw new CustomException(ErrorCode.NOT_YOUR_BOX);
         // 오디오 주소 가져오기
         String audioUrl = box.getAudioUrl();
         // 오디오 재생
-        URL url = new URL(audioUrl);
+        var url = new URL(audioUrl);
         Clip clip;
-        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(url);
+        var audioInputStream = AudioSystem.getAudioInputStream(url);
         try {
-            AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
+            var format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED,
                     44100,
                     16, 2, 4,
                     AudioSystem.NOT_SPECIFIED, true);
-            DataLine.Info info = new DataLine.Info(Clip.class, format);
+            var info = new DataLine.Info(Clip.class, format);
             clip = (Clip) AudioSystem.getLine(info);
         } catch (LineUnavailableException e) {
-            System.out.println("matching line is not available due to resource restrictions");
+            System.err.println("matching line is not available due to resource restrictions");
             return;
         } catch (SecurityException ee) {
-            System.out.println("if a matching line is not available due to security restrictions");
+            System.err.println("if a matching line is not available due to security restrictions");
             return;
         } catch (IllegalArgumentException eee) {
-            System.out.println("if the system does not support at least one line matching the specified Line.Info object " +
+            System.err.println("if the system does not support at least one line matching the specified Line.Info object " +
                     "through any installed mixer");
             return;
         }
@@ -199,5 +208,6 @@ public class CalendarServiceImpl implements CalendarService{
         do {
             Thread.sleep(100);
         } while (clip.isRunning());
+        clip.close();
     }
 }
