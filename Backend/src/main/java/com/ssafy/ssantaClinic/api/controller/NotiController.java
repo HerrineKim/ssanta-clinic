@@ -53,4 +53,21 @@ public class NotiController {
         headers.set("X-Accel-Buffering", "no");
         return ResponseEntity.ok().headers(headers).body(sseEmitter);
     }
+
+    @ApiOperation(value = "미개봉 상자 알림", notes = "어드벤트 캘린더 알림 얻기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping("/list")
+    public ResponseEntity<SseEmitter> getAdventCalendarAlarm() {
+        /**
+         * @Method Name : getAdventCalendarAlarm
+         * @Method 설명 : 어드벤트 캘린더 알림 얻기
+         */
+        // 현재 로그인한 유저의 아이디 가져오기
+        int userId = JwtUtil.getCurrentUserId();
+        notiService.sendUnOpenedBoxNotification(userId);
+        return ResponseEntity.ok().header("X-Accel-Buffering", "no").build();
+    }
 }
