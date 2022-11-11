@@ -6,9 +6,11 @@ import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendar;
 import com.ssafy.ssantaClinic.db.entity.AdventCalendarImg;
+import com.ssafy.ssantaClinic.db.entity.Notification;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarImgRepository;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
+import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +39,8 @@ public class CalendarServiceImpl implements CalendarService{
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
     private final AdventCalendarImgRepository imgRepository;
+    private final NotiRepository notiRepository;
+    private final int DECEMBER = 11;
     static LocalDateTime now = LocalDateTime.now();
     static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     @Override
@@ -50,7 +54,7 @@ public class CalendarServiceImpl implements CalendarService{
         if(!userRepository.findById(userId).isPresent())
             throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
         int month = now.getMonthValue();
-        if(month != 12){
+        if(month != DECEMBER){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
         int day = now.getDayOfMonth();
@@ -74,7 +78,8 @@ public class CalendarServiceImpl implements CalendarService{
                 .orElseThrow(()-> new CustomException(ErrorCode.BOX_NOT_FOUND));
         // 개봉 날짜가 지났는지 확인
         int day = now.getDayOfMonth();
-        if(day < box.getDay()){
+        int month = now.getMonthValue();
+        if(month != DECEMBER || day < box.getDay()){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
         // 접근 권한 확인
@@ -84,6 +89,11 @@ public class CalendarServiceImpl implements CalendarService{
         // 상자 열림 표시
         box.isOpened();
         calendarRepository.save(box);
+        // 알림 읽음 처리
+        Notification notification = notiRepository.findByUrlEndsWith("calendar/" + boxId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOTI_NOT_FOUND));
+        notification.isRead();
+        notiRepository.save(notification);
         List<String> imges = imgRepository.findAllByAdventCalendarId(boxId).stream()
                 .map(AdventCalendarImg::getImgUrl).collect(Collectors.toList());
         return CalendarResponse.GetBoxDetailResponse.builder().
@@ -157,7 +167,8 @@ public class CalendarServiceImpl implements CalendarService{
         var day = Integer.parseInt(date);
         // 개봉 날짜가 지났는지 확인
         int nowDate = now.getDayOfMonth();
-        if(nowDate < day){
+        int month = now.getMonthValue();
+        if(month != DECEMBER || nowDate < day){
             throw new CustomException(ErrorCode.D_DAY_IS_NOT_COMING);
         }
         return calendarRepository.findAllByReceiverUserIdAndDay(userId, day)
