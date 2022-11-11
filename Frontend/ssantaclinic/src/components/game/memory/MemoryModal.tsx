@@ -63,6 +63,16 @@ export default function MemoryModal(props: any) {
   // 시간제한
   const [timeLimit, setTimeLimit] = useState<number>(10);
 
+  useEffect(() => {
+    console.log(roundRunning);
+  });
+
+  useEffect(() => {
+    if (timeLimit === 0) {
+      gameover();
+    }
+  }, [timeLimit]);
+
   // 게임 클리어
   const clear = useCallback(() => {
     setGameClear(true);
@@ -92,6 +102,7 @@ export default function MemoryModal(props: any) {
 
   // 다음 라운드 진행 전 초기화
   const nextRound = useCallback(() => {
+    setTimeLimit(10);
     clearTimeout(endCountdownClear);
     setClickCount(0);
     setClickedCards([]);
@@ -104,6 +115,7 @@ export default function MemoryModal(props: any) {
 
   // 게임오버
   const gameover = useCallback(() => {
+    console.log('gameover!!!!');
     cardEls.forEach((el: any) => {
       if (answer.indexOf(el.id) !== -1 && clickedCards.indexOf(el.id) === -1) {
         el.style.backgroundColor = 'whitesmoke';
@@ -125,6 +137,7 @@ export default function MemoryModal(props: any) {
     setIsFail(true);
     setRoundRunning(false);
     setClickCount(0);
+    setTimeLimit(10);
   }, [answer, cardEls, clickedCards]);
 
   // 카드 클릭 함수
@@ -305,11 +318,6 @@ export default function MemoryModal(props: any) {
       });
     }, 1000 + delay);
 
-    // 시작 카운트다운(출력용)
-    const countdown = setInterval(() => {
-      setCountdown((prev) => prev - 1);
-    }, 1000);
-
     //  정답 표시 색상 초기화
     const colorTimer = setTimeout(() => {
       cardEls.forEach((el: any) => {
@@ -318,6 +326,11 @@ export default function MemoryModal(props: any) {
         el.style.borderColor = 'whitesmoke';
       });
     }, 3000 + delay);
+
+    // 시작 카운트다운(출력용)
+    const countdown = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
 
     // 시작 카운트다운(계산용)
     const startTimer = setTimeout(() => {
@@ -330,7 +343,12 @@ export default function MemoryModal(props: any) {
 
     delay = 0;
 
-    return { colorTimer, startTimer, countdown, delayTimer: prepareTimer };
+    return {
+      colorTimer,
+      startTimer,
+      countdown,
+      delayTimer: prepareTimer,
+    };
   }, [
     answerCount,
     cardEls,
@@ -341,6 +359,17 @@ export default function MemoryModal(props: any) {
     round,
     start,
   ]);
+
+  // click 시작
+  useEffect(() => {
+    let limitTimeCounter: NodeJS.Timer;
+    if (roundRunning) {
+      limitTimeCounter = setInterval(() => {
+        setTimeLimit((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(limitTimeCounter);
+  }, [roundRunning]);
 
   // 카드 엘리먼트 불러오기
   useEffect(() => {
@@ -380,6 +409,7 @@ export default function MemoryModal(props: any) {
 
   // 게임오버 카운트다운 클리어
   useEffect(() => {
+    console.log('게임오버 카운트다운');
     return () => {
       clearTimeout(endCountdownClear);
       clearTimeout(difficultyUpDelayClear);
@@ -413,8 +443,6 @@ export default function MemoryModal(props: any) {
 
       for (let j = 1; j <= difficulty; j++) {
         const id = -difficulty + j + difficulty * i;
-        const randomNum = Math.random() * 8;
-        const randomNumFloor = Math.floor(randomNum + 1);
 
         cardsReturn.push(
           <div
@@ -422,10 +450,6 @@ export default function MemoryModal(props: any) {
             key={`${id}`}
             className="memory-card"
             onClick={onCardClick}
-            // style={{
-            //   backgroundImage: `url(/game/house/house${randomNumFloor}.png)`,
-            //   backgroundSize: 'cover',
-            // }}
           ></div>,
         );
       }
@@ -458,6 +482,7 @@ export default function MemoryModal(props: any) {
       </button>
       <div className="memory-header">
         <div className="memory-round">Round {displayRound}</div>
+        <div className="round-counter">{timeLimit}</div>
         <div className="memory-level">
           {displayRound >= 25
             ? 'Expert'

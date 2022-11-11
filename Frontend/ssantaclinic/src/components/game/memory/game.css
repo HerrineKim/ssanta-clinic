@@ -22,6 +22,9 @@
   position: relative;
   z-index: 2;
 }
+.round-counter {
+  color: red;
+}
 .outbtn {
   position: fixed;
   right: 30px;
