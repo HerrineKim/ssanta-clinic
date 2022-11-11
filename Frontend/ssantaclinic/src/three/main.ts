@@ -1010,6 +1010,7 @@ export class MainCanvas {
 
   //zoomout 함수
   _zoomOut(viewAngle: number) {
+    // this._scenenumber = 1;
     this._isZoom = false;
     this._controls.minDistance = 30;
     this._controls.maxDistance = 80;
@@ -1043,6 +1044,10 @@ export class MainCanvas {
         );
       },
     });
+    setTimeout(() => {
+      this._scenenumber = 1;
+      this._setupControls();
+    }, 1500);
   }
 
   _setupCamera() {
