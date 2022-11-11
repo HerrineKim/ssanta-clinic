@@ -807,6 +807,8 @@ export class MainCanvas {
 
   // 기억력게임
   _setupMemory() {
+    this._isZoom = true;
+
     const memoryAlert = document.querySelector(
       '.memoryAlert',
     ) as HTMLElement | null;

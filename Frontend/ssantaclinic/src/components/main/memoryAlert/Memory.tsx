@@ -15,6 +15,6 @@ export function MemoryAlert() {
       </Div>
     );
   } else {
-    return <MemoryModal></MemoryModal>;
+    return <MemoryModal onClose={setisHelp}></MemoryModal>;
   }
 }
