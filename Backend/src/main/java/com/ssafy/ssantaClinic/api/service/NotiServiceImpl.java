@@ -9,6 +9,7 @@ import com.ssafy.ssantaClinic.db.entity.Type;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
 import com.ssafy.ssantaClinic.db.repository.EmitterRepository;
+import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,7 @@ public class NotiServiceImpl implements NotiService {
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
+    private final NotiRepository notiRepository;
 
     @Override
     @Transactional
@@ -113,13 +115,17 @@ public class NotiServiceImpl implements NotiService {
         } else {
             url += "/api/" + type.getUrl() + "/" + id;
         }
-        return Notification.builder()
-                .user(receiver)
-                .url(url)
-                .message(message)
-                .type(type)
-                .isRead(false)
-                .build();
+        Notification notification = notiRepository.findByUserUserIdAndUrl(receiver.getUserId(), url)
+                                    .orElse(Notification.builder()
+                                            .user(receiver)
+                                            .url(url)
+                                            .message(message)
+                                            .type(type)
+                                            .isRead(false)
+                                            .createdAt(LocalDateTime.now())
+                                            .build());
+        notiRepository.save(notification);
+        return notification;
     }
     @Override
     public void sendUnOpenedBoxNotification(int userId){
