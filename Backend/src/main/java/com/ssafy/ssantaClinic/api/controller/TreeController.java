@@ -1,6 +1,9 @@
 package com.ssafy.ssantaClinic.api.controller;
 
+import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.S3Service;
+import com.ssafy.ssantaClinic.common.exception.CustomException;
+import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -36,16 +39,15 @@ public class TreeController {
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE }
     )
-    public ResponseEntity<?> getGlbFile(@RequestPart(required = false) MultipartFile glbfile) throws IOException {
+    public ResponseEntity<SimpleMessageResponse> getGlbFile
+            (@RequestPart(required = false) MultipartFile glbfile) throws IOException {
         /**
          * @Method Name : getGlbFile
          * @Method 설명 : 3D 트리 파일 보내기
          */
         // S3 업로드
-        String url = "";
-        if(url != null){
-            url = s3Service.uploadGlb(glbfile);
-        }
-        return ResponseEntity.ok().build();
+        var url = s3Service.uploadGlb(glbfile);
+        if(url.isBlank()) throw new CustomException(ErrorCode.FILE_NAME_BLANK_ERROR);
+        return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
     }
 }

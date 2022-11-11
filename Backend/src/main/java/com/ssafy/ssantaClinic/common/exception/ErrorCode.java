@@ -10,6 +10,8 @@ public enum ErrorCode {
     //img
     IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST, "400", "이미지 업로드에 실패했습니다"),
     WRONG_IMAGE_FORMAT(HttpStatus.BAD_REQUEST, "400", "지원하지 않는 파일 형식입니다"),
+    FILE_NAME_BLANK_ERROR(HttpStatus.BAD_REQUEST,"400", "파일 이름이 빈 값입니다."),
+    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "400", "파일 삭제에 실패했습니다."),
 
     // Token
     JWT_TOKEN_WRONG_SIGNATURE(HttpStatus.UNAUTHORIZED, "401", "잘못된 JWT 서명입니다"),
@@ -53,7 +55,10 @@ public enum ErrorCode {
     SSE_SEND_ERROR(HttpStatus.BAD_REQUEST, "400", "SSE 전송 오류"),
     NOTI_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 알림이 존재하지 않습니다."),
     NOTI_ACCESS_ERROR(HttpStatus.FORBIDDEN, "400", "알림 당사자만 알림을 조회할 수 있습니다."),
-    WRONG_NOTI_TYPE_ERROR(HttpStatus.BAD_REQUEST, "400", "잘못된 알림 타입입니다.");
+    WRONG_NOTI_TYPE_ERROR(HttpStatus.BAD_REQUEST, "400", "잘못된 알림 타입입니다."),
+
+    // 공통
+    UTILITY_CLASS_ERROR(HttpStatus.BAD_REQUEST, "400", "유틸리티 클래스는 접근할 수 없습니다.");
     
     private final HttpStatus status;
     private final String errorCode;
