@@ -518,7 +518,8 @@ export class RoomThree {
       },
     });
     setTimeout(() => {
-      this._scene2.add(object3d[1]);
+      //showcase만 add하게 로딩 시간에 따라 순서변경
+      this._scene2.add(object3d[0]);
       this._scene2.add(...this._items);
       this._scene2.add(this._close);
       this._scene2.add(this._check);
