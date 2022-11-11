@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 /**
@@ -35,7 +36,7 @@ public class NotiController {
     })
     @GetMapping(value = "/sub",
                 produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<SimpleMessageResponse> subscribe(
+    public ResponseEntity<SseEmitter> subscribe(
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         /**
          * @Method Name : subscribe
@@ -43,13 +44,13 @@ public class NotiController {
          */
         // 현재 로그인한 유저의 아이디 가져오기
         int userId = JwtUtil.getCurrentUserId();
-        notiService.subscribe(userId, lastEventId);
+        SseEmitter sseEmitter = notiService.subscribe(userId, lastEventId);
         // 헤더 설정
         var headers = new HttpHeaders();
         headers.set("Content-Type", "text/event-stream");
         headers.set("Cache-Control", "no-cache");
         // 리버스 프록시에서의 오동작을 방지
         headers.set("X-Accel-Buffering", "no");
-        return ResponseEntity.ok().headers(headers).body(SimpleMessageResponse.builder().Result("success").build());
+        return ResponseEntity.ok().headers(headers).body(sseEmitter);
     }
 }
