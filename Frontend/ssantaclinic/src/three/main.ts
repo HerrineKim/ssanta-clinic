@@ -479,6 +479,7 @@ export class MainCanvas {
         else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
+          console.log(targets[0].object.parent);
           setTimeout(() => {
             this._setupMemory();
           }, 1500);

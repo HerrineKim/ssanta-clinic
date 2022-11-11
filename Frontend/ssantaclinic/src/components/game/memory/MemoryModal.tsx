@@ -1,8 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  CSSProperties,
+} from 'react';
 import './game.css';
 import { gsap } from 'gsap';
 
 export default function MemoryModal(props: any) {
+  // const imageStyle: CSSProperties = {
+  //   backgroundImage: url('/assets/image/house/house1.png'),
+  // };
   const { onClose } = props;
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);
@@ -51,6 +60,8 @@ export default function MemoryModal(props: any) {
   );
   // gsap
   const [animations, setAnimations] = useState<Array<any>>([]);
+  // 시간제한
+  const [timeLimit, setTimeLimit] = useState<number>(10);
 
   // 게임 클리어
   const clear = useCallback(() => {
@@ -119,8 +130,10 @@ export default function MemoryModal(props: any) {
   // 카드 클릭 함수
   const onCardClick = useCallback(
     (e: any) => {
+      console.log('1');
       // 라운드 시작 전 or 중복 클릭
       if (!roundRunning || clickedCards.indexOf(e.target.id) !== -1) {
+        console.log('2');
         return;
       }
 
@@ -334,27 +347,36 @@ export default function MemoryModal(props: any) {
     setCardEls(document.querySelectorAll('.memory-card'));
   }, [difficulty]);
 
-  // 카드 반짝반짝 효과
   useEffect(() => {
-    if (!start && cardEls.length !== 0) {
-      const animationArr: Array<any> = [];
+    cardEls.forEach((child: any) => {
+      const randomNum = Math.random() * 8;
+      const randomNumFloor = Math.floor(randomNum + 1);
+      child.style.backgroundImage = `url(/game/house/house${randomNumFloor}.png)`;
+      child.style.backgroundSize = 'cover';
+    });
+  }, [cardEls, displayRound]);
 
-      cardEls.forEach((el: any) => {
-        animationArr.push(
-          gsap.to(el, cardEls.length / 10, {
-            repeat: -1,
-            yoyo: true,
-            delay: parseInt(el.id) / 10,
-            backgroundColor: 'whitesmoke',
-            borderColor: '#48cae4',
-            boxShadow: '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke',
-          }),
-        );
-      });
+  // 카드 반짝반짝 효과
+  // useEffect(() => {
+  //   if (!start && cardEls.length !== 0) {
+  //     const animationArr: Array<any> = [];
 
-      setAnimations((prev) => [...prev, ...animationArr]);
-    }
-  }, [cardEls, start]);
+  //     cardEls.forEach((el: any) => {
+  //       animationArr.push(
+  //         gsap.to(el, cardEls.length / 10, {
+  //           repeat: -1,
+  //           yoyo: true,
+  //           delay: parseInt(el.id) / 10,
+  //           backgroundColor: 'whitesmoke',
+  //           borderColor: '#48cae4',
+  //           boxShadow: '0px 0px 15px #48cae4, 0px 0px 30px whitesmoke',
+  //         }),
+  //       );
+  //     });
+
+  //     setAnimations((prev) => [...prev, ...animationArr]);
+  //   }
+  // }, [cardEls, start]);
 
   // 게임오버 카운트다운 클리어
   useEffect(() => {
@@ -391,12 +413,19 @@ export default function MemoryModal(props: any) {
 
       for (let j = 1; j <= difficulty; j++) {
         const id = -difficulty + j + difficulty * i;
+        const randomNum = Math.random() * 8;
+        const randomNumFloor = Math.floor(randomNum + 1);
+
         cardsReturn.push(
           <div
             id={`${id}`}
             key={`${id}`}
             className="memory-card"
             onClick={onCardClick}
+            // style={{
+            //   backgroundImage: `url(/game/house/house${randomNumFloor}.png)`,
+            //   backgroundSize: 'cover',
+            // }}
           ></div>,
         );
       }
