@@ -147,7 +147,14 @@ export default function Home() {
         {/* <GiThreeFriends /> */}
         친구
       </FriendButton>
-      <FriendModal isModal={isModal} setIsModal={setIsModal}></FriendModal>
+      <FriendModal
+        isModal={isModal}
+        setIsModal={setIsModal}
+        friendList={friendList}
+        followingList={followingList}
+        followerList={followerList}
+        follow={follow}
+      ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
       <Div id="shop"></Div>
       <Div id="main-canvas"></Div>
