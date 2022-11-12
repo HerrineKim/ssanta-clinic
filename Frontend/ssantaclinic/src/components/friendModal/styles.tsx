@@ -149,3 +149,10 @@ export const FollowingText = styled.div`
   font-size: 2.5rem;
   color: #422800;
 `;
+
+export const SearchListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;
