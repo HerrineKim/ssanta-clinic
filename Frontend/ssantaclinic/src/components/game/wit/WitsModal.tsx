@@ -133,7 +133,9 @@ export default function WitsModal(props: any) {
         {isResult ? (
           <Result
             isSucces={gameClear}
-            time={null}
+            // isSucces={true}
+            time={time}
+            // time={11}
             round={null}
             onClose={onClose}
           ></Result>

@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { ResultDiv } from './resultstyle';
+import { ResultDiv, CoinImg } from './resultstyle';
 
 interface ResultProp {
   isSucces: boolean;
@@ -9,11 +9,37 @@ interface ResultProp {
 }
 
 export default function Result(props: ResultProp) {
-  const { isSucces, onClose } = props;
-  console.log(isSucces);
+  const { isSucces, onClose, time } = props;
+  const [money, setMoney] = useState<number>(0);
+  useEffect(() => {
+    if (time !== null && isSucces) {
+      if (time <= 30) {
+        setMoney(10);
+      } else if (time <= 40) {
+        setMoney(8);
+      } else if (time <= 50) {
+        setMoney(6);
+      } else if (time <= 60) {
+        setMoney(4);
+      } else {
+        setMoney(2);
+      }
+    }
+  }, []);
+  console.log(time);
   return (
     <ResultDiv>
-      {isSucces ? '감사합니다' : '실망스럽습니다'}
+      {isSucces ? (
+        <div>
+          <p>감사합니다 {time}만에 해결해 주셨어요!</p>
+          <p>알바비드릴게요!</p>
+
+          {money}
+          <CoinImg src="img/coin.png"></CoinImg>
+        </div>
+      ) : (
+        '실망스럽습니다'
+      )}
       <button onClick={() => onClose(false)}>돌아가기</button>
     </ResultDiv>
   );
