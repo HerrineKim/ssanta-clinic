@@ -23,13 +23,15 @@ export default function WitsModal(props: any) {
   const [isFail, setIsFail] = useState<boolean>(false);
   const [gameClear, setGameClear] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(4);
-  const [clickedCards, setClickedCards] = useState<Array<string>>([]);
+
   const [time, setTime] = useState<number>(0);
+  const [clickCount, setClickCount] = useState<number>(3);
 
   const handleClick = (num: number) => {
     if (num === current) {
       if (num === 50) {
         console.log('Success');
+        clear();
         //게임 끝 구현
       }
       const index = numbers.indexOf(num);
@@ -39,10 +41,11 @@ export default function WitsModal(props: any) {
         ...numbers.slice(index + 1),
       ]);
       setCurrent((current) => current + 1);
-    }
-    if (num === current && gameFlag) {
-      if (num === 50) {
-        endGame();
+    } else {
+      if (clickCount === 1) {
+        gameover();
+      } else {
+        setClickCount((prev) => prev - 1);
       }
     }
   };
@@ -89,10 +92,9 @@ export default function WitsModal(props: any) {
 
   const gameover = useCallback(() => {
     console.log('gameover!!!!');
-    // 게임 오버시 round 만큼 돈 axios + 게임 오버 alert
     setGameFlag(false);
     setIsFail(true);
-  }, [clickedCards]);
+  }, []);
 
   // console.log(typeof handleClick);
   return (
@@ -106,8 +108,9 @@ export default function WitsModal(props: any) {
         나가기
       </button>
       <div className="wit-content">
-        <div className="memory-header">
+        <div className="wit-header">
           <div className="round-counter">{time}</div>
+          <div className="click-count">기회: {clickCount}</div>
         </div>
         {(!gameFlag || isFail || gameClear) && (
           <div className="memory-start">
