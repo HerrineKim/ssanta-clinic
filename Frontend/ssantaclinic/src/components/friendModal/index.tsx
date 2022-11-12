@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './index.module.css';
 import {
@@ -33,11 +34,9 @@ export default function FriendModal(props: any) {
     '🎑',
     '🎀',
   ];
-  const randomEmoji =
-    christmasEmojiList[Math.floor(Math.random() * christmasEmojiList.length)];
 
   const [isModal, setIsModal] = [props.isModal, props.setIsModal];
-  const [friendList, setFriendList] = [props.friendList, props.setFriendList];
+  // const [friendList, setFriendList] = [props.friendList, props.setFriendList];
   const [followingList, setFollowingList] = [
     props.followingList,
     props.setFollowingList,
@@ -46,7 +45,34 @@ export default function FriendModal(props: any) {
     props.followerList,
     props.setFollowerList,
   ];
-  const [searchList, setSearchList] = [props.searchList, props.setSearchList];
+  // 친구 검색(api/user/search)
+  const ACCESS_TOKEN = localStorage.getItem('jwt');
+  const [searchList, setSearchList] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
+
+  const handleSearchInput = (e: any) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearch = () => {
+    axios
+      .post(
+        `http://localhost:8080/api/user/search`,
+        { nickName: searchInput },
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        setSearchList(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
 
   function onClickClose() {
     setIsModal(false);
@@ -60,6 +86,18 @@ export default function FriendModal(props: any) {
             <FriendSearchInput
               type="text"
               placeholder="🎅 닉네임으로 친구 찾기"
+              onChange={handleSearchInput}
+              onKeyDown={(e: any) => {
+                if (e.key === 'Enter') {
+                  handleSearch();
+                  // 검색 후 input 초기화
+                  setSearchInput('');
+                  // 검색 후 input focus
+                  e.target.focus();
+                  // 검색 후 input value 초기화
+                  e.target.value = '';
+                }
+              }}
             />
             <FriendModalCloseButton type="button" onClick={onClickClose}>
               X
