@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Board from '../Board';
-import Timer from '../Timer';
+
+import Timer from './Timer';
 import './game.css';
 
 const array: number[] = [];
@@ -61,7 +61,19 @@ export default function WitsModal(props: any) {
       >
         나가기
       </button>
-      <Board numbers={numbers} handleClick={handleClick}></Board>
+      <div className="wit-content">
+        <div className="board-container">
+          {numbers.map((num: number, index: number) => (
+            <div
+              key={index}
+              className="cell-container"
+              onClick={() => handleClick(num)}
+            >
+              {num !== 0 ? num : null}
+            </div>
+          ))}
+        </div>
+      </div>
       {gameFlag ? <Timer></Timer> : <button onClick={startGame}>start</button>}
     </div>
   );
