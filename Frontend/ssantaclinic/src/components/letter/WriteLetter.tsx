@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { selectUserNickname, selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import {
-  LetterWriteContainer,
+  LetterContainer,
   Button,
   TitleInput,
   MessageInput,
@@ -107,7 +107,7 @@ export const WriteLetter = () => {
   );
 
   return (
-    <LetterWriteContainer id="write-letter-container">
+    <LetterContainer id="write-letter-container">
       <div id="header">
         <h1>어떤 고민이 있나요?</h1>
       </div>
@@ -147,6 +147,6 @@ export const WriteLetter = () => {
           </Button>
         </form>
       </div>
-    </LetterWriteContainer>
+    </LetterContainer>
   );
 };
