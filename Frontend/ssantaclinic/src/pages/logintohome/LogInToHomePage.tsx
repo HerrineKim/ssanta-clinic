@@ -6,9 +6,9 @@ import { useNavigate } from 'react-router-dom';
 export const LogInToHomePage = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    // setTimeout(() => {
-    //   navigate('/');
-    // }, 20000);
+    setTimeout(() => {
+      navigate('/');
+    }, 20000);
     const toHomeCanvas = new LoginToHome();
     console.log(toHomeCanvas.render.bind(toHomeCanvas));
     console.log('useeffect');
