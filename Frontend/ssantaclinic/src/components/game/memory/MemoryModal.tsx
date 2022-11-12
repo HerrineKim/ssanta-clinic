@@ -1,9 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import './game.css';
 import { gsap } from 'gsap';
+import ResultMemory from '../result/ResultMemory';
 
 export default function MemoryModal(props: any) {
   const { onClose } = props;
+  const [isResult, setIsResult] = useState<boolean>(false);
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);
   // 카드 엘리먼트 배열
@@ -53,7 +55,9 @@ export default function MemoryModal(props: any) {
   const [animations, setAnimations] = useState<Array<any>>([]);
   // 시간제한
   const [timeLimit, setTimeLimit] = useState<number>(10);
-
+  const result = () => {
+    setIsResult(true);
+  };
   useEffect(() => {
     if (timeLimit === 0) {
       gameover();
@@ -485,15 +489,27 @@ export default function MemoryModal(props: any) {
       </div>
 
       <div className="memory-content">
+        {isResult ? (
+          <ResultMemory
+            isSucces={true}
+            // isSucces={true}
+            time={null}
+            // time={11}
+            round={round}
+            onClose={onClose}
+          ></ResultMemory>
+        ) : null}
         {(!start || isFail || gameClear) && (
           <div className="memory-start">
             {(isFail || gameClear) && (
               <div className="memory-'result'">
-                {gameClear && (
-                  <div className="memory-'clear'">Congratulation!</div>
+                {isFail ? (
+                  <div className="wit-over">Game Over!</div>
+                ) : (
+                  gameClear && <div className="wit-clear">Congratulation!</div>
                 )}
-                <div className="memory-'score__text'">Score</div>
-                <div className="memory-'score__round'">{round}</div>
+                {/* <div className="memory-'score__text'">Score</div>
+                <div className="memory-'score__round'">{round}</div> */}
               </div>
             )}
             <span
@@ -504,13 +520,13 @@ export default function MemoryModal(props: any) {
                   el.kill();
                 });
                 if (isFail || gameClear) {
-                  restart();
+                  result();
                 } else {
                   setStart(true);
                 }
               }}
             >
-              {isFail || gameClear ? 'Restart' : 'Start'}
+              {isFail || gameClear ? '결과 확인' : 'Start'}
             </span>
           </div>
         )}
