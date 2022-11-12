@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResultDiv, CoinImg } from './resultstyle';
 
 interface ResultProp {
@@ -6,35 +6,32 @@ interface ResultProp {
   time: number | null;
   round: number | null;
   onClose: (value: React.SetStateAction<boolean>) => void;
-  game: number;
 }
 
-export default function Result(props: ResultProp) {
-  const { isSucces, onClose, time, game } = props;
+export default function ResultMemory(props: ResultProp) {
+  const { isSucces, onClose, round } = props;
   const [money, setMoney] = useState<number>(0);
-  console.log(game);
+
   useEffect(() => {
-    if (time !== null && isSucces) {
-      if (time <= 30) {
+    if (round !== null && isSucces) {
+      if (round >= 40) {
         setMoney(10);
-      } else if (time <= 40) {
+      } else if (round >= 30) {
         setMoney(8);
-      } else if (time <= 50) {
+      } else if (round >= 20) {
         setMoney(6);
-      } else if (time <= 60) {
+      } else if (round >= 10) {
         setMoney(4);
-      } else {
-        setMoney(2);
       }
     }
   }, []);
-  console.log(time);
+
   return (
     <ResultDiv>
       {isSucces ? (
         <div>
           memory
-          <p>감사합니다 {time}만에 해결해 주셨어요!</p>
+          <p>감사합니다 {round}까지 해결해 주셨어요!</p>
           <p>알바비드릴게요!</p>
           {money}
           <CoinImg src="img/coin.png"></CoinImg>

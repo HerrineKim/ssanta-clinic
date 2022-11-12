@@ -132,6 +132,7 @@ export default function WitsModal(props: any) {
       <div className="wit-content">
         {isResult ? (
           <Result
+            game={2}
             isSucces={gameClear}
             // isSucces={true}
             time={time}
