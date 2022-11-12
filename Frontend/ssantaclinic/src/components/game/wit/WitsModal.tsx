@@ -46,14 +46,24 @@ export default function WitsModal(props: any) {
     }
   };
 
-  const startGame = () => {
-    setNumbers(shuffleArray(array));
-    setCurrent(1);
-    setGameFlag(true);
-    setCountdown(4);
-  };
   const endGame = () => {
     setGameFlag(false);
+  };
+
+  const startGame = () => {
+    setGameFlag(true);
+
+    const countdown = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    const startTimer = setTimeout(() => {
+      setCountdown(0);
+      clearTimeout(countdown);
+      setNumbers(shuffleArray(array));
+      setCurrent(1);
+      setGameFlag(true);
+    }, 4000);
   };
 
   //게임 클리어
