@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const FriendModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 100%;
@@ -85,7 +85,7 @@ export const FriendModalBottomContainer = styled.div`
 export const FollowerContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  position: relative;
   align-items: center;
   width: 50%;
   height: 100%;
@@ -95,9 +95,16 @@ export const FollowerContainer = styled.div`
 export const FollowerText = styled.div`
   width: 100%;
   height: 10%;
+  margin: 5% 0;
   font-family: 'Cafe24Ssurround';
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #422800;
+`;
+
+export const PeopleContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 export const FollowListContainer = styled.div`
@@ -105,29 +112,29 @@ export const FollowListContainer = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  margin-top: 2%;
   width: 100%;
-  padding: 0 10px;
 `;
 
 export const FollowEmoji = styled.div`
   width: 10%;
   height: 100%;
-  font-size: 2rem;
-  color: #422800;
+  font-size: 1.5rem;
 `;
 
 export const FollowNickName = styled.div`
   width: 90%;
   height: 100%;
   font-family: 'IMRegular';
-  font-size: 2rem;
+  font-size: 1.5rem;
+  margin-left: 2%;
   color: black;
 `;
 
 export const FollowingContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  position: relative;
   align-items: center;
   width: 50%;
   height: 100%;
@@ -137,7 +144,8 @@ export const FollowingContainer = styled.div`
 export const FollowingText = styled.div`
   width: 100%;
   height: 10%;
+  margin: 5% 0;
   font-family: 'Cafe24Ssurround';
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #422800;
 `;
