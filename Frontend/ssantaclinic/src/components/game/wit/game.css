@@ -52,3 +52,11 @@ button {
   align-items: center;
   font-size: 30px;
 }
+.wit-header {
+  display: flex;
+  width: 600px;
+  max-width: 80vh;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 10px 10px;
+}
