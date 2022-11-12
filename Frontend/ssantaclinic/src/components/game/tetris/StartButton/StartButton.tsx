@@ -6,7 +6,7 @@ type Props = {
 };
 
 const StartButton: React.FC<Props> = ({ callback }) => (
-  <StyledStartButton onClick={callback}>Start Game</StyledStartButton>
+  <StyledStartButton onClick={callback}>게임 시작하기</StyledStartButton>
 );
 
 export default StartButton;
