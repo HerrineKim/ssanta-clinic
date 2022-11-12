@@ -13,9 +13,29 @@ import {
   FollowingText,
   FollowListContainer,
   FollowNickName,
+  FollowEmoji,
+  PeopleContainer,
 } from './styles';
 
-function FriendModal(props: any) {
+export default function FriendModal(props: any) {
+  // 크리스마스 관련 이모지 중 랜덤 이모지 선택
+  const christmasEmojiList = [
+    '🎄',
+    '🎅',
+    '🎁',
+    '🎉',
+    '🎊',
+    '🎈',
+    '🎏',
+    '🎇',
+    '🎆',
+    '🎐',
+    '🎑',
+    '🎀',
+  ];
+  const randomEmoji =
+    christmasEmojiList[Math.floor(Math.random() * christmasEmojiList.length)];
+
   const [isModal, setIsModal] = [props.isModal, props.setIsModal];
   const [friendList, setFriendList] = [props.friendList, props.setFriendList];
   const [followingList, setFollowingList] = [
@@ -50,17 +70,33 @@ function FriendModal(props: any) {
               <FollowerText>팔로워</FollowerText>
               {followerList.map((follower: any) => (
                 <FollowListContainer key={follower.userId}>
+                  <FollowEmoji>
+                    {
+                      christmasEmojiList[
+                        Math.floor(Math.random() * christmasEmojiList.length)
+                      ]
+                    }
+                  </FollowEmoji>
                   <FollowNickName>{follower.nickName}</FollowNickName>
                 </FollowListContainer>
               ))}
             </FollowerContainer>
             <FollowingContainer>
               <FollowingText>팔로잉</FollowingText>
-              {followingList.map((following: any) => (
-                <FollowListContainer key={following.userId}>
-                  <FollowNickName>{following.nickName}</FollowNickName>
-                </FollowListContainer>
-              ))}
+              <PeopleContainer>
+                {followingList.map((following: any) => (
+                  <FollowListContainer key={following.userId}>
+                    <FollowEmoji>
+                      {
+                        christmasEmojiList[
+                          Math.floor(Math.random() * christmasEmojiList.length)
+                        ]
+                      }
+                    </FollowEmoji>
+                    <FollowNickName>{following.nickName}</FollowNickName>
+                  </FollowListContainer>
+                ))}
+              </PeopleContainer>
             </FollowingContainer>
           </FriendModalBottomContainer>
         </FriendModalContainer>
@@ -68,5 +104,3 @@ function FriendModal(props: any) {
     </div>
   );
 }
-
-export default FriendModal;
