@@ -107,7 +107,10 @@ export const SignUp = () => {
   return (
     <SignUpContainer>
       <div id="signup">
-        <motion.h1 animate={{ fontSize: 50, color: '#ffffff', y: -7 }}>
+        <motion.h1
+          id="signup-text"
+          animate={{ fontSize: 50, color: '#ffffff', y: -7 }}
+        >
           회원가입
         </motion.h1>
       </div>
@@ -127,7 +130,12 @@ export const SignUp = () => {
               onChange={handleChangeEmail}
               required
             />
-            <motion.button className="check-button" onClick={checkEmail}>
+            <motion.button
+              className="check-button"
+              onClick={checkEmail}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
               중복확인
             </motion.button>
             <motion.input
@@ -158,7 +166,12 @@ export const SignUp = () => {
               onChange={handleChangeNickname}
               required
             />
-            <motion.button className="check-button" onClick={checkNickname}>
+            <motion.button
+              className="check-button"
+              onClick={checkNickname}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
               중복확인
             </motion.button>
             <motion.button

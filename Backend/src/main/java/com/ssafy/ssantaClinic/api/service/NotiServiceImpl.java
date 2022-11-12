@@ -9,12 +9,14 @@ import com.ssafy.ssantaClinic.db.entity.Type;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
 import com.ssafy.ssantaClinic.db.repository.EmitterRepository;
+import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -31,12 +33,14 @@ import java.util.Map;
 public class NotiServiceImpl implements NotiService {
     private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
     private static final String BASE_URL = "http://localhost:8080";
-    static final int DECEMBER = 12;
+    private final int DECEMBER = 11;
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
+    private final NotiRepository notiRepository;
 
     @Override
+    @Transactional
     public SseEmitter subscribe(int userId, String lastEventId) {
         /**
          * @Method Name :  subscribe
@@ -79,6 +83,7 @@ public class NotiServiceImpl implements NotiService {
         }
     }
     @Override
+    @Transactional
     public void send(User receiver, Type type, String message, int id) {
         /**
          * @Method Name :  send
@@ -105,18 +110,22 @@ public class NotiServiceImpl implements NotiService {
          * @Method 설명 :  알림 객체를 생성한다.
          */
         String url = BASE_URL;
-        if (!type.getType().equals(Type.REPLY.getType()) || !type.getType().equals(Type.GIFT.getType())) {
+        if (!type.getType().equals(Type.REPLY.getType()) && !type.getType().equals(Type.GIFT.getType())) {
             throw new CustomException(ErrorCode.WRONG_NOTI_TYPE_ERROR);
         } else {
             url += "/api/" + type.getUrl() + "/" + id;
         }
-        return Notification.builder()
-                .user(receiver)
-                .url(url)
-                .message(message)
-                .type(type)
-                .isRead(false)
-                .build();
+        Notification notification = notiRepository.findByUserUserIdAndUrl(receiver.getUserId(), url)
+                                    .orElse(Notification.builder()
+                                            .user(receiver)
+                                            .url(url)
+                                            .message(message)
+                                            .type(type)
+                                            .isRead(false)
+                                            .createdAt(LocalDateTime.now())
+                                            .build());
+        notiRepository.save(notification);
+        return notification;
     }
     @Override
     public void sendUnOpenedBoxNotification(int userId){
@@ -127,7 +136,8 @@ public class NotiServiceImpl implements NotiService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 12월만 개봉 가능
-        if(LocalDateTime.now().getMonth().equals(Month.DECEMBER)){
+        // 임시로 11월 개봉으로 수정
+        if(LocalDateTime.now().getMonthValue() == DECEMBER){
             int day = LocalDateTime.now().getDayOfMonth();
             List<AdventCalendar> unOpenedBoxes =
                     calendarRepository.findAllByReceiverUserIdAndIsReadIsFalse(userId);

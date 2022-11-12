@@ -4,7 +4,10 @@ export const SignUpContainer = styled.div`
   width: 100vw;
   height: 100vh;
   text-align: center;
-
+  #signup-text {
+    font-family: 'Cafe24Ssurround';
+    padding-top: 5%;
+  }
   #signup-button {
     background-color: #fbeee0;
     border: 2px solid #422800;
@@ -33,8 +36,8 @@ export const SignUpContainer = styled.div`
 
   #signup-form-card {
     width: 50%;
-    height: 90%;
-    background-color: #008a00;
+    height: 70%;
+    background-color: #4e6f62;
     border-radius: 200px;
     margin: 0 auto;
   }

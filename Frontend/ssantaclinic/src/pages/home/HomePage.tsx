@@ -3,9 +3,103 @@ import React, { useState, useEffect } from 'react';
 import { Div, ModalDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
-import { TreeModal } from '../../components/tree/index';
+// import { TreeModal } from '../../components/tree/index';
+import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
+import { WitAlert } from '../../components/main/witalert/Wit';
+import { HomeAlert } from '../../components/main/homealert';
+import axios from 'axios';
+import { FriendButton } from './styles';
+// 친구 모달
+import FriendModal from '../../components/friendModal/index';
 
 export default function Home() {
+  // 친구 모달 관리
+  const ACCESS_TOKEN = localStorage.getItem('jwt');
+  const [friendList, setFriendList] = useState([]);
+  const [followingList, setFollowingList] = useState([]);
+  const [followerList, setFollowerList] = useState([]);
+  const [searchList, setSearchList] = useState([]);
+  const [isModal, setIsModal] = useState(false);
+
+  useEffect(() => {
+    // 추천 친구 목록 불러오기(api/friend/recommend)
+    const getFriendList = () => {
+      axios
+        .get('http://localhost:8080/api/friend/recommend', {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setFriendList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    };
+    // 팔로잉 목록(api/friend/followings)
+    const getFollowingList = () => {
+      axios
+        .get('http://localhost:8080/api/friend/followings', {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setFollowingList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    };
+    // 팔로워 목록(api/friend/followers)
+    const getFollowerList = () => {
+      axios
+        .get('http://localhost:8080/api/friend/followers', {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        })
+        .then((res) => {
+          console.log(res.data);
+          setFollowerList(res.data);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    };
+    getFriendList();
+    getFollowingList();
+    getFollowerList();
+  }, []);
+
+  // 팔로우 & 언팔로우(/api/friend/follow)
+  const follow = (friendId: number) => {
+    axios
+      .post(
+        'http://localhost:8080/api/friend/follow',
+        {
+          friendId: friendId,
+        },
+        {
+          headers: {
+            Authorization: ACCESS_TOKEN,
+          },
+        },
+      )
+      .then((res) => {
+        console.log(res.data);
+        // setIsFollowed(true);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+
+  // 친구 검색: 추후 구현
+
   // const firstCanvas = document.getElementById('main-canvas');
   // const canvasRef = useRef<HTMLCanvasElement>(null);
   // const canvasCon = document.getElementById('main-canvas');
@@ -27,16 +121,42 @@ export default function Home() {
     const homeCanvas = new MainCanvas(items);
     // const canvas = document.querySelector('canvas');
     // console.log(canvas);
-    console.log('useeffect');
+    // console.log('useeffect');
     const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
 
-    return () => cancelAnimationFrame(requestId);
+    return () => {
+      cancelAnimationFrame(requestId);
+      console.log('canvas 끝!');
+    };
   }, []);
   return (
     <Div>
+      {/* 모달들 */}
+      {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
+      <HomeAlert>집으로 들어갈래?</HomeAlert>
+      <WitAlert></WitAlert>
+      <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
+      {/* 버튼들 */}
+      <FriendButton
+        onClick={() => {
+          setIsModal(true);
+        }}
+      >
+        {/* <GiThreeFriends /> */}
+        친구
+      </FriendButton>
+      <FriendModal
+        isModal={isModal}
+        setIsModal={setIsModal}
+        friendList={friendList}
+        followingList={followingList}
+        followerList={followerList}
+        follow={follow}
+      ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
+      {/* <Div id="shop"></Div> */}
       <Div id="main-canvas"></Div>
     </Div>
   );
