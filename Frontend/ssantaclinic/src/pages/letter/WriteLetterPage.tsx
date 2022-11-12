@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { WriteLetter } from '../../components/letter/WriteLetter';
 import { Wrapper, CanvasContainer, LetterContainer } from './styles';
-import { LetterWrite } from '../../three/LetterWrite';
+import { LetterWriteModel } from '../../three/LetterWrite';
 export const WriteLetterPage = () => {
   useEffect(() => {
-    const letterCanvas = new LetterWrite();
+    const letterCanvas = new LetterWriteModel();
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
       letterCanvas.render.bind(letterCanvas),
