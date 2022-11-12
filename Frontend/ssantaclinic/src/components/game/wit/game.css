@@ -5,12 +5,15 @@
 .game-container {
   z-index: 999;
   background-color: white;
-  width: 600px;
-  height: 800px;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   border: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 }
 
 button {

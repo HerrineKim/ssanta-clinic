@@ -15,7 +15,8 @@ const shuffleArray = (array: number[]) => {
   return array;
 };
 
-export default function WitsModal() {
+export default function WitsModal(props: any) {
+  const { onClose } = props;
   const [numbers, setNumbers] = useState(array);
   const [gameFlag, setGameFlag] = useState(false);
   const [current, setCurrent] = useState(1);
@@ -52,6 +53,14 @@ export default function WitsModal() {
   // console.log(typeof handleClick);
   return (
     <div className="game-container">
+      <button
+        className="outbtn"
+        onClick={() => {
+          onClose(false);
+        }}
+      >
+        나가기
+      </button>
       <Board numbers={numbers} handleClick={handleClick}></Board>
       {gameFlag ? <Timer></Timer> : <button onClick={startGame}>start</button>}
     </div>
