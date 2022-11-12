@@ -15,6 +15,6 @@ export function WitAlert() {
       </Div>
     );
   } else {
-    return <WitsModal></WitsModal>;
+    return <WitsModal onClose={setisHelp}></WitsModal>;
   }
 }
