@@ -4,7 +4,7 @@ import bgImage from '../../../../src/assets/image/bg.png';
 export const StyledTetrisWrapper = styled.div`
   width: 100%;
   height: 100vh;
-  // overflow: hidden;
+  overflow: hidden;
   outline: none;
 `;
 
@@ -12,9 +12,9 @@ export const StyledTetris = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 5px;
   padding-left: 40px;
   padding-right: 40px;
+  padding-top: 10px;
   margin: 0 auto;
 
   .display {
