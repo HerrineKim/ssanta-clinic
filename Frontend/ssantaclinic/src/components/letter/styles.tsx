@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const LetterWriteContainer = styled.div`
+export const LetterContainer = styled.div`
   display: flex;
   flex-direction: column;
 
@@ -77,6 +77,14 @@ export const MessageInput = styled.input`
   border-radius: 10px;
   background: #34502R;
   margin: 5px;
+`;
+export const Message = styled.div`
+  width: 25vw;
+  height: 60vh;
+  border-radius: 10px;
+  background: white;
+  margin: 5px;
+  margin-bottom: 10%;
 `;
 export const CheckButton = styled.button`
   background-color: #424b35;
