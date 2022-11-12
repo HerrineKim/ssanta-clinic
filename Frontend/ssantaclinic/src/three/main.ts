@@ -451,6 +451,9 @@ export class MainCanvas {
       // const target = this._raycaster.intersectObject(this._group[11]);
       // console.log('target : ', target);
       // console.log('targets: ', targets);
+
+      this._removeMemory();
+
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
           // this._zoomInven(this._showcase, 70);
@@ -471,6 +474,9 @@ export class MainCanvas {
         } else if (targets[0].object.name.includes('game2')) {
           console.log('game2!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 80);
+          setTimeout(() => {
+            this._setupWit();
+          }, 1500);
         }
         // else if (targets[0].object.name.includes('game3')) {
         //   console.log('game3!!!!!!!!!!!!!!');
@@ -805,10 +811,35 @@ export class MainCanvas {
     }
     this._isAlert = true;
   }
+  // 순발력
+  _setupWit() {
+    this._isGame2 = true;
+    const memoryAlert = document.querySelector(
+      '.witAlert',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (memoryAlert !== null) {
+      console.log('memoryAlert');
+      memoryAlert.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+  _removeWit() {
+    const memoryAlert = document.querySelector(
+      '.witAlert',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (memoryAlert !== null) {
+      memoryAlert.style.display = 'none';
+    }
+    this._isAlert = false;
+  }
 
   // 기억력게임
   _setupMemory() {
     this._isZoom = true;
+
+    this._isGame4 = true;
 
     const memoryAlert = document.querySelector(
       '.memoryAlert',

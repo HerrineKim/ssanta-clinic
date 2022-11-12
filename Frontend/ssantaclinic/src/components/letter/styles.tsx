@@ -1,15 +1,20 @@
 import styled from 'styled-components';
 
-export const LetterWriteContainer = styled.div`
+export const LetterContainer = styled.div`
   display: flex;
   flex-direction: column;
 
   #header {
-    margin: 2% auto;
+    display: inline-block;
+    float: right;
+    margin-left: 68%;
     color: white;
   }
   #set-category {
-    margin: 1% auto;
+    display: inline-block;
+    float: right;
+    margin-left: 62%;
+    margin-top: 3%;
   }
   #title-container {
     margin: 1% 10%;
@@ -18,7 +23,9 @@ export const LetterWriteContainer = styled.div`
     margin: 1% 10%;
   }
   .send-button {
-    margin: 1% 48%;
+    display: inline-block;
+    float: right;
+    margin-right: 13%;
   }
 `;
 
@@ -52,7 +59,7 @@ export const Button = styled.button`
 
   @media (min-width: 768px) {
   {
-    min-width: 120px;
+    min-width: 150px;
     padding: 0 25px;
   }
 `;
@@ -70,6 +77,14 @@ export const MessageInput = styled.input`
   border-radius: 10px;
   background: #34502R;
   margin: 5px;
+`;
+export const Message = styled.div`
+  width: 25vw;
+  height: 60vh;
+  border-radius: 10px;
+  background: white;
+  margin: 5px;
+  margin-bottom: 10%;
 `;
 export const CheckButton = styled.button`
   background-color: #424b35;
@@ -102,7 +117,7 @@ export const CheckButton = styled.button`
 
   @media (min-width: 768px) {
   {
-    min-width: 120px;
+    min-width: 150px;
     padding: 0 25px;
   }
 `;
