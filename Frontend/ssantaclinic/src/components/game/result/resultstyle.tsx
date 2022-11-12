@@ -17,3 +17,10 @@ export const ResultDiv = styled.div`
   justify-content: center;
   align-items: center;
 `;
+
+export const CoinImg = styled.img`
+  width: 50px;
+  height: 50px;
+  z-index: 999;
+  vertical-align: middle;
+`;
