@@ -837,12 +837,10 @@ export class MainCanvas {
 
   // 기억력게임
   _setupMemory() {
-<<<<<<< HEAD
     this._isZoom = true;
 
-=======
     this._isGame4 = true;
->>>>>>> feature/fe/wits
+
     const memoryAlert = document.querySelector(
       '.memoryAlert',
     ) as HTMLElement | null;
