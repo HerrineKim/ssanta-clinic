@@ -4,7 +4,7 @@ import { Camera } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-export class LetterWriteModel {
+export class LetterReceiveModel {
   _model2: any;
   _bloomPass: any;
   _composer: any;
@@ -63,12 +63,12 @@ export class LetterWriteModel {
   }
   _setupLight() {
     const color = '#E2E892';
-    const light = new THREE.PointLight(color, 2);
+    const light = new THREE.PointLight(color, 3);
     light.position.set(0, 0.723, 0.079);
     this._scene.add(light);
   }
   _setupModel() {
-    new GLTFLoader().load('/letter/letter_write.glb', (gltf) => {
+    new GLTFLoader().load('/letter/letter_receive.glb', (gltf) => {
       const model1 = gltf.scene;
       this._scene.add(model1);
     });
