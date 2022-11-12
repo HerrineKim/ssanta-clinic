@@ -3,6 +3,8 @@ import React, { useState, useCallback, useEffect } from 'react';
 import Timer from './Timer';
 import './game.css';
 
+import Result from '../result/Result';
+
 const array: number[] = [];
 for (let i = 1; i <= 25; i++) {
   array.push(i);
@@ -19,39 +21,47 @@ export default function WitsModal(props: any) {
   const { onClose } = props;
   const [numbers, setNumbers] = useState(array);
   const [gameFlag, setGameFlag] = useState(false);
+  const [roundFlag, setRoundFlag] = useState(false);
   const [current, setCurrent] = useState(1);
   const [isFail, setIsFail] = useState<boolean>(false);
+  const [isResult, setIsResult] = useState<boolean>(false);
   const [gameClear, setGameClear] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(4);
 
   const [time, setTime] = useState<number>(0);
   const [clickCount, setClickCount] = useState<number>(3);
 
-  const handleClick = (num: number) => {
-    if (num === current) {
-      if (num === 50) {
-        console.log('Success');
-        clear();
-        //게임 끝 구현
-      }
-      const index = numbers.indexOf(num);
-      setNumbers((numbers) => [
-        ...numbers.slice(0, index),
-        num < 26 ? num + 25 : 0,
-        ...numbers.slice(index + 1),
-      ]);
-      setCurrent((current) => current + 1);
-    } else {
-      if (clickCount === 1) {
-        gameover();
+  const handleClick = (num: number, e: any) => {
+    if (roundFlag) {
+      if (num === current) {
+        e.target.style.borderColor = '#12de48';
+        setTimeout(() => {
+          e.target.style.borderColor = '#f5f5f5';
+        }, 300);
+        if (num === 50) {
+          console.log('Success');
+          clear();
+          //게임 끝 구현
+        }
+        const index = numbers.indexOf(num);
+        setNumbers((numbers) => [
+          ...numbers.slice(0, index),
+          num < 26 ? num + 25 : 0,
+          ...numbers.slice(index + 1),
+        ]);
+        setCurrent((current) => current + 1);
       } else {
-        setClickCount((prev) => prev - 1);
+        if (clickCount === 1) {
+          gameover();
+        } else {
+          setClickCount((prev) => prev - 1);
+          e.target.style.borderColor = '#bf1f1f';
+          setTimeout(() => {
+            e.target.style.borderColor = '#f5f5f5';
+          }, 300);
+        }
       }
     }
-  };
-
-  const endGame = () => {
-    setGameFlag(false);
   };
 
   const startGame = () => {
@@ -67,7 +77,7 @@ export default function WitsModal(props: any) {
       clearTimeout(countdown);
       setNumbers(shuffleArray(array));
       setCurrent(1);
-      setGameFlag(true);
+      setRoundFlag(true);
     }, 4000);
   };
 
@@ -91,10 +101,22 @@ export default function WitsModal(props: any) {
   }, []);
 
   const gameover = useCallback(() => {
+    //npc 대화 처리
     console.log('gameover!!!!');
     setGameFlag(false);
     setIsFail(true);
+    setRoundFlag(false);
   }, []);
+
+  const result = () => {
+    setIsResult(true);
+    if (isFail) {
+      console.log('실망..');
+    }
+    if (gameClear) {
+      console.log(time);
+    }
+  };
 
   // console.log(typeof handleClick);
   return (
@@ -108,6 +130,15 @@ export default function WitsModal(props: any) {
         나가기
       </button>
       <div className="wit-content">
+        {isResult ? (
+          <Result
+            isSucces={gameClear}
+            time={null}
+            round={null}
+            onClose={onClose}
+          ></Result>
+        ) : null}
+
         <div className="wit-header">
           <div className="round-counter">{time}</div>
           <div className="click-count">기회: {clickCount}</div>
@@ -116,21 +147,26 @@ export default function WitsModal(props: any) {
           <div className="memory-start">
             {(isFail || gameClear) && (
               <div className="memory-'result'">
-                {gameClear && (
-                  <div className="memory-'clear'">Congratulation!</div>
+                {isFail ? (
+                  <div className="wit-over">Game Over!</div>
+                ) : (
+                  gameClear && <div className="wit-clear">Congratulation!</div>
                 )}
               </div>
             )}
-            <span
+            <div
               className="memory-'start__text"
               style={{ fontSize: gameClear || isFail ? '5vmin' : '20vmin' }}
               onClick={() => {
-                startGame();
-                console.log('click');
+                if (isFail || gameClear) {
+                  result();
+                } else {
+                  startGame();
+                }
               }}
             >
-              {isFail || gameClear ? 'Restart' : 'Start'}
-            </span>
+              {isFail || gameClear ? '결과 확인' : 'Start'}
+            </div>
           </div>
         )}
         <div className="memory-status">
@@ -144,7 +180,7 @@ export default function WitsModal(props: any) {
             <div
               key={index}
               className="cell-container"
-              onClick={() => handleClick(num)}
+              onClick={(event) => handleClick(num, event)}
             >
               {num !== 0 ? num : null}
             </div>

@@ -36,7 +36,8 @@ button {
 }
 
 .cell-container {
-  border: 1px solid red;
+  border: 3px solid whitesmoke;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,4 +60,21 @@ button {
   justify-content: space-between;
   align-items: flex-end;
   padding: 10px 10px;
+}
+.wit-clear {
+  font-weight: 700;
+  font-size: 60px;
+  white-space: nowrap;
+  margin-bottom: 5vmin;
+  color: green;
+}
+.wit-over {
+  font-weight: 700;
+  font-size: 60px;
+  white-space: nowrap;
+  margin-bottom: 5vmin;
+  color: red;
+}
+.click-count {
+  color: green;
 }
