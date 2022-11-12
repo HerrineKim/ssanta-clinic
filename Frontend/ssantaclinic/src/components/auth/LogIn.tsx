@@ -14,20 +14,12 @@ export const LogIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [button, setButton] = useState<boolean>(true);
+  const [notificacoes, setNotificacoes] = useState([]);
   const setUserState = useSetRecoilState(currentUser);
   const navigate = useNavigate();
+  // const EventSource = EventSourcePolyfill;
   let accessToken: any = '';
 
-  // const EventSource = EventSourcePolyfill;
-  // const eventSource = new EventSource('/api/noti/sub');
-  // eventSource.onmessage = (event) => {
-  //   const data = JSON.parse(event.data);
-  //   console.log(data.message);
-  // };
-  // eventSource.onerror = (error) => {
-  //   console.log(error);
-  //   eventSource.close();
-  // };
   useEffect(() => {
     if (localStorage.getItem('jwt') !== '') {
       alert('로그인 했잖아요;;');
@@ -52,8 +44,11 @@ export const LogIn = () => {
           nickname: res.data.nickName,
           noti: [],
         });
-        // const TOKEN = localStorage.getItem('jwt');
+        const TOKEN = localStorage.getItem('jwt');
         // subSSE(TOKEN);
+        // setTimeout(() => {
+        //   subSSE(TOKEN);
+        // }, 660000);
         // navigate('/test'); // Login 성공하면 일단 내 방으로
         navigate('/logintohome');
       })
@@ -62,34 +57,44 @@ export const LogIn = () => {
       });
   };
 
-  // function subSSE(TOKEN: any) {
-  //   console.log('알림 구독실행');
-  //   let eventSource: any;
-  //   const fetchSse = async () => {
-  //     try {
-  //       eventSource = new EventSourcePolyfill(LOCAL + '/api/noti/sub', {
-  //         headers: {
-  //           Authorization: TOKEN,
-  //         },
-  //       });
+  function subSSE(TOKEN: any) {
+    console.log('알림 구독실행');
+    const eventSource = new EventSourcePolyfill(LOCAL + '/api/noti/sub', {
+      headers: {
+        Authorization: TOKEN,
+      },
+      heartbeatTimeout: 900000,
+    });
 
-  //       /* EVENTSOURCE ONMESSAGE ---------------------------------------------------- */
-  //       eventSource.onmessage = async (event: any) => {
-  //         const res = await event.data;
-  //         console.log(res);
-  //       };
-
-  //       /* EVENTSOURCE ONERROR ------------------------------------------------------ */
-  //       eventSource.onerror = async (event: any) => {
-  //         console.log(event);
-  //       };
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchSse();
-  //   return () => eventSource.close();
-  // }
+    console.log(eventSource.readyState);
+    eventSource.addEventListener('open', function (e: any) {
+      console.log(e, '오픈');
+    });
+    eventSource.addEventListener('message', function (e: any) {
+      console.log(e.data, 'addevent');
+    });
+    console.log(eventSource.readyState);
+    eventSource.addEventListener('error', function (e: any) {
+      if (e.readyState == EventSource.CLOSED) {
+        // Connection was closed.
+      }
+    });
+  }
+  async function getNotiList(TOKEN: any) {
+    console.log('비동기 안되냐');
+    await axios
+      .get(LOCAL + '/api/noti/list', {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res, '리스트');
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
 
   //아이디에 '@'가 포함되어 있고, 비밀번호가 5자리 이상일 때 로그인버튼이 활성화되는 기능을 구현해 보자!
   function changeButton() {

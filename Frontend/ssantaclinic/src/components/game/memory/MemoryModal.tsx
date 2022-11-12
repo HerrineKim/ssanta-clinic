@@ -3,9 +3,6 @@ import './game.css';
 import { gsap } from 'gsap';
 
 export default function MemoryModal(props: any) {
-  // const imageStyle: CSSProperties = {
-  //   backgroundImage: url('/assets/image/house/house1.png'),
-  // };
   const { onClose } = props;
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Board from '../../components/game/Board';
-import Timer from '../../components/game/Timer';
+import Board from '../Board';
+import Timer from '../Timer';
 import './game.css';
 
 const array: number[] = [];
@@ -15,7 +15,7 @@ const shuffleArray = (array: number[]) => {
   return array;
 };
 
-export default function WitsPage() {
+export default function WitsModal() {
   const [numbers, setNumbers] = useState(array);
   const [gameFlag, setGameFlag] = useState(false);
   const [current, setCurrent] = useState(1);

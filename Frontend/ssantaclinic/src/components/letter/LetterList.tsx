@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LetterContainer, Message } from './styles';
 
 export const ReceiveLetter = () => {
-  const [message, setMessage] = useState<string>('크쿠르삥뻥');
+  const [message, setMessage] = useState<string>('');
   const [title, setTitle] = useState<string>('');
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   useEffect(() => {
@@ -27,12 +26,15 @@ export const ReceiveLetter = () => {
   });
 
   return (
-    <LetterContainer id="write-letter-container">
-      <div id="message-container">
-        <Message id="message">
-          <p>{message}</p>
-        </Message>
+    <div id="receive-letter-container">
+      <div>
+        <h1>산타가 답장해 줬어!</h1>
       </div>
-    </LetterContainer>
+      <div>
+        <h2>호호호</h2>
+        <h3>{title}</h3>
+        <p>{message}</p>
+      </div>
+    </div>
   );
 };
