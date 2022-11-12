@@ -5,6 +5,7 @@ import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
 import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
+import { WitAlert } from '../../components/main/witalert/Wit';
 import { HomeAlert } from '../../components/main/homealert';
 import axios from 'axios';
 import { FriendButton } from './styles';
@@ -134,6 +135,7 @@ export default function Home() {
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
+      <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
