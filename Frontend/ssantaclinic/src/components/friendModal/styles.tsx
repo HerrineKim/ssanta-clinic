@@ -90,6 +90,7 @@ export const FollowerContainer = styled.div`
   width: 50%;
   height: 100%;
   padding: 0 10px;
+  overflow-y: scroll;
 `;
 
 export const FollowerText = styled.div`
@@ -139,6 +140,7 @@ export const FollowingContainer = styled.div`
   width: 50%;
   height: 100%;
   padding: 0 10px;
+  overflow-y: scroll;
 `;
 
 export const FollowingText = styled.div`
@@ -153,6 +155,7 @@ export const FollowingText = styled.div`
 export const SearchListContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
+  z-index: 1;
 `;
