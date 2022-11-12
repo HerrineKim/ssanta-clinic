@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import Timer from './Timer';
 import './game.css';
@@ -24,6 +24,7 @@ export default function WitsModal(props: any) {
   const [gameClear, setGameClear] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(4);
   const [clickedCards, setClickedCards] = useState<Array<string>>([]);
+  const [time, setTime] = useState<number>(0);
 
   const handleClick = (num: number) => {
     if (num === current) {
@@ -52,12 +53,13 @@ export default function WitsModal(props: any) {
 
   const startGame = () => {
     setGameFlag(true);
+    setTime(0);
 
     const countdown = setInterval(() => {
       setCountdown((prev) => prev - 1);
     }, 1000);
 
-    const startTimer = setTimeout(() => {
+    setTimeout(() => {
       setCountdown(0);
       clearTimeout(countdown);
       setNumbers(shuffleArray(array));
@@ -65,6 +67,18 @@ export default function WitsModal(props: any) {
       setGameFlag(true);
     }, 4000);
   };
+
+  useEffect(() => {
+    let limitTimeCounter: NodeJS.Timer;
+    if (gameFlag) {
+      setTimeout(() => {
+        limitTimeCounter = setInterval(() => {
+          setTime((prev) => prev + 1);
+        }, 1000);
+      }, 4000);
+    }
+    return () => clearInterval(limitTimeCounter);
+  }, [gameFlag]);
 
   //게임 클리어
   const clear = useCallback(() => {
@@ -92,6 +106,9 @@ export default function WitsModal(props: any) {
         나가기
       </button>
       <div className="wit-content">
+        <div className="memory-header">
+          <div className="round-counter">{time}</div>
+        </div>
         {(!gameFlag || isFail || gameClear) && (
           <div className="memory-start">
             {(isFail || gameClear) && (
