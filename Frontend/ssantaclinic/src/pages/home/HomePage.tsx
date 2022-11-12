@@ -18,7 +18,6 @@ export default function Home() {
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
-  const [searchList, setSearchList] = useState([]);
   const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
