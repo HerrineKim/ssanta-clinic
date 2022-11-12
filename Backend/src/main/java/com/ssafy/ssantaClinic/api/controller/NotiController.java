@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.api.controller;
 
+import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.NotiService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import io.swagger.annotations.Api;
@@ -12,13 +13,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 
 /**
  * @FileName : NotiController
  * @Class 설명 : 알림 관련 요청을 처리하는 Controller
  */
-@Api(value = "알림 관련 API", tags = {"NotiController"}, description = "알림 관련 컨트롤러")
+@Api(value = "알림 관련 API", tags = {"NotiController"})
 @RestController
 @Slf4j
 @CrossOrigin(origins = "*")
@@ -34,7 +36,7 @@ public class NotiController {
     })
     @GetMapping(value = "/sub",
                 produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<?> subscribe(
+    public ResponseEntity<SseEmitter> subscribe(
             @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
         /**
          * @Method Name : subscribe
@@ -42,13 +44,30 @@ public class NotiController {
          */
         // 현재 로그인한 유저의 아이디 가져오기
         int userId = JwtUtil.getCurrentUserId();
-        notiService.subscribe(userId, lastEventId);
+        SseEmitter sseEmitter = notiService.subscribe(userId, lastEventId);
         // 헤더 설정
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.set("Content-Type", "text/event-stream");
         headers.set("Cache-Control", "no-cache");
         // 리버스 프록시에서의 오동작을 방지
         headers.set("X-Accel-Buffering", "no");
-        return ResponseEntity.ok().headers(headers).build();
+        return ResponseEntity.ok().headers(headers).body(sseEmitter);
+    }
+
+    @ApiOperation(value = "미개봉 상자 알림", notes = "어드벤트 캘린더 알림 얻기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping("/list")
+    public ResponseEntity<SseEmitter> getAdventCalendarAlarm() {
+        /**
+         * @Method Name : getAdventCalendarAlarm
+         * @Method 설명 : 어드벤트 캘린더 알림 얻기
+         */
+        // 현재 로그인한 유저의 아이디 가져오기
+        int userId = JwtUtil.getCurrentUserId();
+        notiService.sendUnOpenedBoxNotification(userId);
+        return ResponseEntity.ok().header("X-Accel-Buffering", "no").build();
     }
 }

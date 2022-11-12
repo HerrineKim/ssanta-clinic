@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.api.service;
 
+import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.Follow;
@@ -69,5 +70,11 @@ public class FollowServiceImpl implements FollowService {
     public List<User> getFollowingList(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowings().stream().map(Follow::getParent).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FriendResponse> getRecommendFriendList() {
+        return userRepository.findTop10ByOrderByLastLoginAtDesc()
+                .stream().map(User::getFriendResponse).collect(Collectors.toList());
     }
 }

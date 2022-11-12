@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import { selectUserNickname, selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import {
-  LetterWriteContainer,
+  LetterContainer,
   Button,
   TitleInput,
   MessageInput,
   CheckButton,
 } from './styles';
 
-type Keyword = '취업' | '진로';
+type Keyword = '취업' | '진로' | '크리스마스';
 
 export const WriteLetter = () => {
   const [message, setMessage] = useState<string>('');
@@ -52,35 +52,42 @@ export const WriteLetter = () => {
       });
   };
   const toggleJob = () => {
-    setIsJobSelect(!isJobSelect);
-    setIsFutureSelect(!isFutureSelect);
-    setIsCristmasSelect(!isChristmasSelect);
-    if (isJobSelect) {
+    if (!isJobSelect) {
+      setIsJobSelect(!isJobSelect);
+      if (isFutureSelect) {
+        setIsFutureSelect(!isFutureSelect);
+      }
+      if (isChristmasSelect) {
+        setIsCristmasSelect(!isChristmasSelect);
+      }
       setKeyword('취업');
     }
-
-    console.log(isJobSelect, isFutureSelect);
   };
 
   const toggleFuture = () => {
-    setIsFutureSelect(!isFutureSelect);
-    setIsJobSelect(!isJobSelect);
-    setIsCristmasSelect(!isChristmasSelect);
-    if (isJobSelect) {
+    if (!isFutureSelect) {
+      setIsFutureSelect(!isFutureSelect);
+      if (isJobSelect) {
+        setIsJobSelect(!isJobSelect);
+      }
+      if (isChristmasSelect) {
+        setIsCristmasSelect(!isChristmasSelect);
+      }
       setKeyword('진로');
     }
-
-    console.log(isJobSelect, isFutureSelect);
   };
   const toggleCristmas = () => {
-    setIsFutureSelect(!isFutureSelect);
-    setIsJobSelect(!isJobSelect);
-    setIsCristmasSelect(!isChristmasSelect);
-    if (isJobSelect) {
-      setKeyword('진로');
-    }
+    if (!isChristmasSelect) {
+      setIsCristmasSelect(!isChristmasSelect);
 
-    console.log(isJobSelect, isFutureSelect);
+      if (isJobSelect) {
+        setIsJobSelect(!isJobSelect);
+      }
+      if (isFutureSelect) {
+        setIsFutureSelect(!isFutureSelect);
+        setKeyword('크리스마스');
+      }
+    }
   };
   function changeButton() {
     message.length >= 10 ? setButton(false) : setButton(true);
@@ -100,9 +107,9 @@ export const WriteLetter = () => {
   );
 
   return (
-    <LetterWriteContainer id="write-letter-container">
+    <LetterContainer id="write-letter-container">
       <div id="header">
-        <h1>{NICNAME}님은 어떤 고민이 있나요?</h1>
+        <h1>어떤 고민이 있나요?</h1>
       </div>
       <div id="set-category">
         <CheckButton onClick={toggleJob}>
@@ -140,6 +147,6 @@ export const WriteLetter = () => {
           </Button>
         </form>
       </div>
-    </LetterWriteContainer>
+    </LetterContainer>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import YouTube, { YouTubeProps } from 'react-youtube';
+import './calendar.css';
 
 import Countdown from 'react-countdown';
 import { TopContainer } from './styles';
@@ -254,6 +255,16 @@ export function CalendarPage() {
           </MiniContainerSix>
         </CalendarRightContainer>
       </CalendarPageContainer>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
     </CalendarBackground>
   );
 }
