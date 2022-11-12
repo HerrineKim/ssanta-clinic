@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Timer from './Timer';
 import './game.css';
@@ -20,6 +20,10 @@ export default function WitsModal(props: any) {
   const [numbers, setNumbers] = useState(array);
   const [gameFlag, setGameFlag] = useState(false);
   const [current, setCurrent] = useState(1);
+  const [isFail, setIsFail] = useState<boolean>(false);
+  const [gameClear, setGameClear] = useState<boolean>(false);
+  const [countdown, setCountdown] = useState<number>(4);
+  const [clickedCards, setClickedCards] = useState<Array<string>>([]);
 
   const handleClick = (num: number) => {
     if (num === current) {
@@ -46,10 +50,26 @@ export default function WitsModal(props: any) {
     setNumbers(shuffleArray(array));
     setCurrent(1);
     setGameFlag(true);
+    setCountdown(4);
   };
   const endGame = () => {
     setGameFlag(false);
   };
+
+  //게임 클리어
+  const clear = useCallback(() => {
+    // 클리어시 돈 받기 axios + 클리어 alert
+    setGameClear(true);
+    setGameFlag(false);
+  }, []);
+
+  const gameover = useCallback(() => {
+    console.log('gameover!!!!');
+    // 게임 오버시 round 만큼 돈 axios + 게임 오버 alert
+    setGameFlag(false);
+    setIsFail(true);
+  }, [clickedCards]);
+
   // console.log(typeof handleClick);
   return (
     <div className="game-container">
@@ -62,6 +82,33 @@ export default function WitsModal(props: any) {
         나가기
       </button>
       <div className="wit-content">
+        {(!gameFlag || isFail || gameClear) && (
+          <div className="memory-start">
+            {(isFail || gameClear) && (
+              <div className="memory-'result'">
+                {gameClear && (
+                  <div className="memory-'clear'">Congratulation!</div>
+                )}
+              </div>
+            )}
+            <span
+              className="memory-'start__text"
+              style={{ fontSize: gameClear || isFail ? '5vmin' : '20vmin' }}
+              onClick={() => {
+                startGame();
+                console.log('click');
+              }}
+            >
+              {isFail || gameClear ? 'Restart' : 'Start'}
+            </span>
+          </div>
+        )}
+        <div className="memory-status">
+          {isFail
+            ? ''
+            : gameFlag &&
+              (countdown === 0 ? 'Click!' : countdown !== 4 && countdown)}
+        </div>
         <div className="board-container">
           {numbers.map((num: number, index: number) => (
             <div
@@ -74,7 +121,7 @@ export default function WitsModal(props: any) {
           ))}
         </div>
       </div>
-      {gameFlag ? <Timer></Timer> : <button onClick={startGame}>start</button>}
+      {/* {gameFlag ? <Timer></Timer> : <button onClick={startGame}>start</button>} */}
     </div>
   );
 }
