@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.db.entity;
 
+import com.ssafy.ssantaClinic.api.response.LetterResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,6 +24,10 @@ public class ReplyLetter {
     @JoinColumn(name = "send_letter_id")
     private SendLetter sendLetter;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @NotBlank
     private String title;
     @NotBlank
@@ -35,4 +40,15 @@ public class ReplyLetter {
     @Column(name = "is_received")
     @Builder.Default
     private LocalDateTime isReceived = LocalDateTime.now().plusHours(2);
+
+    public LetterResponse.ReplyLetterResponse toReplyLetterResponse() {
+        return LetterResponse.ReplyLetterResponse.builder()
+                .replyLetterId(ReplyLetterId)
+                .sendLetterId(sendLetter.getSendLetterId())
+                .title(title)
+                .message(message)
+                .isRead(isRead)
+                .receivedAt(isReceived.plusHours(9).toString())
+                .build();
+    }
 }

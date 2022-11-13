@@ -18,17 +18,13 @@ public class LetterResponse {
         String title;
         String message;
         String sendAt;
-        LetterType letterType;
-        SendLetterResponse(SendLetter letter){
-            this.sendLetterId = letter.getSendLetterId();
-            this.userId = letter.getUser().getUserId();
-            this.title = letter.getTitle();
-            this.message = letter.getMessage();
-            this.sendAt = letter.getRegDate().toString();
-            this.letterType = letter.getType();
-        }
+        LetterType type;
     }
 
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class ReplyLetterResponse{
         int replyLetterId;
         int sendLetterId;
@@ -36,14 +32,6 @@ public class LetterResponse {
         String message;
         boolean isRead;
         String receivedAt;
-        ReplyLetterResponse(ReplyLetter letter){
-            this.replyLetterId = letter.getReplyLetterId();
-            this.sendLetterId = letter.getSendLetter().getSendLetterId();
-            this.title = letter.getTitle();
-            this.message = letter.getMessage();
-            this.isRead = letter.isRead();
-            this.receivedAt = letter.getIsReceived().toString();
-        }
     }
 
     @Getter
@@ -52,6 +40,6 @@ public class LetterResponse {
     @Builder
     public static class LetterListResponse{
         List<SendLetterResponse> send;
-        List<ReplyLetterResponse> receive;
+        List<ReplyLetterResponse> reply;
     }
 }
