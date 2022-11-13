@@ -794,7 +794,6 @@ export class MainCanvas {
     this._isAlert = false;
   }
 
-
   // 테트리스
   _setupTetris() {
     console.log('setuptetris');
@@ -815,7 +814,8 @@ export class MainCanvas {
     // console.log(memoryAlert);
     if (tetrisAlert !== null) {
       tetrisAlert.style.display = 'none';
-
+    }
+  }
   // 편지
   _setupLetter() {
     this._isZoom = true;
@@ -840,7 +840,6 @@ export class MainCanvas {
     if (letterAlert !== null) {
       console.log('letterAlert');
       letterAlert.style.display = 'none';
-
     }
     this._isAlert = false;
   }
