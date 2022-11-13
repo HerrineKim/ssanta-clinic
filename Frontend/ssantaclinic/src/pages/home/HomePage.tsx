@@ -76,29 +76,6 @@ export default function Home() {
     getFollowerList();
   }, []);
 
-  // 팔로우 & 언팔로우(/api/friend/follow)
-  const follow = (friendId: number) => {
-    axios
-      .post(
-        'http://localhost:8080/api/friend/follow',
-        {
-          friendId: friendId,
-        },
-        {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        },
-      )
-      .then((res) => {
-        console.log(res.data);
-        // setIsFollowed(true);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   // 친구 검색: 추후 구현
 
   // const firstCanvas = document.getElementById('main-canvas');
@@ -136,7 +113,6 @@ export default function Home() {
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
-
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
@@ -155,7 +131,6 @@ export default function Home() {
         friendList={friendList}
         followingList={followingList}
         followerList={followerList}
-        follow={follow}
       ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>

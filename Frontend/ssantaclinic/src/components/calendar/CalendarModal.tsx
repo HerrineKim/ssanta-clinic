@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import './calendar.css';
+import './modalAnimation.scss';
+import { CalendarDetail } from '../calendar/calendarDetail/index';
 
 // Recoil
 import { selectUserNickname } from '../../store/store';
@@ -158,13 +160,16 @@ export function CalendarModal(props: any) {
   };
 
   // 모달창 노출 여부
-  // const [calendarOpen, setCalendarOpen] = React.useState<boolean>(false);
-  // // 모달창 노출
-  // const showCalendar = () => {
-  //   setCalendarOpen(true);
-  // };
+  const [calendarDetailOpen, setCalendarDetailOpen] = useState<boolean>(false);
+  const showCalendarDetail = () => {
+    setCalendarDetailOpen(true);
+  };
   return (
     <CalendarBackground>
+      <CalendarDetail
+        setCalendarDetailOpen={setCalendarDetailOpen}
+        calendarDetailOpen={calendarDetailOpen}
+      ></CalendarDetail>
       <div
         style={{
           position: 'fixed',
@@ -175,7 +180,14 @@ export function CalendarModal(props: any) {
         <YouTube videoId="8MhtzapYzGo" opts={opts} />
       </div>
       <TopContainer>
-        <CalendarTitle>{nickName}님의 2022년 어드벤트 캘린더</CalendarTitle>
+        <CalendarTitle>
+          {nickName}님의{' '}
+          {
+            // 오늘 연도
+            new Date().getFullYear()
+          }
+          년 어드벤트 캘린더
+        </CalendarTitle>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
@@ -209,7 +221,14 @@ export function CalendarModal(props: any) {
         <div>{sender}</div>
         <CalendarLeftContainer>
           <MiniContainerOne>
-            <BoxOne>1</BoxOne>
+            {/* 모달 오픈 */}
+            <BoxOne
+              onClick={() => {
+                showCalendarDetail();
+              }}
+            >
+              1
+            </BoxOne>
             <BoxTwo>2</BoxTwo>
             <BoxThree>3</BoxThree>
           </MiniContainerOne>

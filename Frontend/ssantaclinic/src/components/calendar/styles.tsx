@@ -11,7 +11,7 @@ export const CalendarBackground = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 2;
 `;
 
 export const TopContainer = styled.div`
