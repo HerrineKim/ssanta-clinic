@@ -240,11 +240,13 @@ export class MainCanvas {
     const group: any = [];
     const loader = new GLTFLoader();
     const items: any = [];
+    let count = 0;
 
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
     // 안눌러도 되는 맵 로드
     loader.load('main/santa2.glb', (gltf) => {
+      count += 1;
       // console.log(gltf);
       // console.log(gltf.scene);
       const m = gltf.scene;
@@ -306,70 +308,9 @@ export class MainCanvas {
       group.push(model);
     });
 
-    // showcase load 부분 => 나중에 showcase 파일 변경
-    // loader.load('main/showcase.glb', (gltf) => {
-    //   const model: any = gltf.scene;
-    //   model.traverse((child: any) => {
-    //     if (child instanceof THREE.Group) {
-    //       // console.log(child, child.name);
-    //       // group.push(child);
-    //     }
-    //   });
-    //   model.scale.set(20, 20, 20);
-    //   model.position.set(9, 0, -4.5);
-    //   model.children[0].children[0].children[0].children[0].children[0].material.color.set(
-    //     0xff00ff,
-    //   );
-
-    //   // this._scene.add(model);
-    //   // console.dir(model);
-    //   console.log('showcase:', model);
-    //   this._showcase = model;
-    //   inven.push(model);
-    // });
-
-    // tree load 했던 부분 => room으로 이동
-    // loader.load('main/lowtree.glb', (gltf) => {
-    //   const tree: any[] = [];
-    //   const model: any = gltf.scene;
-    //   model.traverse((child: any) => {
-    //     if (child instanceof THREE.Group) {
-    //       // console.log(child, child.name);
-    //       group.push(child);
-    //     }
-    //   });
-    //   model.position.set(5, 0, -4.5);
-    //   model.name = 'tree';
-    //   model.traverse((child: THREE.Object3D) => {
-    //     tree.push(child);
-    //     child.name = 'tree';
-    //   });
-    //   this._scene.add(model);
-    //   inven.push(model);
-    //   console.log('treegltf:', model);
-    //   this._tree = tree;
-    // });
-
-    // item load 부분
-    // const items: any[] = [];
-    // // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
-    // this._items.forEach((item, index) => {
-    //   // console.log('item:', item);
-    //   // console.log(index);
-    //   loader.load(`main/${item}.glb`, (gltf) => {
-    //     // console.log(index);
-    //     const model = gltf.scene;
-    //     // console.log(`${index}: `, model);
-    //     model.scale.set(0.01, 0.01, 0.01);
-    //     const position = this._position[`${index}`];
-    //     model.position.set(position[0], position[1], position[2]);
-    //     items.push(model);
-    //     // this._scene.add(model);
-    //   });
-    // });
-
     // x button load
     loader.load('main/shopclose.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
 
       this._close = model;
@@ -379,6 +320,7 @@ export class MainCanvas {
 
     // arrow
     loader.load('main/arrow.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       this._arrow = model;
 
@@ -390,6 +332,21 @@ export class MainCanvas {
     // this._inven = inven;
 
     // scene에 있는 모든 3dobj 검사
+    const loadPage = setInterval(() => {
+      console.log('로딩중');
+      console.log(count);
+      if (count === 3) {
+        const loading = document.querySelector(
+          '.loading',
+        ) as HTMLElement | null;
+
+        if (loading !== null) {
+          loading.style.display = 'none';
+        }
+
+        clearInterval(loadPage);
+      }
+    }, 1000);
 
     this._group = group;
     console.log(group);
@@ -412,19 +369,9 @@ export class MainCanvas {
   //클릭 함수
   _onClick(event: any) {
     console.log('click!!!');
-    // function saveArrayBuffer(buffer: any) {
-    //   const file = new Blob([buffer], { type: 'application/octet-stream' });
-    //   console.log('saveArray:', file);
-    //   return file;
-    // }
-
-    // let glbFile: Blob;
 
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
-    // console.log('click event:', event);
-    // console.log(event.offsetX);
-    // console.log(event.offsetY);
 
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
@@ -438,6 +385,7 @@ export class MainCanvas {
       // console.log('click함수 실행:', this._group);    클릭한것 검사
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
       if (arrowTarget.length > 0) {
+        this._scenenumber = 2;
         this._zoomInven(this._showcase, 70);
         return;
       }
@@ -543,6 +491,7 @@ export class MainCanvas {
       //   this._zoomInven(this._inven, 90);
       // }
     } else if (this._scenenumber === 2) {
+      console.log('scenenumber 22222222');
       // scenenumber == 2 일때
       const itemTarget = this._raycaster.intersectObjects(this._items);
       console.log(itemTarget);
@@ -752,16 +701,7 @@ export class MainCanvas {
     }
   }
   _setupAlert(itemId: string) {
-    // const alert = document.querySelector('.alert') as HTMLElement | null;
-    // console.dir(alert);
-    // if (alert !== null) {
-    //   alert.dataset.code = itemId;
-    // }
-    // if (alert !== null) {
-    //   console.log('alert');
-    //   alert.style.display = 'flex';
-    // }
-    // this._isAlert = true;
+    console.log('setupalert');
     const item = parseInt(itemId);
     const e = React.createElement;
     const shop = document.getElementById('shop');
@@ -772,26 +712,6 @@ export class MainCanvas {
       root.render(e(ShopAlert, [{ item: item }], null));
     }
   }
-
-  // shop 모달방식
-  // _removeAlert() {
-  //   const alert = document.querySelector('.alert') as HTMLElement | null;
-  //   console.log(alert);
-  //   if (alert !== null) {
-  //     alert.style.display = 'none';
-  //   }
-  //   this._isAlert = false;
-  // }
-
-  // _setupAlert() {
-  //   const alert = document.querySelector('.alert') as HTMLElement | null;
-  //   // console.log(alert);
-  //   if (alert !== null) {
-  //     console.log('alert');
-  //     alert.style.display = 'flex';
-  //   }
-  //   this._isAlert = true;
-  // }
 
   _removeHomeAlert() {
     const home = document.querySelector('.home') as HTMLElement | null;
