@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { createStage, isColliding } from './gameHelpers';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { playGameOverSound } from '../../../assets/sound/sound';
+import ResultMemory from '../result/ResultMemory';
 
 // Custom hooks
 import { useInterval } from '../../../hooks/tetris/useInterval';
@@ -42,6 +43,8 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
 
   const [dropTime, setDroptime] = React.useState<null | number>(null);
   const [gameOver, setGameOver] = React.useState(true);
+  const [isResult, setIsResult] = React.useState<boolean>(false);
+  const [isFail, setIsFail] = React.useState<boolean>(false);
 
   const gameArea = React.useRef<HTMLDivElement>(null);
 
@@ -99,6 +102,9 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
       }
     }
   };
+  const result = () => {
+    setIsResult(true);
+  };
 
   const drop = (): void => {
     // Increase level when player has cleared 10 rows
@@ -117,7 +123,8 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
         setGameOver(true);
         setDroptime(null);
         playGameOverSound();
-        alert(`게임 오버! 내 점수는 ${score}`);
+        setIsFail(true);
+        // alert(`게임 오버! 내 점수는 ${score}`);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
     }
@@ -169,7 +176,31 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
                 </>
               )}
             </div>
-            <Stage stage={stage} />
+            <div className="gameOverResult">
+              {isResult ? (
+                <ResultMemory
+                  isSucces={true}
+                  // isSucces={true}
+                  time={null}
+                  // time={11}
+                  round={null}
+                  onClose={onClose}
+                ></ResultMemory>
+              ) : null}
+              {isFail ? <div className="wit-over">Game Over!</div> : null}
+              <span
+                className="memory-'start__text"
+                style={{ fontSize: isFail ? '5vmin' : '20vmin' }}
+                onClick={() => {
+                  if (isFail) {
+                    result();
+                  }
+                }}
+              >
+                {isFail ? '결과 확인' : null}
+              </span>
+            </div>
+            <Stage stage={stage}></Stage>
           </StyledTetris>
         </StyledTetrisWrapper>
       </GlobalStyles>

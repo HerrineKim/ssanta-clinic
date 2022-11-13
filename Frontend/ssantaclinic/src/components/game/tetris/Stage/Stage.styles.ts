@@ -9,3 +9,9 @@ export const StyledStage = styled.div`
   border: 1px solid #777;
   background: #222;
 `;
+
+export const OverDiv = styled.div`
+  position: relative;
+  top: 50%;
+  left: 50%;
+`;
