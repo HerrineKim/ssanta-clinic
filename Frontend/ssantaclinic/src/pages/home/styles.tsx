@@ -13,6 +13,11 @@ export const Div = styled.div`
   position: relative;
   display: flex;
 `;
+export const ShopDiv = styled.div`
+  position: relative;
+  display: flex;
+  left: 50%;
+`;
 
 export const ModalDiv = styled.div`
   position: absolute;
