@@ -1,0 +1,21 @@
+insert into santa_letter (content, title, type) values('겨울이 겨울 다운 이유는 크리스마스가 있기 때문일 거에요. 하얀 눈과 크리스마스 캐럴, 크리스마스 트리의 불빛. 모두가 어울려 내는 겨울의 모습처럼 즐거운 크리스마스 보내시길 바랍니다. 사랑합니다.','겨울의 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('12월이 춥지 않은 이유는 크리스마스 때문일 거에요. 더 따뜻하고 더 행복한 크리스마스 보내세요. 메리 크리스마스!','따뜻한 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('메리 크리스마스! 붉은 색이 어울리는 크리스마스입니다. 붉은 빛처럼 따뜻한 크리스마스 보내시길 바랍니다.','붉은 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('반짝이는 크리스마스 트리의 불빛이 반짝이는 요즘입니다. 반짝이는 불빛처럼 반짝이고 행복한 크리스마스 보내시길 바랍니다. 메리 크리스마스!','반짝이는 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('크리스마스에 하얀 눈이 내리는 이유는 세상 온 곳을 따뜻하게 안으려는 하늘의 마음이 전해진 것이 아닐까요. 가정에도 따뜻한 크리스마스 보내시길 바라며, 주변에도 그 따뜻함 나누어 더 따뜻한 크리스마스 보내시길 바랍니다.','화이트 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('추운 겨울이 따뜻하게 느껴지는 이유가 크리스마스가 있기 때문이 아닌가 합니다. 따뜻한 크리스마스 보내시길 바라고, 새해에도 더 따뜻하고 행복한 일들이 함께 하기를 기원합니다.','겨울의 따뜻한 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('올 한해도 루돌프처럼 열심히 달리셨나요? 산타 할아버지께서 당신의 노력을 알고 아주 멋진 선물을 가져다주실 거에요 크리스마스의 기적이 일어나 당신의 꿈이 이뤄지길 바랍니다 행복의 종소리가 울려 퍼지는 메리 크리스마스 되세요','크리스마스의 선물','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('종교를 초월한 전 세계인의 축제 크리스마스입니다 크리스마스가 있기에 한 해의 마지막 달을 더욱 아름답게 마무리할 수 있어 좋습니다. 사랑하는 사람들께 따뜻한 말과 작은 선물로 감동과 진심을 전해보세요 연말 건강하고 알차게 보내시길 바랍니다.','크리스마스는 한 해의 마지막에 있어요.','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('누군가의 체온이 감사한 겨울입니다. 크리스마스에는 여러분의 따뜻함을 나누어 더 따뜻해지는 시간이 되길 소망합니다. 더 따뜻하고 더 행복한 크리스마스 보내세요.','따뜻한 크리스마스','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('온 세상이 크리스마스로 반짝입니다. 이런 때일수록 외로움이 더 커지고, 추위가 더 거세게 느껴지는 이들이 있습니다. 여러분의 따뜻한 마음을 나눌 수 있는 크리스마스가 되길 바랍니다. 여러분의 마음을 나눠주세요. 더 따뜻한 크리스마스 보내세요.','외로움과 추위를 막아주세요.','CHRISTMAS');
+
+insert into santa_letter (content, title, type) values('사랑과 은혜가 넘쳐나는 크리스마스를 보내세요. 얼마남지 않은 한해의 마지막이란 아쉬움 따위는 없도록 화려한 피날레를 거두시길 바랄게요.','한해의 마지막을 아쉬움 없이!','CHRISTMAS');

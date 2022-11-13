@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -26,6 +27,9 @@ public class Letter {
     @OneToOne
     @JoinColumn(name = "santa_letter_id")
     private SantaLetter santaLetter;
+
+    @ManyToOne
+    private Quote quote;
 
     @NotBlank
     private String title;
