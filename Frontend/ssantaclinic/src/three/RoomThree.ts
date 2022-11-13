@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { throws } from 'assert';
+// import { throws } from 'assert';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -148,7 +148,7 @@ export class RoomThree {
     //   0.1,
     //   1000,
     // );
-    const aspect = window.innerWidth / window.innerHeight;
+    // const aspect = window.innerWidth / window.innerHeight;
     // const camera = new THREE.OrthographicCamera(
     //   -10 * aspect,
     //   10 * aspect,
@@ -328,7 +328,7 @@ export class RoomThree {
       return file;
     }
 
-    let glbFile: Blob;
+    // let glbFile: Blob;
 
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
@@ -450,7 +450,7 @@ export class RoomThree {
 
         this._scenenumber = 1;
 
-        this._setupControls();
+        // this._setupControls();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
         }, 100);
@@ -677,7 +677,7 @@ export class RoomThree {
     //box 는 객체를 담는 최소크기 박스
     const box = new THREE.Box3().setFromObject(object3d);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
-    const sizeBox = box.getSize(new THREE.Vector3()).length();
+    // const sizeBox = box.getSize(new THREE.Vector3()).length();
     //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
     const centerBox = box.getCenter(new THREE.Vector3());
 
@@ -688,13 +688,13 @@ export class RoomThree {
       THREE.MathUtils.degToRad(viewAngle),
     );
 
-    const halfSizeModel = sizeBox * 0.5;
-    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
-    const distance = halfSizeModel / Math.tan(halfFov);
+    // const halfSizeModel = sizeBox * 0.5;
+    // const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
+    // const distance = halfSizeModel / Math.tan(halfFov);
 
-    const newPosition = new THREE.Vector3().copy(
-      direction.multiplyScalar(distance).add(centerBox),
-    );
+    // const newPosition = new THREE.Vector3().copy(
+    //   direction.multiplyScalar(distance).add(centerBox),
+    // );
 
     // this._camera.position.copy(newPosition);
     // this._orbitControls.target.copy(centerBox);
