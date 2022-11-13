@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Wrapper, CanvasContainer, LetterContainer } from './styles';
+import { Wrapper, CanvasContainer, LetterPageContainer } from './styles';
 import { ReceiveLetter } from '../../components/letter/ReceiveLetter';
 import { LetterReceiveModel } from '../../three/LetterReceive';
 export const ReceiveLetterPage = () => {
@@ -16,9 +16,9 @@ export const ReceiveLetterPage = () => {
   }, []);
   return (
     <Wrapper>
-      <LetterContainer>
+      <LetterPageContainer>
         <ReceiveLetter />
-      </LetterContainer>
+      </LetterPageContainer>
       <CanvasContainer id="letter-canvas"></CanvasContainer>
     </Wrapper>
   );
