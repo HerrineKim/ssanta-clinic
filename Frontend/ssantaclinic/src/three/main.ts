@@ -185,11 +185,11 @@ export class MainCanvas {
     // console.log(this._controls.PolarAngle, this._controls.minPolarAngle);
     // console.log(this._controls);
     // if (this._snow) {
-    //   if (this._mixer) {
-    //     // console.log('mixer');  //mixer는 charecter.glb의 animation
-    //     const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
-    //     this._mixer.update(deltaTime);
-    //   }
+    if (this._mixer) {
+      // console.log('mixer');  //mixer는 charecter.glb의 animation
+      const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
+      this._mixer.update(deltaTime);
+    }
     // }
 
     // 모델이 움직일때마다 모델박스 바껴야 하므로
@@ -247,7 +247,25 @@ export class MainCanvas {
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
     // 안눌러도 되는 맵 로드
-    loader.load('main/santa2.glb', (gltf) => {
+    loader.load('main/arrowmain.glb', (gltf) => {
+      const model1 = gltf.scene;
+      const animationClips = gltf.animations; //THREE.AnimationCLip []
+      const mixer = new THREE.AnimationMixer(model1);
+      const animationMap: any = {};
+      animationClips.forEach((clip) => {
+        const name = clip.name;
+        console.log(name);
+        animationMap[name] = mixer.clipAction(clip); //THREE.AnimationAction
+      });
+
+      this._mixer = mixer;
+      console.log(this._mixer);
+      this._animationMap = animationMap;
+      this._currentAnimationAction =
+        this._animationMap['Object_2.001Action.007'];
+      this._currentAnimationAction.play();
+
+      console.log(gltf);
       count += 1;
       // console.log(gltf);
       // console.log(gltf.scene);
