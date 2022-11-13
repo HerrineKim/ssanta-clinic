@@ -5,7 +5,7 @@ export const Div = styled.div`
   height: 40%;
   top: 30%;
   left: 30%;
-  z-index: 2;
+  z-index: 9999;
   background-color: white;
   position: fixed;
   display: flex;
