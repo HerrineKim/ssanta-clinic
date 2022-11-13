@@ -198,12 +198,88 @@ export const LoginContainer = styled.div`
     user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
+    margin-left: 1%;
   }
 
   @media (min-width: 768px) {
     #signup-button {
+      min-width: 200px;
+      padding: 0 25px;
+    }
+  }
+
+  #find-password-button {
+    background-color: #fbeee0;
+    border: 2px solid #422800;
+    border-radius: 30px;
+    box-shadow: #422800 4px 4px 0 0;
+    color: #422800;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 0 18px;
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    margin-left: 2%;
+  }
+
+  @media (min-width: 768px) {
+    #find-password-button {
+      min-width: 200px;
+      padding: 0 25px;
+    }
+  }
+`;
+
+export const FindPasswordContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  text-align: center;
+  #find-password-text {
+    font-family: 'Cafe24Ssurround';
+    padding-top: 5%;
+  }
+  #find-password-button {
+    background-color: #fbeee0;
+    border: 2px solid #422800;
+    border-radius: 30px;
+    box-shadow: #422800 4px 4px 0 0;
+    color: #422800;
+    cursor: pointer;
+    display: inline-block;
+    font-weight: 600;
+    font-size: 18px;
+    padding: 0 18px;
+    line-height: 50px;
+    text-align: center;
+    text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+  }
+
+  @media (min-width: 768px) {
+    #find-password-button {
       min-width: 150px;
       padding: 0 25px;
     }
+  }
+`;
+
+export const FindPasswordForm = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .find-password-input {
+    width: 30%;
+    height: 50px;
+    border-radius: 10px;
+    margin: 5px;
   }
 `;
