@@ -5,6 +5,7 @@ import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { CalendarAlert } from './calendaralert/Calendar';
+import Loading from '../loading/Loading';
 
 export default function RoomModal(props: any) {
   const { onClose } = props;
@@ -44,7 +45,7 @@ export default function RoomModal(props: any) {
     };
   }, []);
   return (
-    <Wrapper>
+    <Wrapper className="roommodal">
       <button
         className="outbtn"
         onClick={() => {
@@ -53,8 +54,11 @@ export default function RoomModal(props: any) {
       >
         나가기
       </button>
+
       <CalendarAlert></CalendarAlert>
-      <CanvasContainer id="room-canvas"></CanvasContainer>
+      <CanvasContainer id="room-canvas">
+        <Loading></Loading>
+      </CanvasContainer>
     </Wrapper>
   );
 }

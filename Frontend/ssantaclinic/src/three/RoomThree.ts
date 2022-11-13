@@ -208,9 +208,11 @@ export class RoomThree {
     this._scene.add(light2);
   }
   _setupModel() {
+    let count = 0;
     const inven: any[] = [];
     const loader = new GLTFLoader();
     loader.load('/room/smallroom2.glb', (gltf) => {
+      count += 1;
       const model = gltf.scene;
 
       this._scene.add(model);
@@ -223,6 +225,7 @@ export class RoomThree {
     });
     // x button load
     loader.load('/room/close.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       this._close = model;
 
@@ -232,6 +235,7 @@ export class RoomThree {
     });
     // check load
     loader.load('/room/check.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       this._check = model;
 
@@ -241,6 +245,7 @@ export class RoomThree {
     });
 
     loader.load('/room/tree.glb', (gltf) => {
+      count += 1;
       const tree: any[] = [];
       const model: any = gltf.scene;
       // model.traverse((child: any) => {
@@ -264,6 +269,7 @@ export class RoomThree {
     });
 
     loader.load('/room/showcase.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       // this._scene.add(model);
       // console.log('showcase:', model);
@@ -282,6 +288,7 @@ export class RoomThree {
       // console.log(index);
       if (item !== 0) {
         loader.load(`/main/${item}.glb`, (gltf) => {
+          count += 1;
           // console.log(index);
           const model = gltf.scene;
           // console.log(`${index}: `, model);
@@ -294,7 +301,25 @@ export class RoomThree {
         });
       }
     });
+    const itemCount = this._items.length;
     this._items = items;
+
+    const loadPage = setInterval(() => {
+      console.log('로딩중');
+      console.log(count);
+      console.log(itemCount);
+      if (count === itemCount + 5) {
+        const loading = document.querySelector(
+          '#room-canvas .loading',
+        ) as HTMLElement | null;
+
+        if (loading !== null) {
+          loading.style.display = 'none';
+        }
+
+        clearInterval(loadPage);
+      }
+    }, 1000);
   }
   _setupControls() {
     if (this._scenenumber === 1) {
