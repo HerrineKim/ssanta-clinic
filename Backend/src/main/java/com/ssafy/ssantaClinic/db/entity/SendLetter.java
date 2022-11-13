@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.db.entity;
 
+import com.ssafy.ssantaClinic.api.response.LetterResponse;
 import com.ssafy.ssantaClinic.db.entity.columnEnum.LetterType;
 import lombok.*;
 
@@ -30,9 +31,19 @@ public class SendLetter {
 
     @Column(name = "send_at")
     @Builder.Default
-    private LocalDateTime regDate = LocalDateTime.now();
+    private LocalDateTime sendAt = LocalDateTime.now();
 
     @NotBlank
     @Enumerated(EnumType.STRING)
     LetterType type;
+
+    public LetterResponse.SendLetterResponse toSendLetterResponse() {
+        return LetterResponse.SendLetterResponse.builder()
+                .sendLetterId(sendLetterId)
+                .title(title)
+                .message(message)
+                .sendAt(sendAt.plusHours(9).toString())
+                .type(type)
+                .build();
+    }
 }

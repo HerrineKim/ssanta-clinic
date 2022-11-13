@@ -4,11 +4,14 @@ import com.ssafy.ssantaClinic.api.request.SendLetterRequest;
 import com.ssafy.ssantaClinic.api.response.LetterResponse;
 import com.ssafy.ssantaClinic.db.entity.ReplyLetter;
 import com.ssafy.ssantaClinic.db.entity.SendLetter;
+import com.ssafy.ssantaClinic.db.entity.columnEnum.Emotion;
+import com.ssafy.ssantaClinic.db.entity.columnEnum.LetterType;
 
 import java.util.List;
 
 public interface LetterService {
-    void save(SendLetterRequest letterRequest);
+    SendLetter save(SendLetterRequest letterRequest);
+    void makeReplyLetter(Emotion emotion, LetterType type);
     List<SendLetter> getSendLetterList(int userId);
     List<ReplyLetter> getReplyLetterList(int userId);
     LetterResponse.LetterListResponse getLetterList(int userId);
