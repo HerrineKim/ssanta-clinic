@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unknown-property */
 import React, { useEffect } from 'react';
-import { MyRoom } from '../../components/MyRoom/MyRoom';
+// import { MyRoom } from '../../components/MyRoom/MyRoom';
 import { Wrapper, CanvasContainer } from './styles';
 import { RoomThree } from '../../three/RoomThree';
 
@@ -23,7 +23,7 @@ export const MyRoomPage = () => {
   }, []);
   return (
     <Wrapper>
-      <MyRoom />
+      {/* <MyRoom /> */}
       <CanvasContainer id="room-canvas"></CanvasContainer>
     </Wrapper>
   );
