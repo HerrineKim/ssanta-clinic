@@ -7,7 +7,11 @@ type Props = {
 };
 
 const Cell: React.FC<Props> = ({ type }) => (
-  <StyledCell type={type} color={TETROMINOS[type].color} />
+  <StyledCell
+    type={type}
+    color={TETROMINOS[type].color}
+    backgroundImage={`url(/game/house/house1.png)`}
+  />
 );
 
 export default React.memo(Cell);

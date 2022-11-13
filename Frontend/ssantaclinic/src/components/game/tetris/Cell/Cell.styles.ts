@@ -4,11 +4,14 @@ import { TETROMINOS } from '../../../../pages/game/tetris/setup';
 type Props = {
   type: keyof typeof TETROMINOS;
   color: string;
+  backgroundImage: string;
 };
 
 export const StyledCell = styled.div<Props>`
   width: auto;
   background: rgba(${(props) => props.color}, 0.8);
+  // background-image: ${(props) => props.backgroundImage};
+  // background-size: cover;
   border: ${(props) => (props.type === 0 ? '0px solid' : '4px solid')};
   border-bottom-color: rgba(${(props) => props.color}, 0.1);
   border-right-color: rgba(${(props) => props.color}, 1);
