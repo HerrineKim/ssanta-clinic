@@ -2,6 +2,7 @@ package com.ssafy.ssantaClinic.api.response;
 
 import com.ssafy.ssantaClinic.db.entity.ReplyLetter;
 import com.ssafy.ssantaClinic.db.entity.SendLetter;
+import com.ssafy.ssantaClinic.db.entity.columnEnum.LetterType;
 import lombok.*;
 
 import java.util.List;
@@ -17,12 +18,14 @@ public class LetterResponse {
         String title;
         String message;
         String sendAt;
+        LetterType letterType;
         SendLetterResponse(SendLetter letter){
             this.sendLetterId = letter.getSendLetterId();
             this.userId = letter.getUser().getUserId();
             this.title = letter.getTitle();
             this.message = letter.getMessage();
             this.sendAt = letter.getRegDate().toString();
+            this.letterType = letter.getType();
         }
     }
 
