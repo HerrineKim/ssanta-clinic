@@ -17,7 +17,7 @@ import { MyRoomPage } from './pages/myroom/MyRoomPage';
 import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
 import NotificationPage from './pages/NotificationPage';
 import { ResetTokenPage } from './pages/ResetTokenPage';
-import ShopPage from './pages/shop/ShopPage';
+// import ShopPage from './pages/shop/ShopPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
 import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
@@ -29,7 +29,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
-        <Route path="/shop" element={<ShopPage />}></Route>
+        {/* <Route path="/shop" element={<ShopPage />}></Route> */}
         {/* 회원관련 */}
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LogInPage />}></Route>

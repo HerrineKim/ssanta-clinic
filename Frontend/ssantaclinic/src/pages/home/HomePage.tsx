@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { Div, ModalDiv } from './styles';
+import { Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
@@ -11,6 +11,7 @@ import axios from 'axios';
 import { FriendButton } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
+import Loading from '../../components/loading/Loading';
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
@@ -157,8 +158,10 @@ export default function Home() {
         follow={follow}
       ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
-      {/* <Div id="shop"></Div> */}
-      <Div id="main-canvas"></Div>
+      <Loading></Loading>
+      <Div id="main-canvas">
+        <ShopDiv id="shop"></ShopDiv>
+      </Div>
     </Div>
   );
 }
