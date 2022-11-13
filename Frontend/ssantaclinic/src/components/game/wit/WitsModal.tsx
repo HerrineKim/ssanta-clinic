@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-import Timer from './Timer';
 import './game.css';
 
 import Result from '../result/Result';

@@ -157,7 +157,7 @@ const TetrisPage: React.FC = () => {
                 </>
               )}
             </div>
-            <Stage stage={stage} />
+            {/* <Stage stage={stage} /> */}
           </StyledTetris>
         </StyledTetrisWrapper>
       </GlobalStyles>
