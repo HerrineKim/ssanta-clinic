@@ -7,6 +7,7 @@ import { Alert } from '../../components/main/alert/index';
 import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
 import { WitAlert } from '../../components/main/witalert/Wit';
 import { HomeAlert } from '../../components/main/homealert';
+import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton } from './styles';
 // 친구 모달
@@ -139,6 +140,7 @@ export default function Home() {
 
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
+      <LetterAlert></LetterAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
       <FriendButton

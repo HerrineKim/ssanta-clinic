@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import { WriteLetter } from '../../components/letter/WriteLetter';
-import { Wrapper, CanvasContainer, LetterContainer } from './styles';
+import { Wrapper, CanvasContainer, LetterPageContainer } from './styles';
 import { LetterWriteModel } from '../../three/LetterWrite';
-export const WriteLetterPage = () => {
+import { Button } from './styles';
+
+export const WriteLetterPage = (props: any) => {
+  const { onClose } = props;
   useEffect(() => {
     const letterCanvas = new LetterWriteModel();
     console.log('useeffect');
@@ -16,9 +19,17 @@ export const WriteLetterPage = () => {
   }, []);
   return (
     <Wrapper>
-      <LetterContainer>
+      <LetterPageContainer id="letter-container">
         <WriteLetter />
-      </LetterContainer>
+        <Button
+          id="back-button"
+          onClick={() => {
+            onClose(false);
+          }}
+        >
+          뒤로가기
+        </Button>
+      </LetterPageContainer>
       <CanvasContainer id="letter-canvas"></CanvasContainer>
     </Wrapper>
   );
