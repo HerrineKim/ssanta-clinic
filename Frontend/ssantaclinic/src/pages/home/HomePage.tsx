@@ -11,6 +11,7 @@ import axios from 'axios';
 import { FriendButton } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
+// import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
   // 친구 모달 관리
@@ -134,6 +135,7 @@ export default function Home() {
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
+
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       {/* <TreeModal data={data}></TreeModal> */}
