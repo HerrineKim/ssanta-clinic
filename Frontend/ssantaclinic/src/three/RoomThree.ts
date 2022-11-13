@@ -212,6 +212,7 @@ export class RoomThree {
     const loader = new GLTFLoader();
     loader.load('/room/smallroom2.glb', (gltf) => {
       const model = gltf.scene;
+
       this._scene.add(model);
       const children: any[] = [];
       model.traverse((child) => {
@@ -350,15 +351,22 @@ export class RoomThree {
 
       // 원래 버전
       // const targets = this._raycaster.intersectObjects(this._group);
-      console.log('click!!', this._model);
+      // console.log('click!!', this._model);
       const targets = this._raycaster.intersectObject(this._model);
-      console.log('raycaaster target:', targets);
+      // console.log('raycaaster target:', targets);
 
       if (targets.length > 0) {
-        console.log(targets);
-        console.log('scenenumber 1');
+        // console.log(targets);
+        // console.log('scenenumber 1');
+        if (targets[0].object.parent.name === 'advaent_calendar') {
+          console.log('달력');
+          this._setupCalendar();
+        } else {
+          this._removeCalendar();
+        }
       } else {
         console.log('아무것도업슴');
+        this._removeCalendar();
       }
 
       const trees = this._raycaster.intersectObjects(this._tree);
@@ -441,7 +449,8 @@ export class RoomThree {
         });
 
         this._scenenumber = 1;
-        // this._setupControls();
+
+        this._setupControls();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
         }, 100);
@@ -451,6 +460,26 @@ export class RoomThree {
       // }
       console.log('treetarget:', treeTarget);
       // console.log('itemTarget:', itemTarget);
+    }
+  }
+
+  _setupCalendar() {
+    const calendarAlert = document.querySelector(
+      '.calendar',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (calendarAlert !== null) {
+      console.log('calendarAlert');
+      calendarAlert.style.display = 'flex';
+    }
+  }
+  _removeCalendar() {
+    const calendarAlert = document.querySelector(
+      '.calendar',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (calendarAlert !== null) {
+      calendarAlert.style.display = 'none';
     }
   }
 
