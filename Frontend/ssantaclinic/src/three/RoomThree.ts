@@ -211,7 +211,7 @@ export class RoomThree {
     let count = 0;
     const inven: any[] = [];
     const loader = new GLTFLoader();
-    loader.load('/room/smallroom2.glb', (gltf) => {
+    loader.load('/room/room_change.glb', (gltf) => {
       count += 1;
       const model = gltf.scene;
 

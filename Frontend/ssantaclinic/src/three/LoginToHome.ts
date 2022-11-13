@@ -10,6 +10,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 export class LoginToHome {
   _model1: any;
   _model3: any;
+  _model4: any;
   _santa: any;
   _path: any;
   _model2: any;
@@ -37,7 +38,7 @@ export class LoginToHome {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.5,
+      0.3,
       1,
       0.1,
     );
@@ -75,8 +76,6 @@ export class LoginToHome {
       1000,
     );
 
-    // camera.position.set(-0.004, 0.05, 0.7);
-    // camera.rotation.set(-26.07, -0.19, -0.09);
     camera.position.set(-1.137, 1.055, 1.56);
     camera.rotation.set(-34.06, -31.13, -19.27);
     this._camera = camera;
@@ -95,33 +94,34 @@ export class LoginToHome {
     this._scene.add(light3);
   }
   _setupModel() {
-    new GLTFLoader().load('/login/ToHomeMove.glb', (gltf) => {
+    new GLTFLoader().load('/login/change_deer.glb', (gltf) => {
       const model1 = gltf.scene;
-      // this._scene.add(model1);
-      this._model1 = model1;
+      this._scene.add(model1);
+      // this._model1 = model1;
       const clips = gltf.animations;
       const mixer = new THREE.AnimationMixer(model1);
-      const clip1 = THREE.AnimationClip.findByName(clips, 'Armature.001Action');
-      const clip2 = THREE.AnimationClip.findByName(clips, 'Armature.002Action');
-      const clip3 = THREE.AnimationClip.findByName(clips, 'Armature.004Action');
-      const clip4 = THREE.AnimationClip.findByName(clips, 'RigAction.002');
-      const clip5 = THREE.AnimationClip.findByName(clips, 'RigAction.003');
-      const clip6 = THREE.AnimationClip.findByName(clips, 'RigAction.004');
-      const clip7 = THREE.AnimationClip.findByName(clips, 'RigAction.005');
-      const clip8 = THREE.AnimationClip.findByName(clips, 'RigAction.006');
-      const clip9 = THREE.AnimationClip.findByName(clips, 'RigAction.007');
-      const clip10 = THREE.AnimationClip.findByName(clips, 'RigAction.008');
-      const clip11 = THREE.AnimationClip.findByName(clips, 'RigAction.009');
-      const clip12 = THREE.AnimationClip.findByName(clips, 'RigAction.010');
-      const clip13 = THREE.AnimationClip.findByName(clips, 'RigAction.011');
-      const clip14 = THREE.AnimationClip.findByName(clips, 'RigAction.012');
-      const clip15 = THREE.AnimationClip.findByName(clips, 'RigAction.013');
-      const clip16 = THREE.AnimationClip.findByName(clips, 'RigAction.014');
-      const clip17 = THREE.AnimationClip.findByName(clips, 'RigAction.015');
-      const clip18 = THREE.AnimationClip.findByName(clips, 'RigAction.016');
-      const clip19 = THREE.AnimationClip.findByName(clips, 'RigAction.017');
-      const clip20 = THREE.AnimationClip.findByName(clips, 'RigAction.018');
-      const clip21 = THREE.AnimationClip.findByName(clips, 'RigAction.019');
+      const clip1 = THREE.AnimationClip.findByName(clips, 'Rig.013Action');
+      const clip2 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.001');
+      const clip3 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.002');
+      const clip4 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.003');
+      const clip5 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.004');
+      const clip6 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.005');
+      const clip7 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.006');
+      const clip8 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.007');
+      const clip9 = THREE.AnimationClip.findByName(clips, 'Rig.013Action.008');
+      const clip10 = THREE.AnimationClip.findByName(
+        clips,
+        'Armature.002Action',
+      );
+      const clip11 = THREE.AnimationClip.findByName(
+        clips,
+        'Armature.002Action.001',
+      );
+      // const clip12 = THREE.AnimationClip.findByName(
+      //   clips,
+      //   'Armature|mixamo.com|Layer()',
+      // );
+
       const action1 = mixer.clipAction(clip1);
       const action2 = mixer.clipAction(clip2);
       const action3 = mixer.clipAction(clip3);
@@ -133,16 +133,8 @@ export class LoginToHome {
       const action9 = mixer.clipAction(clip9);
       const action10 = mixer.clipAction(clip10);
       const action11 = mixer.clipAction(clip11);
-      const action12 = mixer.clipAction(clip12);
-      const action13 = mixer.clipAction(clip13);
-      const action14 = mixer.clipAction(clip14);
-      const action15 = mixer.clipAction(clip15);
-      const action16 = mixer.clipAction(clip16);
-      const action17 = mixer.clipAction(clip17);
-      const action18 = mixer.clipAction(clip18);
-      const action19 = mixer.clipAction(clip19);
-      const action20 = mixer.clipAction(clip20);
-      const action21 = mixer.clipAction(clip21);
+      // const action12 = mixer.clipAction(clip12);
+
       action1.play();
       action2.play();
       action3.play();
@@ -154,56 +146,54 @@ export class LoginToHome {
       action9.play();
       action10.play();
       action11.play();
-      action12.play();
-      action13.play();
-      action14.play();
-      action15.play();
-      action16.play();
-      action17.play();
-      action18.play();
-      action19.play();
-      action20.play();
-      action21.play();
+      // action12.play();
 
       this._mixer = mixer;
 
       const path = new THREE.CatmullRomCurve3([
-        new THREE.Vector3(-1, 0, -0.5),
-        new THREE.Vector3(-1, 0, -0.5),
-        new THREE.Vector3(-1, 0, -0.5),
-        new THREE.Vector3(-1, 0, -0.5),
+        // new THREE.Vector3(-1, 0, -0.5),
+        // new THREE.Vector3(10, 0, -0.5),
+        // new THREE.Vector3(30, 0, -10),
+        // new THREE.Vector3(15, -7, -15),
 
-        new THREE.Vector3(-1, 0, -0.5),
-        new THREE.Vector3(10, 0, -0.5),
-        new THREE.Vector3(-15, -8, -15),
-        new THREE.Vector3(15, -7, -15),
+        // new THREE.Vector3(15, -6, 15),
+        // new THREE.Vector3(-15, -5, 15),
+        // new THREE.Vector3(-15, -4, -15),
+        // new THREE.Vector3(15, -3, -15),
 
-        new THREE.Vector3(15, -6, 15),
-        new THREE.Vector3(-15, -5, 15),
-        new THREE.Vector3(-15, -4, -15),
-        new THREE.Vector3(15, -3, -15),
+        // new THREE.Vector3(15, -2, 15),
+        // new THREE.Vector3(-15, 15, 35),
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(5, 0, 0),
+        new THREE.Vector3(15, 5, 0),
+        new THREE.Vector3(20, 10, 0),
 
-        new THREE.Vector3(15, -2, 15),
-        new THREE.Vector3(-15, 15, 35),
+        // new THREE.Vector3(15, -6, 15),
+        // new THREE.Vector3(-15, -5, 15),
+        // new THREE.Vector3(-15, -4, -15),
+        // new THREE.Vector3(15, -3, -15),
+
+        // new THREE.Vector3(15, -2, 15),
+        // new THREE.Vector3(-15, 15, 35),
       ]);
 
       this._path = path;
-      // const points = path.getPoints(1000);
-      // const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      // const material = new THREE.LineBasicMaterial({ color: 0x555555 });
-      // const pathLine = new THREE.Line(geometry, material);
-      // this._scene.add(pathLine);
+      const points = path.getPoints(1000);
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color: 0x555555 });
+      const pathLine = new THREE.Line(geometry, material);
+      this._scene.add(pathLine);
 
-      // const floor = new THREE.Mesh(
-      //   new THREE.PlaneGeometry(7000, 7000),
-      //   new THREE.MeshStandardMaterial({ color: 0x4f4f4f }),
-      // );
-      // floor.receiveShadow = true;
-      // floor.position.y = -100;
-      // floor.rotation.x = -Math.PI / 2;
-      // this._scene.add(floor);
+      // // const floor = new THREE.Mesh(
+      // //   new THREE.PlaneGeometry(7000, 7000),
+      // //   new THREE.MeshStandardMaterial({ color: 0x4f4f4f }),
+      // // );
+      // // floor.receiveShadow = true;
+      // // floor.position.y = -100;
+      // // floor.rotation.x = -Math.PI / 2;
+      // // this._scene.add(floor);
 
-      // this._santa = model1;
+      this._santa = model1;
 
       model1.rotation.y = -Math.PI / 2;
       const parent = new THREE.Object3D();
@@ -220,6 +210,12 @@ export class LoginToHome {
       const model3 = gltf.scene;
       this._model3 = model3;
       this._scene.add(model3);
+    });
+    new GLTFLoader().load('/login/dongurami.glb', (gltf) => {
+      const model4 = gltf.scene;
+      model4.position.set(20, 10, 0);
+      this._model4 = model4;
+      this._scene.add(model4);
     });
     const targetPivot = new THREE.Object3D();
     const target = new THREE.Object3D();
@@ -240,13 +236,13 @@ export class LoginToHome {
     requestAnimationFrame(this.render.bind(this));
   }
 
-  update(t: any) {
+  update() {
     const delta = this._clock.getDelta();
     this._orbitControls.update();
 
     if (this._mixer) this._mixer.update(delta);
 
-    const time = this._clock.oldTime * 0.00003;
+    const time = this._clock.oldTime * 0.0001;
 
     if (this._path) {
       const currentPosition = new THREE.Vector3();
@@ -259,26 +255,26 @@ export class LoginToHome {
       this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
       this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
 
-      // santaMove.getWorldPosition(this._camera.position);
-      // const targetPivot = this._scene.getObjectByName('targetPivot');
-      // if (targetPivot) {
-      //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
+      //   // santaMove.getWorldPosition(this._camera.position);
+      //   // const targetPivot = this._scene.getObjectByName('targetPivot');
+      //   // if (targetPivot) {
+      //   //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
 
-      //   const target = targetPivot.children[0];
-      //   const pt = new THREE.Vector3();
-      //   target.getWorldPosition(pt);
-      //   this._camera.lookAt(pt);
-      // }
+      //   //   const target = targetPivot.children[0];
+      //   //   const pt = new THREE.Vector3();
+      //   //   target.getWorldPosition(pt);
+      //   //   this._camera.lookAt(pt);
+      //   // }
     }
   }
 
-  render(time: any) {
+  render() {
     // this._renderer.render(this._scene, this._camera);
     this._composer.render();
-    setTimeout(() => {
-      this.update(time);
-    }, 5000);
-    // this.update(time);
+    // setTimeout(() => {
+    //   this.update(time);
+    // }, 5000);
+    this.update();
     requestAnimationFrame(this.render.bind(this));
   }
 
