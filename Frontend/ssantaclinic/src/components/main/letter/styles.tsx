@@ -1,23 +1,19 @@
 import styled from 'styled-components';
-export const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
-`;
 
-export const CanvasContainer = styled.div`
-  height: 100%;
-  background: #8a2be2;
-`;
-export const LetterPageContainer = styled.div`
-  position: absolute;
-  width: 100%;
+export const Div = styled.div`
+  width: 70%;
+  height: 70%;
+  top: 15%;
+  left: 15%;
+  z-index: 2;
+  background-color: white;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  display: none;
   border-radius: 30px;
-  bottom: 4%;
-
-  #back-button {
-    font-family: 'Cafe24Ssurround';
-    margin-left: 10%;
-  }
 `;
 
 export const Button = styled.button`
@@ -37,7 +33,6 @@ export const Button = styled.button`
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  bottom: 20%
   }
 
   :hover {
