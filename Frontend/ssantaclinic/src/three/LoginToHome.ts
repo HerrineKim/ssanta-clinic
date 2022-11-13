@@ -169,6 +169,11 @@ export class LoginToHome {
 
       const path = new THREE.CatmullRomCurve3([
         new THREE.Vector3(-1, 0, -0.5),
+        new THREE.Vector3(-1, 0, -0.5),
+        new THREE.Vector3(-1, 0, -0.5),
+        new THREE.Vector3(-1, 0, -0.5),
+
+        new THREE.Vector3(-1, 0, -0.5),
         new THREE.Vector3(10, 0, -0.5),
         new THREE.Vector3(-15, -8, -15),
         new THREE.Vector3(15, -7, -15),
@@ -236,10 +241,8 @@ export class LoginToHome {
   }
 
   update(t: any) {
-    t += 0.001;
     const delta = this._clock.getDelta();
     this._orbitControls.update();
-    const santaMove = this._scene.children[5];
 
     if (this._mixer) this._mixer.update(delta);
 
@@ -272,7 +275,10 @@ export class LoginToHome {
   render(time: any) {
     // this._renderer.render(this._scene, this._camera);
     this._composer.render();
-    this.update(time);
+    setTimeout(() => {
+      this.update(time);
+    }, 5000);
+    // this.update(time);
     requestAnimationFrame(this.render.bind(this));
   }
 
