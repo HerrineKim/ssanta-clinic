@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { MyRoomDiv, Wrapper, CanvasContainer } from './styled';
+import { Wrapper, CanvasContainer } from './styled';
 import { RoomThree } from '../../three/RoomThree';
 import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
