@@ -1,7 +1,7 @@
 package com.ssafy.ssantaClinic.api.service;
 
 import com.ssafy.ssantaClinic.api.request.LetterRequest;
-import com.ssafy.ssantaClinic.db.entity.Letter;
+import com.ssafy.ssantaClinic.db.entity.SendLetter;
 import com.ssafy.ssantaClinic.db.repository.LetterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,17 +16,18 @@ public class LetterServiceImpl implements LetterService {
 
     @Override
     public void save(LetterRequest letterRequest) {
-        Letter.builder().title(letterRequest.getTitle())
-                .message(letterRequest.getMessage());
+        SendLetter letter = SendLetter.builder().title(letterRequest.getTitle())
+                .message(letterRequest.getMessage()).build();
+        letterRepository.save(letter);
     }
 
     @Override
-    public List<Letter> getLetterList(int userId) {
+    public List<SendLetter> getLetterList(int userId) {
         return null;
     }
 
     @Override
-    public Letter getLetter(int letterId) {
+    public SendLetter getLetter(int letterId) {
         return null;
     }
 }

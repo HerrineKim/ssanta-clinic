@@ -1,44 +1,32 @@
 package com.ssafy.ssantaClinic.db.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class Letter {
+public class ReplyLetter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "letter_id")
-    private int letterId;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private int ReplyLetterId;
 
     @OneToOne
-    @JoinColumn(name = "santa_letter_id")
-    private SantaLetter santaLetter;
-
-    @ManyToOne
-    private Quote quote;
+    @JoinColumn(name = "send_letter_id")
+    private SendLetter sendLetter;
 
     @NotBlank
     private String title;
     @NotBlank
     private String message;
-
-    @Column(name = "created_at")
-    @Builder.Default
-    private LocalDateTime regDate = LocalDateTime.now();
 
     @Column(name = "is_read")
     @Builder.Default
