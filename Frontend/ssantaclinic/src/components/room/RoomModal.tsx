@@ -4,6 +4,7 @@ import { RoomThree } from '../../three/RoomThree';
 import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
 import { useRecoilValue } from 'recoil';
+import { CalendarAlert } from './calendaralert/Calendar';
 
 export default function RoomModal(props: any) {
   const { onClose } = props;
@@ -52,6 +53,7 @@ export default function RoomModal(props: any) {
       >
         나가기
       </button>
+      <CalendarAlert></CalendarAlert>
       <CanvasContainer id="room-canvas"></CanvasContainer>
     </Wrapper>
   );
