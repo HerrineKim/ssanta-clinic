@@ -85,6 +85,7 @@ export class MainCanvas {
   _isGame2: boolean;
   _isGame3: boolean;
   _isGame4: boolean;
+  _isLetter: boolean;
 
   _arrow: any;
 
@@ -104,6 +105,7 @@ export class MainCanvas {
     this._isGame2 = false;
     this._isGame3 = false;
     this._isGame4 = false;
+    this._isLetter = false;
     this._isTreeModal = false;
     this._shop = [];
     this._game1 = [];
@@ -446,9 +448,13 @@ export class MainCanvas {
         } else if (targets[0].object.name.includes('playground')) {
           console.log('ground!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
-        } else if (targets[0].object.name === 'letter') {
+        } else if (targets[0].object.name.includes('letter')) {
           console.log('letter!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
+          console.log(targets[0].object.parent);
+          setTimeout(() => {
+            this._setupLetter();
+          }, 1500);
         } else {
           if (this._isAlert) {
             this._removeAlert();
@@ -788,6 +794,7 @@ export class MainCanvas {
     this._isAlert = false;
   }
 
+
   // 테트리스
   _setupTetris() {
     console.log('setuptetris');
@@ -808,6 +815,32 @@ export class MainCanvas {
     // console.log(memoryAlert);
     if (tetrisAlert !== null) {
       tetrisAlert.style.display = 'none';
+
+  // 편지
+  _setupLetter() {
+    this._isZoom = true;
+
+    this._isLetter = true;
+
+    const letterAlert = document.querySelector(
+      '.letterAlert',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (letterAlert !== null) {
+      console.log('편지');
+      letterAlert.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+  _removeLetter() {
+    const letterAlert = document.querySelector(
+      '.letterAlert',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (letterAlert !== null) {
+      console.log('letterAlert');
+      letterAlert.style.display = 'none';
+
     }
     this._isAlert = false;
   }
