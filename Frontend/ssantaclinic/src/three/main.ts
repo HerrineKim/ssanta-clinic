@@ -790,10 +790,11 @@ export class MainCanvas {
 
   // 테트리스
   _setupTetris() {
+    console.log('setuptetris');
     const tetrisAlert = document.querySelector(
       '.tetrisAlert',
     ) as HTMLElement | null;
-    // console.log(alert);
+    console.log(tetrisAlert);
     if (tetrisAlert !== null) {
       console.log('tetrisAlert');
       tetrisAlert.style.display = 'flex';

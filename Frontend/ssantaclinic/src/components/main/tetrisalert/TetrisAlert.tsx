@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Div } from './styles';
 import WitsModal from '../../game/wit/WitsModal';
+import { TetrisModal } from '../../game/tetris/TetrisModal';
 
 export function TetrisAlert() {
   const [isHelp, setisHelp] = useState<boolean>(false);
+  console.log(isHelp);
   function help() {
     setisHelp(true);
   }
@@ -15,6 +17,6 @@ export function TetrisAlert() {
       </Div>
     );
   } else {
-    return <WitsModal onClose={setisHelp}></WitsModal>;
+    return <TetrisModal onClose={setisHelp}></TetrisModal>;
   }
 }
