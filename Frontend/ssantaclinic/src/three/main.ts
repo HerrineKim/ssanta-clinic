@@ -401,6 +401,9 @@ export class MainCanvas {
       // console.log('targets: ', targets);
 
       this._removeMemory();
+      this._removeHomeAlert();
+      this._removeTetris();
+      this._removeWit();
 
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
@@ -419,6 +422,9 @@ export class MainCanvas {
         } else if (targets[0].object.name.includes('game1')) {
           console.log('game1!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 80);
+          setTimeout(() => {
+            this._setupTetris();
+          }, 1500);
         } else if (targets[0].object.name.includes('game2')) {
           console.log('game2!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 80);
@@ -778,6 +784,29 @@ export class MainCanvas {
     // console.log(memoryAlert);
     if (memoryAlert !== null) {
       memoryAlert.style.display = 'none';
+    }
+    this._isAlert = false;
+  }
+
+  // 테트리스
+  _setupTetris() {
+    const tetrisAlert = document.querySelector(
+      '.tetrisAlert',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (tetrisAlert !== null) {
+      console.log('tetrisAlert');
+      tetrisAlert.style.display = 'flex';
+    }
+    this._isAlert = true;
+  }
+  _removeTetris() {
+    const tetrisAlert = document.querySelector(
+      '.tetrisAlert',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (tetrisAlert !== null) {
+      tetrisAlert.style.display = 'none';
     }
     this._isAlert = false;
   }
