@@ -157,7 +157,7 @@ export default function Home() {
         follow={follow}
       ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
-      {/* <Div id="shop"></Div> */}
+      <Div id="shop"></Div>
       <Div id="main-canvas"></Div>
     </Div>
   );

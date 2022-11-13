@@ -412,19 +412,9 @@ export class MainCanvas {
   //클릭 함수
   _onClick(event: any) {
     console.log('click!!!');
-    // function saveArrayBuffer(buffer: any) {
-    //   const file = new Blob([buffer], { type: 'application/octet-stream' });
-    //   console.log('saveArray:', file);
-    //   return file;
-    // }
-
-    // let glbFile: Blob;
 
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
-    // console.log('click event:', event);
-    // console.log(event.offsetX);
-    // console.log(event.offsetY);
 
     const xy = {
       x: (event.offsetX / width) * 2 - 1,
@@ -438,6 +428,7 @@ export class MainCanvas {
       // console.log('click함수 실행:', this._group);    클릭한것 검사
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
       if (arrowTarget.length > 0) {
+        this._scenenumber = 2;
         this._zoomInven(this._showcase, 70);
         return;
       }
@@ -543,6 +534,7 @@ export class MainCanvas {
       //   this._zoomInven(this._inven, 90);
       // }
     } else if (this._scenenumber === 2) {
+      console.log('scenenumber 22222222');
       // scenenumber == 2 일때
       const itemTarget = this._raycaster.intersectObjects(this._items);
       console.log(itemTarget);
@@ -752,16 +744,7 @@ export class MainCanvas {
     }
   }
   _setupAlert(itemId: string) {
-    // const alert = document.querySelector('.alert') as HTMLElement | null;
-    // console.dir(alert);
-    // if (alert !== null) {
-    //   alert.dataset.code = itemId;
-    // }
-    // if (alert !== null) {
-    //   console.log('alert');
-    //   alert.style.display = 'flex';
-    // }
-    // this._isAlert = true;
+    console.log('setupalert');
     const item = parseInt(itemId);
     const e = React.createElement;
     const shop = document.getElementById('shop');
