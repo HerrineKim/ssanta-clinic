@@ -105,6 +105,9 @@ export const LogIn = () => {
   function goSignUp() {
     navigate('/signup');
   }
+  function goFindPassword() {
+    navigate('/findpassword');
+  }
   const handleChangeEmail = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
@@ -154,6 +157,14 @@ export const LogIn = () => {
         onClick={goSignUp}
       >
         회원가입
+      </motion.button>
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        id="find-password-button"
+        onClick={goFindPassword}
+      >
+        비밀번호 찾기
       </motion.button>
     </LoginContainer>
   );
