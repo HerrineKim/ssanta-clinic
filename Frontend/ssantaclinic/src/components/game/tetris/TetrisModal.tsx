@@ -20,6 +20,7 @@ import {
   StyledTetrisWrapper,
   StyledTetris,
   GlobalStyles,
+  GameResult,
 } from './TetrisPage.styles';
 
 interface TetrisProp {
@@ -176,7 +177,7 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
                 </>
               )}
             </div>
-            <div className="gameOverResult">
+            <GameResult>
               {isResult ? (
                 <ResultMemory
                   isSucces={true}
@@ -190,7 +191,11 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
               {isFail ? <div className="wit-over">Game Over!</div> : null}
               <span
                 className="memory-'start__text"
-                style={{ fontSize: isFail ? '5vmin' : '20vmin' }}
+                style={{
+                  fontSize: isFail ? '5vmin' : '20vmin',
+                  color: 'green',
+                  cursor: 'pointer',
+                }}
                 onClick={() => {
                   if (isFail) {
                     result();
@@ -199,7 +204,7 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
               >
                 {isFail ? '결과 확인' : null}
               </span>
-            </div>
+            </GameResult>
             <Stage stage={stage}></Stage>
           </StyledTetris>
         </StyledTetrisWrapper>
