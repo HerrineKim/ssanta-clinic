@@ -14,6 +14,6 @@ export const Wrapper = styled.div`
 export const CanvasContainer = styled.div`
   border: 5px solid red;
   height: 80%;
-  width: 80%;
+  width: 60%;
   background: #8a2be2;
 `;

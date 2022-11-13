@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 export const CalendarBackground = styled.div`
-  width: 100vw;
-  height: 100vh;
+  position: absolute;
+  top: 1.5%;
+  left: 1.5%;
+  width: 97%;
+  height: 97%;
   background-color: #151515;
   display: flex;
   flex-direction: column;

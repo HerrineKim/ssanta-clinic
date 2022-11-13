@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const Div = styled.div`
   width: 40%;
   height: 40%;
-  top: 350px;
-  left: 400px;
+  top: 30%;
+  left: 30%;
   z-index: 9999;
   background-color: white;
   position: fixed;
