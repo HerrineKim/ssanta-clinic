@@ -48,3 +48,13 @@ export const GlobalStyles = styled.div`
   width: 100vw;
   position: relative;
 `;
+
+export const GameResult = styled.div`
+  position: absolute;
+  top: 40%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
