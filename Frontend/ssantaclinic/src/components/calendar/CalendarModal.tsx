@@ -3,6 +3,10 @@ import axios from 'axios';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import './calendar.css';
 
+// Recoil
+import { selectUserNickname } from '../../store/store';
+import { useRecoilValue } from 'recoil';
+
 import Countdown from 'react-countdown';
 import { TopContainer } from './styles';
 import { CalendarBackground } from './styles';
@@ -58,6 +62,7 @@ import { MiniContainerTen } from './styles';
 export function CalendarModal(props: any) {
   const { onClose } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+  const nickName = useRecoilValue(selectUserNickname);
 
   const [content, setContent] = useState<string>('');
   const [audioUrl, setAudioUrl] = useState<string>('');
@@ -167,10 +172,10 @@ export function CalendarModal(props: any) {
           left: 0,
         }}
       >
-        <YouTube videoId="GslqG1EjEI0" opts={opts} />
+        <YouTube videoId="8MhtzapYzGo" opts={opts} />
       </div>
       <TopContainer>
-        <CalendarTitle>OO님의 2022년 어드벤트 캘린더</CalendarTitle>
+        <CalendarTitle>{nickName}님의 2022년 어드벤트 캘린더</CalendarTitle>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
