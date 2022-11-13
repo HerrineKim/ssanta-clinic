@@ -196,7 +196,14 @@ export function CalendarModal(props: any) {
           }
           renderer={renderer}
         />
-        ,
+        <button
+          className="outbtn"
+          onClick={() => {
+            onClose(false);
+          }}
+        >
+          나가기
+        </button>
       </TopContainer>
       <CalendarPageContainer>
         {/* 녹음 불러오는 버튼

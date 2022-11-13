@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import { createStage, isColliding } from './gameHelpers';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { playGameOverSound } from '../../../assets/sound/sound';
-import ResultMemory from '../result/ResultMemory';
+import ResultTetris from '../result/ResultTetris';
 
 // Custom hooks
 import { useInterval } from '../../../hooks/tetris/useInterval';
@@ -179,14 +179,14 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
             </div>
             <GameResult>
               {isResult ? (
-                <ResultMemory
+                <ResultTetris
                   isSucces={true}
                   // isSucces={true}
                   time={null}
                   // time={11}
-                  round={null}
+                  round={level}
                   onClose={onClose}
-                ></ResultMemory>
+                ></ResultTetris>
               ) : null}
               {isFail ? <div className="wit-over">Game Over!</div> : null}
               <span
