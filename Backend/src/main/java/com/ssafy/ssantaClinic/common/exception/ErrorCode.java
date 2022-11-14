@@ -27,6 +27,11 @@ public enum ErrorCode {
     LOGIN_NOT_FOUND_ID(HttpStatus.NOT_FOUND, "404", "해당 아이디를 찾을 수 없습니다"),
     NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "404", "해당 유저가 존재하지 않습니다"),
 
+    // 산타 편지
+    NOT_FOUND_SANTA_LETTER(HttpStatus.NOT_FOUND, "404", "해당 산타 편지가 존재하지 않습니다"),
+    NOT_FOUND_SEND_LETTER(HttpStatus.NOT_FOUND, "404", "편지가 존재하지 않습니다"),
+    NOT_FOUND_REPLY_LETTER(HttpStatus.NOT_FOUND, "404", "편지가 존재하지 않습니다"),
+
     // formatter 오류
     FORMAT_NOT_MATCH(HttpStatus.BAD_REQUEST, "400", "변환 형식이 일치하지 않습니다."),
 
