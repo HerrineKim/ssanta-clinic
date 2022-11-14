@@ -181,9 +181,8 @@ export default function Home() {
       ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
-      <Div id="main-canvas">
-        <ShopDiv id="shop"></ShopDiv>
-      </Div>
+      <ShopDiv id="shop"></ShopDiv>
+      <Div id="main-canvas"></Div>
     </Div>
   );
 }

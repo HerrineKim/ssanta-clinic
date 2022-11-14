@@ -6,8 +6,8 @@ import { NavigateFunction } from 'react-router';
 import { GameReq } from './request/game';
 import { SuccessRes } from './response/success';
 import { GameRes } from './response/game';
-import { ItemsRes, MoneyRes } from './response/main';
-import { ItemsReq, MoneyReq } from './request/main';
+import { ItemsRes, MoneyRes, ShopRes } from './response/main';
+import { ItemsReq, MoneyReq, ShopReq } from './request/main';
 import { MainApi } from './mainApi';
 
 export interface RequestConfig<R> {
@@ -66,6 +66,18 @@ export class SSantaApi implements GameApi, MainApi {
       method: 'get',
       url: `/api/store/${itemsReq.userId}`,
       data: itemsReq,
+      ...requestConfig,
+    });
+  }
+
+  async shop(
+    shopReq: ShopReq,
+    requestConfig: RequestConfig<ShopRes>,
+  ): Promise<void> {
+    await this.request<ShopReq, ShopRes>({
+      method: 'post',
+      url: `/api/store/buy`,
+      data: shopReq,
       ...requestConfig,
     });
   }
