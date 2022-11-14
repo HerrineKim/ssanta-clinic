@@ -1,3 +1,3 @@
 export interface GameRes {
-  money: number;
+  coin: number;
 }
