@@ -23,7 +23,7 @@ interface isLoggedIn {
 const isLoggedIn = atom<isLoggedIn>({
   key: 'isLoggedin',
   default: {
-    isLoggedIn: localStorage.getItem('token') ? true : false,
+    isLoggedIn: localStorage.getItem('jwt') ? true : false,
   },
 });
 

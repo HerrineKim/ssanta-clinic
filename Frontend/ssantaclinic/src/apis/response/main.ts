@@ -1,5 +1,5 @@
 export interface ItemsRes {
-  userId: Item[];
+  items: Item[];
 }
 
 interface Item {

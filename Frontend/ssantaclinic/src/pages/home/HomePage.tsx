@@ -30,9 +30,12 @@ export default function Home() {
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
+
   const [money, setMoney] = useState<number>(0);
-  const [item, setItem] = useState<number[]>([]);
+  const [item, setItem] = useState<any[]>([]);
   const navigate = useNavigate();
+
+  // money 정보 불러오기
   useEffect(() => {
     SSantaApi.getInstance().money(
       { userId: userId },
@@ -43,7 +46,20 @@ export default function Home() {
         navigate,
       },
     );
-  }, [money]);
+  }, []);
+
+  //items 정보불러오기
+  useEffect(() => {
+    SSantaApi.getInstance().items(
+      { userId: userId },
+      {
+        onSuccess(data) {
+          setItem(data.items);
+        },
+        navigate,
+      },
+    );
+  }, []);
 
   useEffect(() => {
     // 추천 친구 목록 불러오기(api/friend/recommend)
