@@ -1,6 +1,7 @@
 package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
+import com.ssafy.ssantaClinic.api.response.TreeResponse;
 import com.ssafy.ssantaClinic.api.service.S3Service;
 import com.ssafy.ssantaClinic.api.service.TreeService;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
@@ -59,5 +60,23 @@ public class TreeController {
             s3Service.delete(orgUrl);
         }
         return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
+    }
+    @ApiOperation(value = "트리 3D 파일 받아오기", notes = "클라이언트로부터 3D을 받아온다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping
+    public ResponseEntity<TreeResponse> getRandomTree() {
+        /**
+         * @Method Name : getRandomTree
+         * @Method 설명 : 랜덤 트리 10개를 가져온다.
+         */
+        // 현재 로그인한 유저의 아이디 가져오기
+        int userId = JwtUtil.getCurrentUserId();
+        return ResponseEntity.ok()
+                            .body(TreeResponse.builder()
+                                            .tree(treeService.getRandomTree(userId))
+                                            .build());
     }
 }
