@@ -1,5 +1,5 @@
-import { ItemsReq, MoneyReq } from './request/main';
-import { ItemsRes, MoneyRes } from './response/main';
+import { ItemsReq, MoneyReq, ShopReq } from './request/main';
+import { ItemsRes, MoneyRes, ShopRes } from './response/main';
 // import { SuccessRes } from './response/success';
 import { RequestConfig } from './ssantaApi';
 
@@ -13,4 +13,6 @@ export interface MainApi {
     itemsReq: ItemsReq,
     requestConfig: RequestConfig<ItemsRes>,
   ): Promise<void>;
+
+  shop(shopReq: ShopReq, requestConfig: RequestConfig<ShopRes>): Promise<void>;
 }
