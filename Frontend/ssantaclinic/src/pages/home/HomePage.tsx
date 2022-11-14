@@ -11,19 +11,38 @@ import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton } from './styles';
+import { selectUserId, selectUserNickname } from '../../store/store';
+import { useRecoilValue } from 'recoil';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
 import { SSantaApi } from '../../apis/ssantaApi';
+import { useNavigate } from 'react-router-dom';
+
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
   // 친구 모달 관리
   const ACCESS_TOKEN = localStorage.getItem('jwt');
+  const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
+  const [money, setMoney] = useState<number>(0);
+  const [item, setItem] = useState<number[]>([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    SSantaApi.getInstance().money(
+      { userId: userId },
+      {
+        onSuccess(data) {
+          setMoney(data.money);
+        },
+        navigate,
+      },
+    );
+  }, [money]);
 
   useEffect(() => {
     // 추천 친구 목록 불러오기(api/friend/recommend)

@@ -51,7 +51,7 @@ export class SSantaApi implements GameApi, MainApi {
     requestConfig: RequestConfig<MoneyRes>,
   ): Promise<void> {
     await this.request<MoneyReq, MoneyRes>({
-      method: 'patch',
+      method: 'get',
       url: `/api/coin`,
       data: moneyReq,
       ...requestConfig,
