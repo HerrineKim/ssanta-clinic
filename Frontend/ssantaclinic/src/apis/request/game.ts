@@ -1,3 +1,3 @@
 export interface GameReq {
-  money: number;
+  coin: number;
 }

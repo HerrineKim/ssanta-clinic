@@ -1,5 +1,5 @@
 export interface ItemsRes {
-  userId: Item[];
+  items: Item[];
 }
 
 interface Item {
@@ -10,5 +10,9 @@ interface Item {
 }
 
 export interface MoneyRes {
+  money: number;
+}
+
+export interface ShopRes {
   money: number;
 }

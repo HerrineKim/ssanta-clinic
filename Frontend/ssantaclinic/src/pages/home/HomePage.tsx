@@ -11,7 +11,7 @@ import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton } from './styles';
-import { selectUserId, selectUserNickname } from '../../store/store';
+import { selectUserId, Money, Items } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
@@ -19,31 +19,53 @@ import Loading from '../../components/loading/Loading';
 import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 
+import { useSetRecoilState } from 'recoil';
+
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
   // 친구 모달 관리
-  const ACCESS_TOKEN = `Bearer ${localStorage.getItem('token')}`;
+  const ACCESS_TOKEN = `Bearer ${localStorage.getItem('jwt')}`;
   console.log(ACCESS_TOKEN);
   const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
-  const [money, setMoney] = useState<number>(0);
-  const [item, setItem] = useState<number[]>([]);
+
+  const setUserMoney = useSetRecoilState(Money);
+  const money = useRecoilValue(Money);
+
+  const setUserItems = useSetRecoilState(Items);
+  const item = useRecoilValue(Items);
+
   const navigate = useNavigate();
+
+  // money 정보 불러오기
   useEffect(() => {
     SSantaApi.getInstance().money(
       { userId: userId },
       {
         onSuccess(data) {
-          setMoney(data.money);
+          setUserMoney({ money: data.money });
         },
         navigate,
       },
     );
-  }, [money]);
+  }, []);
+
+  //items 정보불러오기
+  useEffect(() => {
+    SSantaApi.getInstance().items(
+      { userId: userId },
+      {
+        onSuccess(data) {
+          setUserItems({ items: data.items });
+        },
+        navigate,
+      },
+    );
+  }, []);
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
   useEffect(() => {
@@ -161,9 +183,8 @@ export default function Home() {
       ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
-      <Div id="main-canvas">
-        <ShopDiv id="shop"></ShopDiv>
-      </Div>
+      <ShopDiv id="shop"></ShopDiv>
+      <Div id="main-canvas"></Div>
     </Div>
   );
 }
