@@ -6,8 +6,8 @@ import { NavigateFunction } from 'react-router';
 import { GameReq } from './request/game';
 import { SuccessRes } from './response/success';
 import { GameRes } from './response/game';
-import { ItemsRes, MoneyRes } from './response/main';
-import { ItemsReq, MoneyReq } from './request/main';
+import { ItemsRes, MoneyRes, ShopRes } from './response/main';
+import { ItemsReq, MoneyReq, ShopReq } from './request/main';
 import { MainApi } from './mainApi';
 
 export interface RequestConfig<R> {
@@ -70,6 +70,18 @@ export class SSantaApi implements GameApi, MainApi {
     });
   }
 
+  async shop(
+    shopReq: ShopReq,
+    requestConfig: RequestConfig<ShopRes>,
+  ): Promise<void> {
+    await this.request<ShopReq, ShopRes>({
+      method: 'post',
+      url: `/api/store/buy`,
+      data: shopReq,
+      ...requestConfig,
+    });
+  }
+
   static getInstance(): SSantaApi {
     return this.instance || (this.instance = new this());
   }
@@ -83,6 +95,12 @@ export class SSantaApi implements GameApi, MainApi {
   }
 
   private async request<P, R>(config: Config<P, R>) {
+    const headers: any = {
+      'content-type': 'application/json',
+    };
+    if (localStorage.getItem('jwt')) {
+      headers.Authorization = `${localStorage.getItem('jwt')}`;
+    }
     const request = async () => {
       try {
         const res: R = (
@@ -90,6 +108,7 @@ export class SSantaApi implements GameApi, MainApi {
             method: config.method,
             url: config.url,
             data: config.data,
+            headers: headers,
           })
         ).data;
 
@@ -126,8 +145,8 @@ export class SSantaApi implements GameApi, MainApi {
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
-    } else if (localStorage.getItem('token')) {
-      headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    } else if (localStorage.getItem('jwt')) {
+      headers.Authorization = `Bearer ${localStorage.getItem('jwt')}`;
     }
 
     return axios.create({
