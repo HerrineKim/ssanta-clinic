@@ -46,6 +46,7 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
   const [gameOver, setGameOver] = React.useState(true);
   const [isResult, setIsResult] = React.useState<boolean>(false);
   const [isFail, setIsFail] = React.useState<boolean>(false);
+  const [money, setMoney] = React.useState<number>(0);
 
   const gameArea = React.useRef<HTMLDivElement>(null);
 
@@ -104,6 +105,9 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
     }
   };
   const result = () => {
+    const number = Math.floor(score / 100);
+    setMoney(number);
+
     setIsResult(true);
   };
 
@@ -181,9 +185,8 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
               {isResult ? (
                 <ResultTetris
                   isSucces={true}
-                  // isSucces={true}
+                  money={money}
                   time={null}
-                  // time={11}
                   round={level}
                   onClose={onClose}
                 ></ResultTetris>
