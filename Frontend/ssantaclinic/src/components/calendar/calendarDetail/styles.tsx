@@ -5,17 +5,36 @@ export const CalendarDetailContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 50%;
-  height: 50%;
+  width: 60%;
+  height: 90%;
   z-index: 998;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   transition: all 0.7s;
-  background-color: gray;
-  border: 1px solid black;
+  background-color: #335749;
+  border: 2px solid black;
   border-radius: 8px;
+`;
+
+export const CalendarDetailTopContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 20%;
+`;
+
+export const CalendarDetailBottomContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: space-around;
+  width: 100%;
+  height: 80%;
 `;
 
 export const CloseButton = styled.button`
@@ -48,19 +67,9 @@ box-shadow: #422800 2px 2px 0 0;
 transform: translate(2px, 2px);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 100px) {
 {
-  min-width: 120px;
+  min-width: 60px;
   padding: 0 25px;
 }
-`;
-
-export const PresentContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: space-around;
-  width: 100%;
-  height: 100%;
-  z-index: 998;
 `;
