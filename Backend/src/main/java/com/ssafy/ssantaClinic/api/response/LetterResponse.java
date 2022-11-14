@@ -1,6 +1,8 @@
 package com.ssafy.ssantaClinic.api.response;
 
-import com.sun.xml.bind.v2.runtime.property.StructureLoaderBuilder;
+import com.ssafy.ssantaClinic.db.entity.ReplyLetter;
+import com.ssafy.ssantaClinic.db.entity.SendLetter;
+import com.ssafy.ssantaClinic.db.entity.columnEnum.LetterType;
 import lombok.*;
 
 import java.util.List;
@@ -10,12 +12,26 @@ public class LetterResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class LetterDetailResponse{
-        int letterId;
+    public static class SendLetterResponse {
+        int sendLetterId;
+        int userId;
         String title;
         String message;
-        Boolean isRead;
-        String regDate;
+        String sendAt;
+        LetterType type;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class ReplyLetterResponse{
+        int replyLetterId;
+        int sendLetterId;
+        String title;
+        String message;
+        boolean isRead;
+        String receivedAt;
     }
 
     @Getter
@@ -23,10 +39,9 @@ public class LetterResponse {
     @AllArgsConstructor
     @Builder
     public static class LetterListResponse{
-        List<LetterDetailResponse> send;
-        List<LetterDetailResponse> receive;
+        int sendLetterCount;
+        int replyLetterCount;
+        List<SendLetterResponse> send;
+        List<ReplyLetterResponse> reply;
     }
-
-
-
 }
