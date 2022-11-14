@@ -10,6 +10,27 @@ export const CalendarBackground = styled.div`
   justify-content: center;
 `;
 
+// 선물하기 버튼
+export const PresentButton = styled.button`
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s;
+  &:hover {
+    background-color: #422800;
+    color: #fbeee0;
+  }
+`;
+
 export const TopContainer = styled.div`
   display: flex;
   flex-direction: row;

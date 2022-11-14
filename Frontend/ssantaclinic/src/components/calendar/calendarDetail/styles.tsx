@@ -5,8 +5,8 @@ export const CalendarDetailContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 60%;
-  height: 90%;
+  width: 50%;
+  height: 70%;
   z-index: 998;
   position: absolute;
   top: 50%;
@@ -21,10 +21,11 @@ export const CalendarDetailContainer = styled.div`
 export const CalendarDetailTopContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   width: 100%;
   height: 20%;
+  padding: 5%;
 `;
 
 export const CalendarDetailBottomContainer = styled.div`
@@ -35,6 +36,15 @@ export const CalendarDetailBottomContainer = styled.div`
   align-items: space-around;
   width: 100%;
   height: 80%;
+  padding: 7% 1%;
+  z-index: 999;
+`;
+
+export const DayDiv = styled.div`
+  font-size: 3rem;
+  font-family: 'Cafe24Ssurround';
+  color: white;
+  border-radius: 8px;
 `;
 
 export const CloseButton = styled.button`
@@ -47,15 +57,14 @@ cursor: pointer;
 display: inline-block;
 font-weight: 600;
 font-size: 1.5rem;
-padding: 0 18px;
-line-height: 50px;
 text-align: center;
 text-decoration: none;
 user-select: none;
 -webkit-user-select: none;
 touch-action: manipulation;
-z-index: 999;
 font-family: 'Cafe24Ssurround';
+margin-top: 0;
+width: 5%;
 }
 
 :hover {
@@ -70,6 +79,5 @@ transform: translate(2px, 2px);
 @media (min-width: 100px) {
 {
   min-width: 60px;
-  padding: 0 25px;
 }
 `;
