@@ -36,7 +36,7 @@ public class LetterController {
     public ResponseEntity<SimpleMessageResponse> sendLetter(@RequestBody @Valid SendLetterRequest letter){
         SendLetter sendLetter = letterService.save(letter);
         Emotion emotion = clovaService.getEmotion(sendLetter.getMessage());
-        letterService.makeReplyLetter(emotion, sendLetter.getType());
+        letterService.makeReplyLetter(JwtUtil.getCurrentUserId(), sendLetter, emotion, sendLetter.getType());
         return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("편지가 성공적으로 전송되었습니다.").build());
     }
 
