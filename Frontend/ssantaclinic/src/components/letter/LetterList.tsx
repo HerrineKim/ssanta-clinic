@@ -3,12 +3,35 @@ import axios from 'axios';
 import { Button } from './styles';
 import { useNavigate } from 'react-router-dom';
 
-export const LetterList = () => {
-  const [message, setMessage] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
+export const LetterList = (props: any) => {
+  const { onLetterId, onReceiveLetter, onLetterList } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const navigate = useNavigate();
-
+  const letters = [
+    {
+      id: 1,
+      title: '견뎌',
+      message: '그것도 못해?,',
+    },
+    {
+      id: 2,
+      title: '참아',
+      message: '다른 사람 다해',
+    },
+  ];
+  function Letter({ letter }: { letter: any }) {
+    return (
+      <button
+        onClick={() => {
+          onLetterId(letter.id);
+          onReceiveLetter(true);
+          onLetterList(false);
+        }}
+      >
+        <b>{letter.title}</b> <span>{letter.message}</span>
+      </button>
+    );
+  }
   useEffect(() => {
     axios
       .get('http://localhost:8080' + '/api/letter', {
@@ -18,8 +41,6 @@ export const LetterList = () => {
       })
       .then((res) => {
         console.log(res.data);
-        setMessage('산타에게서 온 답장');
-        setTitle('편지 제목');
       })
       .catch((err) => {
         console.log(err.resonse);
@@ -27,7 +48,9 @@ export const LetterList = () => {
   });
   return (
     <div id="receive-letter-container">
-      <p>리스트</p>
+      {letters.map((letter, index) => (
+        <Letter letter={letter} key={index} />
+      ))}
     </div>
   );
 };
