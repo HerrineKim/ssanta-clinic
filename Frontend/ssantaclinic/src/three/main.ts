@@ -15,7 +15,9 @@ import { throws } from 'assert';
 import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import ShopAlert from '../components/shop';
-import { SetRecoilState } from 'recoil';
+import { selectUserId, Money } from '../store/store';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+
 // import { chdir } from 'process';
 
 // type RGB = `rgb(${number}, ${number}, ${number})`;
