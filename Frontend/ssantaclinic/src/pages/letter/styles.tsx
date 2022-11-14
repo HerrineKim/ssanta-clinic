@@ -2,6 +2,9 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
+  #letter-receive-page-container {
+    height: 100%;
+  }
 `;
 
 export const CanvasContainer = styled.div`
@@ -14,8 +17,14 @@ export const LetterPageContainer = styled.div`
   border-radius: 30px;
   bottom: 4%;
 
-  #back-button {
+  #write-back-button {
     font-family: 'Cafe24Ssurround';
+    margin-left: 10%;
+  }
+  #receive-back-button {
+    position: absolute;
+    font-family: 'Cafe24Ssurround';
+    top: 87%;
     margin-left: 10%;
   }
 `;
