@@ -25,7 +25,7 @@ import { useSetRecoilState } from 'recoil';
 
 export default function Home() {
   // 친구 모달 관리
-  const ACCESS_TOKEN = `Bearer ${localStorage.getItem('jwt')}`;
+  const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
   console.log(ACCESS_TOKEN);
   const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
@@ -47,6 +47,7 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
+          console.log(data);
           setUserMoney({ money: data.money });
         },
         navigate,
