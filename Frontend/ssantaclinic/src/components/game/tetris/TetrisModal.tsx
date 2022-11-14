@@ -164,7 +164,7 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
               onClose(false);
             }}
           >
-            나가기
+            X
           </button>
           <StyledTetris>
             <div className="display">
