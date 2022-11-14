@@ -23,6 +23,7 @@ export const LetterContainer = styled.div`
     margin: 1% 10%;
   }
   #message-container {
+    height: 100%;
     margin: 0 10%;
     text-align: center;
   }
@@ -82,12 +83,12 @@ export const MessageInput = styled.input`
   background: #34502R;
 `;
 export const Message = styled.div`
-  width: 25vw;
-  height: 60vh;
+  width: 30%;
+  height: 70%;
   border-radius: 10px;
   background: white;
-  margin: 5px;
-  margin-bottom: 10%;
+  margin-top: 15%;
+  margin-left: 35%;
 `;
 export const CheckButton = styled.button`
   background-color: #424b35;
