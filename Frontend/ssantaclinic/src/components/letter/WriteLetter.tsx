@@ -35,7 +35,7 @@ export const WriteLetter = () => {
         {
           title: title,
           message: message,
-          keyword: keyword,
+          type: keyword,
         },
         {
           headers: {
