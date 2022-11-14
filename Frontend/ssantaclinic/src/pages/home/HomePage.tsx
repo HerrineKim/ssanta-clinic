@@ -14,6 +14,7 @@ import { FriendButton } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
+import { SSantaApi } from '../../apis/ssantaApi';
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
