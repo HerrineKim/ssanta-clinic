@@ -4,7 +4,7 @@ import YouTube, { YouTubeProps } from 'react-youtube';
 import './calendar.css';
 
 import Countdown from 'react-countdown';
-import { TopContainer } from './styles';
+import { TopContainer, PresentButton } from './styles';
 import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
