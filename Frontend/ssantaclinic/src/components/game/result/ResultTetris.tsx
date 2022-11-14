@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ResultDiv, CoinImg } from './resultstyle';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../apis/url';
+import { useSetRecoilState } from 'recoil';
+import { Money } from '../../../store/store';
+
 interface ResultProp {
   isSucces: boolean;
   time: number | null;
@@ -14,6 +17,7 @@ export default function ResultTetris(props: ResultProp) {
   const { isSucces, onClose, round, money } = props;
   const BASE_URL = API_BASE_URL;
   const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
+  const setUserMoney = useSetRecoilState(Money);
 
   useEffect(() => {
     axios({
@@ -23,7 +27,7 @@ export default function ResultTetris(props: ResultProp) {
       headers: { Authorization: ACCESS_TOKEN },
     }).then((res) => {
       console.log(res);
-      // setUserMoney(res.data);
+      setUserMoney(res.data.money);
     });
   }, []);
 

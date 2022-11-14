@@ -3,7 +3,7 @@ import { ResultDiv, CoinImg } from './resultstyle';
 import { SSantaApi } from '../../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { Money } from '../../../store/store';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../apis/url';
 interface ResultProp {
@@ -30,7 +30,7 @@ export default function ResultMemory(props: ResultProp) {
       headers: { Authorization: ACCESS_TOKEN },
     }).then((res) => {
       console.log(res);
-      // setUserMoney(res.data);
+      setUserMoney(res.data.money);
     });
   }, []);
 
