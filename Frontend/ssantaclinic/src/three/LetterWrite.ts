@@ -86,7 +86,6 @@ export class LetterWriteModel {
   }
 
   update() {
-    console.log(this._camera);
     this._orbitControls.update();
   }
 
