@@ -180,6 +180,7 @@ export const SignUp = () => {
               type="submit"
               id="signup-button"
               disabled={isValid}
+              onClick={handleSubmit}
             >
               회원가입
             </motion.button>
