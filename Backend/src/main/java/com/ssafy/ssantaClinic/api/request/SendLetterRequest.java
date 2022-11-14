@@ -9,11 +9,12 @@ import javax.validation.constraints.NotBlank;
 @Data
 @NoArgsConstructor
 public class SendLetterRequest {
+    @NotBlank(message = "제목을 입력해주세요.")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "내용을 입력해주세요.")
     private String message;
 
-    @NotBlank
+    // Enum은 @NotBlank를 사용하지 않습니다.
     private LetterType type;
 }
