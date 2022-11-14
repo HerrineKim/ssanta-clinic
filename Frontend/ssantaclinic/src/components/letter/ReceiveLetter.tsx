@@ -27,7 +27,7 @@ export const ReceiveLetter = () => {
   });
 
   return (
-    <LetterContainer id="write-letter-container">
+    <LetterContainer id="receive-letter-container">
       <div id="message-container">
         <Message id="message">
           <p>{message}</p>

@@ -25,14 +25,14 @@ export const LogIn = () => {
   useEffect(() => {
     if (isLoggedIn) {
       alert('로그인 했잖아요;;');
-      navigate('/');
+      // navigate('/');
     }
   });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post(DOMAIN + '/api/user/login', {
+      .post(LOCAL + '/api/user/login', {
         email: email,
         password: password,
       })
@@ -51,7 +51,7 @@ export const LogIn = () => {
         // setTimeout(() => {
         //   subSSE(TOKEN);
         // }, 660000);
-        // navigate('/test'); // Login 성공하면 일단 내 방으로
+        // navigate('/test');
         navigate('/logintohome');
       })
       .catch((err) => {

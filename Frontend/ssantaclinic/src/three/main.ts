@@ -426,7 +426,7 @@ export class MainCanvas {
       this._removeHomeAlert();
       this._removeTetris();
       this._removeWit();
-
+      this._removeLetter();
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
           // this._zoomInven(this._showcase, 70);
@@ -480,6 +480,7 @@ export class MainCanvas {
             this._removeAlert();
             this._removeHomeAlert();
             this._removeMemory();
+            this._removeLetter();
           }
 
           this._scenenumber = 1;
@@ -498,6 +499,7 @@ export class MainCanvas {
           this._removeAlert();
           this._removeHomeAlert();
           this._removeMemory();
+          this._removeLetter();
         }
 
         this._removeModal();
@@ -838,6 +840,7 @@ export class MainCanvas {
   }
   // 편지
   _setupLetter() {
+    console.log('편지클릭');
     this._isZoom = true;
 
     this._isLetter = true;
@@ -858,7 +861,6 @@ export class MainCanvas {
     ) as HTMLElement | null;
     // console.log(memoryAlert);
     if (letterAlert !== null) {
-      console.log('letterAlert');
       letterAlert.style.display = 'none';
     }
     this._isAlert = false;

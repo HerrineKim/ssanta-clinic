@@ -13,7 +13,6 @@ export interface IUser {
 
 export interface ILetter {
   isList: boolean;
-  isWirte: boolean;
 }
 
 interface isLoggedIn {
@@ -82,7 +81,6 @@ export const letterState = atom<ILetter>({
   key: 'letter',
   default: {
     isList: true,
-    isWirte: false,
   },
 });
 // export const selectToken = selector({
@@ -122,14 +120,6 @@ export const selectLetterList = selector<boolean>({
   get: ({ get }) => {
     const letter = get(letterState);
     return letter.isList;
-  },
-});
-
-export const selectLetterWrite = selector<boolean>({
-  key: 'nowWriteState',
-  get: ({ get }) => {
-    const letter = get(letterState);
-    return letter.isWirte;
   },
 });
 

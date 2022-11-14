@@ -163,9 +163,11 @@ export class LoginToHome {
 
         // new THREE.Vector3(15, -2, 15),
         // new THREE.Vector3(-15, 15, 35),
-        new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(5, 0, 0),
-        new THREE.Vector3(15, 5, 0),
+        new THREE.Vector3(-20, 0, 5),
+        new THREE.Vector3(-10, 0, 10),
+        new THREE.Vector3(0, 0, 15),
+        new THREE.Vector3(5, 0, 10),
+        new THREE.Vector3(15, 5, 5),
         new THREE.Vector3(20, 10, 0),
 
         // new THREE.Vector3(15, -6, 15),
