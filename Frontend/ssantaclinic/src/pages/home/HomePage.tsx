@@ -23,7 +23,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   // 친구 모달 관리
-  const ACCESS_TOKEN = localStorage.getItem('jwt');
+  const ACCESS_TOKEN = `Bearer ${localStorage.getItem('token')}`;
+  console.log(ACCESS_TOKEN);
   const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
