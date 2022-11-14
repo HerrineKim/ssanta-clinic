@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @FileName : TreeServiceImpl
  * @Class 설명 : 트리 꾸미기 관련 비즈니스 처리 로직을 위한 서비스 구현 정의
@@ -34,5 +36,13 @@ public class TreeServiceImpl implements TreeService{
                                 .treeUrl(treeUrl)
                                 .build());
         return userTreeUrl;
+    }
+
+    @Override
+    public List<String> getRandomTree(int userId) {
+        // 존재하는 회원인지 확인
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+        return userRepository.findRandomUserId(userId);
     }
 }
