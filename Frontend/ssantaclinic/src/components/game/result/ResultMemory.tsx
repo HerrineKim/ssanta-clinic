@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { ResultDiv, CoinImg } from './resultstyle';
+import { SSantaApi } from '../../../apis/ssantaApi';
+import { useNavigate } from 'react-router-dom';
+import { Money } from '../../../store/store';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 interface ResultProp {
   isSucces: boolean;
@@ -9,8 +13,11 @@ interface ResultProp {
 }
 
 export default function ResultMemory(props: ResultProp) {
+  const navigate = useNavigate();
   const { isSucces, onClose, round } = props;
   const [money, setMoney] = useState<number>(0);
+  const setUserMoney = useSetRecoilState(Money);
+  // const totalmoney = useRecoilValue(Money);
 
   useEffect(() => {
     if (round !== null && isSucces) {
@@ -24,6 +31,18 @@ export default function ResultMemory(props: ResultProp) {
         setMoney(4);
       }
     }
+  }, []);
+
+  useEffect(() => {
+    SSantaApi.getInstance().gameResult(
+      { coin: money },
+      {
+        onSuccess(data) {
+          setUserMoney({ money: data.coin });
+        },
+        navigate,
+      },
+    );
   }, []);
 
   return (

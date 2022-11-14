@@ -62,6 +62,9 @@ public enum ErrorCode {
     NOTI_ACCESS_ERROR(HttpStatus.FORBIDDEN, "400", "알림 당사자만 알림을 조회할 수 있습니다."),
     WRONG_NOTI_TYPE_ERROR(HttpStatus.BAD_REQUEST, "400", "잘못된 알림 타입입니다."),
 
+    // coin
+    EARN_NOTHING(HttpStatus.BAD_REQUEST, "400", "게임 머니 값이 입력되지 않았습니다."),
+
     // 공통
     UTILITY_CLASS_ERROR(HttpStatus.BAD_REQUEST, "400", "유틸리티 클래스는 접근할 수 없습니다.");
     
