@@ -11,9 +11,9 @@ import java.util.List;
 
 public interface LetterService {
     SendLetter save(SendLetterRequest letterRequest);
-    void makeReplyLetter(Emotion emotion, LetterType type);
-    List<SendLetter> getSendLetterList(int userId);
-    List<ReplyLetter> getReplyLetterList(int userId);
+    void makeReplyLetter(int userId, SendLetter letter, Emotion emotion, LetterType type);
+    List<LetterResponse.SendLetterResponse> getSendLetterList(int userId);
+    List<LetterResponse.ReplyLetterResponse> getReplyLetterList(int userId);
     LetterResponse.LetterListResponse getLetterList(int userId);
     LetterResponse.SendLetterResponse getSendLetter(int letterId);
     LetterResponse.ReplyLetterResponse getReplyLetter(int letterId);

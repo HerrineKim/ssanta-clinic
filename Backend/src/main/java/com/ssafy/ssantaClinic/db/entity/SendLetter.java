@@ -39,9 +39,10 @@ public class SendLetter {
     public LetterResponse.SendLetterResponse toSendLetterResponse() {
         return LetterResponse.SendLetterResponse.builder()
                 .sendLetterId(sendLetterId)
+                .userId(user.getUserId())
                 .title(title)
                 .message(message)
-                .sendAt(sendAt.plusHours(9).toString())
+                .sendAt(sendAt.toString())
                 .type(type)
                 .build();
     }

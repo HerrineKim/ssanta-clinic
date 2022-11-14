@@ -39,6 +39,8 @@ public class LetterResponse {
     @AllArgsConstructor
     @Builder
     public static class LetterListResponse{
+        int sendLetterCount;
+        int replyLetterCount;
         List<SendLetterResponse> send;
         List<ReplyLetterResponse> reply;
     }

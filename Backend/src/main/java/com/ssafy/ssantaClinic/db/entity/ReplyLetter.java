@@ -41,6 +41,9 @@ public class ReplyLetter {
     @Builder.Default
     private LocalDateTime isReceived = LocalDateTime.now().plusHours(2);
 
+    public void read() {
+        isRead = true;
+    }
     public LetterResponse.ReplyLetterResponse toReplyLetterResponse() {
         return LetterResponse.ReplyLetterResponse.builder()
                 .replyLetterId(ReplyLetterId)
