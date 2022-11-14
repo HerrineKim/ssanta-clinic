@@ -1,5 +1,5 @@
 .container {
-  margin: 0 1%;
+  margin: 3%;
 }
 
 .box {
@@ -22,6 +22,7 @@
   transition: all 0.5s;
   margin: 0 auto;
   display: block;
+  width: 60%;
 }
 .box-body:hover {
   cursor: pointer;
@@ -31,7 +32,7 @@
 .box-body:hover .img{
   opacity: 1;
   z-index: 0;
-  transform: translateY(-157px);
+  transform: translateY(-80px);
 }
 .box-body:hover .box-lid {
   -webkit-animation: box-lid 1s forwards ease-in-out;

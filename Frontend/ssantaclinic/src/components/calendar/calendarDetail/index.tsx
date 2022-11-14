@@ -4,6 +4,7 @@ import {
   CalendarDetailTopContainer,
   CalendarDetailBottomContainer,
   CloseButton,
+  DayDiv,
 } from './styles';
 // import { Present } from '../present/index';
 import { Present2 } from '../present/index2';
@@ -23,6 +24,7 @@ export function CalendarDetail(props: CalendarDetailProps) {
   return (
     <CalendarDetailContainer>
       <CalendarDetailTopContainer>
+        <DayDiv>12월 1일</DayDiv>
         <CloseButton onClick={closeModal}>X</CloseButton>
       </CalendarDetailTopContainer>
       <CalendarDetailBottomContainer>
