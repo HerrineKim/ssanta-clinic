@@ -5,6 +5,7 @@ import com.ssafy.ssantaClinic.db.entity.SendLetter;
 import com.ssafy.ssantaClinic.db.entity.columnEnum.LetterType;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 public class LetterResponse {
@@ -39,9 +40,15 @@ public class LetterResponse {
     @AllArgsConstructor
     @Builder
     public static class LetterListResponse{
+        @NotBlank(message = "보낸 편지 갯수가 없습니다.")
         int sendLetterCount;
+        @NotBlank(message = "받은 편지 갯수가 없습니다.")
         int replyLetterCount;
+
+        @NotBlank(message = "보낸 편지가 없습니다.")
         List<SendLetterResponse> send;
+
+        @NotBlank(message = "받은 편지가 없습니다.")
         List<ReplyLetterResponse> reply;
     }
 }
