@@ -52,6 +52,9 @@ public class User {
 
     private int money;
 
+    @Column(name = "tree_url", length = 300)
+    private String treeUrl;
+
     @OneToMany(mappedBy = "parent")
     @JsonIgnore
     List<Follow> followers;

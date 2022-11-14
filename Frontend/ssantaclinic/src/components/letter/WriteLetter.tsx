@@ -35,7 +35,7 @@ export const WriteLetter = () => {
         {
           title: title,
           message: message,
-          keyword: keyword,
+          type: keyword,
         },
         {
           headers: {
@@ -109,7 +109,7 @@ export const WriteLetter = () => {
   return (
     <LetterContainer id="write-letter-container">
       <div id="header">
-        <h1>어떤 고민이 있나요?</h1>
+        <h1 id="header-text">어떤 고민이 있나요?</h1>
       </div>
       <div id="set-category">
         <CheckButton onClick={toggleJob}>
@@ -124,15 +124,6 @@ export const WriteLetter = () => {
       </div>
       <div>
         <form onSubmit={handleSubmit}>
-          {/* <div id="title-container">
-            <h3 id="title">제목</h3>
-            <TitleInput
-              name="title"
-              id="title-input"
-              onChange={handleChangeTitle}
-              required
-            ></TitleInput>
-          </div> */}
           <div id="message-container">
             <MessageInput
               name="message"

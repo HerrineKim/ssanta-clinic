@@ -1,40 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Button } from './styles';
+import { useNavigate } from 'react-router-dom';
 
-export const ReceiveLetter = () => {
-  const [message, setMessage] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
+export const LetterList = (props: any) => {
+  const { onLetterId, onReceiveLetter, onLetterList } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+  const navigate = useNavigate();
+  const letters = [
+    {
+      id: 1,
+      title: '견뎌',
+      message: '그것도 못해?,',
+    },
+    {
+      id: 2,
+      title: '참아',
+      message: '다른 사람 다해',
+    },
+  ];
+  function Letter({ letter }: { letter: any }) {
+    return (
+      <button
+        onClick={() => {
+          onLetterId(letter.id);
+          onReceiveLetter(true);
+          onLetterList(false);
+        }}
+      >
+        <b>{letter.title}</b> <span>{letter.message}</span>
+      </button>
+    );
+  }
   useEffect(() => {
     axios
       .get('http://localhost:8080' + '/api/letter', {
-        params: {
-          letterId: 'letterId', // 나중에 Token으로 가져오면 될 듯
-        },
         headers: {
           Authorization: ACCESS_TOKEN,
         },
       })
       .then((res) => {
         console.log(res.data);
-        setMessage('산타에게서 온 답장');
-        setTitle('편지 제목');
       })
       .catch((err) => {
         console.log(err.resonse);
       });
   });
-
   return (
     <div id="receive-letter-container">
-      <div>
-        <h1>산타가 답장해 줬어!</h1>
-      </div>
-      <div>
-        <h2>호호호</h2>
-        <h3>{title}</h3>
-        <p>{message}</p>
-      </div>
+      {letters.map((letter, index) => (
+        <Letter letter={letter} key={index} />
+      ))}
     </div>
   );
 };

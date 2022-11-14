@@ -22,8 +22,9 @@ export const LogIn = () => {
 
   useEffect(() => {
     if (localStorage.getItem('jwt') !== '') {
+      console.log(localStorage.getItem('jwt') !== '');
       alert('로그인 했잖아요;;');
-      navigate('/');
+      // navigate('/');
     }
   });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
@@ -49,7 +50,7 @@ export const LogIn = () => {
         // setTimeout(() => {
         //   subSSE(TOKEN);
         // }, 660000);
-        // navigate('/test'); // Login 성공하면 일단 내 방으로
+        // navigate('/test');
         navigate('/logintohome');
       })
       .catch((err) => {
@@ -105,6 +106,9 @@ export const LogIn = () => {
   function goSignUp() {
     navigate('/signup');
   }
+  function goFindPassword() {
+    navigate('/findpassword');
+  }
   const handleChangeEmail = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setEmail(e.target.value);
@@ -154,6 +158,14 @@ export const LogIn = () => {
         onClick={goSignUp}
       >
         회원가입
+      </motion.button>
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        id="find-password-button"
+        onClick={goFindPassword}
+      >
+        비밀번호 찾기
       </motion.button>
     </LoginContainer>
   );

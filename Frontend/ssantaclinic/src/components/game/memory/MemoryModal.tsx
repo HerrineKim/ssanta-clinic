@@ -64,6 +64,10 @@ export default function MemoryModal(props: any) {
     }
   }, [timeLimit]);
 
+  useEffect(() => {
+    console.log(isSuccess);
+  });
+
   // 게임 클리어
   const clear = useCallback(() => {
     // 클리어시 돈 받기 axios + 클리어 alert
@@ -180,14 +184,15 @@ export default function MemoryModal(props: any) {
       // 클릭수와 정답개수가 동일하면 다음 라운드, 아닐 경우 계속 클릭 진행
       if (clickCount + 1 === answer.length) {
         setIsSuccesss(true);
-
+        console.log(111);
         // 난이도 업일 경우 1초 딜레이 후 라운드 진행
         if (round === 4 || round === 12 || round === 24) {
           const difficultyUpDelay = setTimeout(() => {
+            console.log(222);
             nextRound();
           }, 1000);
 
-          setDifficultyUpDelayClear(difficultyUpDelay);
+          // setDifficultyUpDelayClear(difficultyUpDelay);
 
           return;
         }
@@ -198,7 +203,7 @@ export default function MemoryModal(props: any) {
 
           return;
         }
-
+        console.log(333);
         nextRound();
       } else {
         setClickCount((prev) => prev + 1);
