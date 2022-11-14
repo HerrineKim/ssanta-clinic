@@ -11,13 +11,15 @@ import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton } from './styles';
-import { selectUserId, selectUserNickname } from '../../store/store';
+import { selectUserId, Money, Items } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
 import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
+
+import { useSetRecoilState } from 'recoil';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
@@ -31,8 +33,12 @@ export default function Home() {
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
 
-  const [money, setMoney] = useState<number>(0);
-  const [item, setItem] = useState<any[]>([]);
+  const setUserMoney = useSetRecoilState(Money);
+  const money = useRecoilValue(Money);
+
+  const setUserItems = useSetRecoilState(Items);
+  const item = useRecoilValue(Items);
+
   const navigate = useNavigate();
 
   // money 정보 불러오기
@@ -41,7 +47,7 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
-          setMoney(data.money);
+          setUserMoney({ money: data.money });
         },
         navigate,
       },
@@ -54,7 +60,7 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
-          setItem(data.items);
+          setUserItems({ items: data.items });
         },
         navigate,
       },
