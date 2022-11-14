@@ -34,19 +34,6 @@ export default function ResultMemory(props: ResultProp) {
     }
   }, []);
 
-  // useEffect(() => {
-  //   SSantaApi.getInstance().gameResult(
-  //     { coin: money },
-  //     {
-  //       onSuccess(data) {
-  //         console.log(data);
-  //         setUserMoney({ money: data.coin });
-  //       },
-  //       navigate,
-  //     },
-  //   );
-  // }, []);
-
   axios({
     method: 'patch',
     url: 'http://localhost:8080/api/coin',
