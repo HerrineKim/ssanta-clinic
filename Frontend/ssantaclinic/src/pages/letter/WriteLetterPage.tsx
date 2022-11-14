@@ -5,8 +5,9 @@ import { LetterWriteModel } from '../../three/LetterWrite';
 import { Button } from './styles';
 
 export const WriteLetterPage = (props: any) => {
-  const { onClose } = props;
+  const { onBack, goList } = props;
   useEffect(() => {
+    console.log(onBack, 'ghkrd;s');
     const letterCanvas = new LetterWriteModel();
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
@@ -22,9 +23,10 @@ export const WriteLetterPage = (props: any) => {
       <LetterPageContainer id="letter-container">
         <WriteLetter />
         <Button
-          id="back-button"
+          id="write-back-button"
           onClick={() => {
-            onClose(false);
+            onBack(false);
+            goList(true);
           }}
         >
           뒤로가기

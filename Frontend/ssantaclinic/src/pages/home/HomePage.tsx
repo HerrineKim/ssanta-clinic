@@ -67,6 +67,7 @@ export default function Home() {
     );
   }, []);
 
+  const [isLetter, setIsLetter] = useState<boolean>(false);
   useEffect(() => {
     // 추천 친구 목록 불러오기(api/friend/recommend)
     const getFriendList = () => {
@@ -152,6 +153,7 @@ export default function Home() {
       console.log('canvas 끝!');
     };
   }, []);
+
   return (
     <Div>
       {/* 모달들 */}

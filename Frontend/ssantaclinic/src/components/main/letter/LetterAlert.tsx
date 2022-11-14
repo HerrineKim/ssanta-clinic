@@ -8,75 +8,57 @@ import { Button } from './styles';
 export function LetterAlert() {
   const [isList, setIsList] = useState<boolean>(true);
   const [isWrite, setIsWrite] = useState<boolean>(false);
-  const [isReceive, setIsCristmasSelect] = useState<boolean>(false);
-  function write() {
-    setIsWrite(true);
-  }
+  const [isReceive, setIsReceive] = useState<boolean>(false);
+  const [letterId, setLetterId] = useState<number>(0);
   function Write() {
     setIsList(!isList);
     setIsWrite(!isWrite);
   }
-  const setList = () => {
-    if (!isList) {
-      setIsList(!isList);
-      if (isWrite) {
-        setIsWrite(!isWrite);
-      }
-      if (isReceive) {
-        setIsCristmasSelect(!isReceive);
-      }
-    }
-  };
-
-  const setWrite = () => {
-    if (!isWrite) {
-      setIsWrite(!isWrite);
-      if (isList) {
-        setIsList(!isList);
-      }
-      if (isReceive) {
-        setIsCristmasSelect(!isReceive);
-      }
-    }
-  };
-  const setReceive = () => {
-    if (!isReceive) {
-      setIsCristmasSelect(!isReceive);
-
-      if (isList) {
-        setIsList(!isList);
-      }
-      if (isWrite) {
-        setIsWrite(!isWrite);
-      }
-    }
-  };
+  function Close() {
+    setIsList(false);
+    setIsWrite(false);
+    setIsReceive(false);
+    setTimeout(() => {
+      setIsList(true);
+    }, 1500);
+  }
   if (isList) {
     return (
       <Div className="letterAlert">
-        <LetterList></LetterList>;
+        <LetterList
+          onLetterId={setLetterId}
+          onReceiveLetter={setIsReceive}
+          onLetterList={setIsList}
+        ></LetterList>
         <div>
           <Button onClick={Write}>편지쓰기</Button>
+        </div>
+        <div>
+          <Button id="close-button" onClick={Close}>
+            나가기
+          </Button>
         </div>
       </Div>
     );
   } else if (isWrite) {
     return (
       <Div className="letterAlert">
-        <WriteLetterPage onClose={setIsWrite}></WriteLetterPage>
+        <WriteLetterPage
+          onBack={setIsWrite}
+          goList={setIsList}
+        ></WriteLetterPage>
       </Div>
     );
   } else if (isReceive) {
     return (
       <Div className="letterAlert">
-        <ReceiveLetterPage></ReceiveLetterPage>
+        <ReceiveLetterPage
+          onBack={setIsReceive}
+          goList={setIsList}
+        ></ReceiveLetterPage>
       </Div>
     );
   } else {
-    return (
-      <Div className="letterAlert">
-        <LetterList></LetterList>
-      </Div>
-    );
+    return null;
   }
 }
