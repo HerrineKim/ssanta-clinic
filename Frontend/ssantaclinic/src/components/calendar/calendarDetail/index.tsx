@@ -1,7 +1,11 @@
 import React from 'react';
-import { CalendarDetailContainer } from './styles';
-import { CloseButton, PresentContainer } from './styles';
-import { Present } from '../present/index';
+import {
+  CalendarDetailContainer,
+  CalendarDetailTopContainer,
+  CalendarDetailBottomContainer,
+  CloseButton,
+} from './styles';
+// import { Present } from '../present/index';
 import { Present2 } from '../present/index2';
 
 type CalendarDetailProps = {
@@ -18,11 +22,22 @@ export function CalendarDetail(props: CalendarDetailProps) {
   }
   return (
     <CalendarDetailContainer>
-      <CloseButton onClick={closeModal}>닫기</CloseButton>
-      <PresentContainer>
-        <Present></Present>
+      <CalendarDetailTopContainer>
+        <CloseButton onClick={closeModal}>X</CloseButton>
+      </CalendarDetailTopContainer>
+      <CalendarDetailBottomContainer>
+        {/* <Present></Present> */}
         <Present2></Present2>
-      </PresentContainer>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+        <Present2></Present2>
+      </CalendarDetailBottomContainer>
     </CalendarDetailContainer>
   );
 }
