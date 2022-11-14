@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { currentUser } from '../../store/store';
+import { useRecoilValue } from 'recoil';
+import { currentUser, isLogIn } from '../../store/store';
 import { Button, LoginContainer } from './styles';
 import { Input } from './styles';
 import { motion } from 'framer-motion';
@@ -16,12 +17,13 @@ export const LogIn = () => {
   const [button, setButton] = useState<boolean>(true);
   const [notificacoes, setNotificacoes] = useState([]);
   const setUserState = useSetRecoilState(currentUser);
+  const isLoggedIn = useRecoilValue(isLogIn);
   const navigate = useNavigate();
   // const EventSource = EventSourcePolyfill;
   let accessToken: any = '';
 
   useEffect(() => {
-    if (localStorage.getItem('jwt') !== '') {
+    if (isLoggedIn) {
       alert('로그인 했잖아요;;');
       navigate('/');
     }

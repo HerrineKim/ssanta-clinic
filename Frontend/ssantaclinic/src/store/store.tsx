@@ -16,6 +16,25 @@ export interface ILetter {
   isWirte: boolean;
 }
 
+interface isLoggedIn {
+  isLoggedIn: boolean;
+}
+
+const isLoggedIn = atom<isLoggedIn>({
+  key: 'isLoggedin',
+  default: {
+    isLoggedIn: localStorage.getItem('token') ? true : false,
+  },
+});
+
+export const isLogIn = selector<boolean>({
+  key: 'isLogIn',
+  get: ({ get }) => {
+    const isLogdIn = get(isLoggedIn);
+    return isLogdIn.isLoggedIn;
+  },
+});
+
 export const currentUser = atom<IUser>({
   key: 'user',
   default: {
