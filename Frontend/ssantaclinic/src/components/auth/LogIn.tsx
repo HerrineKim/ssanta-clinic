@@ -25,7 +25,7 @@ export const LogIn = () => {
   useEffect(() => {
     if (isLoggedIn) {
       alert('로그인 했잖아요;;');
-      // navigate('/');
+      navigate('/');
     }
   });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
