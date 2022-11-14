@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { createStage, isColliding } from './gameHelpers';
 import YouTube, { YouTubeProps } from 'react-youtube';
+import { playGameOverSound } from '../../../assets/sound/sound';
 
 // Custom hooks
 import { useInterval } from '../../../hooks/tetris/useInterval';
@@ -21,21 +22,15 @@ import {
 } from './TetrisPage.styles';
 
 const TetrisPage: React.FC = () => {
-  // YouTube example
-  // const onPlayerReady: YouTubeProps['onReady'] = (event) => {
-  //   // access to player in all event handlers via event.target
-  //   event.target.pauseVideo();
-  // };
   const opts: YouTubeProps['opts'] = {
-    height: '100',
-    width: '100',
+    height: '60',
+    width: '60',
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
       listType: 'playlist',
       list: 'OLAK5uy_lt7KMCvK3ZUc8gkRdaHBwxS8B8dDAMbk4',
       disablekb: 1,
-      // controls: 0,
       fs: 0,
       modestbranding: 1,
     },
@@ -117,6 +112,8 @@ const TetrisPage: React.FC = () => {
         console.log('Game over!');
         setGameOver(true);
         setDroptime(null);
+        playGameOverSound();
+        alert(`게임 오버! 내 점수는 ${score}`);
       }
       updatePlayerPos({ x: 0, y: 0, collided: true });
     }
@@ -127,42 +124,54 @@ const TetrisPage: React.FC = () => {
   }, dropTime);
 
   return (
-    <GlobalStyles>
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-        }}
-      >
-        <YouTube opts={opts} />
-      </div>
-      <StyledTetrisWrapper
-        role="button"
-        tabIndex={0}
-        onKeyDown={move}
-        onKeyUp={keyUp}
-        ref={gameArea}
-      >
-        <StyledTetris>
-          <div className="display">
-            {gameOver ? (
-              <>
-                <Display gameOver={gameOver} text="Game Over!" />
-                <StartButton callback={handleStartGame} />
-              </>
-            ) : (
-              <>
-                <Display text={`Score: ${score}`} />
-                <Display text={`Rows: ${rows}`} />
-                <Display text={`Level: ${level}`} />
-              </>
-            )}
-          </div>
-          <Stage stage={stage} />
-        </StyledTetris>
-      </StyledTetrisWrapper>
-    </GlobalStyles>
+    <Fragment>
+      <GlobalStyles>
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+          }}
+        >
+          <YouTube opts={opts} />
+        </div>
+        <StyledTetrisWrapper
+          role="button"
+          tabIndex={0}
+          onKeyDown={move}
+          onKeyUp={keyUp}
+          ref={gameArea}
+        >
+          <StyledTetris>
+            <div className="display">
+              {gameOver ? (
+                <>
+                  <Display gameOver={gameOver} text="게임 오버" />
+                  <StartButton callback={handleStartGame} />
+                </>
+              ) : (
+                <>
+                  <Display text={`점수: ${score}`} />
+                  <Display text={`줄 수: ${rows}`} />
+                  <Display text={`레벨: ${level}`} />
+                </>
+              )}
+            </div>
+            {/* <Stage stage={stage} /> */}
+          </StyledTetris>
+        </StyledTetrisWrapper>
+      </GlobalStyles>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+      <div className="snowflake">❅</div>
+      <div className="snowflake">❆</div>
+      <div className="snowflake">❄</div>
+    </Fragment>
   );
 };
 

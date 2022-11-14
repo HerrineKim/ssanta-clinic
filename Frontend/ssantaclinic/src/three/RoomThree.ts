@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import { throws } from 'assert';
+// import { throws } from 'assert';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
@@ -148,7 +148,7 @@ export class RoomThree {
     //   0.1,
     //   1000,
     // );
-    const aspect = window.innerWidth / window.innerHeight;
+    // const aspect = window.innerWidth / window.innerHeight;
     // const camera = new THREE.OrthographicCamera(
     //   -10 * aspect,
     //   10 * aspect,
@@ -208,10 +208,13 @@ export class RoomThree {
     this._scene.add(light2);
   }
   _setupModel() {
+    let count = 0;
     const inven: any[] = [];
     const loader = new GLTFLoader();
-    loader.load('/room/smallroom2.glb', (gltf) => {
+    loader.load('/room/room_change.glb', (gltf) => {
+      count += 1;
       const model = gltf.scene;
+
       this._scene.add(model);
       const children: any[] = [];
       model.traverse((child) => {
@@ -222,6 +225,7 @@ export class RoomThree {
     });
     // x button load
     loader.load('/room/close.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       this._close = model;
 
@@ -231,6 +235,7 @@ export class RoomThree {
     });
     // check load
     loader.load('/room/check.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       this._check = model;
 
@@ -240,6 +245,7 @@ export class RoomThree {
     });
 
     loader.load('/room/tree.glb', (gltf) => {
+      count += 1;
       const tree: any[] = [];
       const model: any = gltf.scene;
       // model.traverse((child: any) => {
@@ -263,6 +269,7 @@ export class RoomThree {
     });
 
     loader.load('/room/showcase.glb', (gltf) => {
+      count += 1;
       const model: any = gltf.scene;
       // this._scene.add(model);
       // console.log('showcase:', model);
@@ -281,6 +288,7 @@ export class RoomThree {
       // console.log(index);
       if (item !== 0) {
         loader.load(`/main/${item}.glb`, (gltf) => {
+          count += 1;
           // console.log(index);
           const model = gltf.scene;
           // console.log(`${index}: `, model);
@@ -293,7 +301,25 @@ export class RoomThree {
         });
       }
     });
+    const itemCount = this._items.length;
     this._items = items;
+
+    const loadPage = setInterval(() => {
+      console.log('로딩중');
+      console.log(count);
+      console.log(itemCount);
+      if (count === itemCount + 5) {
+        const loading = document.querySelector(
+          '#room-canvas .loading',
+        ) as HTMLElement | null;
+
+        if (loading !== null) {
+          loading.style.display = 'none';
+        }
+
+        clearInterval(loadPage);
+      }
+    }, 1000);
   }
   _setupControls() {
     if (this._scenenumber === 1) {
@@ -327,7 +353,7 @@ export class RoomThree {
       return file;
     }
 
-    let glbFile: Blob;
+    // let glbFile: Blob;
 
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
@@ -350,15 +376,22 @@ export class RoomThree {
 
       // 원래 버전
       // const targets = this._raycaster.intersectObjects(this._group);
-      console.log('click!!', this._model);
+      // console.log('click!!', this._model);
       const targets = this._raycaster.intersectObject(this._model);
-      console.log('raycaaster target:', targets);
+      // console.log('raycaaster target:', targets);
 
       if (targets.length > 0) {
-        console.log(targets);
-        console.log('scenenumber 1');
+        // console.log(targets);
+        // console.log('scenenumber 1');
+        if (targets[0].object.parent.name === 'advaent_calendar') {
+          console.log('달력');
+          this._setupCalendar();
+        } else {
+          this._removeCalendar();
+        }
       } else {
         console.log('아무것도업슴');
+        this._removeCalendar();
       }
 
       const trees = this._raycaster.intersectObjects(this._tree);
@@ -441,6 +474,7 @@ export class RoomThree {
         });
 
         this._scenenumber = 1;
+
         // this._setupControls();
         setTimeout(() => {
           this._zoomFit(this._model, 60);
@@ -451,6 +485,26 @@ export class RoomThree {
       // }
       console.log('treetarget:', treeTarget);
       // console.log('itemTarget:', itemTarget);
+    }
+  }
+
+  _setupCalendar() {
+    const calendarAlert = document.querySelector(
+      '.calendar',
+    ) as HTMLElement | null;
+    // console.log(alert);
+    if (calendarAlert !== null) {
+      console.log('calendarAlert');
+      calendarAlert.style.display = 'flex';
+    }
+  }
+  _removeCalendar() {
+    const calendarAlert = document.querySelector(
+      '.calendar',
+    ) as HTMLElement | null;
+    // console.log(memoryAlert);
+    if (calendarAlert !== null) {
+      calendarAlert.style.display = 'none';
     }
   }
 
@@ -648,7 +702,7 @@ export class RoomThree {
     //box 는 객체를 담는 최소크기 박스
     const box = new THREE.Box3().setFromObject(object3d);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
-    const sizeBox = box.getSize(new THREE.Vector3()).length();
+    // const sizeBox = box.getSize(new THREE.Vector3()).length();
     //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
     const centerBox = box.getCenter(new THREE.Vector3());
 
@@ -659,13 +713,13 @@ export class RoomThree {
       THREE.MathUtils.degToRad(viewAngle),
     );
 
-    const halfSizeModel = sizeBox * 0.5;
-    const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
-    const distance = halfSizeModel / Math.tan(halfFov);
+    // const halfSizeModel = sizeBox * 0.5;
+    // const halfFov = THREE.MathUtils.degToRad(this._camera.fov * 0.5);
+    // const distance = halfSizeModel / Math.tan(halfFov);
 
-    const newPosition = new THREE.Vector3().copy(
-      direction.multiplyScalar(distance).add(centerBox),
-    );
+    // const newPosition = new THREE.Vector3().copy(
+    //   direction.multiplyScalar(distance).add(centerBox),
+    // );
 
     // this._camera.position.copy(newPosition);
     // this._orbitControls.target.copy(centerBox);

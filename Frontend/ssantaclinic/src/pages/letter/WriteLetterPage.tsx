@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
 import { WriteLetter } from '../../components/letter/WriteLetter';
-import { Wrapper, CanvasContainer, LetterContainer } from './styles';
+import { Wrapper, CanvasContainer, LetterPageContainer } from './styles';
 import { LetterWriteModel } from '../../three/LetterWrite';
-export const WriteLetterPage = () => {
+import { Button } from './styles';
+
+export const WriteLetterPage = (props: any) => {
+  const { onBack, goList } = props;
   useEffect(() => {
+    console.log(onBack, 'ghkrd;s');
     const letterCanvas = new LetterWriteModel();
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
@@ -16,9 +20,18 @@ export const WriteLetterPage = () => {
   }, []);
   return (
     <Wrapper>
-      <LetterContainer>
+      <LetterPageContainer id="letter-container">
         <WriteLetter />
-      </LetterContainer>
+        <Button
+          id="write-back-button"
+          onClick={() => {
+            onBack(false);
+            goList(true);
+          }}
+        >
+          뒤로가기
+        </Button>
+      </LetterPageContainer>
       <CanvasContainer id="letter-canvas"></CanvasContainer>
     </Wrapper>
   );

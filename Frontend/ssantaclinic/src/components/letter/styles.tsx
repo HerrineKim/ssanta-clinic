@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
 export const LetterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  height: 100%;
 
   #header {
-    display: inline-block;
-    float: right;
-    margin-left: 68%;
-    color: white;
+    margin-left: 75%;
+    margin-top: 5%;
+    h1 {
+      font-size: 20px;
+      right: 10%;
+      color: white;
+      font-family: 'Cafe24Ssurround';
+    }
   }
   #set-category {
     display: inline-block;
@@ -20,12 +23,14 @@ export const LetterContainer = styled.div`
     margin: 1% 10%;
   }
   #message-container {
-    margin: 1% 10%;
+    height: 100%;
+    margin: 0 10%;
+    text-align: center;
   }
   .send-button {
-    display: inline-block;
     float: right;
     margin-right: 13%;
+    font-family: 'Cafe24Ssurround';
   }
 `;
 
@@ -72,19 +77,18 @@ export const TitleInput = styled.input`
   margin: 5px;
 `;
 export const MessageInput = styled.input`
-  width: 25vw;
-  height: 60vh;
+  width: 30%;
+  height: 22vw;
   border-radius: 10px;
   background: #34502R;
-  margin: 5px;
 `;
 export const Message = styled.div`
-  width: 25vw;
-  height: 60vh;
+  width: 30%;
+  height: 70%;
   border-radius: 10px;
   background: white;
-  margin: 5px;
-  margin-bottom: 10%;
+  margin-top: 15%;
+  margin-left: 35%;
 `;
 export const CheckButton = styled.button`
   background-color: #424b35;

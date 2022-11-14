@@ -1,26 +1,51 @@
 import React, { useState, useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { Div, ModalDiv } from './styles';
+import { Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
 import { MemoryAlert } from '../../components/main/memoryAlert/Memory';
 import { WitAlert } from '../../components/main/witalert/Wit';
+import { TetrisAlert } from '../../components/main/tetrisalert/TetrisAlert';
 import { HomeAlert } from '../../components/main/homealert';
+import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton } from './styles';
+import { selectUserId, selectUserNickname } from '../../store/store';
+import { useRecoilValue } from 'recoil';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
+import Loading from '../../components/loading/Loading';
+import { SSantaApi } from '../../apis/ssantaApi';
+import { useNavigate } from 'react-router-dom';
+
+// import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
   // 친구 모달 관리
-  const ACCESS_TOKEN = localStorage.getItem('jwt');
+  const ACCESS_TOKEN = `Bearer ${localStorage.getItem('token')}`;
+  console.log(ACCESS_TOKEN);
+  const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
-  const [searchList, setSearchList] = useState([]);
   const [isModal, setIsModal] = useState(false);
+  const [money, setMoney] = useState<number>(0);
+  const [item, setItem] = useState<number[]>([]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    SSantaApi.getInstance().money(
+      { userId: userId },
+      {
+        onSuccess(data) {
+          setMoney(data.money);
+        },
+        navigate,
+      },
+    );
+  }, [money]);
 
+  const [isLetter, setIsLetter] = useState<boolean>(false);
   useEffect(() => {
     // 추천 친구 목록 불러오기(api/friend/recommend)
     const getFriendList = () => {
@@ -75,29 +100,6 @@ export default function Home() {
     getFollowerList();
   }, []);
 
-  // 팔로우 & 언팔로우(/api/friend/follow)
-  const follow = (friendId: number) => {
-    axios
-      .post(
-        'http://localhost:8080/api/friend/follow',
-        {
-          friendId: friendId,
-        },
-        {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        },
-      )
-      .then((res) => {
-        console.log(res.data);
-        // setIsFollowed(true);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   // 친구 검색: 추후 구현
 
   // const firstCanvas = document.getElementById('main-canvas');
@@ -129,14 +131,17 @@ export default function Home() {
       console.log('canvas 끝!');
     };
   }, []);
+
   return (
     <Div>
       {/* 모달들 */}
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
+      <TetrisAlert></TetrisAlert>
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
+      <LetterAlert></LetterAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
       <FriendButton
@@ -153,11 +158,12 @@ export default function Home() {
         friendList={friendList}
         followingList={followingList}
         followerList={followerList}
-        follow={follow}
       ></FriendModal>
       <ModalDiv className="modal"></ModalDiv>
-      {/* <Div id="shop"></Div> */}
-      <Div id="main-canvas"></Div>
+      <Loading></Loading>
+      <Div id="main-canvas">
+        <ShopDiv id="shop"></ShopDiv>
+      </Div>
     </Div>
   );
 }

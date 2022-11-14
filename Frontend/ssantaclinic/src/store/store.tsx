@@ -11,6 +11,10 @@ export interface IUser {
   // jwt: string;
 }
 
+export interface ILetter {
+  isList: boolean;
+}
+
 export const currentUser = atom<IUser>({
   key: 'user',
   default: {
@@ -23,6 +27,12 @@ export const currentUser = atom<IUser>({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const letterState = atom<ILetter>({
+  key: 'letter',
+  default: {
+    isList: true,
+  },
+});
 // export const selectToken = selector({
 //   key: 'userToken',
 //   get: ({ get }) => {
@@ -52,6 +62,14 @@ export const selectUserNickname = selector<string>({
   get: ({ get }) => {
     const user = get(currentUser);
     return user.nickname;
+  },
+});
+
+export const selectLetterList = selector<boolean>({
+  key: 'nowLetterState',
+  get: ({ get }) => {
+    const letter = get(letterState);
+    return letter.isList;
   },
 });
 
