@@ -32,6 +32,10 @@ public class LetterServiceImpl implements LetterService {
     @Override
     @Transactional
     public SendLetter save(SendLetterRequest letterRequest) {
+        /**
+         * @Method Name : save
+         * @Method 설명 : 회원이 보낸 편지를 저장하는 메소드
+         */
         SendLetter letter = SendLetter.builder()
                 .user(userRepository.getUserByUserId(JwtUtil.getCurrentUserId()).get())
                 .title(letterRequest.getTitle())
@@ -45,6 +49,10 @@ public class LetterServiceImpl implements LetterService {
     @Override
     @Transactional
     public void makeReplyLetter(int userId, SendLetter sendLetter, Emotion emotion, LetterType type) {
+        /**
+         * @Method Name : makeReplyLetter
+         * @Method 설명 : 회원이 보낸 편지에 대한 답장 편지를 만드는 메소드
+         */
         User user = userRepository.getUserByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         ReplyLetter.ReplyLetterBuilder replyLetter = ReplyLetter.builder();
 
@@ -59,12 +67,13 @@ public class LetterServiceImpl implements LetterService {
                 .sendLetter(sendLetter);
 
         String nickName = user.getNickName();
-        // 부정적으로 판정되면 편지 + 명언 아닐경우 그냥 편지만
+        // 부정적으로 판정되면 편지 + 명언
         if(emotion.equals(Emotion.Negative)){
             List<Quote> quoteList = quoteRepository.findAll();
             Quote quote = quoteList.get(randomizer.nextInt(quoteList.size()));
             replyLetter.message(santaLetter.getContent().replaceAll("OO", nickName) + "\n\n" + quote.getQuote() + " - "+ quote.getSource());
         }else{
+            // 긍정 or 중립일 경우 그냥 편지만
             replyLetter.message(santaLetter.getContent().replaceAll("OO", nickName));
         }
         replyLetterRepository.save(replyLetter.build());
@@ -73,12 +82,20 @@ public class LetterServiceImpl implements LetterService {
     @Override
     @Transactional
     public List<LetterResponse.SendLetterResponse> getSendLetterList(int userId) {
+        /**
+         * @Method Name : getSendLetterList
+         * @Method 설명 : 회원이 보낸 편지 리스트를 가져오는 메소드
+         */
         return sendLetterRepository.findAllByUser_UserId(userId).stream().map(SendLetter::toSendLetterResponse).collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public List<LetterResponse.ReplyLetterResponse> getReplyLetterList(int userId) {
+        /**
+         * @Method Name : getReplyLetterList
+         * @Method 설명 : 회원이 받은 편지 리스트를 가져오는 메소드
+         */
         List<ReplyLetter> replyLetterList = replyLetterRepository.findAllByUser_UserId(userId);
         // 시간을 확인해서 받을 수 있는 편지인지 확인
         return replyLetterList.stream().filter(replyLetter -> replyLetter.getIsReceived().isBefore(LocalDateTime.now())).map(ReplyLetter::toReplyLetterResponse).collect(Collectors.toList());
@@ -87,6 +104,10 @@ public class LetterServiceImpl implements LetterService {
     @Override
     @Transactional
     public LetterResponse.LetterListResponse getLetterList(int userId) {
+        /**
+         * @Method Name : getLetterList
+         * @Method 설명 : 회원이 보낸 편지와 받은 편지 리스트를 가져오는 메소드
+         */
         List<LetterResponse.SendLetterResponse> sendLetterList = getSendLetterList(userId);
         List<LetterResponse.ReplyLetterResponse> replyLetterList = getReplyLetterList(userId);
 
