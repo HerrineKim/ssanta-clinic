@@ -88,16 +88,16 @@ export class MainCanvas {
   _isGame3: boolean;
   _isGame4: boolean;
   _isLetter: boolean;
-
+  _userId: number;
   _arrow: any;
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
   _scenenumber = 1;
 
-  constructor(items: number[]) {
+  constructor(items: number[], userId: number) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
-
+    this._userId = userId;
     this._items = items;
     this._isAlert = false;
     this._isZoom = false;
@@ -530,7 +530,7 @@ export class MainCanvas {
       const itemTarget = this._raycaster.intersectObjects(this._items);
       console.log(itemTarget);
       if (itemTarget.length > 0) {
-        this._setupAlert(itemTarget[0].object.name);
+        this._setupAlert(itemTarget[0].object.name, this._userId);
       } else {
         this._removeAlert();
       }
@@ -734,7 +734,7 @@ export class MainCanvas {
       root.unmount();
     }
   }
-  _setupAlert(itemId: string) {
+  _setupAlert(itemId: string, userId: number) {
     console.log('setupalert');
     const item = parseInt(itemId);
     const e = React.createElement;
@@ -743,7 +743,7 @@ export class MainCanvas {
       console.log(shop);
       const root = ReactDOM.createRoot(shop);
 
-      root.render(e(ShopAlert, [{ item: item }], null));
+      root.render(e(ShopAlert, [{ item: item, userId: userId }], null));
     }
   }
 
