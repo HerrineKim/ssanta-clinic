@@ -2,6 +2,8 @@ package com.ssafy.ssantaClinic.api.controller;
 
 import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.service.S3Service;
+import com.ssafy.ssantaClinic.api.service.TreeService;
+import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import io.swagger.annotations.Api;
@@ -29,7 +31,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class TreeController {
     private final S3Service s3Service;
-
+    private final TreeService treeService;
     @ApiOperation(value = "트리 3D 파일 받아오기", notes = "클라이언트로부터 3D을 받아온다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
@@ -43,11 +45,19 @@ public class TreeController {
             (@RequestPart(required = false) MultipartFile glbfile) throws IOException {
         /**
          * @Method Name : getGlbFile
-         * @Method 설명 : 3D 트리 파일 보내기
+         * @Method 설명 : 클라이언트로부터 3D을 받아온다.
          */
+        // 현재 로그인한 유저의 아이디 가져오기
+        int userId = JwtUtil.getCurrentUserId();
         // S3 업로드
         var url = s3Service.uploadGlb(glbfile);
         if(url.isBlank()) throw new CustomException(ErrorCode.FILE_NAME_BLANK_ERROR);
+        // db에 url 저장
+        String orgUrl = treeService.saveTreeImage(userId, url);
+        // 기존 파일 존재했으면 삭제
+        if(orgUrl != null) {
+            s3Service.delete(orgUrl);
+        }
         return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
     }
 }

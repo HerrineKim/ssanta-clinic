@@ -3,6 +3,8 @@ package com.ssafy.ssantaClinic.api.service;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteBucketRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
@@ -29,6 +31,9 @@ public class S3Service {
 
     @Value("${cloud.aws.s3.bucket.name}") // 프로퍼티에서 cloud.aws.s3.bucket에 대한 정보를 불러옴
     public String bucket;
+
+    @Value("${aws.accessKey}")
+    private String key;
 
     private final AmazonS3Client amazonS3Client;
 
@@ -73,10 +78,11 @@ public class S3Service {
          */
         String url;
             // 파일이름 암호화
-            final String saveFileName = getUuid() + ".glb";
+            var saveFileName = getUuid() + ".glb";
             // 파일 객체 생성
             // System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
             File file = new File(System.getProperty("user.dir") + saveFileName);
+            saveFileName = "tree/" + saveFileName;
         try {
             // 파일 변환
             uploadFile.transferTo(file);
@@ -124,7 +130,8 @@ public class S3Service {
          * @Method Name : uploadOnS3
          * @Method 설명 : S3 버킷에 파일 업로드
          */
-        amazonS3Client.putObject(new PutObjectRequest(bucket, findName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3Client.putObject(new PutObjectRequest(bucket, findName, file)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
     }
     public void delete(String imageUrl) {
         /**
@@ -132,8 +139,9 @@ public class S3Service {
          * @Method 설명 : S3 버킷에서 파일 삭제
          */
         try {
-            final String deleteFileName = imageUrl.substring(imageUrl.lastIndexOf('/')+1);
-            amazonS3Client.deleteObject(this.bucket, deleteFileName);
+            final String deleteFileName = "tree/" + imageUrl.substring(imageUrl.lastIndexOf('/')+1);
+//            amazonS3Client.deleteObject(this.bucket, deleteFileName);
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, deleteFileName));
         } catch (SdkClientException e) {
             e.printStackTrace();
         }
