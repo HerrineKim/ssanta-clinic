@@ -15,6 +15,56 @@ export interface ILetter {
   isList: boolean;
 }
 
+interface isLoggedIn {
+  isLoggedIn: boolean;
+}
+
+const isLoggedIn = atom<isLoggedIn>({
+  key: 'isLoggedin',
+  default: {
+    isLoggedIn: localStorage.getItem('jwt') ? true : false,
+  },
+});
+
+interface Money {
+  money: number;
+}
+
+// money
+export const Money = atom<Money>({
+  key: 'money',
+  default: {
+    money: 0,
+  },
+});
+
+interface Items {
+  items: Item[];
+}
+
+interface Item {
+  itemImg: string;
+  price: string;
+  // 아이템이름??
+  nickname: string;
+}
+
+// items
+export const Items = atom<Items>({
+  key: 'items',
+  default: {
+    items: [],
+  },
+});
+
+export const isLogIn = selector<boolean>({
+  key: 'isLogIn',
+  get: ({ get }) => {
+    const isLogdIn = get(isLoggedIn);
+    return isLogdIn.isLoggedIn;
+  },
+});
+
 export const currentUser = atom<IUser>({
   key: 'user',
   default: {
