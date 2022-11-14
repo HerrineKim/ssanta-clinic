@@ -9,6 +9,6 @@ interface Item {
   nickname: string;
 }
 
-export interface MoneyReq {
+export interface MoneyRes {
   money: number;
 }

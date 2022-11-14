@@ -6,6 +6,9 @@ import { NavigateFunction } from 'react-router';
 import { GameReq } from './request/game';
 import { SuccessRes } from './response/success';
 import { GameRes } from './response/game';
+import { ItemsRes, MoneyRes } from './response/main';
+import { ItemsReq, MoneyReq } from './request/main';
+import { MainApi } from './mainApi';
 
 export interface RequestConfig<R> {
   onSuccess?(data: R): void;
@@ -22,7 +25,7 @@ interface Config<P, R> {
   navigate: NavigateFunction;
 }
 
-export class SSantaApi implements GameApi {
+export class SSantaApi implements GameApi, MainApi {
   private static instance: SSantaApi;
   private axiosInstance: AxiosInstance;
 
@@ -39,6 +42,30 @@ export class SSantaApi implements GameApi {
       method: 'patch',
       url: `/api/coin`,
       data: gameReq,
+      ...requestConfig,
+    });
+  }
+
+  async money(
+    moneyReq: MoneyReq,
+    requestConfig: RequestConfig<MoneyRes>,
+  ): Promise<void> {
+    await this.request<MoneyReq, MoneyRes>({
+      method: 'patch',
+      url: `/api/coin`,
+      data: moneyReq,
+      ...requestConfig,
+    });
+  }
+
+  async items(
+    itemsReq: ItemsReq,
+    requestConfig: RequestConfig<ItemsRes>,
+  ): Promise<void> {
+    await this.request<ItemsReq, ItemsRes>({
+      method: 'get',
+      url: `/api/store/${itemsReq.userId}`,
+      data: itemsReq,
       ...requestConfig,
     });
   }
