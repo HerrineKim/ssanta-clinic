@@ -28,9 +28,9 @@ public class ReplyLetter {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotBlank
+    @NotBlank(message = "제목을 입력해주세요.")
     private String title;
-    @NotBlank
+    @NotBlank(message = "내용을 입력해주세요.")
     private String message;
 
     @Column(name = "is_read")
