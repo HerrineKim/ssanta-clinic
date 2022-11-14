@@ -27,6 +27,37 @@ const isLoggedIn = atom<isLoggedIn>({
   },
 });
 
+interface Money {
+  money: number;
+}
+
+// money
+export const Money = atom<Money>({
+  key: 'money',
+  default: {
+    money: 0,
+  },
+});
+
+interface Items {
+  items: Item[];
+}
+
+interface Item {
+  itemImg: string;
+  price: string;
+  // 아이템이름??
+  nickname: string;
+}
+
+// items
+export const Items = atom<Items>({
+  key: 'items',
+  default: {
+    items: [],
+  },
+});
+
 export const isLogIn = selector<boolean>({
   key: 'isLogIn',
   get: ({ get }) => {
