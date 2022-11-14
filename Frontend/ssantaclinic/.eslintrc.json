@@ -1,11 +1,11 @@
 {
+  "root": true,
 
   "parser": "@typescript-eslint/parser",
 
   "plugins": ["react", "@typescript-eslint", "prettier"],
 
   "extends": [
-
     "eslint:recommended",
 
     "plugin:react/recommended",
@@ -13,11 +13,9 @@
     "plugin:@typescript-eslint/recommended",
 
     "plugin:prettier/recommended"
-
   ],
 
   "rules": {
-
     "react/prop-types": "off",
 
     "@typescript-eslint/explicit-module-boundary-types": "off",
@@ -25,18 +23,11 @@
     "prettier/prettier": ["error", { "endOfLine": "auto" }],
 
     "@typescript-eslint/no-explicit-any": ["off"]
-
   },
 
   "settings": {
-
     "react": {
-
       "version": "detect"
-
     }
-
   }
-
 }
-
