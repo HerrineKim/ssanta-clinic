@@ -34,16 +34,15 @@ public class NotiController {
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @GetMapping(value = "/sub",
+    @GetMapping(value = "/sub/{userId}",
                 produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> subscribe(
-            @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId) {
+            @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId,
+            @PathVariable int userId) {
         /**
          * @Method Name : subscribe
          * @Method 설명 : SSE 서버에 접속한다.
          */
-        // 현재 로그인한 유저의 아이디 가져오기
-        int userId = JwtUtil.getCurrentUserId();
         SseEmitter sseEmitter = notiService.subscribe(userId, lastEventId);
         // 헤더 설정
         var headers = new HttpHeaders();
@@ -59,14 +58,12 @@ public class NotiController {
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @GetMapping("/list")
-    public ResponseEntity<SseEmitter> getAdventCalendarAlarm() {
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<SseEmitter> getAdventCalendarAlarm(@PathVariable int userId) {
         /**
          * @Method Name : getAdventCalendarAlarm
          * @Method 설명 : 어드벤트 캘린더 알림 얻기
          */
-        // 현재 로그인한 유저의 아이디 가져오기
-        int userId = JwtUtil.getCurrentUserId();
         notiService.sendUnOpenedBoxNotification(userId);
         return ResponseEntity.ok().header("X-Accel-Buffering", "no").build();
     }
