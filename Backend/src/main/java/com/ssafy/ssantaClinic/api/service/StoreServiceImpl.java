@@ -65,7 +65,6 @@ public class StoreServiceImpl implements StoreService{
         // 회원 잔고 계산
         User user = userRepository.getUserByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-
         int leftMoney = user.getMoney() - totalPrice;
 
         // 잔고가 0보다 작으면 살 수 없으므로 Error, 아니면 회원 잔고 갱신
@@ -74,7 +73,8 @@ public class StoreServiceImpl implements StoreService{
         } else {
             throw new CustomException(ErrorCode.NOT_ENOUGH_MONEY_ERROR);
         }
-
+        user.changeMoney(leftMoney);
+        userRepository.save(user);
         // 3. userId를 이용하여 해당 유저가 이미 가지고 있는 아이템인지 확인. 이미 가지고 있다면 count ++ 아니면 새롭게 행 추가
         // userId와 itemId에 일치하는 데이터 가져오기
         Optional<UserItemBox> userItemBox = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId, itemId);
