@@ -36,26 +36,30 @@ import { API_BASE_URL } from '../../apis/url';
 import { selectUserId, Money, MyItems, IsCover } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
-// import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
+import ShopAlert from '../../components/shop';
 
 export default function Home() {
   const BASE_URL = API_BASE_URL;
   // 친구 모달 관리
   const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
-  console.log(ACCESS_TOKEN);
+  // console.log(ACCESS_TOKEN);
   const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
+  const [scenenumber, setSceneNumber] = useState<number>(1);
+  const [clickedItem, setClickedItem] = useState<number>(0);
+  const [isClick, setIsClick] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
   const setUserItems = useSetRecoilState(MyItems);
   const item = useRecoilValue(MyItems);
+  const [cost, setCost] = useState<number>(0);
 
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
@@ -76,9 +80,7 @@ export default function Home() {
   //     },
   //   );
   // }, []);
-  useEffect(() => {
-    console.log('랜더링 될때마다:', money);
-  });
+
   const getCoin = () =>
     axios({
       url: `${BASE_URL}coin`,
@@ -88,7 +90,7 @@ export default function Home() {
       },
     }).then((res) => {
       setUserMoney(res.data.coin);
-      console.log(res);
+      // console.log(res);
     });
 
   //items 정보불러오기
@@ -97,25 +99,13 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
-          console.log(data);
+          // console.log(data);
           setUserItems(data.itemList);
         },
         navigate,
       },
     );
   }, []);
-
-  // const getItems = () =>
-  //   axios({
-  //     url: `${BASE_URL}coin`,
-  //     method: 'get',
-  //     headers: {
-  //       Authorization: ACCESS_TOKEN,
-  //     },
-  //   }).then((res) => {
-  //     setUserMoney(res.data.coin);
-  //     console.log(res);
-  //   });
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
   useEffect(() => {
@@ -128,11 +118,11 @@ export default function Home() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setFriendList(res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
         });
     };
     // 팔로잉 목록(api/friend/followings)
@@ -144,11 +134,11 @@ export default function Home() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setFollowingList(res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
         });
     };
     // 팔로워 목록(api/friend/followers)
@@ -160,11 +150,11 @@ export default function Home() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setFollowerList(res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
         });
     };
     getFriendList();
@@ -175,47 +165,46 @@ export default function Home() {
 
   // 친구 검색: 추후 구현
 
-  // const firstCanvas = document.getElementById('main-canvas');
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const canvasCon = document.getElementById('main-canvas');
-  // console.log(canvasCon);
+  const homeCanvas = new MainCanvas(userId);
 
-  // useCanvas(canvasRef.current);
-  // console.log(canvasRef.current);
+  const render = (time: number) => {
+    setSceneNumber(homeCanvas._scenenumber);
+    setIsClick(homeCanvas._isItemClick);
+    setClickedItem(homeCanvas._clickedItem);
 
-  //myroom 에서 axios 로 받아오는 트리에 대한 정보
-  //트리 위치에 따라 장식품 리스트로 받아옴 => tree는 백에서 glb로 받아오는걸로
-  // const data = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 1, 2, 3, 1, 1, 2, 2];
+    if (homeCanvas._scenenumber === 1) {
+      // console.log(this._camera.position);
+      homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
+      homeCanvas.update(time);
+      // console.log('!');
 
-  // 로그인한 유저가 갖고있는 아이템 정보를 받아와야함
-  // 개수 정해봐야함 (개수 limit 거는게 맞는 것 같음)
-  const items = [1, 2, 3, 1, 1, 2, 3, 1, 2, 3];
-  // const scenenumber = homeCanvas._scenenumber;
-  // console.log('scenenumber:', scenenumber);
-  // const homeCanvas = new MainCanvas(items, userId);
-  console.log('home');
-  const homeCanvas = new MainCanvas(items, userId);
-  // let scenenumber = 1;
-  // const runCanvas = (time: number) => {
-  //   homeCanvas.render(time).bind(homeCanvas);
-  //   scenenumber = homeCanvas._scenenumber;
-  // };
+      requestAnimationFrame(render);
+    } else {
+      // inven scene
+      homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
+      homeCanvas.update2(time);
 
-  // test
-  // const [scenenumber, setSceneNumber] = useState<number>(
-  //   homeCanvas._scenenumber,
-  // );
-  // useEffect(() => {
-  //   console.log(scenenumber);
-  // }, [scenenumber]);
+      requestAnimationFrame(render);
+    }
+  };
 
-  // setInterval(() => {
-  //   setSceneNumber(homeCanvas._scenenumber);
-  // }, 500);
+  useEffect(() => {
+    if (scenenumber === 2) {
+      setIsCover(false);
+    }
+  }, [scenenumber]);
+  // 아이템에 따라 가격 다르게
+  useEffect(() => {
+    if (clickedItem <= 28) {
+      setCost(1000);
+    } else {
+      setCost(2000);
+    }
+  }, [clickedItem]);
 
   useEffect(() => {
     homeCanvas.setupOnce();
-    const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
+    const requestId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(requestId);
@@ -298,6 +287,9 @@ export default function Home() {
         followingList={followingList}
         followerList={followerList}
       ></FriendModal>
+      {isClick ? (
+        <ShopAlert item={clickedItem} userId={userId} cost={cost}></ShopAlert>
+      ) : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
       <ShopDiv id="shop"></ShopDiv>
