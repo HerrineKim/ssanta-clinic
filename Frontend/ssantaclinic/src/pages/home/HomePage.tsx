@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
@@ -168,7 +174,24 @@ export default function Home() {
   // const homeCanvas = new MainCanvas(items, userId);
   console.log('home');
   const homeCanvas = new MainCanvas(items, userId);
-  const scenenumber = homeCanvas._scenenumber;
+  // let scenenumber = 1;
+  // const runCanvas = (time: number) => {
+  //   homeCanvas.render(time).bind(homeCanvas);
+  //   scenenumber = homeCanvas._scenenumber;
+  // };
+
+  // test
+  // const [scenenumber, setSceneNumber] = useState<number>(
+  //   homeCanvas._scenenumber,
+  // );
+  // useEffect(() => {
+  //   console.log(scenenumber);
+  // }, [scenenumber]);
+
+  // setInterval(() => {
+  //   setSceneNumber(homeCanvas._scenenumber);
+  // }, 500);
+
   useEffect(() => {
     homeCanvas.setupOnce();
     const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
@@ -177,21 +200,13 @@ export default function Home() {
       cancelAnimationFrame(requestId);
       console.log('canvas 끝!');
     };
-  }, [scenenumber]);
-
-  const num = useCallback(() => {
-    homeCanvas.scene();
   }, []);
-  setInterval(() => {
-    console.log(num);
-  }, 500);
-  console.log(num);
-
-  // const alert = useRef<HTMLDivElement>(null);
+  // setInterval(() => {
+  //   console.log(homeCanvas._isShop);
+  // }, 1000);
   // useEffect(() => {
-  //   console.log('alert.current:', alert.current);
-  // });
-
+  //   console.log(scenenumber);
+  // }, [scenenumber]);
   return (
     <Div>
       {/* 모달들 */}

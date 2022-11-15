@@ -116,6 +116,7 @@ export class MainCanvas {
     this._home = [];
     this._showcase = [];
   }
+  // this._scenenumber.addEventListener('change', )
 
   setupOnce() {
     const canvasContainer = document.querySelector('#main-canvas');
@@ -404,6 +405,7 @@ export class MainCanvas {
       // console.log('click함수 실행:', this._group);    클릭한것 검사
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
       if (arrowTarget.length > 0) {
+        this._isShop = true;
         this._scenenumber = 2;
         this._zoomInven(this._showcase, 70);
         setTimeout(() => {
