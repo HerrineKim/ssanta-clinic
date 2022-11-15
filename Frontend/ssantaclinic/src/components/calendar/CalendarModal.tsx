@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import YouTube, { YouTubeProps } from 'react-youtube';
 import './calendar.css';
 import './modalAnimation.scss';
 import { CalendarDetail } from '../calendar/calendarDetail/index';
@@ -110,21 +109,6 @@ export function CalendarModal(props: any) {
     }
   };
 
-  // bgm
-  const opts: YouTubeProps['opts'] = {
-    height: '70',
-    width: '70',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-      // 유튜브 주소
-      disablekb: 1,
-      // controls: 0,
-      fs: 0,
-      modestbranding: 1,
-    },
-  };
-
   const getBoxInfo = () => {
     axios
       .get('http://localhost:8080/api/calendar?boxId=3', {
@@ -170,15 +154,6 @@ export function CalendarModal(props: any) {
         setCalendarDetailOpen={setCalendarDetailOpen}
         calendarDetailOpen={calendarDetailOpen}
       ></CalendarDetail>
-      <div
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-        }}
-      >
-        <YouTube videoId="8MhtzapYzGo" opts={opts} />
-      </div>
       <TopContainer>
         <CalendarTitle>
           {nickName}님의{' '}
