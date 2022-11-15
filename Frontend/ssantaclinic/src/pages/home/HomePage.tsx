@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { Div, ModalDiv, ShopDiv } from './styles';
+import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
@@ -10,7 +10,7 @@ import { TetrisAlert } from '../../components/main/tetrisalert/TetrisAlert';
 import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
-import { FriendButton } from './styles';
+import { FriendButton, MoneyState } from './styles';
 import { selectUserId, Money, Items } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 // 친구 모달
@@ -18,12 +18,13 @@ import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
 import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
-
+import { API_BASE_URL } from '../../apis/url';
 import { useSetRecoilState } from 'recoil';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
 export default function Home() {
+  const BASE_URL = API_BASE_URL;
   // 친구 모달 관리
   const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
   console.log(ACCESS_TOKEN);
@@ -32,6 +33,7 @@ export default function Home() {
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
+  const [isCover, setIsCover] = useState(true);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -42,18 +44,30 @@ export default function Home() {
   const navigate = useNavigate();
 
   // money 정보 불러오기
-  useEffect(() => {
-    SSantaApi.getInstance().money(
-      { userId: userId },
-      {
-        onSuccess(data) {
-          console.log(data);
-          setUserMoney({ money: data.money });
-        },
-        navigate,
+  // useEffect(() => {
+  //   SSantaApi.getInstance().money(
+  //     { userId: userId },
+  //     {
+  //       onSuccess(data) {
+  //         console.log(data);
+  //         setUserMoney({ money: data.money });
+  //         console.log(money);
+  //       },
+  //       navigate,
+  //     },
+  //   );
+  // }, []);
+  const getCoin = () =>
+    axios({
+      url: `${BASE_URL}coin`,
+      method: 'get',
+      headers: {
+        Authorization: ACCESS_TOKEN,
       },
-    );
-  }, []);
+    }).then((res) => {
+      setUserMoney({ money: res.data.coin });
+      console.log(res);
+    });
 
   //items 정보불러오기
   useEffect(() => {
@@ -121,6 +135,7 @@ export default function Home() {
     getFriendList();
     getFollowingList();
     getFollowerList();
+    getCoin();
   }, []);
 
   // 친구 검색: 추후 구현
@@ -167,14 +182,24 @@ export default function Home() {
       <LetterAlert></LetterAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
-      <FriendButton
-        onClick={() => {
-          setIsModal(true);
-        }}
-      >
-        {/* <GiThreeFriends /> */}
-        친구
-      </FriendButton>
+
+      {isCover ? (
+        <FriendButton
+          onClick={() => {
+            setIsModal(true);
+          }}
+        >
+          {/* <GiThreeFriends /> */}
+          친구
+        </FriendButton>
+      ) : null}
+      {isCover ? (
+        <MoneyState>
+          <CoinImg src="img/coin.png"></CoinImg>
+          {money.money}
+        </MoneyState>
+      ) : null}
+
       <FriendModal
         isModal={isModal}
         setIsModal={setIsModal}
