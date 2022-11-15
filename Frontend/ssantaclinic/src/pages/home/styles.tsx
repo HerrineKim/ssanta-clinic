@@ -140,7 +140,7 @@ export const ItemButton = styled.button`
   z-index: 4;
   position: relative;
   margin-right: 20px;
-  
+  width: 200px;
   background-color: #fbeee0;
   border: 2px solid #422800;
   border-radius: 30px;
