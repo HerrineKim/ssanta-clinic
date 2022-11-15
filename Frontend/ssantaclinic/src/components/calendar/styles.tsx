@@ -1,5 +1,26 @@
 import styled from 'styled-components';
 
+export const PresentButton = styled.button`
+  min-width: 120px;
+  font-family: 'Cafe24Ssurround';
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 1.5%;
+  transition: all 0.3s;
+  &:hover {
+    background-color: #422800;
+    color: #fbeee0;
+  }
+`;
+
 export const CalendarBackground = styled.div`
   position: absolute;
   top: 1.5%;
