@@ -28,7 +28,7 @@ const isLoggedIn = atom<isLoggedIn>({
 
 // iscover
 export const IsCover = atom<boolean>({
-  key: 'IsCover',
+  key: 'isCover',
   default: true,
 });
 
@@ -50,11 +50,9 @@ interface Item {
 }
 
 // items
-export const Items = atom<Items>({
+export const MyItems = atom<number[]>({
   key: 'items',
-  default: {
-    items: [],
-  },
+  default: [],
 });
 
 export const isLogIn = selector<boolean>({
