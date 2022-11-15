@@ -75,7 +75,7 @@ export function CalendarPage() {
   const renderer = ({ days, hours, minutes, seconds, completed }: any) => {
     if (completed) {
       // Render a completed state
-      return <span>🎄🎄🎄</span>;
+      return <span>🎄</span>;
     } else {
       // Render a countdown
       return (
@@ -169,7 +169,12 @@ export function CalendarPage() {
         <YouTube videoId="GslqG1EjEI0" opts={opts} />
       </div>
       <TopContainer>
-        <CalendarTitle>OO님의 2022년 어드벤트 캘린더</CalendarTitle>
+        <CalendarTitle>
+          OO님의
+          {/* 올해 연도 */}
+          {new Date().getFullYear()}년 어드벤트 캘린더
+        </CalendarTitle>
+        <PresentButton>X</PresentButton>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
@@ -178,7 +183,6 @@ export function CalendarPage() {
           }
           renderer={renderer}
         />
-        ,
       </TopContainer>
       <CalendarPageContainer>
         {/* 녹음 불러오는 버튼
