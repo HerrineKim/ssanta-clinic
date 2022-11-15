@@ -3,6 +3,7 @@ import axios from 'axios';
 import './calendar.css';
 import './modalAnimation.scss';
 import { CalendarDetail } from '../calendar/calendarDetail/index';
+import { BoxCreate } from './boxCreate';
 
 // Recoil
 import { selectUserNickname } from '../../store/store';
@@ -127,33 +128,29 @@ export function CalendarModal(props: any) {
         console.log(err.response);
       });
   };
-  // 녹음 재생(api/calendar/play?boxId=1)
-  const play = () => {
-    axios
-      .get('http://localhost:8080/api/calendar/play?boxId=' + '3', {
-        headers: {
-          Authorization: ACCESS_TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
 
-  // 모달창 노출 여부
+  // 일별 모달창 노출 여부
   const [calendarDetailOpen, setCalendarDetailOpen] = useState<boolean>(false);
   const showCalendarDetail = () => {
     setCalendarDetailOpen(true);
   };
+
+  // boxCreate창 노출 여부
+  const [boxCreateOpen, setBoxCreateOpen] = useState<boolean>(false);
+  const showBoxCreate = () => {
+    setBoxCreateOpen(true);
+  };
+
   return (
     <CalendarBackground>
       <CalendarDetail
         setCalendarDetailOpen={setCalendarDetailOpen}
         calendarDetailOpen={calendarDetailOpen}
       ></CalendarDetail>
+      <BoxCreate
+        setBoxCreateOpen={setBoxCreateOpen}
+        boxCreateOpen={boxCreateOpen}
+      ></BoxCreate>
       <TopContainer>
         <CalendarTitle>
           {nickName}님의{' '}
@@ -163,7 +160,7 @@ export function CalendarModal(props: any) {
           }
           년 어드벤트 캘린더
         </CalendarTitle>
-        <PresentButton>선물하기</PresentButton>
+        <PresentButton>선물하기💟</PresentButton>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
