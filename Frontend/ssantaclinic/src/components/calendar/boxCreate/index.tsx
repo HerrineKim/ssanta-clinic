@@ -102,7 +102,15 @@ export function BoxCreate(props: BoxCreateProps) {
         audio
         render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
           <div>
-            <p>{status}</p>
+            <p>
+              {status
+                // 정규식으로 idle -> 녹음 대기중, recording -> 녹음 중, stopped -> 녹음 중지로 바꾸기
+                // aquiring_media -> 녹음 권한 허용
+                .replace(/idle/g, '녹음 대기중')
+                .replace(/recording/g, '녹음 중')
+                .replace(/stopped/g, '녹음 중지')
+                .replace(/acquiring_media/g, '녹음 권한 허용')}
+            </p>
             <button onClick={startRecording}>Start Recording</button>
             <button onClick={stopRecording}>Stop Recording</button>
             <video src={mediaBlobUrl} controls autoPlay loop />
