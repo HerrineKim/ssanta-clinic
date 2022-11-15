@@ -46,6 +46,9 @@ export default function FriendModal(props: any) {
     props.followerList,
     props.setFollowerList,
   ];
+  // Navigate 선언
+  const navigate = useNavigate();
+
   // 친구 검색(api/user/search)
   const ACCESS_TOKEN = localStorage.getItem('jwt');
   const [searchInput, setSearchInput] = useState('');
@@ -68,6 +71,7 @@ export default function FriendModal(props: any) {
       .then((res) => {
         console.log(res.data);
         // 해당 유저의 마이룸으로 이동
+        navigate('/otherroom/' + res.data.userId);
       })
       .catch((err) => {
         console.log(err.response);

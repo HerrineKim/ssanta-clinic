@@ -33,9 +33,16 @@ import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
 //recoil
-import { selectUserId, Money, MyItems, IsCover } from '../../store/store';
-import { useRecoilValue } from 'recoil';
-import { useSetRecoilState } from 'recoil';
+import {
+  selectUserId,
+  Money,
+  MyItems,
+  IsCover,
+  isLoggedIn,
+  currentUser,
+  NotiListState,
+} from '../../store/store';
+import { useRecoilValue, useSetRecoilState, useResetRecoilState } from 'recoil';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
@@ -65,6 +72,48 @@ export default function Home() {
   const isCover = useRecoilValue(IsCover);
 
   const navigate = useNavigate();
+
+  const resetMoney = useResetRecoilState(Money);
+  const resetMyItems = useResetRecoilState(MyItems);
+  const resetIsCover = useResetRecoilState(isLoggedIn);
+  const resetUser = useResetRecoilState(currentUser);
+  const resetNoti = useResetRecoilState(NotiListState);
+  // 로그아웃
+  function LogoutToHome() {
+    logout();
+    navigate('/login');
+    setTimeout(() => {
+      console.log('기달');
+      location.reload();
+    }, 1000);
+  }
+  function logout() {
+    localStorage.clear();
+    resetMoney;
+    resetMyItems;
+    resetIsCover;
+    resetUser;
+    resetNoti;
+    console.log('1');
+  }
+  // const LogOut = () => { // 토큰을 찾을 수 없다고 뜹니다.
+  //   console.log(ACCESS_TOKEN);
+  //   axios
+  //     .post('http://localhost:8080/api/user/logout', {
+  //       headers: {
+  //         Authorization: ACCESS_TOKEN,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       // token, recoil 값들이 locastorage에 저장됨
+  //       localStorage.clear();
+  //       navigate('/login');
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response);
+  //     });
+  // };
 
   // money 정보 불러오기
   // useEffect(() => {
@@ -261,7 +310,7 @@ export default function Home() {
             <CoinImg src="img/coin.png"></CoinImg>
             {money}
           </MoneyState>
-          <LogoutButton>
+          <LogoutButton onClick={LogoutToHome}>
             <LogoutIcon></LogoutIcon>
           </LogoutButton>
         </TopBar>

@@ -13,6 +13,7 @@ export const OtherRoom = () => {
   const OtherID = param.id;
   useEffect(() => {
     // const OtherId =
+    console.log(OtherID);
     axios
       .get('http://localhost:8080/api/user/detail/' + OtherID, {
         headers: {
@@ -24,7 +25,6 @@ export const OtherRoom = () => {
       })
       .catch((err) => {
         console.log(err.resonse);
-        navigate('/404');
       });
   });
   // function GetOtherUser() { //다른 사람 유저 정보
