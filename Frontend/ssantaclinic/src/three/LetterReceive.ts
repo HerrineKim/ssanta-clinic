@@ -63,7 +63,7 @@ export class LetterReceiveModel {
   }
   _setupLight() {
     const color = '#E2E892';
-    const light = new THREE.PointLight(color, 3);
+    const light = new THREE.PointLight(color, 5);
     light.position.set(0, 0.723, 0.079);
     this._scene.add(light);
   }
@@ -86,7 +86,6 @@ export class LetterReceiveModel {
   }
 
   update() {
-    console.log(this._camera);
     this._orbitControls.update();
   }
 

@@ -7,6 +7,8 @@ import {
 } from './styles';
 import { ReceiveLetter } from '../../components/letter/ReceiveLetter';
 import { LetterReceiveModel } from '../../three/LetterReceive';
+import { motion } from 'framer-motion';
+
 export const ReceiveLetterPage = (props: any) => {
   const { onBack, goList } = props;
   useEffect(() => {
@@ -25,6 +27,9 @@ export const ReceiveLetterPage = (props: any) => {
       <LetterPageContainer id="letter-receive-page-container">
         <ReceiveLetter />
         <Button
+          as={motion.button}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           id="receive-back-button"
           onClick={() => {
             onBack(false);
