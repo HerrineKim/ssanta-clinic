@@ -20,7 +20,7 @@ interface isLoggedIn {
   isLoggedIn: boolean;
 }
 
-const isLoggedIn = atom<isLoggedIn>({
+export const isLoggedIn = atom<isLoggedIn>({
   key: 'isLoggedin',
   default: {
     isLoggedIn: localStorage.getItem('jwt') ? true : false,
@@ -77,12 +77,6 @@ export const currentUser = atom<IUser>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const letterState = atom<ILetter>({
-  key: 'letter',
-  default: {
-    isList: true,
-  },
-});
 // export const selectToken = selector({
 //   key: 'userToken',
 //   get: ({ get }) => {
@@ -119,14 +113,6 @@ export const selectUserIsLogin = selector<boolean>({
   get: ({ get }) => {
     const user = get(currentUser);
     return user.isLogin;
-  },
-});
-
-export const selectLetterList = selector<boolean>({
-  key: 'nowLetterState',
-  get: ({ get }) => {
-    const letter = get(letterState);
-    return letter.isList;
   },
 });
 
