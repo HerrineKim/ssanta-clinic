@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Div } from './style';
+import { CalendarAlertDiv, CalendarButton } from './style';
 
 import { CalendarModal } from '../../calendar/CalendarModal';
 
@@ -15,10 +15,10 @@ export function CalendarAlert(props: any) {
 
   if (!isHelp) {
     return (
-      <Div className="calendar">
-        캘린더 구경할래?
-        <button onClick={help}>ㅇㅋ</button>
-      </Div>
+      <CalendarAlertDiv className="calendar">
+        선물이 많이 왔을까?
+        <CalendarButton onClick={help}>구경</CalendarButton>
+      </CalendarAlertDiv>
     );
   } else {
     return <CalendarModal onClose={setisHelp}></CalendarModal>;

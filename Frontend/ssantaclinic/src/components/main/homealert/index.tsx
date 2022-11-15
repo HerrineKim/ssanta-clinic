@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Div } from './style';
+import { HomeAlertDiv, InButton } from './style';
 import { useRecoilValue } from 'recoil';
 import { selectUserId } from '../../../store/store';
 
@@ -20,10 +20,10 @@ export function HomeAlert(props: any) {
 
   if (!isHelp) {
     return (
-      <Div className="home">
+      <HomeAlertDiv className="home">
         들어갈래?
-        <button onClick={help}>ㅇㅋ</button>
-      </Div>
+        <InButton onClick={help}>네!</InButton>
+      </HomeAlertDiv>
     );
   } else {
     return <RoomModal onClose={setisHelp}></RoomModal>;
