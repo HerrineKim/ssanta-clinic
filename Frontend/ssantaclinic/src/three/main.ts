@@ -88,15 +88,17 @@ export class MainCanvas {
   _isLetter: boolean;
   _userId: number;
   _arrow: any;
+  _clickedItem: number;
+  _isItemClick: boolean;
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
   _scenenumber = 1;
 
-  constructor(items: number[], userId: number) {
+  constructor(userId: number) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
     this._userId = userId;
-    this._items = items;
+    this._items = [];
     this._isAlert = false;
     this._isZoom = false;
     this._isShop = false;
@@ -115,6 +117,8 @@ export class MainCanvas {
     this._letter = [];
     this._home = [];
     this._showcase = [];
+    this._clickedItem = 0;
+    this._isItemClick = false;
   }
   // this._scenenumber.addEventListener('change', )
 
@@ -152,24 +156,6 @@ export class MainCanvas {
 
     window.onresize = this.resize.bind(this);
     this.resize();
-  }
-
-  render(time: number) {
-    // console.log('!!!!');
-    if (this._scenenumber === 1) {
-      // console.log(this._camera.position);
-      this._renderer.render(this._scene, this._camera);
-      this.update(time);
-      // console.log('!');
-
-      requestAnimationFrame(this.render.bind(this));
-    } else {
-      // inven scene
-      this._renderer.render(this._scene2, this._camera);
-      this.update2(time);
-
-      requestAnimationFrame(this.render.bind(this));
-    }
   }
 
   update2(time: number) {
@@ -425,7 +411,7 @@ export class MainCanvas {
       // console.log('targets: ', targets);
 
       this._removeMemory();
-      this._removeHomeAlert();
+      // this._removeHomeAlert();
       this._removeTetris();
       this._removeWit();
       this._removeLetter();
@@ -479,7 +465,8 @@ export class MainCanvas {
           }, 1500);
         } else {
           if (this._isAlert) {
-            this._removeAlert();
+            this._isItemClick = false;
+
             this._removeHomeAlert();
             this._removeMemory();
             this._removeLetter();
@@ -498,7 +485,8 @@ export class MainCanvas {
       } else {
         this._scenenumber = 1;
         if (this._isAlert) {
-          this._removeAlert();
+          this._isItemClick = false;
+
           this._removeHomeAlert();
           this._removeMemory();
           this._removeLetter();
@@ -532,9 +520,11 @@ export class MainCanvas {
       const itemTarget = this._raycaster.intersectObjects(this._items);
       // console.log(itemTarget);
       if (itemTarget.length > 0) {
-        this._setupAlert(itemTarget[0].object.name, this._userId);
+        console.log(itemTarget[0].object.name);
+        this._clickedItem = parseInt(itemTarget[0].object.name);
+        this._isItemClick = true;
       } else {
-        this._removeAlert();
+        this._isItemClick = false;
       }
 
       const closeTarget = this._raycaster.intersectObject(this._close);
@@ -728,26 +718,6 @@ export class MainCanvas {
   //   this._scene.remove(this._showcase);
   //   this._scene.remove(...this._items);
   // }
-  _removeAlert() {
-    const shop = document.getElementById('shop');
-    if (shop !== null) {
-      const root = ReactDOM.createRoot(shop);
-      console.log('unmount');
-      root.unmount();
-    }
-  }
-  _setupAlert(itemId: string, userId: number) {
-    console.log('setupalert');
-    const item = parseInt(itemId);
-    const e = React.createElement;
-    const shop = document.getElementById('shop');
-    if (shop !== null) {
-      // console.log(shop);
-      const root = ReactDOM.createRoot(shop);
-
-      root.render(e(ShopAlert, [{ item: item, userId: userId }], null));
-    }
-  }
 
   _removeHomeAlert() {
     const home = document.querySelector('.home') as HTMLElement | null;
