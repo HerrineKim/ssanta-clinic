@@ -26,7 +26,7 @@ import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
 //recoil
-import { selectUserId, Money, Items, IsCover } from '../../store/store';
+import { selectUserId, Money, MyItems, IsCover } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
 // import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
@@ -47,8 +47,8 @@ export default function Home() {
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
-  const setUserItems = useSetRecoilState(Items);
-  const item = useRecoilValue(Items);
+  const setUserItems = useSetRecoilState(MyItems);
+  const item = useRecoilValue(MyItems);
 
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
@@ -91,12 +91,24 @@ export default function Home() {
       {
         onSuccess(data) {
           console.log(data);
-          setUserItems({ items: data.items });
+          setUserItems(data.itemList);
         },
         navigate,
       },
     );
   }, []);
+
+  // const getItems = () =>
+  //   axios({
+  //     url: `${BASE_URL}coin`,
+  //     method: 'get',
+  //     headers: {
+  //       Authorization: ACCESS_TOKEN,
+  //     },
+  //   }).then((res) => {
+  //     setUserMoney(res.data.coin);
+  //     console.log(res);
+  //   });
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
   useEffect(() => {
