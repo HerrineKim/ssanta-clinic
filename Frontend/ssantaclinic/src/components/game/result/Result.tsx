@@ -20,15 +20,17 @@ export default function Result(props: ResultProp) {
   const setUserMoney = useSetRecoilState(Money);
 
   useEffect(() => {
-    axios({
-      method: 'patch',
-      url: `${BASE_URL}coin`,
-      data: { coin: money },
-      headers: { Authorization: ACCESS_TOKEN },
-    }).then((res) => {
-      console.log(res);
-      setUserMoney(res.data.coin);
-    });
+    if (isSucces) {
+      axios({
+        method: 'patch',
+        url: `${BASE_URL}coin`,
+        data: { coin: money },
+        headers: { Authorization: ACCESS_TOKEN },
+      }).then((res) => {
+        console.log(res);
+        setUserMoney(res.data.coin);
+      });
+    }
   }, []);
   console.log(time);
   return (

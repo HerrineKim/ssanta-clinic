@@ -26,6 +26,12 @@ const isLoggedIn = atom<isLoggedIn>({
   },
 });
 
+// iscover
+export const IsCover = atom<boolean>({
+  key: 'IsCover',
+  default: true,
+});
+
 // money
 export const Money = atom<number>({
   key: 'money',
