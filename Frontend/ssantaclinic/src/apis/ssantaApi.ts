@@ -40,7 +40,7 @@ export class SSantaApi implements GameApi, MainApi {
   ): Promise<void> {
     await this.request<GameReq, GameRes>({
       method: 'patch',
-      url: `/coin`,
+      url: `/api/coin`,
       data: gameReq,
 
       ...requestConfig,
@@ -53,7 +53,7 @@ export class SSantaApi implements GameApi, MainApi {
   ): Promise<void> {
     await this.request<MoneyReq, MoneyRes>({
       method: 'get',
-      url: `/coin`,
+      url: `/api/coin`,
       data: moneyReq,
       ...requestConfig,
     });
@@ -65,7 +65,7 @@ export class SSantaApi implements GameApi, MainApi {
   ): Promise<void> {
     await this.request<ItemsReq, ItemsRes>({
       method: 'get',
-      url: `/api/store/${itemsReq.userId}`,
+      url: `/store/items/${itemsReq.userId}`,
       data: itemsReq,
       ...requestConfig,
     });

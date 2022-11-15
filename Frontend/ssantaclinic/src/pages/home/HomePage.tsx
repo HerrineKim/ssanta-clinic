@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
@@ -11,15 +17,17 @@ import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton, MoneyState, ItemButton, BottomBar } from './styles';
-import { selectUserId, Money, Items } from '../../store/store';
-import { useRecoilValue } from 'recoil';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
 import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
+//recoil
+import { selectUserId, Money, Items, IsCover } from '../../store/store';
+import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
+import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
@@ -33,13 +41,15 @@ export default function Home() {
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
-  const [isCover, setIsCover] = useState(true);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
   const setUserItems = useSetRecoilState(Items);
   const item = useRecoilValue(Items);
+
+  const setIsCover = useSetRecoilState(IsCover);
+  const isCover = useRecoilValue(IsCover);
 
   const navigate = useNavigate();
 
@@ -78,6 +88,7 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
+          console.log(data);
           setUserItems({ items: data.items });
         },
         navigate,
@@ -158,13 +169,31 @@ export default function Home() {
   // 로그인한 유저가 갖고있는 아이템 정보를 받아와야함
   // 개수 정해봐야함 (개수 limit 거는게 맞는 것 같음)
   const items = [1, 2, 3, 1, 1, 2, 3, 1, 2, 3];
-
+  // const scenenumber = homeCanvas._scenenumber;
+  // console.log('scenenumber:', scenenumber);
+  // const homeCanvas = new MainCanvas(items, userId);
   console.log('home');
+  const homeCanvas = new MainCanvas(items, userId);
+  // let scenenumber = 1;
+  // const runCanvas = (time: number) => {
+  //   homeCanvas.render(time).bind(homeCanvas);
+  //   scenenumber = homeCanvas._scenenumber;
+  // };
+
+  // test
+  // const [scenenumber, setSceneNumber] = useState<number>(
+  //   homeCanvas._scenenumber,
+  // );
+  // useEffect(() => {
+  //   console.log(scenenumber);
+  // }, [scenenumber]);
+
+  // setInterval(() => {
+  //   setSceneNumber(homeCanvas._scenenumber);
+  // }, 500);
+
   useEffect(() => {
-    const homeCanvas = new MainCanvas(items, userId);
-    // const canvas = document.querySelector('canvas');
-    // console.log(canvas);
-    // console.log('useeffect');
+    homeCanvas.setupOnce();
     const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
 
     return () => {
@@ -172,7 +201,12 @@ export default function Home() {
       console.log('canvas 끝!');
     };
   }, []);
-
+  // setInterval(() => {
+  //   console.log(homeCanvas._isShop);
+  // }, 1000);
+  // useEffect(() => {
+  //   console.log(scenenumber);
+  // }, [scenenumber]);
   return (
     <Div>
       {/* 모달들 */}
@@ -183,6 +217,7 @@ export default function Home() {
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       <LetterAlert></LetterAlert>
+      <ShopAlert></ShopAlert>
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
 
