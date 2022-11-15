@@ -10,7 +10,7 @@ import { selectUserNickname } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 
 import Countdown from 'react-countdown';
-import { TopContainer } from './styles';
+import { TopContainer, PresentButton } from './styles';
 import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
@@ -188,6 +188,7 @@ export function CalendarModal(props: any) {
           }
           년 어드벤트 캘린더
         </CalendarTitle>
+        <PresentButton>선물하기</PresentButton>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
