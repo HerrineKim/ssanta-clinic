@@ -160,7 +160,13 @@ export function CalendarModal(props: any) {
           }
           년 어드벤트 캘린더
         </CalendarTitle>
-        <PresentButton>선물하기💟</PresentButton>
+        <PresentButton
+          onClick={() => {
+            showBoxCreate();
+          }}
+        >
+          선물하기💟
+        </PresentButton>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
