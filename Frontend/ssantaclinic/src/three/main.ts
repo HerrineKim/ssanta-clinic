@@ -407,6 +407,9 @@ export class MainCanvas {
       if (arrowTarget.length > 0) {
         this._scenenumber = 2;
         this._zoomInven(this._showcase, 70);
+        setTimeout(() => {
+          this._setupShopAlert();
+        }, 1500);
         return;
       }
       this._scene.remove(this._arrow);
@@ -763,6 +766,12 @@ export class MainCanvas {
     }
     this._isAlert = true;
   }
+
+  _setupShopAlert() {
+    const shop = document.getElementById('shop');
+  }
+  _removeShopAlert() {}
+
   // 순발력
   _setupWit() {
     this._isGame2 = true;
