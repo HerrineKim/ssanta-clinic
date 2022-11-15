@@ -15,8 +15,6 @@ import { throws } from 'assert';
 import React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import ShopAlert from '../components/shop';
-import { selectUserId, Money } from '../store/store';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
 
 // import { chdir } from 'process';
 
@@ -117,10 +115,10 @@ export class MainCanvas {
     this._letter = [];
     this._home = [];
     this._showcase = [];
+  }
+  // this._scenenumber.addEventListener('change', )
 
-    // const divContainer = document.querySelector('#webgl-container');
-    // this._divContainer = divContainer;
-    // console.log('constructor');
+  setupOnce() {
     const canvasContainer = document.querySelector('#main-canvas');
     this._canvasContainer = canvasContainer;
 
@@ -407,8 +405,12 @@ export class MainCanvas {
       // console.log('click함수 실행:', this._group);    클릭한것 검사
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
       if (arrowTarget.length > 0) {
+        this._isShop = true;
         this._scenenumber = 2;
         this._zoomInven(this._showcase, 70);
+        setTimeout(() => {
+          this._setupShopAlert();
+        }, 1500);
         return;
       }
       this._scene.remove(this._arrow);
@@ -765,6 +767,12 @@ export class MainCanvas {
     }
     this._isAlert = true;
   }
+
+  _setupShopAlert() {
+    const shop = document.getElementById('shop');
+  }
+  _removeShopAlert() {}
+
   // 순발력
   _setupWit() {
     this._isGame2 = true;
@@ -1129,6 +1137,12 @@ export class MainCanvas {
     const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
     this._scene.add(ambientLight);
 
+    // const spotLight = new THREE.SpotLight(0xffffff);
+    // spotLight.position.set(-60, 0, 0);
+    // this._scene.add(spotLight);
+
+    // const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    // this._scene.add(spotLightHelper);
     // this._addPointLight(50, 20, 50, 0xff0000);
     // this._addPointLight(-50, 20, 50, 0xffff00);
     // this._addPointLight(-50, 20, -50, 0x00ff00);
