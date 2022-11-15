@@ -5,6 +5,7 @@ import ResultMemory from '../result/ResultMemory';
 
 export default function MemoryModal(props: any) {
   const { onClose } = props;
+  const [money, setMoney] = useState<number>(0);
   const [isResult, setIsResult] = useState<boolean>(false);
   // 최초 시작
   const [start, setStart] = useState<boolean>(false);
@@ -63,10 +64,6 @@ export default function MemoryModal(props: any) {
       gameover();
     }
   }, [timeLimit]);
-
-  useEffect(() => {
-    console.log(isSuccess);
-  });
 
   // 게임 클리어
   const clear = useCallback(() => {
@@ -136,6 +133,16 @@ export default function MemoryModal(props: any) {
     setRoundRunning(false);
     setClickCount(0);
     setTimeLimit(10);
+
+    if (round >= 40) {
+      setMoney(10);
+    } else if (round >= 30) {
+      setMoney(8);
+    } else if (round >= 20) {
+      setMoney(6);
+    } else if (round >= 10) {
+      setMoney(4);
+    }
   }, [answer, cardEls, clickedCards]);
 
   // 카드 클릭 함수
@@ -477,7 +484,7 @@ export default function MemoryModal(props: any) {
           onClose(false);
         }}
       >
-        나가기
+        X
       </button>
       <div className="memory-header">
         <div className="memory-round">Round {displayRound}</div>
@@ -496,11 +503,9 @@ export default function MemoryModal(props: any) {
       <div className="memory-content">
         {isResult ? (
           <ResultMemory
-            isSucces={true}
-            // isSucces={true}
-            time={null}
-            // time={11}
             round={round}
+            money={money}
+            isSucces={round > 2 ? true : false}
             onClose={onClose}
           ></ResultMemory>
         ) : null}

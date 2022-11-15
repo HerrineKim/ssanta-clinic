@@ -26,6 +26,7 @@ export default function WitsModal(props: any) {
   const [isResult, setIsResult] = useState<boolean>(false);
   const [gameClear, setGameClear] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(4);
+  const [money, setMoney] = useState<number>(0);
 
   const [time, setTime] = useState<number>(0);
   const [clickCount, setClickCount] = useState<number>(3);
@@ -108,13 +109,18 @@ export default function WitsModal(props: any) {
   }, []);
 
   const result = () => {
+    if (time <= 30) {
+      setMoney(10);
+    } else if (time <= 40) {
+      setMoney(8);
+    } else if (time <= 50) {
+      setMoney(6);
+    } else if (time <= 60) {
+      setMoney(4);
+    } else {
+      setMoney(2);
+    }
     setIsResult(true);
-    if (isFail) {
-      console.log('실망..');
-    }
-    if (gameClear) {
-      console.log(time);
-    }
   };
 
   // console.log(typeof handleClick);
@@ -126,16 +132,14 @@ export default function WitsModal(props: any) {
           onClose(false);
         }}
       >
-        나가기
+        X
       </button>
       <div className="wit-content">
         {isResult ? (
           <Result
-            game={2}
             isSucces={gameClear}
-            // isSucces={true}
+            money={money}
             time={time}
-            // time={11}
             round={null}
             onClose={onClose}
           ></Result>

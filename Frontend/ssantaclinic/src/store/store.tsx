@@ -27,16 +27,16 @@ const isLoggedIn = atom<isLoggedIn>({
   },
 });
 
-interface Money {
-  money: number;
-}
+// iscover
+export const IsCover = atom<boolean>({
+  key: 'IsCover',
+  default: true,
+});
 
 // money
-export const Money = atom<Money>({
+export const Money = atom<number>({
   key: 'money',
-  default: {
-    money: 0,
-  },
+  default: 0,
 });
 
 interface Items {
