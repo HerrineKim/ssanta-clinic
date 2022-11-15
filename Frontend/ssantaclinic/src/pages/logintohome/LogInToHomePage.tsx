@@ -8,7 +8,7 @@ export const LogInToHomePage = () => {
   useEffect(() => {
     setTimeout(() => {
       navigate('/');
-    }, 8000);
+    }, 9000);
     const toHomeCanvas = new LoginToHome();
     console.log(toHomeCanvas.render.bind(toHomeCanvas));
     console.log('useeffect');

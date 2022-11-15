@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { useRecoilValue } from 'recoil';
 import { currentUser, isLogIn } from '../../store/store';
-import { Button, LoginContainer } from './styles';
+import { LoginContainer } from './styles';
 import { Input } from './styles';
 import { motion } from 'framer-motion';
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
@@ -45,14 +45,15 @@ export const LogIn = () => {
           id: res.data.userId,
           nickname: res.data.nickName,
           noti: [],
+          isLogin: true,
         });
-        const TOKEN = localStorage.getItem('jwt');
+
         // subSSE(TOKEN);
         // setTimeout(() => {
         //   subSSE(TOKEN);
         // }, 660000);
         // navigate('/test');
-        navigate('/logintohome');
+        // navigate('/logintohome');
       })
       .catch((err) => {
         console.log(err.response);
@@ -122,6 +123,7 @@ export const LogIn = () => {
     },
     [],
   );
+
   return (
     <LoginContainer id="login-container">
       <form onSubmit={handleSubmit}>
