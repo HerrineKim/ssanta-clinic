@@ -3,23 +3,42 @@
 import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
 import React, { useEffect } from 'react';
 import axios from 'axios';
-// const EventSource = NativeEventSource || EventSourcePolyfill;
+import { useRecoilState } from 'recoil';
+import { currentUser, isLogIn } from '../../store/store';
+
+const EventSource = EventSourcePolyfill;
 const LOCAL = 'http://localhost:8080';
 const TOKEN = localStorage.getItem('jwt') || '';
 
 export const Test = () => {
+  const [userState, setUserState] = useRecoilState(currentUser);
+
   useEffect(() => {
     console.log(TOKEN);
-    const eventSource = new EventSourcePolyfill(LOCAL + '/api/noti/sub', {
+    const eventSource = new EventSource(LOCAL + '/api/noti/sub', {
       headers: {
         Authorization: TOKEN,
       },
     });
+    eventSource.onopen = (event) => console.log('open', event); // <2>
+    eventSource.onmessage = (event) => {
+      console.log(JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      setUserState({
+        email: 'test',
+        id: userState.id,
+        nickname: userState.nickname,
+        noti: [data],
+        isLogin: true,
+      });
+    };
 
-    console.log(eventSource.readyState);
-    getNotiList(TOKEN);
-    console.log(eventSource.readyState);
-    getNotiList(TOKEN);
+    eventSource.onerror = (event) => {
+      console.log('error', event);
+    };
+    setTimeout(() => {
+      console.log(userState);
+    }, 10000);
     // eventSource.onmessage = function (event) {
     //   console.log(event.data, '온메시지');
     // };
@@ -51,9 +70,9 @@ export const Test = () => {
     // }
   });
 
-  async function getNotiList(TOKEN: any) {
+  function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
-    await axios
+    axios
       .get(LOCAL + '/api/noti/list', {
         headers: {
           Authorization: TOKEN,
