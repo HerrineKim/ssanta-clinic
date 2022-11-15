@@ -8,6 +8,7 @@ export interface IUser {
   id: string;
   nickname: string;
   noti: Array<string>;
+  isLogin: boolean;
   // jwt: string;
 }
 
@@ -72,6 +73,7 @@ export const currentUser = atom<IUser>({
     id: '',
     nickname: '',
     noti: [],
+    isLogin: false,
     // jwt: '',
   },
   effects_UNSTABLE: [persistAtom],
@@ -112,6 +114,13 @@ export const selectUserNickname = selector<string>({
   get: ({ get }) => {
     const user = get(currentUser);
     return user.nickname;
+  },
+});
+export const selectUserIsLogin = selector<boolean>({
+  key: 'IsLogin',
+  get: ({ get }) => {
+    const user = get(currentUser);
+    return user.isLogin;
   },
 });
 
