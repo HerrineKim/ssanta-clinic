@@ -93,10 +93,10 @@ export class MainCanvas {
   // 1이 기본, 2가 트리꾸미는 scene
   _scenenumber = 1;
 
-  constructor(items: number[], userId: number) {
+  constructor(userId: number) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
     this._userId = userId;
-    this._items = items;
+    this._items = [];
     this._isAlert = false;
     this._isZoom = false;
     this._isShop = false;
