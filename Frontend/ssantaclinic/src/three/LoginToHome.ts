@@ -151,32 +151,15 @@ export class LoginToHome {
       this._mixer = mixer;
 
       const path = new THREE.CatmullRomCurve3([
-        // new THREE.Vector3(-1, 0, -0.5),
-        // new THREE.Vector3(10, 0, -0.5),
-        // new THREE.Vector3(30, 0, -10),
-        // new THREE.Vector3(15, -7, -15),
-
-        // new THREE.Vector3(15, -6, 15),
-        // new THREE.Vector3(-15, -5, 15),
-        // new THREE.Vector3(-15, -4, -15),
-        // new THREE.Vector3(15, -3, -15),
-
-        // new THREE.Vector3(15, -2, 15),
-        // new THREE.Vector3(-15, 15, 35),
-        new THREE.Vector3(-20, 0, 5),
-        new THREE.Vector3(-10, 0, 10),
-        new THREE.Vector3(0, 0, 15),
-        new THREE.Vector3(5, 0, 10),
-        new THREE.Vector3(15, 5, 5),
-        new THREE.Vector3(20, 10, 0),
-
-        // new THREE.Vector3(15, -6, 15),
-        // new THREE.Vector3(-15, -5, 15),
-        // new THREE.Vector3(-15, -4, -15),
-        // new THREE.Vector3(15, -3, -15),
-
-        // new THREE.Vector3(15, -2, 15),
-        // new THREE.Vector3(-15, 15, 35),
+        new THREE.Vector3(0, 0, 0),
+        new THREE.Vector3(5, 0, 5),
+        new THREE.Vector3(10, 0, 10),
+        new THREE.Vector3(20, 5, 20),
+        new THREE.Vector3(25, 10, 25),
+        new THREE.Vector3(30, 20, 30),
+        new THREE.Vector3(35, 30, 20),
+        new THREE.Vector3(40, 40, 10),
+        new THREE.Vector3(45, 50, 0),
       ]);
 
       this._path = path;
@@ -215,7 +198,7 @@ export class LoginToHome {
     });
     new GLTFLoader().load('/login/dongurami.glb', (gltf) => {
       const model4 = gltf.scene;
-      model4.position.set(20, 10, 0);
+      model4.position.set(40, 50, 0);
       this._model4 = model4;
       this._scene.add(model4);
     });

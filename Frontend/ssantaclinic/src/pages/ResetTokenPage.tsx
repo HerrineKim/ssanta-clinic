@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { currentUser } from '../store/store';
-import { useRecoilState, useResetRecoilState } from 'recoil';
+import { useSetRecoilState, useResetRecoilState } from 'recoil';
 
 export const ResetTokenPage = () => {
-  const reset = useResetRecoilState(currentUser);
+  const setUser = useSetRecoilState(currentUser);
   useEffect(() => {
-    localStorage.setItem('jwt', '');
+    localStorage.clear();
   });
+  function Reset() {
+    setUser({
+      email: '',
+      id: '',
+      nickname: '',
+      noti: [],
+      isLogin: false,
+    });
+  }
   return (
     <div>
-      <button onClick={reset}>reset</button>
+      <button onClick={Reset}>reset</button>
     </div>
   );
 };
