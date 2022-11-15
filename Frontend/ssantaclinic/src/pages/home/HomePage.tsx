@@ -27,7 +27,7 @@ import { API_BASE_URL } from '../../apis/url';
 import { selectUserId, Money, Items, IsCover } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
-import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
+// import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
@@ -217,7 +217,7 @@ export default function Home() {
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       <LetterAlert></LetterAlert>
-      <ShopAlert></ShopAlert>
+      {/* <ShopAlert></ShopAlert> */}
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
 
