@@ -120,7 +120,7 @@ export class MainCanvas {
 
     // const divContainer = document.querySelector('#webgl-container');
     // this._divContainer = divContainer;
-    console.log('constructor');
+    // console.log('constructor');
     const canvasContainer = document.querySelector('#main-canvas');
     this._canvasContainer = canvasContainer;
 
@@ -230,13 +230,13 @@ export class MainCanvas {
       const stats = Stats();
       this._canvasContainer.appendChild(stats.dom);
       this._fps = stats;
-      console.log('setoucontrols111');
+      // console.log('setoucontrols111');
     } else {
       // 트리 위주로 돌릴 수 있게
       // 드래그앤 드롭
       this._controls.enabled = false;
       // this._controls.minDistance = 0.3;
-      console.log('setupcontrols222');
+      // console.log('setupcontrols222');
     }
   }
 
@@ -256,18 +256,18 @@ export class MainCanvas {
       const animationMap: any = {};
       animationClips.forEach((clip) => {
         const name = clip.name;
-        console.log(name);
+        // console.log(name);
         animationMap[name] = mixer.clipAction(clip); //THREE.AnimationAction
       });
 
       this._mixer = mixer;
-      console.log(this._mixer);
+      // console.log(this._mixer);
       this._animationMap = animationMap;
       this._currentAnimationAction =
         this._animationMap['Object_2.001Action.007'];
       this._currentAnimationAction.play();
 
-      console.log(gltf);
+      // console.log(gltf);
       count += 1;
       // console.log(gltf);
       // console.log(gltf.scene);
@@ -298,7 +298,7 @@ export class MainCanvas {
       // console.log(m);
       const originModel = gltf.scene;
       const model = gltf.scene.children[0];
-      console.log('LOAD model:', model);
+      // console.log('LOAD model:', model);
       this._model = model;
       this._scene.add(originModel);
 
@@ -355,8 +355,8 @@ export class MainCanvas {
 
     // scene에 있는 모든 3dobj 검사
     const loadPage = setInterval(() => {
-      console.log('로딩중');
-      console.log(count);
+      // console.log('로딩중');
+      // console.log(count);
       if (count === 3) {
         const loading = document.querySelector(
           '.loading',
@@ -371,13 +371,13 @@ export class MainCanvas {
     }, 1000);
 
     this._group = group;
-    console.log(group);
+    // console.log(group);
   }
 
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
 
-    console.log('setpupicking');
+    // console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
 
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
@@ -390,7 +390,7 @@ export class MainCanvas {
 
   //클릭 함수
   _onClick(event: any) {
-    console.log('click!!!');
+    // console.log('click!!!');
 
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
@@ -415,9 +415,9 @@ export class MainCanvas {
 
       // 원래 버전
       // const targets = this._raycaster.intersectObjects(this._group);
-      console.log('click!!', this._model);
+      // console.log('click!!', this._model);
       const targets = this._raycaster.intersectObject(this._model);
-      console.log('raycaaster target:', targets);
+      // console.log('raycaaster target:', targets);
       // const target = this._raycaster.intersectObject(this._group[11]);
       // console.log('target : ', target);
       // console.log('targets: ', targets);
@@ -461,7 +461,7 @@ export class MainCanvas {
         else if (targets[0].object.name.includes('game4')) {
           console.log('game4!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
-          console.log(targets[0].object.parent);
+          // console.log(targets[0].object.parent);
           setTimeout(() => {
             this._setupMemory();
           }, 1500);
@@ -471,7 +471,7 @@ export class MainCanvas {
         } else if (targets[0].object.name.includes('letter')) {
           console.log('letter!!!!!!!!!!!!!!');
           this._zoomFit(targets[0].object.parent, 60);
-          console.log(targets[0].object.parent);
+          // console.log(targets[0].object.parent);
           setTimeout(() => {
             this._setupLetter();
           }, 1500);
@@ -528,7 +528,7 @@ export class MainCanvas {
       console.log('scenenumber 22222222');
       // scenenumber == 2 일때
       const itemTarget = this._raycaster.intersectObjects(this._items);
-      console.log(itemTarget);
+      // console.log(itemTarget);
       if (itemTarget.length > 0) {
         this._setupAlert(itemTarget[0].object.name, this._userId);
       } else {
@@ -539,7 +539,7 @@ export class MainCanvas {
       if (closeTarget.length > 0) {
         this._scenenumber = 1;
         // this._setupControls();
-        console.log(this._shop);
+        // console.log(this._shop);
         // setTimeout(() => {
         //   this._zoomFit(this._shop[0].parent, 60);
         // }, 100);
@@ -740,7 +740,7 @@ export class MainCanvas {
     const e = React.createElement;
     const shop = document.getElementById('shop');
     if (shop !== null) {
-      console.log(shop);
+      // console.log(shop);
       const root = ReactDOM.createRoot(shop);
 
       root.render(e(ShopAlert, [{ item: item, userId: userId }], null));
