@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LetterContainer, Message } from './styles';
+import {
+  LetterContainer,
+  Message,
+  LetterSanta,
+  ReceiveLetterContainer,
+} from './styles';
+import './santa.css';
 
 export const ReceiveLetter = () => {
   const [message, setMessage] = useState<string>('크쿠르삥뻥');
@@ -28,11 +34,29 @@ export const ReceiveLetter = () => {
 
   return (
     <LetterContainer id="receive-letter-container">
-      <div id="message-container">
-        <Message id="message">
-          <p>{message}</p>
-        </Message>
-      </div>
+      <ReceiveLetterContainer id="receive-message-container">
+        <Message id="message">{message}</Message>
+      </ReceiveLetterContainer>
+      <LetterSanta className="window">
+        <div className="santa">
+          <div className="head">
+            <div className="face">
+              <div className="redhat">
+                <div className="whitepart"></div>
+                <div className="redpart"></div>
+                <div className="hatball"></div>
+              </div>
+              <div className="eyes"></div>
+              <div className="beard">
+                <div className="nouse"></div>
+                <div className="mouth"></div>
+              </div>
+            </div>
+            <div className="ears"></div>
+          </div>
+          <div className="body"></div>
+        </div>
+      </LetterSanta>
     </LetterContainer>
   );
 };

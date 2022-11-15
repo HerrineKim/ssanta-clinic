@@ -2,7 +2,9 @@ import styled from 'styled-components';
 
 export const LetterContainer = styled.div`
   height: 100%;
-
+  #message-input {
+    posision: absoloute;
+  }
   #header {
     margin-left: 75%;
     margin-top: 5%;
@@ -18,6 +20,85 @@ export const LetterContainer = styled.div`
     float: right;
     margin-left: 62%;
     margin-top: 3%;
+
+    #check-btn {
+      background-color: #561d18;
+      border: 2px solid #171e13;
+      border-radius: 30px;
+      box-shadow: #422800 4px 4px 0 0;
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-block;
+      font-weight: 600;
+      font-size: 18px;
+      padding: 0 18px;
+      line-height: 50px;
+      text-align: center;
+      margin: 2px;
+      :hover {
+        background-color: #561d18;
+      }
+
+      :active {
+        box-shadow: #422800 2px 2px 0 0;
+        transform: translate(2px, 2px);
+      }
+
+      @media (min-width: 768px) {
+         {
+          min-width: 150px;
+          padding: 0 25px;
+        }
+      }
+    }
+    #non-check-btn {
+      background-color: #424b35;
+      border: 2px solid #171e13;
+      border-radius: 30px;
+      box-shadow: #422800 4px 4px 0 0;
+      color: #ffffff;
+      cursor: pointer;
+      display: inline-block;
+      font-weight: 600;
+      font-size: 18px;
+      padding: 0 18px;
+      line-height: 50px;
+      text-align: center;
+      text-decoration: none;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      margin: 2px;
+      :hover {
+        background-color: #561d18;
+      }
+
+      :active {
+        box-shadow: #422800 2px 2px 0 0;
+        transform: translate(2px, 2px);
+      }
+
+      @media (min-width: 768px) {
+         {
+          min-width: 150px;
+          padding: 0 25px;
+        }
+      }
+    }
+  }
+  #description {
+    width: 30%;
+    position: absolute;
+    display: inline-block;
+    float: right;
+    margin-left: 68%;
+    margin-top: 10%;
+    h3 {
+      color: white;
+      font-family: 'Cafe24Ssurround';
+      text-align: center;
+      margin-top: 3%;
+    }
   }
   #title-container {
     margin: 1% 10%;
@@ -26,6 +107,8 @@ export const LetterContainer = styled.div`
     height: 100%;
     margin: 0 10%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
   }
   .send-button {
     float: right;
@@ -41,7 +124,6 @@ export const Button = styled.button`
   box-shadow: #422800 4px 4px 0 0;
   color: #422800;
   cursor: pointer;
-  display: inline-block;
   font-weight: 600;
   font-size: 18px;
   padding: 0 18px;
@@ -76,52 +158,45 @@ export const TitleInput = styled.input`
   background: #34502R;
   margin: 5px;
 `;
-export const MessageInput = styled.input`
+export const MessageInput = styled.textarea`
   width: 30%;
   height: 22vw;
   border-radius: 10px;
-  background: #34502R;
+  margin: 0 auto;
+  background: #f8f4e5;
+  resize: none;
+  font-family: 'Cafe24Ssurround';
 `;
 export const Message = styled.div`
   width: 30%;
   height: 70%;
   border-radius: 10px;
-  background: white;
+  background: #f8f4e5;
   margin-top: 15%;
   margin-left: 35%;
+  font-family: 'Cafe24Ssurround';
+  word-wrap: break-word;
 `;
-export const CheckButton = styled.button`
-  background-color: #424b35;
-  border: 2px solid #171e13;
-  border-radius: 30px;
-  box-shadow: #422800 4px 4px 0 0;
-  color: #ffffff;
-  cursor: pointer;
-  display: inline-block;
-  font-weight: 600;
-  font-size: 18px;
-  padding: 0 18px;
-  line-height: 50px;
+
+export const LetterListContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  background-color: #033220;
   text-align: center;
-  text-decoration: none;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  margin: 2px
-  }
 
-  :hover {
-  background-color: #561d18;
-  }
-
-  :active {
-  box-shadow: #422800 2px 2px 0 0;
-  transform: translate(2px, 2px);
-  }
-
-  @media (min-width: 768px) {
-  {
-    min-width: 150px;
-    padding: 0 25px;
+  #letterbox {
+    background-color: #ffffff;
+    width: 50%;
+    height: 8%;
+    margin-top: 3%;
+    border-radius: 20px;
+    margin-left: 24%;
+    box-shadow: 5px 5px 5px 5px;
   }
 `;
+export const ReceiveLetterContainer = styled.div`
+  width: 80%;
+  height: 100%;
+  margin-left: 10%;
+`;
+export const LetterSanta = styled.div``;
