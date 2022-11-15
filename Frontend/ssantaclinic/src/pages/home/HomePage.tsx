@@ -57,6 +57,9 @@ export default function Home() {
   //     },
   //   );
   // }, []);
+  useEffect(() => {
+    console.log('랜더링 될때마다:', money);
+  });
   const getCoin = () =>
     axios({
       url: `${BASE_URL}coin`,
@@ -65,7 +68,7 @@ export default function Home() {
         Authorization: ACCESS_TOKEN,
       },
     }).then((res) => {
-      setUserMoney({ money: res.data.coin });
+      setUserMoney(res.data.coin);
       console.log(res);
     });
 
@@ -196,7 +199,7 @@ export default function Home() {
       {isCover ? (
         <MoneyState>
           <CoinImg src="img/coin.png"></CoinImg>
-          {money.money}
+          {money}
         </MoneyState>
       ) : null}
 

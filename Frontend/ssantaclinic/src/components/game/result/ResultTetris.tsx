@@ -27,7 +27,7 @@ export default function ResultTetris(props: ResultProp) {
       headers: { Authorization: ACCESS_TOKEN },
     }).then((res) => {
       console.log(res);
-      setUserMoney(res.data.money);
+      setUserMoney(res.data.coin);
     });
   }, []);
 
