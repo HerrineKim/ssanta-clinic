@@ -6,6 +6,7 @@ import { useRecoilValue } from 'recoil';
 import { BoxCreateContainer } from './styles';
 
 const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+
 type BoxCreateProps = {
   setBoxCreateOpen: React.Dispatch<React.SetStateAction<boolean>>;
   boxCreateOpen: boolean;
@@ -89,6 +90,12 @@ export function BoxCreate(props: BoxCreateProps) {
         console.log(err);
       });
   };
+  const setIsOpen = () => {
+    props.setBoxCreateOpen(false);
+  };
+  if (!props.boxCreateOpen) {
+    return null;
+  }
   return (
     <BoxCreateContainer>
       <ReactMediaRecorder
@@ -158,6 +165,8 @@ export function BoxCreate(props: BoxCreateProps) {
           }
         }}
       />
+      {/* 닫기 버튼 */}
+      <button onClick={setIsOpen}>닫기</button>
     </BoxCreateContainer>
   );
 }
