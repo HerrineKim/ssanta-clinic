@@ -175,26 +175,8 @@ export default function Home() {
 
   // 친구 검색: 추후 구현
 
-  // const firstCanvas = document.getElementById('main-canvas');
-  // const canvasRef = useRef<HTMLCanvasElement>(null);
-  // const canvasCon = document.getElementById('main-canvas');
-  // console.log(canvasCon);
-
-  // useCanvas(canvasRef.current);
-  // console.log(canvasRef.current);
-
-  //myroom 에서 axios 로 받아오는 트리에 대한 정보
-  //트리 위치에 따라 장식품 리스트로 받아옴 => tree는 백에서 glb로 받아오는걸로
-  // const data = [1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4, 1, 1, 2, 3, 1, 1, 2, 2];
-
-  // 로그인한 유저가 갖고있는 아이템 정보를 받아와야함
-  // 개수 정해봐야함 (개수 limit 거는게 맞는 것 같음)
-  const items = [1, 2, 3, 1, 1, 2, 3, 1, 2, 3];
-  // const scenenumber = homeCanvas._scenenumber;
-  // console.log('scenenumber:', scenenumber);
-  // const homeCanvas = new MainCanvas(items, userId);
   console.log('home');
-  const homeCanvas = new MainCanvas(items, userId);
+  const homeCanvas = new MainCanvas(userId);
   // let scenenumber = 1;
   // const runCanvas = (time: number) => {
   //   homeCanvas.render(time).bind(homeCanvas);
