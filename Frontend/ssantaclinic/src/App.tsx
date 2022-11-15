@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+import { BoxDetail } from './components/calendar/boxDetail';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
 import { LogOutPage } from './pages/auth/LogOutPage';
@@ -8,8 +9,6 @@ import HomePage from './pages/home/HomePage';
 import TetrisPage from './pages/game/tetris/TetrisPage';
 // import WitsPage from './pages/game/WitsPage';
 // import MemoryPage from './pages/game/MemoryPage';
-import { CalendarPage } from './pages/calendar/calendarPage';
-import { BoxCreate } from './pages/calendar/boxCreate';
 import FindPasswordPage from './pages/auth/FindPasswordPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
 import { WriteLetterPage } from './pages/letter/WriteLetterPage';
@@ -33,7 +32,7 @@ function App() {
         {/* 회원관련 */}
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LogInPage />}></Route>
-        <Route path="/logintohome" element={<LogInToHomePage />}></Route>
+        <Route path="/loginToHome" element={<LogInToHomePage />}></Route>
         <Route path="/logout" element={<LogOutPage />}></Route>
         <Route path="/findPassword" element={<FindPasswordPage />}></Route>
         <Route
@@ -42,8 +41,7 @@ function App() {
         ></Route>
         {/* <Route path="/wits" element={<WitsPage />}></Route> */}
         {/* <Route path="/memory" element={<MemoryPage />}></Route> */}
-        <Route path="/calendar" element={<CalendarPage />}></Route>
-        <Route path="/boxCreate" element={<BoxCreate />}></Route>
+        {/* <Route path="/boxCreate" element={<BoxCreate />}></Route> */}
         <Route path="/letter/write" element={<WriteLetterPage />}></Route>
         {/* <Route path="/myroom/:id" element={<MyRoomPage />}></Route> */}
         <Route path="/otherroom/:id" element={<OtherRoomPage />}></Route>
@@ -51,11 +49,12 @@ function App() {
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
         <Route path="/notification" element={<NotificationPage />}></Route>
         <Route path="/tetris" element={<TetrisPage />}></Route>
-        <Route path="/resettoken" element={<ResetTokenPage />}></Route>
+        <Route path="/resetToken" element={<ResetTokenPage />}></Route>
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
         <Route path="/test" element={<Test />}></Route>
-        <Route path="/anitest" element={<AniTestPage />}></Route>
+        <Route path="/aniTest" element={<AniTestPage />}></Route>
+        <Route path="/boxDetail" element={<BoxDetail />}></Route>
       </Routes>
     </Router>
   );
