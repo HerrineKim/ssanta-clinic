@@ -79,22 +79,20 @@ public class TreeController {
                                             .tree(treeService.getRandomTree(userId))
                                             .build());
     }
-    @ApiOperation(value = "트리 주소 전송", notes = "내 트리 주소 전송")
+    @ApiOperation(value = "트리 주소 전송", notes = "트리 주소 전송")
     @ApiResponses({
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
-    public ResponseEntity<TreeResponse.GetTreeResponse> getMyTree() {
+    public ResponseEntity<TreeResponse.GetTreeResponse> getTreeInfo(@PathVariable int userId) {
         /**
          * @Method Name : getMyTree
-         * @Method 설명 : 내 트리 주소 전송
+         * @Method 설명 : 트리 주소 전송
          */
-        // 현재 로그인한 유저의 아이디 가져오기
-        int userId = JwtUtil.getCurrentUserId();
         return ResponseEntity.ok()
                 .body(TreeResponse.GetTreeResponse.builder()
-                        .tree(treeService.getMyTree(userId))
+                        .tree(treeService.getTreeInfo(userId))
                         .build());
     }
 }
