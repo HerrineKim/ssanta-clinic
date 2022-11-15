@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { selectUserIsLogin } from '../../store/store';
 export const LogInPage = () => {
   const isLogin = useRecoilValue(selectUserIsLogin);
+
   useEffect(() => {
     console.log(isLogin, '로그인됐냐');
     const test1Canvas = new LoginThree();
