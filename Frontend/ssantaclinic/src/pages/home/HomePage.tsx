@@ -10,7 +10,7 @@ import { TetrisAlert } from '../../components/main/tetrisalert/TetrisAlert';
 import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
-import { FriendButton, MoneyState, ItemButton } from './styles';
+import { FriendButton, MoneyState, ItemButton, BottomBar } from './styles';
 import { selectUserId, Money, Items } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 // 친구 모달
@@ -187,22 +187,24 @@ export default function Home() {
       {/* 버튼들 */}
 
       {isCover ? (
-        <FriendButton
-          onClick={() => {
-            setIsModal(true);
-          }}
-        >
-          {/* <GiThreeFriends /> */}
-          친구
-        </FriendButton>
-      ) : null}
-      {isCover ? (
         <MoneyState>
           <CoinImg src="img/coin.png"></CoinImg>
           {money}
         </MoneyState>
       ) : null}
-      {isCover ? <ItemButton>아이템</ItemButton> : null}
+      {isCover ? (
+        <BottomBar>
+          <ItemButton>아이템</ItemButton>
+          <FriendButton
+            onClick={() => {
+              setIsModal(true);
+            }}
+          >
+            {/* <GiThreeFriends /> */}
+            친구
+          </FriendButton>
+        </BottomBar>
+      ) : null}
 
       <FriendModal
         isModal={isModal}
