@@ -48,9 +48,7 @@ export default function FriendModal(props: any) {
   ];
   // 친구 검색(api/user/search)
   const ACCESS_TOKEN = localStorage.getItem('jwt');
-  const [searchList, setSearchList] = useState([]);
   const [searchInput, setSearchInput] = useState('');
-  const [isSearch, setIsSearch] = useState(false);
 
   const handleSearchInput = (e: any) => {
     setSearchInput(e.target.value);
