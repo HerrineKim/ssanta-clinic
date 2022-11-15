@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
@@ -11,14 +11,15 @@ import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
 import { FriendButton, MoneyState, ItemButton, BottomBar } from './styles';
-import { selectUserId, Money, Items } from '../../store/store';
-import { useRecoilValue } from 'recoil';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
 import { SSantaApi } from '../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
+//recoil
+import { selectUserId, Money, Items, IsCover } from '../../store/store';
+import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
@@ -33,13 +34,15 @@ export default function Home() {
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
-  const [isCover, setIsCover] = useState(true);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
   const setUserItems = useSetRecoilState(Items);
   const item = useRecoilValue(Items);
+
+  const setIsCover = useSetRecoilState(IsCover);
+  const isCover = useRecoilValue(IsCover);
 
   const navigate = useNavigate();
 
@@ -173,6 +176,11 @@ export default function Home() {
       console.log('canvas 끝!');
     };
   }, []);
+
+  // const alert = useRef<HTMLDivElement>(null);
+  // useEffect(() => {
+  //   console.log('alert.current:', alert.current);
+  // });
 
   return (
     <Div>
