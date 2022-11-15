@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import axios from 'axios';
-import { Button } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { LetterListContainer } from './styles';
+import { motion } from 'framer-motion';
 
 export const LetterList = (props: any) => {
   const { onLetterId, onReceiveLetter, onLetterList } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
-  const navigate = useNavigate();
+
   const letters = [
     {
       id: 1,
@@ -21,7 +21,10 @@ export const LetterList = (props: any) => {
   ];
   function Letter({ letter }: { letter: any }) {
     return (
-      <button
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        id="letterbox"
         onClick={() => {
           onLetterId(letter.id);
           onReceiveLetter(true);
@@ -29,7 +32,7 @@ export const LetterList = (props: any) => {
         }}
       >
         <b>{letter.title}</b> <span>{letter.message}</span>
-      </button>
+      </motion.div>
     );
   }
   useEffect(() => {
@@ -47,10 +50,10 @@ export const LetterList = (props: any) => {
       });
   });
   return (
-    <div id="receive-letter-container">
+    <LetterListContainer id="receive-letter-container">
       {letters.map((letter, index) => (
         <Letter letter={letter} key={index} />
       ))}
-    </div>
+    </LetterListContainer>
   );
 };

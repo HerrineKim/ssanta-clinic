@@ -9,6 +9,13 @@ import gsap from 'gsap';
 
 import axios from 'axios';
 
+interface Item {
+  itemImg: string;
+  price: string;
+  // 아이템이름??
+  nickname: string;
+}
+
 export class RoomThree {
   _divContainer: any;
   _renderer: any;
@@ -287,10 +294,14 @@ export class RoomThree {
       // console.log('item:', item);
       // console.log(index);
       if (item !== 0) {
-        loader.load(`/main/${item}.glb`, (gltf) => {
+        loader.load(`/items/${item}.glb`, (gltf) => {
           count += 1;
           // console.log(index);
           const model = gltf.scene;
+          model.traverse((child) => {
+            child.name = String(item);
+          });
+          console.log(model);
           // console.log(`${index}: `, model);
           model.scale.set(0.01, 0.01, 0.01);
           const position = this._position[`${index}`];
@@ -573,7 +584,7 @@ export class RoomThree {
     });
     setTimeout(() => {
       //showcase만 add하게 로딩 시간에 따라 순서변경
-      this._scene2.add(object3d[0]);
+      this._scene2.add(this._showcase);
       this._scene2.add(...this._items);
       this._scene2.add(this._close);
       this._scene2.add(this._check);
@@ -594,7 +605,7 @@ export class RoomThree {
     // const raycaster = this._raycaster;
 
     items.forEach((child: any, index: any) => {
-      // console.log('item child:', child);
+      console.log('item child:', child);
       child.name = index;
       const controls = new DragControls(
         [child],
@@ -624,13 +635,27 @@ export class RoomThree {
           console.log('parent = event.object');
           event.object.removeFromParent();
         }
-        event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+        // if (
+        //   1 <= parseInt(event.object.name) &&
+        //   parseInt(event.object.name) <= 8
+        // ) {
+        //   event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+        // } else {
+        //   event.object.children[0].material.emissive.set(0xaaaaaa);
+        // }
       });
 
       controls.addEventListener('dragend', (event) => {
         const targets = controls.getRaycaster().intersectObjects(tree);
         console.log('dragend targets:', targets);
-        event.object.children[0].children[0].material.emissive.set(0x000000);
+        // if (
+        //   1 <= parseInt(event.object.name) &&
+        //   parseInt(event.object.name) <= 8
+        // ) {
+        //   event.object.children[0].children[0].material.emissive.set(0x000000);
+        // } else {
+        //   event.object.children[0].material.emissive.set(0x000000);
+        // }
 
         //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
         // console.log('world position:', event.object.getWorldPosition());

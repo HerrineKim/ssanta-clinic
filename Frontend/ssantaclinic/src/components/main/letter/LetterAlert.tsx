@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Div } from './styles';
+import { Div, TitleLetterContainer, ButtonLetterContainer } from './styles';
 import { LetterList } from '../../letter/LetterList';
 import { WriteLetterPage } from '../../../pages/letter/WriteLetterPage';
 import { ReceiveLetterPage } from '../../../pages/letter/ReceiveLetterPage';
-import { Button } from './styles';
-
+import { motion } from 'framer-motion';
 export function LetterAlert() {
   const [isList, setIsList] = useState<boolean>(true);
   const [isWrite, setIsWrite] = useState<boolean>(false);
@@ -25,19 +24,31 @@ export function LetterAlert() {
   if (isList) {
     return (
       <Div className="letterAlert">
+        <TitleLetterContainer>
+          <h1>산타편지</h1>
+        </TitleLetterContainer>
         <LetterList
           onLetterId={setLetterId}
           onReceiveLetter={setIsReceive}
           onLetterList={setIsList}
         ></LetterList>
-        <div>
-          <Button onClick={Write}>편지쓰기</Button>
-        </div>
-        <div>
-          <Button id="close-button" onClick={Close}>
+        <ButtonLetterContainer>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={Write}
+          >
+            편지쓰기
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            id="close-button"
+            onClick={Close}
+          >
             나가기
-          </Button>
-        </div>
+          </motion.button>
+        </ButtonLetterContainer>
       </Div>
     );
   } else if (isWrite) {

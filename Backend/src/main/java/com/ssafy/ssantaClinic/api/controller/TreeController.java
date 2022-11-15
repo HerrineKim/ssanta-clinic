@@ -67,7 +67,7 @@ public class TreeController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping
-    public ResponseEntity<TreeResponse> getRandomTree() {
+    public ResponseEntity<TreeResponse.GetTreeListResponse> getRandomTree() {
         /**
          * @Method Name : getRandomTree
          * @Method 설명 : 랜덤 트리 10개를 가져온다.
@@ -75,8 +75,24 @@ public class TreeController {
         // 현재 로그인한 유저의 아이디 가져오기
         int userId = JwtUtil.getCurrentUserId();
         return ResponseEntity.ok()
-                            .body(TreeResponse.builder()
+                            .body(TreeResponse.GetTreeListResponse.builder()
                                             .tree(treeService.getRandomTree(userId))
                                             .build());
+    }
+    @ApiOperation(value = "트리 주소 전송", notes = "트리 주소 전송")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @GetMapping("/{userId}")
+    public ResponseEntity<TreeResponse.GetTreeResponse> getTreeInfo(@PathVariable int userId) {
+        /**
+         * @Method Name : getTreeInfo
+         * @Method 설명 : 트리 주소 전송
+         */
+        return ResponseEntity.ok()
+                .body(TreeResponse.GetTreeResponse.builder()
+                        .tree(treeService.getTreeInfo(userId))
+                        .build());
     }
 }
