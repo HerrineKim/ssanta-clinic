@@ -16,10 +16,10 @@ interface Request {
   userId: number;
 }
 
-export default function ShopAlert(props: Iprops[]) {
+export default function ShopAlert(props: Iprops) {
   // const [itemId, setItemId] = useState<number>(0);
   // const navigate = useNavigate();
-  const { item, userId } = props[0];
+  const { item, userId } = props;
   const [count, setCount] = useState<number>(0);
   const [data, setData] = useState<Request>();
   const TOKEN = localStorage.getItem('jwt') || '';

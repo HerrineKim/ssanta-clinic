@@ -36,9 +36,9 @@ import { API_BASE_URL } from '../../apis/url';
 import { selectUserId, Money, MyItems, IsCover } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
-// import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
+import ShopAlert from '../../components/shop';
 
 export default function Home() {
   const BASE_URL = API_BASE_URL;
@@ -50,6 +50,9 @@ export default function Home() {
   const [followingList, setFollowingList] = useState([]);
   const [followerList, setFollowerList] = useState([]);
   const [isModal, setIsModal] = useState(false);
+  const [scenenumber, setSceneNumber] = useState<number>(1);
+  const [clickedItem, setClickedItem] = useState<number>(0);
+  const [isClick, setIsClick] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -177,10 +180,10 @@ export default function Home() {
 
   const homeCanvas = new MainCanvas(userId);
 
-  const [scenenumber, setSceneNumber] = useState<number>(1);
-
   const render = (time: number) => {
     setSceneNumber(homeCanvas._scenenumber);
+    setIsClick(homeCanvas._isItemClick);
+    setClickedItem(homeCanvas._clickedItem);
 
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
@@ -199,7 +202,9 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log(scenenumber);
+    if (scenenumber === 2) {
+      setIsCover(false);
+    }
   }, [scenenumber]);
 
   useEffect(() => {
@@ -287,6 +292,9 @@ export default function Home() {
         followingList={followingList}
         followerList={followerList}
       ></FriendModal>
+      {isClick ? (
+        <ShopAlert item={clickedItem} userId={userId}></ShopAlert>
+      ) : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
       <ShopDiv id="shop"></ShopDiv>
