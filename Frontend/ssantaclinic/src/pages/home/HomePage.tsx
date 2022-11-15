@@ -226,7 +226,7 @@ export default function Home() {
   // }, [scenenumber]);
   return (
     <Div>
-      <div
+      {/* <div
         style={{
           position: 'fixed',
           bottom: 0,
@@ -234,7 +234,7 @@ export default function Home() {
         }}
       >
         <YouTube videoId="8MhtzapYzGo" opts={opts} />
-      </div>
+      </div> */}
       {/* 모달들 */}
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
