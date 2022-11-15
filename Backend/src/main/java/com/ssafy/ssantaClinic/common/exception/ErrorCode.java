@@ -66,6 +66,9 @@ public enum ErrorCode {
     // coin
     EARN_NOTHING(HttpStatus.BAD_REQUEST, "400", "게임 머니 값이 입력되지 않았습니다."),
 
+    // tree
+    TREE_URL_NOT_FOUND(HttpStatus.BAD_REQUEST, "400", "트리 주소를 찾을 수 없습니다."),
+
     // 공통
     UTILITY_CLASS_ERROR(HttpStatus.BAD_REQUEST, "400", "유틸리티 클래스는 접근할 수 없습니다.");
     
