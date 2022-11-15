@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import YouTube, { YouTubeProps } from 'react-youtube';
 import './calendar.css';
 import './modalAnimation.scss';
 import { CalendarDetail } from '../calendar/calendarDetail/index';
+import { BoxCreate } from './boxCreate';
 
 // Recoil
 import { selectUserNickname } from '../../store/store';
@@ -110,21 +110,6 @@ export function CalendarModal(props: any) {
     }
   };
 
-  // bgm
-  const opts: YouTubeProps['opts'] = {
-    height: '70',
-    width: '70',
-    playerVars: {
-      // https://developers.google.com/youtube/player_parameters
-      autoplay: 1,
-      // 유튜브 주소
-      disablekb: 1,
-      // controls: 0,
-      fs: 0,
-      modestbranding: 1,
-    },
-  };
-
   const getBoxInfo = () => {
     axios
       .get('http://localhost:8080/api/calendar?boxId=3', {
@@ -143,42 +128,29 @@ export function CalendarModal(props: any) {
         console.log(err.response);
       });
   };
-  // 녹음 재생(api/calendar/play?boxId=1)
-  const play = () => {
-    axios
-      .get('http://localhost:8080/api/calendar/play?boxId=' + '3', {
-        headers: {
-          Authorization: ACCESS_TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
 
-  // 모달창 노출 여부
+  // 일별 모달창 노출 여부
   const [calendarDetailOpen, setCalendarDetailOpen] = useState<boolean>(false);
   const showCalendarDetail = () => {
     setCalendarDetailOpen(true);
   };
+
+  // boxCreate창 노출 여부
+  const [boxCreateOpen, setBoxCreateOpen] = useState<boolean>(false);
+  const showBoxCreate = () => {
+    setBoxCreateOpen(true);
+  };
+
   return (
     <CalendarBackground>
       <CalendarDetail
         setCalendarDetailOpen={setCalendarDetailOpen}
         calendarDetailOpen={calendarDetailOpen}
       ></CalendarDetail>
-      <div
-        style={{
-          position: 'fixed',
-          bottom: 0,
-          left: 0,
-        }}
-      >
-        <YouTube videoId="8MhtzapYzGo" opts={opts} />
-      </div>
+      <BoxCreate
+        setBoxCreateOpen={setBoxCreateOpen}
+        boxCreateOpen={boxCreateOpen}
+      ></BoxCreate>
       <TopContainer>
         <CalendarTitle>
           {nickName}님의{' '}
@@ -188,7 +160,7 @@ export function CalendarModal(props: any) {
           }
           년 어드벤트 캘린더
         </CalendarTitle>
-        <PresentButton>선물하기</PresentButton>
+        <PresentButton>선물하기💟</PresentButton>
         {/* 크리스마스 카운터 */}
         <Countdown
           date={

@@ -3,8 +3,15 @@ import axios from 'axios';
 import { ReactMediaRecorder } from 'react-media-recorder';
 import { selectUserId, selectUserNickname } from '../../../store/store';
 import { useRecoilValue } from 'recoil';
+import { BoxCreateContainer } from './styles';
+
 const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
-export function BoxCreate() {
+type BoxCreateProps = {
+  setBoxCreateOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  boxCreateOpen: boolean;
+};
+
+export function BoxCreate(props: BoxCreateProps) {
   // 상자 보내기 (/api/calendar)
   const [audio, setAudio] = useState<File>();
   const [image, setImage] = useState<File[]>([]);
@@ -83,7 +90,7 @@ export function BoxCreate() {
       });
   };
   return (
-    <div>
+    <BoxCreateContainer>
       <ReactMediaRecorder
         audio
         render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
@@ -151,6 +158,6 @@ export function BoxCreate() {
           }
         }}
       />
-    </div>
+    </BoxCreateContainer>
   );
 }

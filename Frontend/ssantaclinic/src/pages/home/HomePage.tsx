@@ -5,6 +5,8 @@ import React, {
   useCallback,
   useMemo,
 } from 'react';
+import YouTube, { YouTubeProps } from 'react-youtube';
+
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
@@ -27,7 +29,7 @@ import { API_BASE_URL } from '../../apis/url';
 import { selectUserId, Money, MyItems, IsCover } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
-import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
+// import { ShopAlert } from '../../components/main/shopalert/ShopAlert';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 
@@ -213,6 +215,21 @@ export default function Home() {
       console.log('canvas 끝!');
     };
   }, []);
+
+  // bgm
+  const opts: YouTubeProps['opts'] = {
+    height: '70',
+    width: '70',
+    playerVars: {
+      // https://developers.google.com/youtube/player_parameters
+      autoplay: 1,
+      // 유튜브 주소
+      disablekb: 1,
+      // controls: 0,
+      fs: 0,
+      modestbranding: 1,
+    },
+  };
   // setInterval(() => {
   //   console.log(homeCanvas._isShop);
   // }, 1000);
@@ -221,6 +238,15 @@ export default function Home() {
   // }, [scenenumber]);
   return (
     <Div>
+      {/* <div
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+        }}
+      >
+        <YouTube videoId="8MhtzapYzGo" opts={opts} />
+      </div> */}
       {/* 모달들 */}
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
@@ -229,7 +255,7 @@ export default function Home() {
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       <LetterAlert></LetterAlert>
-      <ShopAlert></ShopAlert>
+      {/* <ShopAlert></ShopAlert> */}
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
 
