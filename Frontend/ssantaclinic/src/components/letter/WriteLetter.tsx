@@ -11,7 +11,7 @@ import {
   CheckButton,
 } from './styles';
 
-type Keyword = '취업' | '진로' | '크리스마스';
+type Keyword = 'WORK' | 'STUDY' | 'CHRISTMAS';
 
 export const WriteLetter = () => {
   const [message, setMessage] = useState<string>('');
@@ -20,7 +20,7 @@ export const WriteLetter = () => {
   const [isJobSelect, setIsJobSelect] = useState<boolean>(true);
   const [isFutureSelect, setIsFutureSelect] = useState<boolean>(false);
   const [isChristmasSelect, setIsCristmasSelect] = useState<boolean>(false);
-  const [keyword, setKeyword] = useState<Keyword>('취업');
+  const [keyword, setKeyword] = useState<Keyword>('WORK');
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const ID = useRecoilValue(selectUserId);
   const NICNAME = useRecoilValue(selectUserNickname);
@@ -45,7 +45,6 @@ export const WriteLetter = () => {
       )
       .then((res) => {
         console.log('응답 받아옴 성공!', res.data);
-        navigate('/room');
       })
       .catch((err) => {
         console.log(err.resonse);
@@ -60,7 +59,7 @@ export const WriteLetter = () => {
       if (isChristmasSelect) {
         setIsCristmasSelect(!isChristmasSelect);
       }
-      setKeyword('취업');
+      setKeyword('WORK');
     }
   };
 
@@ -73,7 +72,7 @@ export const WriteLetter = () => {
       if (isChristmasSelect) {
         setIsCristmasSelect(!isChristmasSelect);
       }
-      setKeyword('진로');
+      setKeyword('STUDY');
     }
   };
   const toggleCristmas = () => {
@@ -85,7 +84,7 @@ export const WriteLetter = () => {
       }
       if (isFutureSelect) {
         setIsFutureSelect(!isFutureSelect);
-        setKeyword('크리스마스');
+        setKeyword('CHRISTMAS');
       }
     }
   };

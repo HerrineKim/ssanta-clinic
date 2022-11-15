@@ -31,7 +31,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class NotiServiceImpl implements NotiService {
-    private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
+    private static final Long DEFAULT_TIMEOUT = 10L* 1000; // 10분
     private static final String BASE_URL = "http://localhost:8080";
     private final int DECEMBER = 11;
     private final EmitterRepository emitterRepository;
@@ -79,7 +79,7 @@ public class NotiServiceImpl implements NotiService {
                                     .id(id).name("sse").data(data));
         } catch (IOException e) {
             emitterRepository.deleteById(id);
-            throw new CustomException(ErrorCode.SSE_SEND_ERROR);
+//            throw new CustomException(ErrorCode.SSE_SEND_ERROR);
         }
     }
     @Override
