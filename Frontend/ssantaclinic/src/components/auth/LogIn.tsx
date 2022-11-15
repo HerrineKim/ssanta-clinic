@@ -22,12 +22,12 @@ export const LogIn = () => {
   // const EventSource = EventSourcePolyfill;
   let accessToken: any = '';
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      alert('로그인 했잖아요;;');
-      navigate('/');
-    }
-  });
+  // useEffect(() => {
+  //   if (isLoggedIn) {
+  //     alert('로그인 했잖아요;;');
+  //     navigate('/');
+  //   }
+  // });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
