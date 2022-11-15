@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 
 export const BoxCreateContainer = styled.div`
-  width: 90%;
-  height: 90%;
+  position: absolute;
+  top: 25%;
+  left: 25%;
   display: flex;
   flex-direction: column;
   justify-content: center;
