@@ -13,7 +13,7 @@ import { BoxCreate } from './pages/calendar/boxCreate';
 import FindPasswordPage from './pages/auth/FindPasswordPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
 import { WriteLetterPage } from './pages/letter/WriteLetterPage';
-import { MyRoomPage } from './pages/myroom/MyRoomPage';
+// import { MyRoomPage } from './pages/myroom/MyRoomPage';
 import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
 import NotificationPage from './pages/NotificationPage';
 import { ResetTokenPage } from './pages/ResetTokenPage';
@@ -45,7 +45,7 @@ function App() {
         <Route path="/calendar" element={<CalendarPage />}></Route>
         <Route path="/boxCreate" element={<BoxCreate />}></Route>
         <Route path="/letter/write" element={<WriteLetterPage />}></Route>
-        <Route path="/myroom/:id" element={<MyRoomPage />}></Route>
+        {/* <Route path="/myroom/:id" element={<MyRoomPage />}></Route> */}
         <Route path="/otherroom/:id" element={<OtherRoomPage />}></Route>
         <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route>
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
