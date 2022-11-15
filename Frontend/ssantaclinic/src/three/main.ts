@@ -771,7 +771,7 @@ export class MainCanvas {
   _setupShopAlert() {
     const shop = document.getElementById('shop');
   }
-  _removeShopAlert() {}
+  // _removeShopAlert() {}
 
   // 순발력
   _setupWit() {

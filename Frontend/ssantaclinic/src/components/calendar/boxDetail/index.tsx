@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 
 export function BoxDetail() {
-  const ACCESS_TOKEN = localStorage.getItem('accessToken');
+  const ACCESS_TOKEN = localStorage.getItem('jwt');
   // 녹음 테스트
   useEffect(() => {
     // api/calendar/play?boxId=9
@@ -13,9 +13,12 @@ export function BoxDetail() {
         },
       })
       .then((res) => {
+        console.log(ACCESS_TOKEN);
         console.log(res.data);
       })
       .catch((err) => {
+        console.log(ACCESS_TOKEN);
+
         console.log(err.response);
       });
   }, []);
