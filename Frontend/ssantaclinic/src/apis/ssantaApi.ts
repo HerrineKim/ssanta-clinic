@@ -42,6 +42,7 @@ export class SSantaApi implements GameApi, MainApi {
       method: 'patch',
       url: `/api/coin`,
       data: gameReq,
+
       ...requestConfig,
     });
   }
@@ -64,7 +65,7 @@ export class SSantaApi implements GameApi, MainApi {
   ): Promise<void> {
     await this.request<ItemsReq, ItemsRes>({
       method: 'get',
-      url: `/api/store/${itemsReq.userId}`,
+      url: `/store/items/${itemsReq.userId}`,
       data: itemsReq,
       ...requestConfig,
     });
@@ -95,9 +96,8 @@ export class SSantaApi implements GameApi, MainApi {
   }
 
   private async request<P, R>(config: Config<P, R>) {
-    const headers: any = {
-      'content-type': 'application/json',
-    };
+    const headers: any = {};
+
     if (localStorage.getItem('jwt')) {
       headers.Authorization = `${localStorage.getItem('jwt')}`;
     }
@@ -116,6 +116,7 @@ export class SSantaApi implements GameApi, MainApi {
           config.onSuccess(res);
         }
       } catch (error: any) {
+        console.log(error);
         const status = error.response.status;
 
         switch (status) {

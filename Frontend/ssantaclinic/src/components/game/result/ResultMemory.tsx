@@ -3,46 +3,35 @@ import { ResultDiv, CoinImg } from './resultstyle';
 import { SSantaApi } from '../../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { Money } from '../../../store/store';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-
+import { useSetRecoilState } from 'recoil';
+import axios from 'axios';
+import { API_BASE_URL } from '../../../apis/url';
 interface ResultProp {
+  money: number;
+  round: number;
   isSucces: boolean;
-  time: number | null;
-  round: number | null;
   onClose: (value: React.SetStateAction<boolean>) => void;
 }
 
 export default function ResultMemory(props: ResultProp) {
+  const BASE_URL = API_BASE_URL;
   const navigate = useNavigate();
-  const { isSucces, onClose, round } = props;
-  const [money, setMoney] = useState<number>(0);
+  const { money, onClose, round, isSucces } = props;
+
   const setUserMoney = useSetRecoilState(Money);
   // const totalmoney = useRecoilValue(Money);
+  const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
 
   useEffect(() => {
-    if (round !== null && isSucces) {
-      if (round >= 40) {
-        setMoney(10);
-      } else if (round >= 30) {
-        setMoney(8);
-      } else if (round >= 20) {
-        setMoney(6);
-      } else if (round >= 10) {
-        setMoney(4);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    SSantaApi.getInstance().gameResult(
-      { coin: money },
-      {
-        onSuccess(data) {
-          setUserMoney({ money: data.coin });
-        },
-        navigate,
-      },
-    );
+    axios({
+      method: 'patch',
+      url: `${BASE_URL}coin`,
+      data: { coin: money },
+      headers: { Authorization: ACCESS_TOKEN },
+    }).then((res) => {
+      console.log(res);
+      setUserMoney(res.data.coin);
+    });
   }, []);
 
   return (

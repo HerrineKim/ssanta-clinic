@@ -7,7 +7,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 public interface NotiService {
     SseEmitter subscribe(int userId, String lastEventId);
-    void sendToClient(SseEmitter emitter, String id, Object data);
+    void sendToClient(SseEmitter emitter, String eventId, String emitterId, Object data);
     void send(User receiver, Type type, String message, int id);
     Notification createNotification(User receiver, Type type, String message, int id);
     void sendUnOpenedBoxNotification(int userId);

@@ -53,8 +53,9 @@ public enum ErrorCode {
     // store
     NOT_FOUND_ITEM_INFO(HttpStatus.NOT_FOUND, "404", "해당 아이템이 존재하지 않습니다."),
     NOT_FOUND_USER_ITEM_INFO(HttpStatus.NOT_FOUND, "404", "유저가 해당 아이템을 가지고 있지 않습니다."),
-    ITEM_COUNT_UNDER_ZERO_ERROR(HttpStatus.NOT_FOUND, "400", "아이템 개수는 0보다 작을 수 없습니다."),
-    NOT_ENOUGH_MONEY_ERROR(HttpStatus.NOT_FOUND, "400", "잔고가 부족합니다."),
+    ITEM_COUNT_UNDER_ZERO_ERROR(HttpStatus.BAD_REQUEST, "400", "아이템 개수는 0보다 작을 수 없습니다."),
+    NOT_ENOUGH_MONEY_ERROR(HttpStatus.BAD_REQUEST, "400", "잔고가 부족합니다."),
+    ITEM_LIMIT_EXCESS(HttpStatus.BAD_REQUEST, "400", "아이템은 24개까지 보유할 수 있습니다."),
 
     // SSE
     SSE_SEND_ERROR(HttpStatus.BAD_REQUEST, "400", "SSE 전송 오류"),

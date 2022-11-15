@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Div } from './styles';
-import WitsModal from '../../game/wit/WitsModal';
+import MemoryModal from '../../game/memory/MemoryModal';
 import { IsCover } from '../../../store/store';
 import { useRecoilValue } from 'recoil';
 import { useSetRecoilState } from 'recoil';
 
-export function WitAlert() {
+export function ShopAlert() {
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
   const [isHelp, setisHelp] = useState<boolean>(false);
-  function help() {
-    setisHelp(true);
-  }
+
   useEffect(() => {
     if (isHelp) {
       setIsCover(false);
@@ -20,14 +18,17 @@ export function WitAlert() {
     }
   }, [isHelp]);
 
+  function help() {
+    setisHelp(true);
+  }
   if (!isHelp) {
     return (
-      <Div className="witAlert">
+      <Div className="shopAlert">
         도와 주세요
         <button onClick={help}>ㅇㅋ</button>
       </Div>
     );
   } else {
-    return <WitsModal onClose={setisHelp}></WitsModal>;
+    return <MemoryModal onClose={setisHelp}></MemoryModal>;
   }
 }
