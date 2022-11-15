@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ItemAlert } from './styles';
+import { ItemAlert, Button } from './styles';
 import axios from 'axios';
 
 // import { SSantaApi } from '../../apis/ssantaApi';
@@ -8,6 +8,7 @@ import axios from 'axios';
 interface Iprops {
   item: number;
   userId: number;
+  onClose: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface Request {
@@ -16,10 +17,10 @@ interface Request {
   userId: number;
 }
 
-export default function ShopAlert(props: Iprops) {
+export default function ShopAlert(props: any) {
   // const [itemId, setItemId] = useState<number>(0);
   // const navigate = useNavigate();
-  const { item, userId } = props;
+  const { item, userId, onClose } = props;
   const [count, setCount] = useState<number>(0);
   const [data, setData] = useState<Request>();
   const TOKEN = localStorage.getItem('jwt') || '';
@@ -40,18 +41,6 @@ export default function ShopAlert(props: Iprops) {
     });
   }
 
-  // function send(event: any) {
-  //   SSantaApi.getInstance().shop(
-  //     { itemId: props[0].item, count: count, userId: userId },
-  //     {
-  //       onSuccess(data) {
-  //         setUserMoney({ money: data.money });
-  //       },
-  //       navigate,
-  //     },
-  //   );
-  // }
-
   function changeCount(event: any) {
     setCount(event.target.value);
   }
@@ -68,7 +57,8 @@ export default function ShopAlert(props: Iprops) {
     <ItemAlert className="alert">
       {item}구매하시겠습니까?
       <input type="number" value={count} onChange={changeCount} min="0"></input>
-      <button onClick={send}>ㅇㅇ</button>
+      <Button onClick={send}>ㅇㅇ</Button>
+      {/* <Button onClick={close}>ㄴㄴ</Button> */}
     </ItemAlert>
   );
 }

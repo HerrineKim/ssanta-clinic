@@ -44,7 +44,7 @@ export default function Home() {
   const BASE_URL = API_BASE_URL;
   // 친구 모달 관리
   const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
-  console.log(ACCESS_TOKEN);
+  // console.log(ACCESS_TOKEN);
   const userId = parseInt(useRecoilValue(selectUserId));
   const [friendList, setFriendList] = useState([]);
   const [followingList, setFollowingList] = useState([]);
@@ -79,9 +79,7 @@ export default function Home() {
   //     },
   //   );
   // }, []);
-  useEffect(() => {
-    console.log('랜더링 될때마다:', money);
-  });
+
   const getCoin = () =>
     axios({
       url: `${BASE_URL}coin`,
@@ -91,7 +89,7 @@ export default function Home() {
       },
     }).then((res) => {
       setUserMoney(res.data.coin);
-      console.log(res);
+      // console.log(res);
     });
 
   //items 정보불러오기
@@ -100,25 +98,13 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
-          console.log(data);
+          // console.log(data);
           setUserItems(data.itemList);
         },
         navigate,
       },
     );
   }, []);
-
-  // const getItems = () =>
-  //   axios({
-  //     url: `${BASE_URL}coin`,
-  //     method: 'get',
-  //     headers: {
-  //       Authorization: ACCESS_TOKEN,
-  //     },
-  //   }).then((res) => {
-  //     setUserMoney(res.data.coin);
-  //     console.log(res);
-  //   });
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
   useEffect(() => {
@@ -131,11 +117,11 @@ export default function Home() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setFriendList(res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
         });
     };
     // 팔로잉 목록(api/friend/followings)
@@ -147,11 +133,11 @@ export default function Home() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setFollowingList(res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
         });
     };
     // 팔로워 목록(api/friend/followers)
@@ -163,11 +149,11 @@ export default function Home() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setFollowerList(res.data);
         })
         .catch((err) => {
-          console.log(err.response);
+          // console.log(err.response);
         });
     };
     getFriendList();
@@ -293,7 +279,12 @@ export default function Home() {
         followerList={followerList}
       ></FriendModal>
       {isClick ? (
-        <ShopAlert item={clickedItem} userId={userId}></ShopAlert>
+        <ShopAlert
+          item={clickedItem}
+          userId={userId}
+          onClose={setIsClick}
+          isClick={isClick}
+        ></ShopAlert>
       ) : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
