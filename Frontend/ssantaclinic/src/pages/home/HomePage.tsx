@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
-
+import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
@@ -18,7 +18,14 @@ import { TetrisAlert } from '../../components/main/tetrisalert/TetrisAlert';
 import { HomeAlert } from '../../components/main/homealert';
 import { LetterAlert } from '../../components/main/letter/LetterAlert';
 import axios from 'axios';
-import { FriendButton, MoneyState, ItemButton, BottomBar } from './styles';
+import {
+  FriendButton,
+  MoneyState,
+  ItemButton,
+  BottomBar,
+  TopBar,
+  LogoutButton,
+} from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
@@ -260,10 +267,15 @@ export default function Home() {
       {/* 버튼들 */}
 
       {isCover ? (
-        <MoneyState>
-          <CoinImg src="img/coin.png"></CoinImg>
-          {money}
-        </MoneyState>
+        <TopBar>
+          <MoneyState>
+            <CoinImg src="img/coin.png"></CoinImg>
+            {money}
+          </MoneyState>
+          <LogoutButton>
+            <LogoutIcon></LogoutIcon>
+          </LogoutButton>
+        </TopBar>
       ) : null}
       {isCover ? (
         <BottomBar>
