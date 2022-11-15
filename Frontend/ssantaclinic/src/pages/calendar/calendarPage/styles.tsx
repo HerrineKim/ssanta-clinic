@@ -46,7 +46,6 @@ export const CalendarPageContainer = styled.div`
   justify-content: space-around;
   height: 85vh;
   width: 90vw;
-  // background-color: skyblue;
 `;
 
 export const CalendarTitle = styled.div`
