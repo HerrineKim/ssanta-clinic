@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Wrapper, CanvasContainer } from './styled';
+import { Wrapper, CanvasContainer, CloseButton } from './styled';
 import { RoomThree } from '../../three/RoomThree';
 import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
@@ -46,14 +46,14 @@ export default function RoomModal(props: any) {
   }, []);
   return (
     <Wrapper className="roommodal">
-      <button
+      <CloseButton
         className="outbtn"
         onClick={() => {
           onClose(false);
         }}
       >
-        나가기
-      </button>
+        x
+      </CloseButton>
 
       <CalendarAlert></CalendarAlert>
       <CanvasContainer id="room-canvas">

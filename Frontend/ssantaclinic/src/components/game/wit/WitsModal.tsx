@@ -132,7 +132,7 @@ export default function WitsModal(props: any) {
           onClose(false);
         }}
       >
-        나가기
+        X
       </button>
       <div className="wit-content">
         {isResult ? (

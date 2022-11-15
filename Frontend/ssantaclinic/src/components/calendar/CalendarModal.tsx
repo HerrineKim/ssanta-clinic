@@ -15,7 +15,7 @@ import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
 // 좌측 상단
-import { CalendarTitle } from './styles';
+import { CalendarTitle, CloseButton } from './styles';
 import { MiniContainerOne } from './styles';
 import { BoxOne } from './styles';
 import { BoxTwo } from './styles';
@@ -196,14 +196,14 @@ export function CalendarModal(props: any) {
           }
           renderer={renderer}
         />
-        <button
+        <CloseButton
           className="outbtn"
           onClick={() => {
             onClose(false);
           }}
         >
-          나가기
-        </button>
+          x
+        </CloseButton>
       </TopContainer>
       <CalendarPageContainer>
         {/* 녹음 불러오는 버튼

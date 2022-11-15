@@ -484,7 +484,7 @@ export default function MemoryModal(props: any) {
           onClose(false);
         }}
       >
-        나가기
+        X
       </button>
       <div className="memory-header">
         <div className="memory-round">Round {displayRound}</div>
