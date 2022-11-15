@@ -54,7 +54,15 @@ public class StoreServiceImpl implements StoreService{
 
         // 1-1. 현재 로그인한 user와 사려는 user가 다르면 error 반환
 
-
+        // 사려는 개수 + 내가 가진 아이템 개수 > 24 이면 error
+        List<UserItemBox> userItemBoxList = userItemBoxRepository.findAllByUser_UserId(userId);
+        int userItemCnt = 0;
+        for (var item : userItemBoxList) {
+            userItemCnt += item.getCount();
+        }
+        if(count + userItemCnt > 24) {
+            throw new CustomException(ErrorCode.ITEM_LIMIT_EXCESS);
+        }
         // 2. 아이템 개당 가격을 가져와서 회원 잔고를 갱신 -(count * price)
         Item item = itemRepository.getItemByItemId(itemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ITEM_INFO));
