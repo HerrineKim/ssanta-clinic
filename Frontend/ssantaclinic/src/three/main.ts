@@ -154,24 +154,6 @@ export class MainCanvas {
     this.resize();
   }
 
-  render(time: number) {
-    // console.log('!!!!');
-    if (this._scenenumber === 1) {
-      // console.log(this._camera.position);
-      this._renderer.render(this._scene, this._camera);
-      this.update(time);
-      // console.log('!');
-
-      requestAnimationFrame(this.render.bind(this));
-    } else {
-      // inven scene
-      this._renderer.render(this._scene2, this._camera);
-      this.update2(time);
-
-      requestAnimationFrame(this.render.bind(this));
-    }
-  }
-
   update2(time: number) {
     time *= 0.001;
     // console.log('updaete2');
