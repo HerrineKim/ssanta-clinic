@@ -78,6 +78,7 @@ export default function Home() {
       { userId: userId },
       {
         onSuccess(data) {
+          console.log(data);
           setUserItems({ items: data.items });
         },
         navigate,

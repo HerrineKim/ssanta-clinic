@@ -1129,6 +1129,12 @@ export class MainCanvas {
     const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
     this._scene.add(ambientLight);
 
+    // const spotLight = new THREE.SpotLight(0xffffff);
+    // spotLight.position.set(-60, 0, 0);
+    // this._scene.add(spotLight);
+
+    // const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    // this._scene.add(spotLightHelper);
     // this._addPointLight(50, 20, 50, 0xff0000);
     // this._addPointLight(-50, 20, 50, 0xffff00);
     // this._addPointLight(-50, 20, -50, 0x00ff00);
