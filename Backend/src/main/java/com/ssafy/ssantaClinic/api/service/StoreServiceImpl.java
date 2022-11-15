@@ -129,4 +129,14 @@ public class StoreServiceImpl implements StoreService{
                 .itemList(itemList)
                 .build();
     }
+
+    @Override
+    public List<StoreResponse.UserItemList2Response> getUserItemList2(int userId) {
+        // 존재하는 회원인지 확인
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+
+        return userItemBoxRepository.findAllByUser_UserId(userId).stream().map(StoreResponse.UserItemList2Response::new)
+                .collect(Collectors.toList());
+    }
 }
