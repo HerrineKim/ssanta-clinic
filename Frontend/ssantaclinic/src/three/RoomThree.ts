@@ -9,6 +9,13 @@ import gsap from 'gsap';
 
 import axios from 'axios';
 
+interface Item {
+  itemImg: string;
+  price: string;
+  // 아이템이름??
+  nickname: string;
+}
+
 export class RoomThree {
   _divContainer: any;
   _renderer: any;
@@ -287,10 +294,11 @@ export class RoomThree {
       // console.log('item:', item);
       // console.log(index);
       if (item !== 0) {
-        loader.load(`/main/${item}.glb`, (gltf) => {
+        loader.load(`/items/${item}.glb`, (gltf) => {
           count += 1;
           // console.log(index);
           const model = gltf.scene;
+          console.log(model);
           // console.log(`${index}: `, model);
           model.scale.set(0.01, 0.01, 0.01);
           const position = this._position[`${index}`];
@@ -573,7 +581,7 @@ export class RoomThree {
     });
     setTimeout(() => {
       //showcase만 add하게 로딩 시간에 따라 순서변경
-      this._scene2.add(object3d[0]);
+      this._scene2.add(this._showcase);
       this._scene2.add(...this._items);
       this._scene2.add(this._close);
       this._scene2.add(this._check);
@@ -594,8 +602,8 @@ export class RoomThree {
     // const raycaster = this._raycaster;
 
     items.forEach((child: any, index: any) => {
-      // console.log('item child:', child);
-      child.name = index;
+      console.log('item child:', child);
+      // child.name = index;
       const controls = new DragControls(
         [child],
         this._camera,
