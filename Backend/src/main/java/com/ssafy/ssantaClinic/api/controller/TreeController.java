@@ -84,10 +84,10 @@ public class TreeController {
             @ApiResponse(code = 200, message = "조회 성공"),
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
-    @GetMapping
+    @GetMapping("/{userId}")
     public ResponseEntity<TreeResponse.GetTreeResponse> getTreeInfo(@PathVariable int userId) {
         /**
-         * @Method Name : getMyTree
+         * @Method Name : getTreeInfo
          * @Method 설명 : 트리 주소 전송
          */
         return ResponseEntity.ok()

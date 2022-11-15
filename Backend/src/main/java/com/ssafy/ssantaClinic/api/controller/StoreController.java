@@ -57,15 +57,15 @@ public class StoreController {
         return  ResponseEntity.ok().body(storeService.getUserItemList(userId));
     }
 
-    @ApiOperation(value = "개인 아이템 조회", notes="개인이 보유하고 있는 아이템 목록 조회", httpMethod = "GET")
-    @GetMapping("/items/list")
-    public ResponseEntity<List<StoreResponse.UserItemList2Response>> getUserItemList2() {
-        /**
-         * @Method Name : getUserItemList2
-         * @Method 설명 : 개인이 보유하고 있는 아이템 목록을 조회한다.
-         */
-        // 현재 로그인한 유저의 아이디 가져오기
-        int userId = JwtUtil.getCurrentUserId();
-        return  ResponseEntity.ok().body(storeService.getUserItemList2(userId));
-    }
+//    @ApiOperation(value = "개인 아이템 조회", notes="개인이 보유하고 있는 아이템 목록 조회", httpMethod = "GET")
+//    @GetMapping("/items/list")
+//    public ResponseEntity<List<StoreResponse.UserItemList2Response>> getUserItemList2() {
+//        /**
+//         * @Method Name : getUserItemList2
+//         * @Method 설명 : 개인이 보유하고 있는 아이템 목록을 조회한다.
+//         */
+//        // 현재 로그인한 유저의 아이디 가져오기
+//        int userId = JwtUtil.getCurrentUserId();
+//        return  ResponseEntity.ok().body(storeService.getUserItemList2(userId));
+//    }
 }
