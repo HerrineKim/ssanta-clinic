@@ -1,5 +1,7 @@
 package com.ssafy.ssantaClinic.api.response;
 
+import com.ssafy.ssantaClinic.common.exception.CustomException;
+import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,5 +13,21 @@ import java.util.List;
 @Data
 @Builder
 public class TreeResponse {
-    private List<String> tree;
+    private TreeResponse() {
+        throw new CustomException(ErrorCode.UTILITY_CLASS_ERROR);
+    }
+
+    @Data
+    @Builder
+    public static class GetTreeListResponse {
+        private List<String> tree;
+
+    }
+
+    @Data
+    @Builder
+    public static class GetTreeResponse {
+        private String tree;
+
+    }
 }
