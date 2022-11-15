@@ -59,6 +59,7 @@ export default function Home() {
 
   const setUserItems = useSetRecoilState(MyItems);
   const item = useRecoilValue(MyItems);
+  const [cost, setCost] = useState<number>(0);
 
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
@@ -192,6 +193,14 @@ export default function Home() {
       setIsCover(false);
     }
   }, [scenenumber]);
+  // 아이템에 따라 가격 다르게
+  useEffect(() => {
+    if (clickedItem <= 28) {
+      setCost(1000);
+    } else {
+      setCost(2000);
+    }
+  }, [clickedItem]);
 
   useEffect(() => {
     homeCanvas.setupOnce();
@@ -279,12 +288,7 @@ export default function Home() {
         followerList={followerList}
       ></FriendModal>
       {isClick ? (
-        <ShopAlert
-          item={clickedItem}
-          userId={userId}
-          onClose={setIsClick}
-          isClick={isClick}
-        ></ShopAlert>
+        <ShopAlert item={clickedItem} userId={userId} cost={cost}></ShopAlert>
       ) : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>

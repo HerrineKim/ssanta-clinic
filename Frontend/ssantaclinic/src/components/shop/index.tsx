@@ -8,7 +8,7 @@ import axios from 'axios';
 interface Iprops {
   item: number;
   userId: number;
-  onClose: React.Dispatch<React.SetStateAction<boolean>>;
+  cost: number;
 }
 
 interface Request {
@@ -17,10 +17,11 @@ interface Request {
   userId: number;
 }
 
-export default function ShopAlert(props: any) {
+export default function ShopAlert(props: Iprops) {
   // const [itemId, setItemId] = useState<number>(0);
   // const navigate = useNavigate();
-  const { item, userId, onClose } = props;
+
+  const { item, userId, cost } = props;
   const [count, setCount] = useState<number>(0);
   const [data, setData] = useState<Request>();
   const TOKEN = localStorage.getItem('jwt') || '';
@@ -55,9 +56,9 @@ export default function ShopAlert(props: any) {
 
   return (
     <ItemAlert className="alert">
-      {item}구매하시겠습니까?
+      {item}구매하시겠습니까? 개당 {cost}입니다.
       <input type="number" value={count} onChange={changeCount} min="0"></input>
-      <Button onClick={send}>ㅇㅇ</Button>
+      <Button onClick={send}>구매!</Button>
       {/* <Button onClick={close}>ㄴㄴ</Button> */}
     </ItemAlert>
   );
