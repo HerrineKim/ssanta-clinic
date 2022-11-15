@@ -47,12 +47,11 @@ public class TreeServiceImpl implements TreeService{
     }
 
     @Override
-    public String getMyTree(int userId) {
+    public String getTreeInfo(int userId) {
         // 유저 검색
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-        if(user.getTreeUrl().isBlank())
-            throw new CustomException(ErrorCode.TREE_URL_NOT_FOUND);
-        return user.getTreeUrl();
+        String treeUrl = user.getTreeUrl().isBlank() ? "" : user.getTreeUrl();
+        return treeUrl;
     }
 }
