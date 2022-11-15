@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
 import { MainCanvas } from '../../three/main';
@@ -165,18 +165,27 @@ export default function Home() {
   const items = [1, 2, 3, 1, 1, 2, 3, 1, 2, 3];
   // const scenenumber = homeCanvas._scenenumber;
   // console.log('scenenumber:', scenenumber);
-  const homeCanvas = new MainCanvas(items, userId);
+  // const homeCanvas = new MainCanvas(items, userId);
   console.log('home');
+  const homeCanvas = new MainCanvas(items, userId);
+  const scenenumber = homeCanvas._scenenumber;
   useEffect(() => {
-    const homeCanvas = new MainCanvas(items, userId);
-
+    homeCanvas.setupOnce();
     const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
 
     return () => {
       cancelAnimationFrame(requestId);
       console.log('canvas 끝!');
     };
+  }, [scenenumber]);
+
+  const num = useCallback(() => {
+    homeCanvas.scene();
   }, []);
+  setInterval(() => {
+    console.log(num);
+  }, 500);
+  console.log(num);
 
   // const alert = useRef<HTMLDivElement>(null);
   // useEffect(() => {

@@ -115,10 +115,9 @@ export class MainCanvas {
     this._letter = [];
     this._home = [];
     this._showcase = [];
+  }
 
-    // const divContainer = document.querySelector('#webgl-container');
-    // this._divContainer = divContainer;
-    // console.log('constructor');
+  setupOnce() {
     const canvasContainer = document.querySelector('#main-canvas');
     this._canvasContainer = canvasContainer;
 
