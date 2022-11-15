@@ -175,29 +175,36 @@ export default function Home() {
 
   // 친구 검색: 추후 구현
 
-  console.log('home');
   const homeCanvas = new MainCanvas(userId);
-  // let scenenumber = 1;
-  // const runCanvas = (time: number) => {
-  //   homeCanvas.render(time).bind(homeCanvas);
-  //   scenenumber = homeCanvas._scenenumber;
-  // };
 
-  // test
-  // const [scenenumber, setSceneNumber] = useState<number>(
-  //   homeCanvas._scenenumber,
-  // );
-  // useEffect(() => {
-  //   console.log(scenenumber);
-  // }, [scenenumber]);
+  const [scenenumber, setSceneNumber] = useState<number>(1);
 
-  // setInterval(() => {
-  //   setSceneNumber(homeCanvas._scenenumber);
-  // }, 500);
+  const render = (time: number) => {
+    setSceneNumber(homeCanvas._scenenumber);
+
+    if (homeCanvas._scenenumber === 1) {
+      // console.log(this._camera.position);
+      homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
+      homeCanvas.update(time);
+      // console.log('!');
+
+      requestAnimationFrame(render);
+    } else {
+      // inven scene
+      homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
+      homeCanvas.update2(time);
+
+      requestAnimationFrame(render);
+    }
+  };
+
+  useEffect(() => {
+    console.log(scenenumber);
+  }, [scenenumber]);
 
   useEffect(() => {
     homeCanvas.setupOnce();
-    const requestId = requestAnimationFrame(homeCanvas.render.bind(homeCanvas));
+    const requestId = requestAnimationFrame(render);
 
     return () => {
       cancelAnimationFrame(requestId);
