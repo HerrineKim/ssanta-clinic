@@ -298,6 +298,7 @@ export class RoomThree {
           count += 1;
           // console.log(index);
           const model = gltf.scene;
+          console.log(model);
           // console.log(`${index}: `, model);
           model.scale.set(0.01, 0.01, 0.01);
           const position = this._position[`${index}`];
@@ -601,8 +602,8 @@ export class RoomThree {
     // const raycaster = this._raycaster;
 
     items.forEach((child: any, index: any) => {
-      // console.log('item child:', child);
-      child.name = index;
+      console.log('item child:', child);
+      // child.name = index;
       const controls = new DragControls(
         [child],
         this._camera,
