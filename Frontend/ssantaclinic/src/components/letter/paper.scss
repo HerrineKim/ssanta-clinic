@@ -1,0 +1,26 @@
+.paper {
+  --lines: #1d97b8;
+  width: 30%;
+  height: 800px;
+  background-color: #fff;
+  background-image: linear-gradient(var(--lines) 0.05em, transparent 0.05em);
+  background-size: 100% 2em;
+  position: relative;
+  box-shadow: 15px 15px 33px rgba(27, 27, 27, 0.1);
+
+  textarea {
+    position: absolute;
+    top: 6rem;
+    left: 4rem;
+    width: calc(100% - 5rem);
+    height: calc(100% - 7rem);
+    background-color: transparent;
+    border: none;
+    font-family: 'Comic Sans';
+    font-size: 2rem;
+    line-height: 1;
+    padding-left: 1rem;
+    margin: 0;
+    resize: none;
+  }
+}

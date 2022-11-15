@@ -3,7 +3,7 @@ import { WriteLetter } from '../../components/letter/WriteLetter';
 import { Wrapper, CanvasContainer, LetterPageContainer } from './styles';
 import { LetterWriteModel } from '../../three/LetterWrite';
 import { Button } from './styles';
-
+import { motion } from 'framer-motion';
 export const WriteLetterPage = (props: any) => {
   const { onBack, goList } = props;
   useEffect(() => {
@@ -23,6 +23,9 @@ export const WriteLetterPage = (props: any) => {
       <LetterPageContainer id="letter-container">
         <WriteLetter />
         <Button
+          as={motion.button}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           id="write-back-button"
           onClick={() => {
             onBack(false);
