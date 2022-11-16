@@ -67,8 +67,10 @@ export function BoxCreate(props: BoxCreateProps) {
     setCreatedAt(dateString);
     // 쿼리 스트링에서 receiverId 가져오기
     const url = window.location.href;
-    const receiverId = url.split('=')[1];
-    setReceiver(receiverId);
+    // otherroom/숫자
+    const receiver = url.split('/')[4];
+    setReceiver(receiver);
+    console.log(receiver);
   }, []);
 
   const sendBox = (e: any) => {
@@ -118,6 +120,8 @@ export function BoxCreate(props: BoxCreateProps) {
         props.setBoxCreateOpen(false);
       })
       .catch((err) => {
+        console.log(userId);
+        console.log(receiver);
         console.log(err);
         alert('오류가 발생했습니다. 다시 시도해주세요.');
       });

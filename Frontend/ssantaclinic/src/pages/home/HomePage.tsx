@@ -140,53 +140,7 @@ export default function Home() {
   // }, []);
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
-  // const getFriendList = () => {
-  //   axios
-  //     .get('http://localhost:8080/api/friend/recommend', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log(res.data);
-  //       setFriendList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // console.log(err.response);
-  //     });
-  // };
-  // // 팔로잉 목록(api/friend/followings)
-  // const getFollowingList = () => {
-  //   axios
-  //     .get('http://localhost:8080/api/friend/followings', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log(res.data);
-  //       setFollowingList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // console.log(err.response);
-  //     });
-  // };
-  // // 팔로워 목록(api/friend/followers)
-  // const getFollowerList = () => {
-  //   axios
-  //     .get('http://localhost:8080/api/friend/followers', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log(res.data);
-  //       setFollowerList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // console.log(err.response);
-  //     });
-  // };
+
   useEffect(() => {
     let requestId: number;
     axios
@@ -301,7 +255,7 @@ export default function Home() {
 
   return (
     <Div>
-      {/* <div
+      <div
         style={{
           position: 'fixed',
           bottom: 0,
@@ -309,7 +263,7 @@ export default function Home() {
         }}
       >
         <YouTube videoId="8MhtzapYzGo" opts={opts} />
-      </div> */}
+      </div>
       {/* 모달들 */}
       {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
