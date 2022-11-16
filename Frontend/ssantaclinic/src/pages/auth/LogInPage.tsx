@@ -30,13 +30,9 @@ export const LogInPage = () => {
     const requestId1 = requestAnimationFrame(
       test1Canvas.render.bind(test1Canvas),
     );
-    // const requestId2 = requestAnimationFrame(
-    //   test1Canvas.render2.bind(test1Canvas),
-    // );
 
     return () => {
       cancelAnimationFrame(requestId1);
-      // cancelAnimationFrame(requestId2);
     };
   }, []);
   if (isLogin && !isHome) {

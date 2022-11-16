@@ -3,15 +3,16 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FindPasswordContainer, FindPasswordForm } from './styles';
-
+import { API_BASE_URL } from '../../apis/url';
 export default function FindPassword() {
+  const BASE_URL = API_BASE_URL;
   const [email, setEmail] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     setIsValid(true);
     axios
-      .post('http://localhost:8080' + 'api/user/find/password', {
+      .post(BASE_URL + 'api/user/find/password', {
         email: email,
       })
       .then((res) => {
@@ -25,9 +26,9 @@ export default function FindPassword() {
   };
   function sendUrl(UUID: string) {
     axios
-      .post('http://localhost:8080' + 'api/user/find/password/url', {
+      .post(BASE_URL + 'api/user/find/password/url', {
         email: email,
-        url: 'http://localhost:8080' + '/changepassword/' + UUID,
+        url: BASE_URL + '/changepassword/' + UUID,
       })
       .then((res) => {
         confirm('이메일을 확인하세요');
