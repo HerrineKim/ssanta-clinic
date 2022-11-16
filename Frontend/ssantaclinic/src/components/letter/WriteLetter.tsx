@@ -41,6 +41,7 @@ export const WriteLetter = () => {
       )
       .then((res) => {
         console.log('응답 받아옴 성공!', res.data);
+        // LetterList로 가는 코드 추가
       })
       .catch((err) => {
         console.log(err.resonse);
