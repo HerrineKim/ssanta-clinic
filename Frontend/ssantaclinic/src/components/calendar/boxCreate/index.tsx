@@ -46,7 +46,6 @@ export function BoxCreate(props: BoxCreateProps) {
   const [createdAt, setCreatedAt] = useState<string>('');
   const [receiver, setReceiver] = useState<string>('');
   const [day, setDay] = useState<number>(1);
-  const userId = useRecoilValue(selectUserId);
 
   // 자동으로 현재 날짜 및 시간 yyyy-mm-dd hh:mm:ss 형태로 가져오기
   useEffect(() => {
@@ -67,8 +66,10 @@ export function BoxCreate(props: BoxCreateProps) {
     setCreatedAt(dateString);
     // 쿼리 스트링에서 receiverId 가져오기
     const url = window.location.href;
-    const receiverId = url.split('=')[1];
-    setReceiver(receiverId);
+    // otherroom/숫자
+    const receiver = url.split('/')[4];
+    setReceiver(receiver);
+    console.log(receiver);
   }, []);
 
   const sendBox = (e: any) => {
@@ -107,7 +108,7 @@ export function BoxCreate(props: BoxCreateProps) {
       },
       data: boxFormData,
       params: {
-        userId: userId,
+        userId: receiver,
         day: day,
       },
     };
@@ -191,6 +192,7 @@ export function BoxCreate(props: BoxCreateProps) {
                   <RecordSaveButton
                     onClick={() => {
                       // Url을 File로 변환하여 저장
+
                       if (mediaBlobUrl) {
                         fetch(mediaBlobUrl)
                           .then((res) => res.blob())
