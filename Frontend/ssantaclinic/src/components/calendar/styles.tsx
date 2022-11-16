@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const PresentButton = styled.button`
-  min-width: 120px;
+  min-width: 130px;
   font-family: 'Cafe24Ssurround';
   background-color: #fbeee0;
   border: 2px solid #422800;
