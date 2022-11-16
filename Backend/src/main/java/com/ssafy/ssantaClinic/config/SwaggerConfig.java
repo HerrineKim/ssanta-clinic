@@ -17,7 +17,7 @@ import java.util.List;
 
 //swagger address : http://localhost:8080/api/swagger-ui/#/
 // https://j7a105.p.ssafy.io:8080/swagger-ui/#/
-
+@Configuration
 @EnableSwagger2
 public class SwaggerConfig {
     @Bean
