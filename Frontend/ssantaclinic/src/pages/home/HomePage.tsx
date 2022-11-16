@@ -147,53 +147,7 @@ export default function Home() {
   // }, []);
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
-  // const getFriendList = () => {
-  //   axios
-  //     .get('http://localhost:8080/api/friend/recommend', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log(res.data);
-  //       setFriendList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // console.log(err.response);
-  //     });
-  // };
-  // // 팔로잉 목록(api/friend/followings)
-  // const getFollowingList = () => {
-  //   axios
-  //     .get('http://localhost:8080/api/friend/followings', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log(res.data);
-  //       setFollowingList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // console.log(err.response);
-  //     });
-  // };
-  // // 팔로워 목록(api/friend/followers)
-  // const getFollowerList = () => {
-  //   axios
-  //     .get('http://localhost:8080/api/friend/followers', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       // console.log(res.data);
-  //       setFollowerList(res.data);
-  //     })
-  //     .catch((err) => {
-  //       // console.log(err.response);
-  //     });
-  // };
+
   useEffect(() => {
     let requestId: number;
     axios
@@ -308,17 +262,19 @@ export default function Home() {
 
   return (
     <Div>
-      {/* <div
+      {/* render after three seconds */}
+      <div
+        // 메인화면 유튜브 BGM 제거/수정하고 싶으면 여기서!
         style={{
           position: 'fixed',
-          bottom: 0,
+          bottom: -3,
           left: 0,
+          zIndex: 1000,
         }}
       >
-        <YouTube videoId="8MhtzapYzGo" opts={opts} />
-      </div> */}
+        <YouTube videoId="yyQL24ZMMjg" opts={opts} />
+      </div>
       {/* 모달들 */}
-      {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
       <TetrisAlert></TetrisAlert>
