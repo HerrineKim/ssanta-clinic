@@ -43,6 +43,7 @@ export default function ShopAlert(props: Iprops) {
 
   function send(event: any) {
     if (isMoneyPossible && isItemPossible) {
+      setIsBuy(true);
       axios({
         url: `${BASE_URL}store/buy`,
         method: 'post',
@@ -52,6 +53,8 @@ export default function ShopAlert(props: Iprops) {
         },
       }).then((res) => {
         console.log(res);
+        setIsBuy(false);
+        setUserMoney(res.data.money);
       });
     }
   }
@@ -81,6 +84,7 @@ export default function ShopAlert(props: Iprops) {
 
   return (
     <ItemAlert className="alert">
+      {isBuy ? <span>구매중</span> : null}
       <span>{item}구매하시겠습니까?</span>
       <span>개당 {cost}입니다.</span>
       <input type="number" value={count} onChange={changeCount} min="0"></input>
