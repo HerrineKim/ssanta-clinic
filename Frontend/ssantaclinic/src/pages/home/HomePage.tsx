@@ -8,7 +8,7 @@ import React, {
 import YouTube, { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
+import { CoinImg, Div, ModalDiv, ShopDiv, ShopTalk } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
@@ -328,7 +328,9 @@ export default function Home() {
           </FriendButton>
         </BottomBar>
       ) : null}
-
+      {scenenumber === 2 ? (
+        <ShopTalk>사고 싶은 아이템을 클릭하세요.</ShopTalk>
+      ) : null}
       <FriendModal
         isModal={isModal}
         setIsModal={setIsModal}

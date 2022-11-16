@@ -365,7 +365,7 @@ export class MainCanvas {
       const targets = this._raycaster.intersectObject(this._model);
       if (arrowTarget.length > 0) {
         this._isShop = true;
-        this._scenenumber = 2;
+
         this._zoomInven(this._showcase, 70);
 
         return;
