@@ -62,9 +62,9 @@ import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
 
 export function CalendarModal(props: any) {
+  const [boxNums, setBoxNums] = useState<number[]>([]);
   useEffect(() => {
-    // 현재 url 가져오기
-    const url = window.location.href;
+    // 캘린더 날짜 별 개수 가져오기(api/calendar/)
   }, []);
   const { onClose } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
