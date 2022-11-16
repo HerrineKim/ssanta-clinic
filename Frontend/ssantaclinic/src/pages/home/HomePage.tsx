@@ -71,6 +71,8 @@ export default function Home() {
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
 
+  const [randomTrees, setRandomTrees] = useState<string[]>([]);
+
   const navigate = useNavigate();
 
   const resetMoney = useResetRecoilState(Money);
@@ -115,106 +117,110 @@ export default function Home() {
   //     });
   // };
 
-  // money 정보 불러오기
+  const instance = axios.create({
+    baseURL: `${BASE_URL}`,
+    headers: {
+      Authorization: ACCESS_TOKEN,
+    },
+  });
+
+  //items 정보불러오기
   // useEffect(() => {
-  //   SSantaApi.getInstance().money(
+  //   SSantaApi.getInstance().items(
   //     { userId: userId },
   //     {
   //       onSuccess(data) {
-  //         console.log(data);
-  //         setUserMoney({ money: data.money });
-  //         console.log(money);
+  //         // console.log(data);
+  //         setUserItems(data.itemList);
   //       },
   //       navigate,
   //     },
   //   );
   // }, []);
 
-  const getCoin = () =>
-    axios({
-      url: `${BASE_URL}coin`,
-      method: 'get',
-      headers: {
-        Authorization: ACCESS_TOKEN,
-      },
-    }).then((res) => {
-      setUserMoney(res.data.coin);
-      // console.log(res);
-    });
-
-  //items 정보불러오기
-  useEffect(() => {
-    SSantaApi.getInstance().items(
-      { userId: userId },
-      {
-        onSuccess(data) {
-          // console.log(data);
-          setUserItems(data.itemList);
-        },
-        navigate,
-      },
-    );
-  }, []);
-
   const [isLetter, setIsLetter] = useState<boolean>(false);
+  // const getFriendList = () => {
+  //   axios
+  //     .get('http://localhost:8080/api/friend/recommend', {
+  //       headers: {
+  //         Authorization: ACCESS_TOKEN,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       // console.log(res.data);
+  //       setFriendList(res.data);
+  //     })
+  //     .catch((err) => {
+  //       // console.log(err.response);
+  //     });
+  // };
+  // // 팔로잉 목록(api/friend/followings)
+  // const getFollowingList = () => {
+  //   axios
+  //     .get('http://localhost:8080/api/friend/followings', {
+  //       headers: {
+  //         Authorization: ACCESS_TOKEN,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       // console.log(res.data);
+  //       setFollowingList(res.data);
+  //     })
+  //     .catch((err) => {
+  //       // console.log(err.response);
+  //     });
+  // };
+  // // 팔로워 목록(api/friend/followers)
+  // const getFollowerList = () => {
+  //   axios
+  //     .get('http://localhost:8080/api/friend/followers', {
+  //       headers: {
+  //         Authorization: ACCESS_TOKEN,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       // console.log(res.data);
+  //       setFollowerList(res.data);
+  //     })
+  //     .catch((err) => {
+  //       // console.log(err.response);
+  //     });
+  // };
   useEffect(() => {
-    // 추천 친구 목록 불러오기(api/friend/recommend)
-    const getFriendList = () => {
-      axios
-        .get('http://localhost:8080/api/friend/recommend', {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setFriendList(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-        });
+    let requestId: number;
+    axios
+      .all([
+        getCoin(),
+        getTree(),
+        getItems(),
+        getFriendList(),
+        getFollowerList(),
+        getFollowingList(),
+      ])
+      .then(
+        axios.spread((res1, res2, res3, res4, res5, res6) => {
+          setUserMoney(res1.data.coin);
+          setRandomTrees(res2.data.tree);
+          setUserItems(res3.data.itemList);
+          setFriendList(res4.data);
+          setFollowerList(res5.data);
+          setFollowingList(res6.data);
+          console.log(res1, res2, res3, res4, res5, res6);
+          homeCanvas = new MainCanvas(userId, res2.data.tree);
+
+          homeCanvas.setupOnce();
+          requestId = requestAnimationFrame(render);
+          console.log(randomTrees);
+        }),
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+    return () => {
+      cancelAnimationFrame(requestId);
+      console.log('canvas 끝!');
     };
-    // 팔로잉 목록(api/friend/followings)
-    const getFollowingList = () => {
-      axios
-        .get('http://localhost:8080/api/friend/followings', {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setFollowingList(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-        });
-    };
-    // 팔로워 목록(api/friend/followers)
-    const getFollowerList = () => {
-      axios
-        .get('http://localhost:8080/api/friend/followers', {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setFollowerList(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-        });
-    };
-    getFriendList();
-    getFollowingList();
-    getFollowerList();
-    getCoin();
   }, []);
-
-  // 친구 검색: 추후 구현
-
-  const homeCanvas = new MainCanvas(userId);
 
   const render = (time: number) => {
     setSceneNumber(homeCanvas._scenenumber);
@@ -237,6 +243,32 @@ export default function Home() {
     }
   };
 
+  function getCoin() {
+    return instance.get('/coin');
+  }
+  function getTree() {
+    return instance.get('tree');
+  }
+  function getItems() {
+    return instance.get(`/store/items/${userId}`);
+  }
+
+  function getFriendList() {
+    return instance.get('friend/recommend');
+  }
+
+  function getFollowingList() {
+    return instance.get('friend/followings');
+  }
+
+  function getFollowerList() {
+    return instance.get('friend/followers');
+  }
+
+  let homeCanvas: any;
+
+  // 친구 검색: 추후 구현
+
   useEffect(() => {
     if (scenenumber === 2) {
       setIsCover(false);
@@ -250,16 +282,6 @@ export default function Home() {
       setCost(2000);
     }
   }, [clickedItem]);
-
-  useEffect(() => {
-    homeCanvas.setupOnce();
-    const requestId = requestAnimationFrame(render);
-
-    return () => {
-      cancelAnimationFrame(requestId);
-      console.log('canvas 끝!');
-    };
-  }, []);
 
   // bgm
   const opts: YouTubeProps['opts'] = {
@@ -275,12 +297,7 @@ export default function Home() {
       modestbranding: 1,
     },
   };
-  // setInterval(() => {
-  //   console.log(homeCanvas._isShop);
-  // }, 1000);
-  // useEffect(() => {
-  //   console.log(scenenumber);
-  // }, [scenenumber]);
+
   return (
     <Div>
       {/* <div
