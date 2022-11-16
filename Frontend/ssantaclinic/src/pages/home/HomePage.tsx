@@ -256,16 +256,17 @@ export default function Home() {
   return (
     <Div>
       <div
+        // 메인화면 유튜브 BGM 제거/수정하고 싶으면 여기서!
         style={{
           position: 'fixed',
-          bottom: 0,
+          bottom: -3,
           left: 0,
+          zIndex: 1000,
         }}
       >
-        <YouTube videoId="8MhtzapYzGo" opts={opts} />
+        <YouTube videoId="yyQL24ZMMjg" opts={opts} />
       </div>
       {/* 모달들 */}
-      {/* 친구 모달 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
       <TetrisAlert></TetrisAlert>
