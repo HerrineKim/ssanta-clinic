@@ -317,3 +317,39 @@ transform: translate(2px, 2px);
   min-width: 40px;
   padding: 0 20px;
 }`;
+
+export const ShopTalk = styled.div`
+  z-index: 4;
+  position: fixed;
+  margin: auto;
+  left: 40%;
+  bottom: 50px;
+  height: 150px;
+  width: 370px;
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  display: flex;
+  align-items:center;
+  
+  font-weight: 600;
+  font-size: 1.5rem;
+  padding: 0 18px;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  font-family: 'Cafe24Ssurround';
+  }
+
+
+
+  @media (min-width: 768px) {
+  {
+    min-width: 40px;
+    padding: 0 20px;
+  }
+`;

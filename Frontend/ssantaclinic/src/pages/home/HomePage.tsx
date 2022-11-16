@@ -8,7 +8,7 @@ import React, {
 import YouTube, { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
+import { CoinImg, Div, ModalDiv, ShopDiv, ShopTalk } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
@@ -65,6 +65,7 @@ export default function Home() {
   const [scenenumber, setSceneNumber] = useState<number>(1);
   const [clickedItem, setClickedItem] = useState<number>(0);
   const [isClick, setIsClick] = useState<boolean>(false);
+  const [isShop, setIsShop] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -72,7 +73,7 @@ export default function Home() {
   const setUserItems = useSetRecoilState(MyItems);
   const item = useRecoilValue(MyItems);
   const [cost, setCost] = useState<number>(0);
-
+  const [isCancle, setIsCancel] = useState<boolean>(false);
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
 
@@ -185,10 +186,11 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
+    console.log(homeCanvas._isItemClick);
     setSceneNumber(homeCanvas._scenenumber);
-    setIsClick(homeCanvas._isItemClick);
-    setClickedItem(homeCanvas._clickedItem);
 
+    setClickedItem(homeCanvas._clickedItem);
+    setIsShop(homeCanvas._isShop);
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
@@ -200,7 +202,11 @@ export default function Home() {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
       homeCanvas.update2(time);
-
+      if (isCancle) {
+        setIsClick(false);
+      } else {
+        setIsClick(homeCanvas._isItemClick);
+      }
       requestAnimationFrame(render);
     }
   };
@@ -234,6 +240,8 @@ export default function Home() {
   useEffect(() => {
     if (scenenumber === 2) {
       setIsCover(false);
+    } else {
+      setIsCover(true);
     }
   }, [scenenumber]);
   // 아이템에 따라 가격 다르게
@@ -285,7 +293,7 @@ export default function Home() {
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
 
-      {isCover ? (
+      {isShop || isCover ? (
         <TopBar>
           <MoneyState>
             <CoinImg src="img/coin.png"></CoinImg>
@@ -324,7 +332,9 @@ export default function Home() {
           </FriendButton>
         </BottomBar>
       ) : null}
-
+      {scenenumber === 2 ? (
+        <ShopTalk>사고 싶은 아이템을 클릭하세요.</ShopTalk>
+      ) : null}
       <FriendModal
         isModal={isModal}
         setIsModal={setIsModal}
@@ -334,7 +344,12 @@ export default function Home() {
       ></FriendModal>
       <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
       {isClick ? (
-        <ShopAlert item={clickedItem} userId={userId} cost={cost}></ShopAlert>
+        <ShopAlert
+          item={clickedItem}
+          userId={userId}
+          cost={cost}
+          onClose={setIsCancel}
+        ></ShopAlert>
       ) : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
