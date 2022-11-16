@@ -65,6 +65,7 @@ export default function Home() {
   const [scenenumber, setSceneNumber] = useState<number>(1);
   const [clickedItem, setClickedItem] = useState<number>(0);
   const [isClick, setIsClick] = useState<boolean>(false);
+  const [isShop, setIsShop] = useState<Boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -188,6 +189,7 @@ export default function Home() {
     setSceneNumber(homeCanvas._scenenumber);
     setIsClick(homeCanvas._isItemClick);
     setClickedItem(homeCanvas._clickedItem);
+    setIsShop(homeCanvas._isShop);
 
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
@@ -287,7 +289,7 @@ export default function Home() {
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
 
-      {isCover ? (
+      {isShop || isCover ? (
         <TopBar>
           <MoneyState>
             <CoinImg src="img/coin.png"></CoinImg>
