@@ -47,57 +47,11 @@ export const LogIn = () => {
           noti: [],
           isLogin: true,
         });
-
-        // subSSE(TOKEN);
-        // setTimeout(() => {
-        //   subSSE(TOKEN);
-        // }, 660000);
-        // navigate('/test');
-        // navigate('/logintohome');
       })
       .catch((err) => {
         console.log(err.response);
       });
   };
-
-  function subSSE(TOKEN: any) {
-    console.log('알림 구독실행');
-    const eventSource = new EventSourcePolyfill(LOCAL + '/api/noti/sub', {
-      headers: {
-        Authorization: TOKEN,
-      },
-      heartbeatTimeout: 900000,
-    });
-
-    console.log(eventSource.readyState);
-    eventSource.addEventListener('open', function (e: any) {
-      console.log(e, '오픈');
-    });
-    eventSource.addEventListener('message', function (e: any) {
-      console.log(e.data, 'addevent');
-    });
-    console.log(eventSource.readyState);
-    eventSource.addEventListener('error', function (e: any) {
-      if (e.readyState == EventSource.CLOSED) {
-        // Connection was closed.
-      }
-    });
-  }
-  function getNotiList(TOKEN: any) {
-    console.log('비동기 안되냐');
-    axios
-      .get(LOCAL + '/api/noti/list', {
-        headers: {
-          Authorization: TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res, '리스트');
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }
 
   //아이디에 '@'가 포함되어 있고, 비밀번호가 5자리 이상일 때 로그인버튼이 활성화되는 기능을 구현해 보자!
   function changeButton() {

@@ -1,0 +1,45 @@
+.close {
+  display: none;
+  animation: modal-close 0.3s;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  animation: modal-show 0.3s;
+}
+
+.modal > section {
+  display: flex;
+  width: 50%;
+  min-width: 700px;
+  height: 70%;
+  min-height: 500px;
+  border-radius: 0.5rem;
+  background: #f2f2f2;
+  border: 2px solid #000;
+}
+
+
+@keyframes modal-show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-close {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
