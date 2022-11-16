@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarAlertDiv, CalendarButton } from './style';
 import { useParams } from 'react-router-dom';
-import { OtherCalendarModal } from '../../calendar/OtherCalendarModal';
+import { CalendarModal } from '../../calendar/CalendarModal';
 import axios from 'axios';
 // interface Iprops {
 //   return;
@@ -41,6 +41,6 @@ export function CalendarAlert(props: any) {
       </CalendarAlertDiv>
     );
   } else {
-    return <OtherCalendarModal onClose={setisHelp}></OtherCalendarModal>;
+    return <CalendarModal onClose={setisHelp}></CalendarModal>;
   }
 }
