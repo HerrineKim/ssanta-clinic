@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
+  overflow: hidden;
 `;
 
 export const CanvasContainer = styled.div`
@@ -12,8 +13,8 @@ export const CanvasContainer = styled.div`
 
 export const ToHomeButton = styled.button`
   position: absolute;
-  left:90%;
-  bottom: 92%;
+  right: 2%;
+  top: 1%;
   background-color: #fbeee0;
   border: 2px solid #422800;
   border-radius: 30px;
@@ -23,13 +24,13 @@ export const ToHomeButton = styled.button`
   display: inline-block;
   font-weight: 600;
   font-size: 18px;
-  padding: 0 18px;
-  line-height: 50px;
   text-align: center;
   text-decoration: none;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  font-family: 'Cafe24Ssurround';
+  
   }
 
   :hover {
@@ -43,7 +44,7 @@ export const ToHomeButton = styled.button`
 
   @media (min-width: 768px) {
   {
-    min-width: 150px;
+    min-width: 50px;
     padding: 0 25px;
   }
 `;
