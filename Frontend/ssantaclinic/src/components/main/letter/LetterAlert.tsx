@@ -5,7 +5,7 @@ import { WriteLetterPage } from '../../../pages/letter/WriteLetterPage';
 import { ReceiveLetterPage } from '../../../pages/letter/ReceiveLetterPage';
 import { motion } from 'framer-motion';
 import axios from 'axios';
-
+import { API_BASE_URL } from '../../../apis/url';
 export interface ILetters {
   title: string;
   message: string;
@@ -14,6 +14,7 @@ export interface ILetters {
   sendLetterId: number;
 }
 export function LetterAlert() {
+  const BASE_URL = API_BASE_URL;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const [isList, setIsList] = useState<boolean>(true);
   const [isWrite, setIsWrite] = useState<boolean>(false);
@@ -26,7 +27,7 @@ export function LetterAlert() {
   }, []);
   function getLetters() {
     axios
-      .get('http://localhost:8080' + '/api/letter', {
+      .get(BASE_URL + '/api/letter', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

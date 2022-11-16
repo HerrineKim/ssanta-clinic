@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ItemAlert, Button } from './styles';
 import axios from 'axios';
-
+import { API_BASE_URL } from '../../apis/url';
 // import { SSantaApi } from '../../apis/ssantaApi';
 // import { useNavigate } from 'react-router-dom';
 
@@ -18,6 +18,7 @@ interface Request {
 }
 
 export default function ShopAlert(props: Iprops) {
+  const BASE_URL = API_BASE_URL;
   // const [itemId, setItemId] = useState<number>(0);
   // const navigate = useNavigate();
 
@@ -31,7 +32,7 @@ export default function ShopAlert(props: Iprops) {
 
   function send(event: any) {
     axios({
-      url: 'http://localhost:8080/api/store/buy',
+      url: BASE_URL + '/api/store/buy',
       method: 'post',
       data: data,
       headers: {

@@ -18,8 +18,9 @@ import {
   PeopleContainer,
   SearchListContainer,
 } from './styles';
-
+import { API_BASE_URL } from '../../apis/url';
 export default function FriendModal(props: any) {
+  const BASE_URL = API_BASE_URL;
   // 크리스마스 관련 이모지 중 랜덤 이모지 선택
   const christmasEmojiList = [
     '🎄',
@@ -60,7 +61,7 @@ export default function FriendModal(props: any) {
   const handleSearch = () => {
     axios
       .post(
-        `http://localhost:8080/api/user/search`,
+        BASE_URL + `/api/user/search`,
         { nickName: searchInput },
         {
           headers: {

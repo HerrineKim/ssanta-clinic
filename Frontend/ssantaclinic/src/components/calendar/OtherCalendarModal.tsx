@@ -4,7 +4,7 @@ import './calendar.css';
 import './modalAnimation.scss';
 import { CalendarDetail } from '../calendar/calendarDetail/index';
 import { BoxCreate } from './boxCreate';
-
+import { API_BASE_URL } from '../../apis/url';
 // Recoil
 import { selectUserNickname } from '../../store/store';
 import { useRecoilValue } from 'recoil';
@@ -62,6 +62,7 @@ import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
 
 export function OtherCalendarModal(props: any) {
+  const BASE_URL = API_BASE_URL;
   useEffect(() => {
     // 현재 url 가져오기
     const url = window.location.href;
@@ -116,7 +117,7 @@ export function OtherCalendarModal(props: any) {
 
   const getBoxInfo = () => {
     axios
-      .get('http://localhost:8080/api/calendar?boxId=3', {
+      .get(BASE_URL + '/api/calendar?boxId=3', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
