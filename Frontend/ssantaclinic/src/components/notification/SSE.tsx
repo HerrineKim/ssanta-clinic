@@ -15,7 +15,7 @@ export const Test = () => {
 
   useEffect(() => {
     console.log(TOKEN);
-    const eventSource = new EventSource(LOCAL + '/api/noti/sub/' + ID, {
+    const eventSource = new EventSource(LOCAL + 'noti/sub/' + ID, {
       headers: {
         Authorization: TOKEN,
       },
@@ -60,7 +60,7 @@ export const Test = () => {
   function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
     axios
-      .get(LOCAL + '/api/noti/list/' + ID, {
+      .get(LOCAL + 'noti/list/' + ID, {
         headers: {
           Authorization: TOKEN,
         },
