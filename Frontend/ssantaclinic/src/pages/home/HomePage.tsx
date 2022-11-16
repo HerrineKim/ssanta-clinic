@@ -255,6 +255,7 @@ export default function Home() {
 
   return (
     <Div>
+      {/* render after three seconds */}
       <div
         // 메인화면 유튜브 BGM 제거/수정하고 싶으면 여기서!
         style={{
