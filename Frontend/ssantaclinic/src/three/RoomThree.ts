@@ -41,8 +41,10 @@ export class RoomThree {
   _check: any;
   _treeaddres: string;
   _isSave: boolean;
+  _clickedItem: any[];
 
   constructor(items: number[], tree: string) {
+    this._clickedItem = [];
     this._treeaddres = tree;
     this._scenenumber = 1;
     this._isTreeModal = false;
@@ -635,12 +637,12 @@ export class RoomThree {
     // console.log('tree:', this._tree);
     const positions = this._position;
     const tree = this._tree;
+    const clickedItems = this._clickedItem;
     let items = this._items;
     // console.log(items);
     // const raycaster = this._raycaster;
     console.log('setuodrag:', items);
     items.forEach((child: any, index: any) => {
-      child.name = index;
       const controls = new DragControls(
         [child],
         this._camera,
@@ -648,7 +650,7 @@ export class RoomThree {
       );
       controls.transformGroup = true;
 
-      controls.addEventListener('dragstart', function (event) {
+      controls.addEventListener('dragstart', (event) => {
         // child.position.z = 1.5;
         // 이미 걸려있는 것 처리
         const targets = controls.getRaycaster().intersectObjects(tree);
@@ -667,7 +669,11 @@ export class RoomThree {
         // 장식품이 트리에 붙어있는 것일때
         if (event.object.parent === object) {
           console.log('parent = event.object');
+          console.log(event.object);
           event.object.removeFromParent();
+          this._scene2.add(event.object);
+
+          console.log(event.object);
         }
         // if (
         //   1 <= parseInt(event.object.name) &&
@@ -724,6 +730,7 @@ export class RoomThree {
           }
         } else {
           console.log(2222222222);
+          console.log(event.object);
           // event.object.removeFromParent();
           console.log('remove object:', event.object);
           console.log('target.length === 0');
