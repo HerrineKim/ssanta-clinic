@@ -60,21 +60,20 @@ import { MiniContainerNine } from './styles';
 import { BoxNineteen } from './styles';
 import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
-import { useParams } from 'react-router-dom';
 
 export function OtherCalendarModal(props: any) {
+  useEffect(() => {
+    // 현재 url 가져오기
+    const url = window.location.href;
+  }, []);
   const { onClose } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
-  const param = useParams();
+  const nickName = useRecoilValue(selectUserNickname);
 
   const [content, setContent] = useState<string>('');
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [imges, setImges] = useState<[]>([]);
   const [sender, setSender] = useState<string>('');
-
-  // Other User detail
-  const [otherNickName, setOtherNickName] = useState<string>('');
-  const [otherId, setOtherId] = useState<number>(0);
 
   // 어드벤트 캘린더 박스 클릭했는데 오늘이 2022년 12월 25일 이전이면 이동 되지 않고 경고창 띄우기
   const notYet = () => {
@@ -113,26 +112,6 @@ export function OtherCalendarModal(props: any) {
         </div>
       );
     }
-  };
-
-  useEffect(() => {
-    GetOtherUser();
-  }, []);
-  const GetOtherUser = () => {
-    axios
-      .get('http://localhost:8080/api/user/detail/' + param.id, {
-        headers: {
-          Authorization: ACCESS_TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res.data, '캘린더 정보');
-        setOtherNickName(res.data.nickName);
-        setOtherId(res.data.userId);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
   };
 
   const getBoxInfo = () => {
@@ -178,14 +157,21 @@ export function OtherCalendarModal(props: any) {
       ></BoxCreate>
       <TopContainer>
         <CalendarTitle>
-          {otherNickName}님의{' '}
+          {nickName}님의{' '}
           {
             // 오늘 연도
             new Date().getFullYear()
           }
           년 어드벤트 캘린더
         </CalendarTitle>
-        <PresentButton>선물하기💟</PresentButton>
+        <PresentButton
+          onClick={() => {
+            showBoxCreate();
+          }}
+        >
+          선물하기💟
+        </PresentButton>
+
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
@@ -204,22 +190,6 @@ export function OtherCalendarModal(props: any) {
         </CloseButton>
       </TopContainer>
       <CalendarPageContainer>
-        {/* 녹음 불러오는 버튼
-        <button
-          onClick={() => {
-            play();
-          }}
-        >
-          재생
-        </button>
-        <button
-          onClick={() => {
-            getBoxInfo();
-          }}
-        >
-          박스 정보
-        </button> */}
-        {/* 박스 내용  */}
         <div>{content}</div>
         <div>{audioUrl}</div>
         <div>{imges}</div>
