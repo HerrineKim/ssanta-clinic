@@ -617,6 +617,9 @@ export class MainCanvas {
       letterAlert.style.display = 'none';
     }
   }
+  _isCancle() {
+    this._isItemClick = false;
+  }
 
   // https://www.youtube.com/watch?v=OgC3kGKKb7A
   // viewangle 은 수직축으로의 각도 90 도면 평면과 평행하게 바라봄. 0 도면 위에서 바라봄.
