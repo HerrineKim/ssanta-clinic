@@ -39,10 +39,14 @@ export class RoomThree {
   _inven: any;
   _isTreeModal: boolean;
   _check: any;
+  _treeaddres: string;
+  _isSave: boolean;
 
-  constructor(items: number[]) {
+  constructor(items: number[], tree: string) {
+    this._treeaddres = tree;
     this._scenenumber = 1;
     this._isTreeModal = false;
+    this._isSave = false;
     this._items = items;
     this._position = [
       [1.8, 3.6, 1.2],
@@ -70,7 +74,9 @@ export class RoomThree {
       [4.8, 2, 1.2],
       [5.2, 2, 1.2],
     ];
+  }
 
+  setupOnce() {
     this._setupThreeJs();
     this._setupCamera();
     this._setupLight();
@@ -82,6 +88,7 @@ export class RoomThree {
     this._setupPicking();
     this._setupEvents();
   }
+
   _setupThreeJs() {
     const divContainer = document.querySelector('#room-canvas');
     this._divContainer = divContainer;
@@ -104,7 +111,7 @@ export class RoomThree {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
+    // requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
@@ -117,27 +124,22 @@ export class RoomThree {
     this._orbitControls.update();
   }
 
-  render() {
-    if (this._scenenumber === 1) {
-      // console.log(this._camera.position);
-      this._renderer.render(this._scene, this._camera);
-      this.update();
-      // console.log('!');
+  // render() {
+  //   if (this._scenenumber === 1) {
+  //     // console.log(this._camera.position);
+  //     this._renderer.render(this._scene, this._camera);
+  //     this.update();
+  //     // console.log('!');
 
-      requestAnimationFrame(this.render.bind(this));
-    } else {
-      // inven scene
-      this._renderer.render(this._scene2, this._camera);
-      this.update2();
+  //     requestAnimationFrame(this.render.bind(this));
+  //   } else {
+  //     // inven scene
+  //     this._renderer.render(this._scene2, this._camera);
+  //     this.update2();
 
-      requestAnimationFrame(this.render.bind(this));
-    }
-    // this._renderer.render(this._scene, this._camera);
-    // this.update();
-    // // console.log(this._camera.position);
-
-    // requestAnimationFrame(this.render.bind(this));
-  }
+  //     requestAnimationFrame(this.render.bind(this));
+  //   }
+  // }
 
   resize() {
     const width = this._divContainer.clientWidth;
@@ -250,30 +252,58 @@ export class RoomThree {
 
       // model.name = 'close';
     });
-
-    loader.load('/room/tree.glb', (gltf) => {
-      count += 1;
-      const tree: any[] = [];
-      const model: any = gltf.scene;
-      // model.traverse((child: any) => {
-      //   if (child instanceof THREE.Group) {
-      //     // console.log(child, child.name);
-      //     group.push(child);
-      //   }
-      // });
-      // model.position.set(5, 0, -4.5);
-      model.name = 'tree';
-      model.traverse((child: THREE.Object3D) => {
-        tree.push(child);
-        child.name = 'tree';
+    // treeaddres 없을 수도 있음
+    if (this._treeaddres) {
+      loader.load(`${this._treeaddres}`, (gltf) => {
+        count += 1;
+        const tree: any[] = [];
+        const model: any = gltf.scene;
+        console.log('tree:', model);
+        // model.traverse((child: any) => {
+        //   if (child instanceof THREE.Group) {
+        //     // console.log(child, child.name);
+        //     group.push(child);
+        //   }
+        // });
+        // model.position.set(5, 0, -4.5);
+        model.name = 'tree';
+        model.traverse((child: THREE.Object3D) => {
+          tree.push(child);
+          child.name = 'tree';
+        });
+        this._scene.add(model);
+        inven.push(model);
+        // console.log('loadtree inven:', inven);
+        // console.log('treegltf:', model);
+        this._tree = tree;
+        this._inven = inven;
       });
-      this._scene.add(model);
-      inven.push(model);
-      // console.log('loadtree inven:', inven);
-      // console.log('treegltf:', model);
-      this._tree = tree;
-      this._inven = inven;
-    });
+    } else {
+      loader.load('/room/tree.glb', (gltf) => {
+        count += 1;
+        const tree: any[] = [];
+        const model: any = gltf.scene;
+        console.log('tree:', model);
+        // model.traverse((child: any) => {
+        //   if (child instanceof THREE.Group) {
+        //     // console.log(child, child.name);
+        //     group.push(child);
+        //   }
+        // });
+        // model.position.set(5, 0, -4.5);
+        model.name = 'tree';
+        model.traverse((child: THREE.Object3D) => {
+          tree.push(child);
+          child.name = 'tree';
+        });
+        this._scene.add(model);
+        inven.push(model);
+        // console.log('loadtree inven:', inven);
+        // console.log('treegltf:', model);
+        this._tree = tree;
+        this._inven = inven;
+      });
+    }
 
     loader.load('/room/showcase.glb', (gltf) => {
       count += 1;
@@ -301,7 +331,7 @@ export class RoomThree {
           model.traverse((child) => {
             child.name = String(item);
           });
-          console.log(model);
+          // console.log(model);
           // console.log(`${index}: `, model);
           model.scale.set(0.01, 0.01, 0.01);
           const position = this._position[`${index}`];
@@ -317,8 +347,8 @@ export class RoomThree {
 
     const loadPage = setInterval(() => {
       console.log('로딩중');
-      console.log(count);
-      console.log(itemCount);
+      // console.log(count);
+      // console.log(itemCount);
       if (count === itemCount + 5) {
         const loading = document.querySelector(
           '#room-canvas .loading',
@@ -443,10 +473,11 @@ export class RoomThree {
       const formData = new FormData();
       const TOKEN = localStorage.getItem('jwt') || '';
       if (checkTarget.length > 0) {
+        this._isSave = true;
         let glbFile: Blob;
         exporter.parse(
           this._tree[0],
-          function (result) {
+          (result) => {
             console.log('result:', result);
             glbFile = saveArrayBuffer(result);
             formData.append('glbfile', glbFile);
@@ -460,6 +491,7 @@ export class RoomThree {
                 Authorization: TOKEN,
               },
             }).then((res) => {
+              this._isSave = false;
               console.log(res);
             });
           },
@@ -498,7 +530,9 @@ export class RoomThree {
       // console.log('itemTarget:', itemTarget);
     }
   }
-
+  changeSave() {
+    this._isSave = false;
+  }
   _setupCalendar() {
     const calendarAlert = document.querySelector(
       '.calendar',
@@ -605,7 +639,6 @@ export class RoomThree {
     // const raycaster = this._raycaster;
 
     items.forEach((child: any, index: any) => {
-      console.log('item child:', child);
       child.name = index;
       const controls = new DragControls(
         [child],

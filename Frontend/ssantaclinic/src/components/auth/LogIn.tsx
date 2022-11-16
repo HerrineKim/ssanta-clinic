@@ -83,9 +83,9 @@ export const LogIn = () => {
       }
     });
   }
-  async function getNotiList(TOKEN: any) {
+  function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
-    await axios
+    axios
       .get(LOCAL + '/api/noti/list', {
         headers: {
           Authorization: TOKEN,
