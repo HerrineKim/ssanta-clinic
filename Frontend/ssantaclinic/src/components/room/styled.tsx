@@ -13,10 +13,12 @@ export const Wrapper = styled.div`
 
 export const CanvasContainer = styled.div`
   position: relative;
-  border: 5px solid red;
+  border: 5px solid #35904f;
+  background: #35904f;
   height: 80%;
   width: 60%;
-  background: #8a2be2;
+  border-radius: 10px;
+  box-shadow: 10px rgba(0, 0, 0, 0.2);
 `;
 
 export const CloseButton = styled.button`
