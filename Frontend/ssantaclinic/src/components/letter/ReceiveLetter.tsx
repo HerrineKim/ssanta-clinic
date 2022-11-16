@@ -7,8 +7,9 @@ import {
   ReceiveLetterContainer,
 } from './styles';
 import './santa.css';
-
+import { API_BASE_URL } from '../../apis/url';
 export const ReceiveLetter = (props: any) => {
+  const BASE_URL = API_BASE_URL;
   const { onLetterId } = props;
   const [message, setMessage] = useState<string>('크쿠르삥뻥');
   const [title, setTitle] = useState<string>('');
@@ -16,7 +17,7 @@ export const ReceiveLetter = (props: any) => {
   useEffect(() => {
     console.log(onLetterId);
     axios
-      .get('http://localhost:8080' + '/api/letter/reply/' + onLetterId, {
+      .get(BASE_URL + '/api/letter/reply/' + onLetterId, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

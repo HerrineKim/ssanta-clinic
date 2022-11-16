@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
-
+import { API_BASE_URL } from '../../../apis/url';
 export function BoxDetail() {
+  const BASE_URL = API_BASE_URL;
   const ACCESS_TOKEN = localStorage.getItem('jwt');
   // 녹음 테스트
   useEffect(() => {
     // api/calendar/play?boxId=9
     axios
-      .get('http://localhost:8080/api/calendar/play?boxId=11', {
+      .get(BASE_URL + '/api/calendar/play?boxId=11', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
