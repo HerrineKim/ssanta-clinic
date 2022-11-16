@@ -10,8 +10,9 @@ import { LetterReceiveModel } from '../../three/LetterReceive';
 import { motion } from 'framer-motion';
 
 export const ReceiveLetterPage = (props: any) => {
-  const { onBack, goList } = props;
+  const { onLetterId, onBack, goList } = props;
   useEffect(() => {
+    console.log(onLetterId);
     const letterCanvas = new LetterReceiveModel();
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
@@ -25,7 +26,7 @@ export const ReceiveLetterPage = (props: any) => {
   return (
     <Wrapper>
       <LetterPageContainer id="letter-receive-page-container">
-        <ReceiveLetter />
+        <ReceiveLetter onLetterId={onLetterId} />
         <Button
           as={motion.button}
           whileHover={{ scale: 1.1 }}
