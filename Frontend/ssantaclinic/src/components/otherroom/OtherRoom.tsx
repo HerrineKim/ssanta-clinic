@@ -16,7 +16,7 @@ export const OtherRoom = () => {
     // const OtherId =
     console.log(OtherID);
     axios
-      .get(BASE_URL + '/api/user/detail/' + OtherID, {
+      .get(BASE_URL + 'user/detail/' + OtherID, {
         headers: {
           Authorization: TOKEN,
         },

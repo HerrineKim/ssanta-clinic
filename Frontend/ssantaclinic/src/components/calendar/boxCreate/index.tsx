@@ -104,7 +104,7 @@ export function BoxCreate(props: BoxCreateProps) {
     // config
     const config = {
       method: 'post',
-      url: BASE_URL + '/api/calendar',
+      url: BASE_URL + 'calendar',
       headers: {
         Authorization: ACCESS_TOKEN,
         'Content-Type': 'multipart/form-data',

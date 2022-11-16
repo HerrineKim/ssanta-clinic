@@ -27,7 +27,7 @@ export function LetterAlert() {
   }, []);
   function getLetters() {
     axios
-      .get(BASE_URL + '/api/letter', {
+      .get(BASE_URL + 'letter', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

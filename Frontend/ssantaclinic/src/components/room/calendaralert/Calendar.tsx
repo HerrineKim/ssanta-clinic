@@ -18,7 +18,7 @@ export function CalendarAlert(props: any) {
   });
   const GetOtherCalendar = () => {
     axios
-      .get(BASE_URL + '/api/calendar?' + param.id, {
+      .get(BASE_URL + 'calendar?' + param.id, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

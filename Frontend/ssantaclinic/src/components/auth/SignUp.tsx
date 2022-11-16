@@ -23,7 +23,7 @@ export const SignUp = () => {
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     axios
-      .post(BASE_URL + '/api/user/join', {
+      .post(BASE_URL + 'user/join', {
         email: email,
         password: password,
         nickName: nickname,
@@ -43,7 +43,7 @@ export const SignUp = () => {
     e.preventDefault();
     console.log(email);
     axios
-      .post(BASE_URL + '/api/user/check/email', {
+      .post(BASE_URL + 'user/check/email', {
         email: email,
       })
       .then((res) => {
@@ -65,7 +65,7 @@ export const SignUp = () => {
   function checkNickname(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
     axios
-      .post(BASE_URL + '/api/user/check/nickname', {
+      .post(BASE_URL + 'user/check/nickname', {
         nickName: nickname,
       })
       .then((res) => {
