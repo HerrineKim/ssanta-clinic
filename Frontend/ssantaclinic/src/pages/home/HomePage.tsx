@@ -234,6 +234,8 @@ export default function Home() {
   useEffect(() => {
     if (scenenumber === 2) {
       setIsCover(false);
+    } else {
+      setIsCover(true);
     }
   }, [scenenumber]);
   // 아이템에 따라 가격 다르게
