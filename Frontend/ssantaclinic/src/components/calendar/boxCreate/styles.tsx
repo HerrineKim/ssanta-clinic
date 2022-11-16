@@ -66,6 +66,7 @@ export const RecordContainer = styled.div`
   width: 50%;
   height: 100%;
   font-family: IMRegular;
+  padding-top: 4%;
 `;
 
 export const RecordText = styled.div`
@@ -79,28 +80,32 @@ export const RecordText = styled.div`
 export const RecordPlayer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 50%;
+  height: 10%;
+  margin-top: 10%;
 `;
 
 export const RecordStatus = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 50%;
+  height: 10%;
+  font-size: 1rem;
+  margin-top: 5%;
+  margin-left: 5%;
 `;
 
 export const RecordButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
-  height: 50%;
+  height: 30%;
 `;
 
 export const ImageContainer = styled.div`
@@ -302,7 +307,9 @@ user-select: none;
 touch-action: manipulation;
 font-family: 'Cafe24Ssurround';
 margin-top: 0;
-width: 5%;
+margin-left: 5%;
+width: 20%;
+min-width: 200px;
 }
 
 :hover {
@@ -372,6 +379,7 @@ user-select: none;
 touch-action: manipulation;
 font-family: 'Cafe24Ssurround';
 margin-top: 0;
+margin-left: 5%;
 width: 15%;
 min-width: 200px;
 }

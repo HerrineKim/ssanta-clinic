@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { ReactMediaRecorder } from 'react-media-recorder';
 import { selectUserId, selectUserNickname } from '../../../store/store';
@@ -157,7 +157,7 @@ export function BoxCreate(props: BoxCreateProps) {
       </BoxCreateTop>
       <BoxCreateMiddle>
         <RecordContainer>
-          <RecordText>음성 메시지 보내기</RecordText>
+          <RecordText>음성 메시지 보내기 📼</RecordText>
           <ReactMediaRecorder
             audio
             render={({
@@ -166,8 +166,12 @@ export function BoxCreate(props: BoxCreateProps) {
               stopRecording,
               mediaBlobUrl,
             }) => (
-              <div>
-                <p>
+              <Fragment>
+                <RecordPlayer>
+                  <audio src={mediaBlobUrl} controls />
+                </RecordPlayer>
+                <RecordStatus>
+                  {' '}
                   {status
                     // 정규식으로 idle -> 녹음 대기중, recording -> 녹음 중, stopped -> 녹음 중지로 바꾸기
                     // aquiring_media -> 녹음 권한 허용
@@ -175,37 +179,37 @@ export function BoxCreate(props: BoxCreateProps) {
                     .replace(/recording/g, '~녹음 중~')
                     .replace(/stopped/g, '녹음 중지')
                     .replace(/acquiring_media/g, '녹음 권한 허용')}
-                </p>
-                <RecordStartButton onClick={startRecording}>
-                  녹음 시작
-                </RecordStartButton>
-                <RecordStopButton onClick={stopRecording}>
-                  녹음 끝
-                </RecordStopButton>
-                <audio src={mediaBlobUrl} controls />
-                {/* 내가 보내려는 음성을 저장 */}
-                <RecordSaveButton
-                  onClick={() => {
-                    // Url을 File로 변환하여 저장
-                    if (mediaBlobUrl) {
-                      // setAudio
-                      fetch(mediaBlobUrl)
-                        .then((res) => res.blob())
-                        .then((blob) => {
-                          const file = new File([blob], 'audio_message.wav', {
-                            type: 'audio_message/wav',
+                </RecordStatus>
+                <RecordButtonContainer>
+                  <RecordStartButton onClick={startRecording}>
+                    ⏺️
+                  </RecordStartButton>
+                  <RecordStopButton onClick={stopRecording}>
+                    ⏹️
+                  </RecordStopButton>
+                  {/* 내가 보내려는 음성을 저장 */}
+                  <RecordSaveButton
+                    onClick={() => {
+                      // Url을 File로 변환하여 저장
+                      if (mediaBlobUrl) {
+                        fetch(mediaBlobUrl)
+                          .then((res) => res.blob())
+                          .then((blob) => {
+                            const file = new File([blob], 'audio_message.wav', {
+                              type: 'audio_message/wav',
+                            });
+                            setAudio(file);
+                          })
+                          .then(() => {
+                            console.log(audio);
                           });
-                          setAudio(file);
-                        })
-                        .then(() => {
-                          console.log(audio);
-                        });
-                    }
-                  }}
-                >
-                  담기
-                </RecordSaveButton>
-              </div>
+                      }
+                    }}
+                  >
+                    담기
+                  </RecordSaveButton>
+                </RecordButtonContainer>
+              </Fragment>
             )}
           />
         </RecordContainer>
