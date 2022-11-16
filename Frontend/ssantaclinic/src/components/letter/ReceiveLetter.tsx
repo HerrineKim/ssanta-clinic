@@ -8,24 +8,22 @@ import {
 } from './styles';
 import './santa.css';
 
-export const ReceiveLetter = () => {
+export const ReceiveLetter = (props: any) => {
+  const { onLetterId } = props;
   const [message, setMessage] = useState<string>('크쿠르삥뻥');
   const [title, setTitle] = useState<string>('');
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   useEffect(() => {
+    console.log(onLetterId);
     axios
-      .get('http://localhost:8080' + '/api/letter', {
-        params: {
-          letterId: 'letterId', // 나중에 Token으로 가져오면 될 듯
-        },
+      .get('http://localhost:8080' + '/api/letter/reply/' + onLetterId, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
       })
       .then((res) => {
         console.log(res.data);
-        setMessage('산타에게서 온 답장');
-        setTitle('편지 제목');
+        setMessage(res.data.message);
       })
       .catch((err) => {
         console.log(err.resonse);
