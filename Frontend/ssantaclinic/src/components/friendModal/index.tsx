@@ -61,7 +61,7 @@ export default function FriendModal(props: any) {
   const handleSearch = () => {
     axios
       .post(
-        BASE_URL + `/api/user/search`,
+        BASE_URL + `user/search`,
         { nickName: searchInput },
         {
           headers: {

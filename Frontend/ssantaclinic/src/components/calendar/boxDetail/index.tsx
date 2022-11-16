@@ -8,7 +8,7 @@ export function BoxDetail() {
   useEffect(() => {
     // api/calendar/play?boxId=9
     axios
-      .get(BASE_URL + '/api/calendar/play?boxId=11', {
+      .get(BASE_URL + 'calendar/play?boxId=11', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

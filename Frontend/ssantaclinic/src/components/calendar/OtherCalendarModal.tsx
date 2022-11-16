@@ -117,7 +117,7 @@ export function OtherCalendarModal(props: any) {
 
   const getBoxInfo = () => {
     axios
-      .get(BASE_URL + '/api/calendar?boxId=3', {
+      .get(BASE_URL + 'calendar?boxId=3', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

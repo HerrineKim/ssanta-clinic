@@ -490,7 +490,7 @@ export class RoomThree {
             console.log('result : ', glbFile);
 
             axios({
-              url: BASE_URL + '/api/tree',
+              url: BASE_URL + 'tree',
               method: 'post',
               data: formData,
               headers: {
@@ -642,7 +642,7 @@ export class RoomThree {
     const positions = this._position;
     const tree = this._tree;
     let unclickedItems = this._unclickedItem;
-    let items = this._items;
+    const items = this._items;
     // console.log(items);
     // const raycaster = this._raycaster;
     console.log('setuodrag:', items);

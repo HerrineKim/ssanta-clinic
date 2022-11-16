@@ -30,7 +30,7 @@ export const LogIn = () => {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post(BASE_URL + '/api/user/login', {
+      .post(BASE_URL + 'user/login', {
         email: email,
         password: password,
       })

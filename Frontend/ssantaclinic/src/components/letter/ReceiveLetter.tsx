@@ -17,7 +17,7 @@ export const ReceiveLetter = (props: any) => {
   useEffect(() => {
     console.log(onLetterId);
     axios
-      .get(BASE_URL + '/api/letter/reply/' + onLetterId, {
+      .get(BASE_URL + 'letter/reply/' + onLetterId, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

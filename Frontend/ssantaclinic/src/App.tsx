@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { BoxDetail } from './components/calendar/boxDetail';
@@ -10,18 +10,18 @@ import TetrisPage from './pages/game/tetris/TetrisPage';
 // import MemoryPage from './pages/game/MemoryPage';
 import FindPasswordPage from './pages/auth/FindPasswordPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
-import { WriteLetterPage } from './pages/letter/WriteLetterPage';
+
 // import { MyRoomPage } from './pages/myroom/MyRoomPage';
-import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
+
 import { ResetTokenPage } from './pages/ResetTokenPage';
 // import ShopPage from './pages/shop/ShopPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
-import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
+
 import axios from 'axios';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { currentUser, isLogIn, selectUserId } from './store/store';
-import { INoti, notiState } from './store/Notification';
+import { selectUserId } from './store/store';
+import { notiState } from './store/Notification';
 import { EventSourcePolyfill } from 'event-source-polyfill';
 import { API_BASE_URL } from './apis/url';
 const EventSource = EventSourcePolyfill;
@@ -31,11 +31,11 @@ function App() {
   const TOKEN = localStorage.getItem('jwt') || '';
   const ID = useRecoilValue(selectUserId);
   const setNotis = useSetRecoilState(notiState);
-  const [test, setTest] = useState<any[]>([]);
+
   useEffect(() => {
     if (TOKEN) {
       console.log('sse');
-      const eventSource = new EventSource(BASE_URL + '/api/noti/sub/' + ID, {
+      const eventSource = new EventSource(BASE_URL + 'noti/sub/' + ID, {
         headers: {
           Authorization: TOKEN,
         },
@@ -47,8 +47,12 @@ function App() {
       };
 
       eventSource.onmessage = function (event) {
-        const data: any = JSON.parse(event.data);
-        setNotis((names) => [...names, data]);
+        try {
+          const data: any = JSON.parse(event.data);
+          setNotis((names) => [...names, data]);
+        } catch {
+          console.log(event, '패스');
+        }
       };
     }
   });
@@ -56,7 +60,7 @@ function App() {
   function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
     axios
-      .get(BASE_URL + '/api/noti/list/' + ID, {
+      .get(BASE_URL + 'noti/list/' + ID, {
         headers: {
           Authorization: TOKEN,
         },

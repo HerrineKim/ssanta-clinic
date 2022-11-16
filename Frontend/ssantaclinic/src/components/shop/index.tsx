@@ -32,7 +32,7 @@ export default function ShopAlert(props: Iprops) {
 
   function send(event: any) {
     axios({
-      url: BASE_URL + '/api/store/buy',
+      url: BASE_URL + 'store/buy',
       method: 'post',
       data: data,
       headers: {

@@ -28,7 +28,7 @@ export const WriteLetter = () => {
     e.preventDefault();
     axios
       .post(
-        BASE_URL + '/api/letter',
+        BASE_URL + 'letter',
         {
           title: title,
           message: message,
