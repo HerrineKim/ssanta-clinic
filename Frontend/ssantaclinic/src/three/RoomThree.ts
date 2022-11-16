@@ -110,14 +110,14 @@ export class RoomThree {
     window.onresize = this.resize.bind(this);
     this.resize();
 
-    this._clock = new THREE.Clock();
+    // this._clock = new THREE.Clock();
     // requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
-    const delta = this._clock.getDelta();
+    // const delta = this._clock.getDelta();
     this._orbitControls.update();
-    if (this._mixer) this._mixer.update(delta);
+    // if (this._mixer) this._mixer.update(delta);
   }
   update2() {
     // console.log('updaete2');
@@ -316,7 +316,7 @@ export class RoomThree {
       // console.log('loadshowcase inven:', inven);
       this._inven = inven;
     });
-
+    console.log('roomtree:', this._items);
     // item load 부분
     const items: any[] = [];
     // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
@@ -337,10 +337,11 @@ export class RoomThree {
           const position = this._position[`${index}`];
           // model.position.set(0, 0, 0);
           model.position.set(position[0], position[1], position[2]);
-          items.push(model);
+          items[index] = model;
           // this._scene.add(model);
         });
       }
+      console.log('roomtree:', this._items);
     });
     const itemCount = this._items.length;
     this._items = items;
@@ -637,7 +638,7 @@ export class RoomThree {
     let items = this._items;
     // console.log(items);
     // const raycaster = this._raycaster;
-
+    console.log('setuodrag:', items);
     items.forEach((child: any, index: any) => {
       child.name = index;
       const controls = new DragControls(
@@ -701,6 +702,7 @@ export class RoomThree {
             event.object.position.setY(targets[0].point.y);
             event.object.position.setZ(targets[0].point.z);
             let object = targets[0].object;
+            // tree 최상위 찾기
             while (object.parent) {
               object = object.parent;
               if (object instanceof THREE.Group) {
@@ -708,26 +710,28 @@ export class RoomThree {
               }
             }
 
-            items = items.filter((obj: any) => obj !== event.object);
+            // items = items.filter((obj: any) => obj !== event.object);
             object.attach(event.object);
-            this._items = items;
+            // this._items = items;
           } else {
             // 나눌 필요 있음
             // event.object.removeFromParent();
+            console.log(111111111111);
             console.log('tree가 아닌것 raycast');
-            event.object.position.setX(positions[child.name][0]);
-            event.object.position.setY(positions[child.name][1]);
-            event.object.position.setZ(positions[child.name][2]);
+            event.object.position.setX(positions[index][0]);
+            event.object.position.setY(positions[index][1]);
+            event.object.position.setZ(positions[index][2]);
           }
         } else {
+          console.log(2222222222);
           // event.object.removeFromParent();
           console.log('remove object:', event.object);
           console.log('target.length === 0');
           // console.log('else event:', event);
           console.log(child, positions[child.name][0]);
-          event.object.position.setX(positions[child.name][0]);
-          event.object.position.setY(positions[child.name][1]);
-          event.object.position.setZ(positions[child.name][2]);
+          event.object.position.setX(positions[index][0]);
+          event.object.position.setY(positions[index][1]);
+          event.object.position.setZ(positions[index][2]);
           console.log(event.object.position);
         }
 
