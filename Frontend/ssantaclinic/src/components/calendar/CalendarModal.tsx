@@ -7,6 +7,7 @@ import { BoxCreate } from './boxCreate';
 import { API_BASE_URL } from '../../apis/url';
 // Recoil
 import { selectUserNickname } from '../../store/store';
+import { selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 
 import Countdown from 'react-countdown';
@@ -70,11 +71,32 @@ export function CalendarModal(props: any) {
   const { onClose } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const nickName = useRecoilValue(selectUserNickname);
+  const userId = useRecoilValue(selectUserId);
 
   const [content, setContent] = useState<string>('');
   const [audioUrl, setAudioUrl] = useState<string>('');
   const [imges, setImges] = useState<[]>([]);
   const [sender, setSender] = useState<string>('');
+
+  // 캘린더 날짜 별 개수 가져오기(api/calendar/userId=int)
+  const [boxNums, setBoxNums] = useState<any[]>([]);
+  // [{"date":1,"cnt":0},{"date":2,"cnt":1},{"date":3,"cnt":0}]
+  useEffect(() => {
+    axios
+      .get(`http://localhost:8080/api/calendar?userId=${userId}`, {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        setBoxNums(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    // axios
+    // .get(`http://localhost:8080/api/calendar/use`, {
+  }, [ACCESS_TOKEN, userId]);
 
   // 어드벤트 캘린더 박스 클릭했는데 오늘이 2022년 12월 25일 이전이면 이동 되지 않고 경고창 띄우기
   const notYet = () => {
@@ -184,10 +206,6 @@ export function CalendarModal(props: any) {
         </CloseButton>
       </TopContainer>
       <CalendarPageContainer>
-        <div>{content}</div>
-        <div>{audioUrl}</div>
-        <div>{imges}</div>
-        <div>{sender}</div>
         <CalendarLeftContainer>
           <MiniContainerOne>
             {/* 모달 오픈 */}
@@ -197,55 +215,228 @@ export function CalendarModal(props: any) {
               }}
             >
               1
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 1) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
             </BoxOne>
-            <BoxTwo>2</BoxTwo>
-            <BoxThree>3</BoxThree>
+            <BoxTwo>
+              2
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 2) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxTwo>
+            <BoxThree>
+              3
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 3) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxThree>
           </MiniContainerOne>
           <MiniContainerTwo>
-            <BoxEight>8</BoxEight>
+            <BoxEight>
+              8
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 8) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxEight>
             <MiniContainerTwoRight>
               <MiniContainerTwoTop>
-                <BoxNine>9</BoxNine>
-                <BoxTen>10</BoxTen>
+                <BoxNine>
+                  9
+                  {boxNums.map((boxNum) => {
+                    if (boxNum.date === 9) {
+                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    }
+                  })}
+                </BoxNine>
+                <BoxTen>
+                  10
+                  {boxNums.map((boxNum) => {
+                    if (boxNum.date === 10) {
+                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    }
+                  })}
+                </BoxTen>
               </MiniContainerTwoTop>
               <MiniContainerTwoBottom>
-                <BoxThirteen>13</BoxThirteen>
-                <BoxFourteen>14</BoxFourteen>
-                <BoxFifteen>15</BoxFifteen>
+                <BoxThirteen>
+                  13
+                  {boxNums.map((boxNum) => {
+                    if (boxNum.date === 13) {
+                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    }
+                  })}
+                </BoxThirteen>
+                <BoxFourteen>
+                  14
+                  {boxNums.map((boxNum) => {
+                    if (boxNum.date === 14) {
+                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    }
+                  })}
+                </BoxFourteen>
+                <BoxFifteen>
+                  15
+                  {boxNums.map((boxNum) => {
+                    if (boxNum.date === 15) {
+                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    }
+                  })}
+                </BoxFifteen>
               </MiniContainerTwoBottom>
             </MiniContainerTwoRight>
           </MiniContainerTwo>
           <MiniContainerThree>
-            <BoxTwentyOne>21</BoxTwentyOne>
-            <BoxTwentyTwo>22</BoxTwentyTwo>
-            <BoxTwentyThree>23</BoxTwentyThree>
+            <BoxTwentyOne>
+              21
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 21) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxTwentyOne>
+            <BoxTwentyTwo>
+              22
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 22) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxTwentyTwo>
+            <BoxTwentyThree>
+              23
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 23) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxTwentyThree>
           </MiniContainerThree>
         </CalendarLeftContainer>
         <CalendarMiddleContainer>
-          <BoxFour>4</BoxFour>
-          <BoxSixteen>16</BoxSixteen>
+          <BoxFour>
+            4
+            {boxNums.map((boxNum) => {
+              if (boxNum.date === 4) {
+                return <p key={boxNum.date}>{boxNum.cnt}</p>;
+              }
+            })}
+          </BoxFour>
+          <BoxSixteen>
+            16
+            {boxNums.map((boxNum) => {
+              if (boxNum.date === 16) {
+                return <p key={boxNum.date}>{boxNum.cnt}</p>;
+              }
+            })}
+          </BoxSixteen>
         </CalendarMiddleContainer>
         <CalendarRightContainer>
           <MiniContainerFour>
-            <BoxFive>5</BoxFive>
-            <BoxSix>6</BoxSix>
-            <BoxSeven>7</BoxSeven>
+            <BoxFive>
+              5
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 5) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxFive>
+            <BoxSix>
+              6
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 6) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxSix>
+            <BoxSeven>
+              7
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 7) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxSeven>
           </MiniContainerFour>
           <MiniContainerFive>
-            <BoxEleven>11</BoxEleven>
-            <BoxTwelve>12</BoxTwelve>
+            <BoxEleven>
+              11
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 11) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxEleven>
+            <BoxTwelve>
+              12
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 12) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </BoxTwelve>
           </MiniContainerFive>
           <MiniContainerSix>
             <MiniContainerSeven>
-              <BoxSeventeen>17</BoxSeventeen>
-              <BoxTwentyFour>24</BoxTwentyFour>
+              <BoxSeventeen>
+                17
+                {boxNums.map((boxNum) => {
+                  if (boxNum.date === 17) {
+                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  }
+                })}
+              </BoxSeventeen>
+              <BoxTwentyFour>
+                24
+                {boxNums.map((boxNum) => {
+                  if (boxNum.date === 24) {
+                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  }
+                })}
+              </BoxTwentyFour>
             </MiniContainerSeven>
-            <MiniContainerEight>18</MiniContainerEight>
+            <MiniContainerEight>
+              18
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 18) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </MiniContainerEight>
             <MiniContainerNine>
-              <BoxNineteen>19</BoxNineteen>
-              <BoxTwentyFive>25</BoxTwentyFive>
+              <BoxNineteen>
+                19
+                {boxNums.map((boxNum) => {
+                  if (boxNum.date === 19) {
+                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  }
+                })}
+              </BoxNineteen>
+              <BoxTwentyFive>
+                25
+                {boxNums.map((boxNum) => {
+                  if (boxNum.date === 25) {
+                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  }
+                })}
+              </BoxTwentyFive>
             </MiniContainerNine>
-            <MiniContainerTen>20</MiniContainerTen>
+            <MiniContainerTen>
+              20
+              {boxNums.map((boxNum) => {
+                if (boxNum.date === 20) {
+                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                }
+              })}
+            </MiniContainerTen>
           </MiniContainerSix>
         </CalendarRightContainer>
       </CalendarPageContainer>
