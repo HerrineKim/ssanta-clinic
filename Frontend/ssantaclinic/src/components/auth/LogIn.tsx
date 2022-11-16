@@ -7,11 +7,9 @@ import { currentUser, isLogIn } from '../../store/store';
 import { LoginContainer } from './styles';
 import { Input } from './styles';
 import { motion } from 'framer-motion';
-import { NativeEventSource, EventSourcePolyfill } from 'event-source-polyfill';
-
+import { API_BASE_URL } from '../../apis/url';
 export const LogIn = () => {
-  const LOCAL = 'http://localhost:8080';
-  const DOMAIN = 'https://k7a201.p.ssafy.io';
+  const BASE_URL = API_BASE_URL;
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [button, setButton] = useState<boolean>(true);
@@ -19,7 +17,7 @@ export const LogIn = () => {
   const setUserState = useSetRecoilState(currentUser);
   const isLoggedIn = useRecoilValue(isLogIn);
   const navigate = useNavigate();
-  // const EventSource = EventSourcePolyfill;
+
   let accessToken: any = '';
 
   // useEffect(() => {
@@ -32,7 +30,7 @@ export const LogIn = () => {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post(LOCAL + '/api/user/login', {
+      .post(BASE_URL + 'user/login', {
         email: email,
         password: password,
       })

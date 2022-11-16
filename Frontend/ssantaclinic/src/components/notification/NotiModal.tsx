@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from './index.module.css';
-import { FriendModalContainer, FriendModalCloseButton } from './styles';
+import { NotiModalContainer, NotiModalCloseButton } from './styles';
 import { useRecoilState } from 'recoil';
 import { notiState } from '../../store/Notification';
 
@@ -19,7 +19,7 @@ export default function NotiModal(props: any) {
         //   onLetterList(false);
         // }}
       >
-        <b>{noti.message}</b>
+        <b className="noti-message">{noti.message}</b>
       </div>
     );
   }
@@ -30,14 +30,14 @@ export default function NotiModal(props: any) {
   return (
     <div className={isModal ? styles['modal'] : styles['close']}>
       <section>
-        <FriendModalContainer>
-          <FriendModalCloseButton type="button" onClick={onClickClose}>
-            X
-          </FriendModalCloseButton>
+        <NotiModalCloseButton type="button" onClick={onClickClose}>
+          X
+        </NotiModalCloseButton>
+        <NotiModalContainer>
           {notis.map((noti: any, index: any) => (
             <Notis noti={noti} key={index} />
           ))}
-        </FriendModalContainer>
+        </NotiModalContainer>
       </section>
     </div>
   );
