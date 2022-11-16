@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { BoxDetail } from './components/calendar/boxDetail';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
-import { LogOutPage } from './pages/auth/LogOutPage';
 import HomePage from './pages/home/HomePage';
 import TetrisPage from './pages/game/tetris/TetrisPage';
 // import WitsPage from './pages/game/WitsPage';
@@ -19,17 +18,16 @@ import { ResetTokenPage } from './pages/ResetTokenPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
 import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
-import { Test } from './components/notification/SSE';
-import { AniTestPage } from './pages/logintohome/AniTest';
 import axios from 'axios';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { currentUser, isLogIn, selectUserId } from './store/store';
 import { INoti, notiState } from './store/Notification';
 import { EventSourcePolyfill } from 'event-source-polyfill';
+import { API_BASE_URL } from './apis/url';
 const EventSource = EventSourcePolyfill;
 
 function App() {
-  const LOCAL = 'http://localhost:8080';
+  const BASE_URL = API_BASE_URL;
   const TOKEN = localStorage.getItem('jwt') || '';
   const ID = useRecoilValue(selectUserId);
   const setNotis = useSetRecoilState(notiState);
@@ -37,7 +35,7 @@ function App() {
   useEffect(() => {
     if (TOKEN) {
       console.log('sse');
-      const eventSource = new EventSource(LOCAL + '/api/noti/sub/' + ID, {
+      const eventSource = new EventSource(BASE_URL + '/api/noti/sub/' + ID, {
         headers: {
           Authorization: TOKEN,
         },
@@ -58,7 +56,7 @@ function App() {
   function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
     axios
-      .get(LOCAL + '/api/noti/list/' + ID, {
+      .get(BASE_URL + '/api/noti/list/' + ID, {
         headers: {
           Authorization: TOKEN,
         },
@@ -96,8 +94,6 @@ function App() {
         <Route path="/resetToken" element={<ResetTokenPage />}></Route>
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
-        <Route path="/test" element={<Test />}></Route>
-        <Route path="/aniTest" element={<AniTestPage />}></Route>
         <Route path="/boxDetail" element={<BoxDetail />}></Route>
       </Routes>
     </Router>

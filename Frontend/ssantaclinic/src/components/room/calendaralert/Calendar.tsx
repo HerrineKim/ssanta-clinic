@@ -3,11 +3,13 @@ import { CalendarAlertDiv, CalendarButton } from './style';
 import { useParams } from 'react-router-dom';
 import { CalendarModal } from '../../calendar/CalendarModal';
 import axios from 'axios';
+import { API_BASE_URL } from '../../../apis/url';
 // interface Iprops {
 //   return;
 // }
 
 export function CalendarAlert(props: any) {
+  const BASE_URL = API_BASE_URL;
   const [isHelp, setisHelp] = useState<boolean>(false);
   const param = useParams();
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
@@ -16,7 +18,7 @@ export function CalendarAlert(props: any) {
   });
   const GetOtherCalendar = () => {
     axios
-      .get('http://localhost:8080/api/calendar?' + param.id, {
+      .get(BASE_URL + '/api/calendar?' + param.id, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
