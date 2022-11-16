@@ -25,6 +25,8 @@ import {
   BottomBar,
   TopBar,
   LogoutButton,
+  NotiButton,
+  NotiConTainer,
 } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
@@ -46,6 +48,9 @@ import { useRecoilValue, useSetRecoilState, useResetRecoilState } from 'recoil';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
+// 알림 관련
+import { motion, Variants } from 'framer-motion';
+import NotiModal from '../../components/notification/NotiModal';
 
 export default function Home() {
   const BASE_URL = API_BASE_URL;
@@ -80,7 +85,8 @@ export default function Home() {
   const resetIsCover = useResetRecoilState(isLoggedIn);
   const resetUser = useResetRecoilState(currentUser);
   const resetNoti = useResetRecoilState(NotiListState);
-  0;
+  //알림
+  const [isOpen, setIsOpen] = useState(false);
   // 로그아웃
   function LogoutToHome() {
     logout();
@@ -99,6 +105,7 @@ export default function Home() {
     resetNoti;
     console.log('1');
   }
+
   // const LogOut = () => { // 토큰을 찾을 수 없다고 뜹니다.
   //   console.log(ACCESS_TOKEN);
   //   axios
@@ -335,6 +342,21 @@ export default function Home() {
       ) : null}
       {isCover ? (
         <BottomBar>
+          <NotiConTainer
+            as={motion.div}
+            initial={false}
+            animate={isOpen ? 'open' : 'closed'}
+            className="noti"
+          >
+            <NotiButton
+              as={motion.button}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              알림
+            </NotiButton>
+          </NotiConTainer>
+
           <ItemButton>아이템</ItemButton>
           <FriendButton
             onClick={() => {
@@ -354,6 +376,7 @@ export default function Home() {
         followingList={followingList}
         followerList={followerList}
       ></FriendModal>
+      <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
       {isClick ? (
         <ShopAlert item={clickedItem} userId={userId} cost={cost}></ShopAlert>
       ) : null}

@@ -4,25 +4,22 @@ import { Wrapper, CanvasContainer } from './styles';
 import { useNavigate } from 'react-router-dom';
 
 export const LogInToHomePage = (props: any) => {
-  const { checkIsLogin } = props;
+  const { checkIsLogin, goHome } = props;
   console.log(checkIsLogin, '렌더링 체크');
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
       navigate('/');
+      goHome(true);
     }, 9000);
-    if (checkIsLogin) {
-      const toHomeCanvas = new LoginToHome();
-      console.log(toHomeCanvas.render.bind(toHomeCanvas));
-      console.log('useeffect');
-      const requestId2 = requestAnimationFrame(
-        toHomeCanvas.render.bind(toHomeCanvas),
-      );
+    const toHomeCanvas = new LoginToHome();
+    const requestId2 = requestAnimationFrame(
+      toHomeCanvas.render.bind(toHomeCanvas),
+    );
 
-      return () => {
-        cancelAnimationFrame(requestId2);
-      };
-    }
+    return () => {
+      cancelAnimationFrame(requestId2);
+    };
   }, []);
   return (
     <Wrapper>
