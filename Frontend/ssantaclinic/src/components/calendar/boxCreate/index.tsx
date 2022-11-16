@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { ReactMediaRecorder } from 'react-media-recorder';
 import { selectUserId, selectUserNickname } from '../../../store/store';
@@ -7,12 +7,27 @@ import {
   BoxCreateContainer,
   MessageContainer,
   RecordContainer,
+  RecordText,
+  RecordPlayer,
+  RecordStatus,
+  RecordButtonContainer,
   ImageContainer,
   BoxCreateTop,
   BoxCreateMiddle,
   BoxCreateBottom,
   CloseButton,
   XButton,
+  DayText,
+  DayInput,
+  DaySenderContainer,
+  SenderText,
+  SenderInput,
+  ContentTextarea,
+  ImageText,
+  ImageUploader,
+  RecordStartButton,
+  RecordStopButton,
+  RecordSaveButton,
 } from './styles';
 
 const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
@@ -116,23 +131,33 @@ export function BoxCreate(props: BoxCreateProps) {
   return (
     <BoxCreateContainer>
       <BoxCreateTop>
-        {/* day */}
-        <input
-          type="number"
-          placeholder="날짜"
-          onChange={(e) => setDay(Number(e.target.value))}
-        />
-        {/* sender 닉네임 */}
-        <input
-          type="text"
-          placeholder="보내는 사람"
-          onChange={(e) => setSender(e.target.value)}
-        />
+        <DaySenderContainer>
+          <DayText>받는 날짜:</DayText>
+          {/* day */}
+          <DayInput
+            type="number"
+            placeholder="날짜"
+            onChange={(e) => setDay(Number(e.target.value))}
+            // 1~25일까지만 입력 가능
+            min="1"
+            max="25"
+            // 1일부터 시작
+            defaultValue="1"
+          />
+          <SenderText>보내는 이:</SenderText>
+          {/* sender 닉네임 */}
+          <SenderInput
+            type="text"
+            placeholder="여섯 자 이내"
+            onChange={(e) => setSender(e.target.value)}
+          />
+        </DaySenderContainer>
         {/* 닫기 버튼 */}
         <XButton onClick={setIsOpen}>x</XButton>
       </BoxCreateTop>
       <BoxCreateMiddle>
         <RecordContainer>
+          <RecordText>음성 메시지 보내기 📼</RecordText>
           <ReactMediaRecorder
             audio
             render={({
@@ -141,8 +166,12 @@ export function BoxCreate(props: BoxCreateProps) {
               stopRecording,
               mediaBlobUrl,
             }) => (
-              <div>
-                <p>
+              <Fragment>
+                <RecordPlayer>
+                  <audio src={mediaBlobUrl} controls />
+                </RecordPlayer>
+                <RecordStatus>
+                  {' '}
                   {status
                     // 정규식으로 idle -> 녹음 대기중, recording -> 녹음 중, stopped -> 녹음 중지로 바꾸기
                     // aquiring_media -> 녹음 권한 허용
@@ -150,69 +179,71 @@ export function BoxCreate(props: BoxCreateProps) {
                     .replace(/recording/g, '~녹음 중~')
                     .replace(/stopped/g, '녹음 중지')
                     .replace(/acquiring_media/g, '녹음 권한 허용')}
-                </p>
-                <button onClick={startRecording}>녹음 시작</button>
-                <button onClick={stopRecording}>녹음 끝</button>
-                <video src={mediaBlobUrl} controls autoPlay loop />
-                {/* 내가 보내려는 음성을 저장 */}
-                <button
-                  onClick={() => {
-                    // Url을 File로 변환하여 저장
-                    if (mediaBlobUrl) {
-                      // setAudio
-                      fetch(mediaBlobUrl)
-                        .then((res) => res.blob())
-                        .then((blob) => {
-                          const file = new File([blob], 'audio_message.wav', {
-                            type: 'audio_message/wav',
+                </RecordStatus>
+                <RecordButtonContainer>
+                  <RecordStartButton onClick={startRecording}>
+                    ⏺️
+                  </RecordStartButton>
+                  <RecordStopButton onClick={stopRecording}>
+                    ⏹️
+                  </RecordStopButton>
+                  {/* 내가 보내려는 음성을 저장 */}
+                  <RecordSaveButton
+                    onClick={() => {
+                      // Url을 File로 변환하여 저장
+                      if (mediaBlobUrl) {
+                        fetch(mediaBlobUrl)
+                          .then((res) => res.blob())
+                          .then((blob) => {
+                            const file = new File([blob], 'audio_message.wav', {
+                              type: 'audio_message/wav',
+                            });
+                            setAudio(file);
+                          })
+                          .then(() => {
+                            console.log(audio);
                           });
-                          setAudio(file);
-                        })
-                        .then(() => {
-                          console.log(audio);
-                        });
-                    }
-                  }}
-                >
-                  저장
-                </button>
-                {/* 다운로드 */}
-                <a href={mediaBlobUrl} download="my-audio-file.wav">
-                  다운로드
-                </a>
-              </div>
+                      }
+                    }}
+                  >
+                    담기
+                  </RecordSaveButton>
+                </RecordButtonContainer>
+              </Fragment>
             )}
           />
         </RecordContainer>
+
+        <ImageContainer>
+          <ImageText>사진 보내기 🖼️</ImageText>
+          {/* image upload */}
+          <ImageUploader>
+            <div className="image-upload">
+              <input
+                type="file"
+                id="image-upload"
+                accept="image/*"
+                multiple
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setImage(Array.from(e.target.files));
+                  }
+                }}
+              />
+            </div>
+          </ImageUploader>
+        </ImageContainer>
         <MessageContainer>
           {/* content */}
-          <input
-            type="text"
-            placeholder="content"
+          <ContentTextarea
+            placeholder="마음을 담은 메시지를 남겨주세요."
             onChange={(e) => setContent(e.target.value)}
           />
         </MessageContainer>
-        <ImageContainer>
-          {/* image upload */}
-          <div className="image-upload">
-            <label htmlFor="image-upload">이미지 업로드</label>
-            <input
-              type="file"
-              id="image-upload"
-              accept="image/*"
-              multiple
-              onChange={(e) => {
-                if (e.target.files) {
-                  setImage(Array.from(e.target.files));
-                }
-              }}
-            />
-          </div>
-        </ImageContainer>
       </BoxCreateMiddle>
       <BoxCreateBottom>
         {/* 상자 보내기 */}
-        <CloseButton onClick={sendBox}>상자 보내기</CloseButton>
+        <CloseButton onClick={sendBox}>상자 보내기 🎁</CloseButton>
       </BoxCreateBottom>
     </BoxCreateContainer>
   );

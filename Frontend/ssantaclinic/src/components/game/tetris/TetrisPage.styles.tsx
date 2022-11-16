@@ -21,6 +21,7 @@ export const StyledTetris = styled.div`
     display: flex;
     justify-content: space-between;
     width: 380px;
+    font-family: 'IMRegular';
   }
 `;
 
