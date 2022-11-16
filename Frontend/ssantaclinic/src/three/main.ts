@@ -478,6 +478,7 @@ export class MainCanvas {
       const closeTarget = this._raycaster.intersectObject(this._close);
       if (closeTarget.length > 0) {
         this._scenenumber = 1;
+        this._isItemClick = false;
         // this._setupControls();
         // console.log(this._shop);
         // setTimeout(() => {
