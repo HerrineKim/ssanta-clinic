@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LogIn } from '../../components/auth/LogIn';
 import { LoginThree } from '../../three/LoginThree';
 import { Wrapper, CanvasContainer, LoginContainer } from './styles';
@@ -7,12 +7,10 @@ import { useRecoilValue } from 'recoil';
 import { selectUserIsLogin } from '../../store/store';
 export const LogInPage = () => {
   const isLogin = useRecoilValue(selectUserIsLogin);
+  const [isHome, setIsHome] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(isLogin, '로그인됐냐');
     const test1Canvas = new LoginThree();
-    console.log(test1Canvas.render.bind(test1Canvas));
-    console.log('useeffect');
     const requestId1 = requestAnimationFrame(
       test1Canvas.render.bind(test1Canvas),
     );
@@ -25,10 +23,14 @@ export const LogInPage = () => {
       // cancelAnimationFrame(requestId2);
     };
   }, []);
-  if (isLogin) {
+  if (isLogin && !isHome) {
     return (
       <Wrapper>
-        <LogInToHomePage checkIsLogin={isLogin}></LogInToHomePage>;
+        <LogInToHomePage
+          checkIsLogin={isLogin}
+          goHome={setIsHome}
+        ></LogInToHomePage>
+        ;
       </Wrapper>
     );
   } else {

@@ -21,13 +21,11 @@ export const Test = () => {
       },
     });
     eventSource.onopen = (event) => console.log('open', event); // <2>
-
+    getNotiList(TOKEN);
     eventSource.onerror = (event) => {
       console.log('error', event);
     };
-    setTimeout(() => {
-      getNotiList(TOKEN);
-    }, 2000);
+
     eventSource.onmessage = function (event) {
       console.log(event.data, '온메시지');
     };
