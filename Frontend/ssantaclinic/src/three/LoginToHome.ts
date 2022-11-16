@@ -62,9 +62,7 @@ export class LoginToHome {
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color('#080078');
-      // scene.fog = new THREE.FogExp2('#080078', 0.1);
-      const axesHelper = new THREE.AxesHelper(20);
-      scene.add(axesHelper);
+      scene.fog = new THREE.FogExp2('#080078', 0.1);
       this._scene = scene;
     }
   }
@@ -223,29 +221,30 @@ export class LoginToHome {
     if (this._mixer) this._mixer.update(delta);
 
     const time = this._clock.oldTime * 0.0001;
+    if (window.location.pathname === '/login/') {
+      if (this._path) {
+        console.log('애니시작');
+        const currentPosition = new THREE.Vector3();
+        const nextPosition = new THREE.Vector3();
 
-    if (this._path) {
-      console.log('애니시작');
-      const currentPosition = new THREE.Vector3();
-      const nextPosition = new THREE.Vector3();
+        this._path.getPointAt(time % 1, currentPosition);
+        this._path.getPointAt((time + 9.001) % 1, nextPosition);
 
-      this._path.getPointAt(time % 1, currentPosition);
-      this._path.getPointAt((time + 9.001) % 1, nextPosition);
+        this._santa.position.copy(currentPosition);
+        this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+        this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
 
-      this._santa.position.copy(currentPosition);
-      this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
-      this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+        //   // santaMove.getWorldPosition(this._camera.position);
+        //   // const targetPivot = this._scene.getObjectByName('targetPivot');
+        //   // if (targetPivot) {
+        //   //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
 
-      //   // santaMove.getWorldPosition(this._camera.position);
-      //   // const targetPivot = this._scene.getObjectByName('targetPivot');
-      //   // if (targetPivot) {
-      //   //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
-
-      //   //   const target = targetPivot.children[0];
-      //   //   const pt = new THREE.Vector3();
-      //   //   target.getWorldPosition(pt);
-      //   //   this._camera.lookAt(pt);
-      //   // }
+        //   //   const target = targetPivot.children[0];
+        //   //   const pt = new THREE.Vector3();
+        //   //   target.getWorldPosition(pt);
+        //   //   this._camera.lookAt(pt);
+        //   // }
+      }
     }
   }
 
