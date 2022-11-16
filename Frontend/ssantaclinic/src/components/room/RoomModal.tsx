@@ -8,6 +8,7 @@ import { CalendarAlert } from './calendaralert/Calendar';
 import Loading from '../loading/Loading';
 import { MyItems } from '../../store/store';
 import { API_BASE_URL } from '../../apis/url';
+import Saving from './saving/Saving';
 
 export default function RoomModal(props: any) {
   const { onClose } = props;
@@ -17,6 +18,8 @@ export default function RoomModal(props: any) {
   const NICKNAME = useRecoilValue(selectUserNickname);
   const ID = useRecoilValue(selectUserId);
   const TOKEN = localStorage.getItem('jwt') || '';
+
+  const [isSave, setIsSave] = useState<boolean>(false);
 
   // 트리 정보받기, 캘린더(선물) 정보 받기
 
@@ -46,6 +49,8 @@ export default function RoomModal(props: any) {
   console.log(items);
 
   const render = (time: number) => {
+    setIsSave(roomCanvas._isSave);
+
     if (roomCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       roomCanvas._renderer.render(roomCanvas._scene, roomCanvas._camera);
@@ -76,6 +81,7 @@ export default function RoomModal(props: any) {
       <CalendarAlert></CalendarAlert>
       <CanvasContainer id="room-canvas">
         <Loading></Loading>
+        {isSave && <Saving></Saving>}
       </CanvasContainer>
     </Wrapper>
   );

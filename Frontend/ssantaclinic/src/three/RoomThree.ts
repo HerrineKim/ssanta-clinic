@@ -40,11 +40,13 @@ export class RoomThree {
   _isTreeModal: boolean;
   _check: any;
   _treeaddres: string;
+  _isSave: boolean;
 
   constructor(items: number[], tree: string) {
     this._treeaddres = tree;
     this._scenenumber = 1;
     this._isTreeModal = false;
+    this._isSave = false;
     this._items = items;
     this._position = [
       [1.8, 3.6, 1.2],
@@ -444,10 +446,11 @@ export class RoomThree {
       const formData = new FormData();
       const TOKEN = localStorage.getItem('jwt') || '';
       if (checkTarget.length > 0) {
+        this._isSave = true;
         let glbFile: Blob;
         exporter.parse(
           this._tree[0],
-          function (result) {
+          (result) => {
             console.log('result:', result);
             glbFile = saveArrayBuffer(result);
             formData.append('glbfile', glbFile);
@@ -461,6 +464,7 @@ export class RoomThree {
                 Authorization: TOKEN,
               },
             }).then((res) => {
+              this._isSave = false;
               console.log(res);
             });
           },
@@ -499,7 +503,9 @@ export class RoomThree {
       // console.log('itemTarget:', itemTarget);
     }
   }
-
+  changeSave() {
+    this._isSave = false;
+  }
   _setupCalendar() {
     const calendarAlert = document.querySelector(
       '.calendar',
@@ -606,7 +612,6 @@ export class RoomThree {
     // const raycaster = this._raycaster;
 
     items.forEach((child: any, index: any) => {
-      console.log('item child:', child);
       child.name = index;
       const controls = new DragControls(
         [child],
