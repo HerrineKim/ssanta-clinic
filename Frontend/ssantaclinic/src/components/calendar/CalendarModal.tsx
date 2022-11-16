@@ -4,7 +4,7 @@ import './calendar.css';
 import './modalAnimation.scss';
 import { CalendarDetail } from '../calendar/calendarDetail/index';
 import { BoxCreate } from './boxCreate';
-
+import { API_BASE_URL } from '../../apis/url';
 // Recoil
 import { selectUserNickname } from '../../store/store';
 import { selectUserId } from '../../store/store';
@@ -63,6 +63,11 @@ import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
 
 export function CalendarModal(props: any) {
+  const BASE_URL = API_BASE_URL;
+  useEffect(() => {
+    // 현재 url 가져오기
+    const url = window.location.href;
+  }, []);
   const { onClose } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const nickName = useRecoilValue(selectUserNickname);
@@ -134,7 +139,7 @@ export function CalendarModal(props: any) {
 
   const getBoxInfo = () => {
     axios
-      .get('http://localhost:8080/api/calendar?boxId=3', {
+      .get(BASE_URL + 'calendar?boxId=3', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
