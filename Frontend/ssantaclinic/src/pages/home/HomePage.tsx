@@ -189,6 +189,11 @@ export default function Home() {
   const render = (time: number) => {
     console.log(homeCanvas._isItemClick);
     setSceneNumber(homeCanvas._scenenumber);
+    if (isCancle) {
+      setIsClick(false);
+    } else {
+      setIsClick(homeCanvas._isItemClick);
+    }
 
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
@@ -203,11 +208,7 @@ export default function Home() {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
       homeCanvas.update2(time);
-      if (isCancle) {
-        setIsClick(false);
-      } else {
-        setIsClick(homeCanvas._isItemClick);
-      }
+
       requestAnimationFrame(render);
     }
   };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ItemAlert, Button, ButtonDiv } from './styles';
+import { ItemAlert, Button, ButtonDiv, TextSpan } from './styles';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/url';
 import { Money, MyItems } from '../../store/store';
@@ -94,13 +94,14 @@ export default function ShopAlert(props: Iprops) {
           ㄴㄴ
         </Button>
       </ButtonDiv>
-      {isItemPossible && isMoneyPossible
-        ? null
-        : isItemPossible
-        ? '돈이 부족합니다.'
-        : isMoneyPossible
-        ? '아이템칸이 부족합니다.'
-        : '돈도 부족, 아이템칸도 부족'}
+
+      {isItemPossible && isMoneyPossible ? null : isItemPossible ? (
+        <TextSpan>돈이 부족합니다.</TextSpan>
+      ) : isMoneyPossible ? (
+        <TextSpan>아이템칸이 부족합니다.</TextSpan>
+      ) : (
+        <TextSpan>돈도 부족, 아이템칸도 부족</TextSpan>
+      )}
     </ItemAlert>
   );
 }
