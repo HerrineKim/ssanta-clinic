@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+import { API_BASE_URL } from '../../apis/url';
 export function ChangePassword() {
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
-
+  const BASE_URL = API_BASE_URL;
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     axios
-      .patch('http://localhost:8080' + 'api/user/find/password/update', {
+      .patch(BASE_URL + 'api/user/find/password/update', {
         password: password,
       })
       .then((res) => {

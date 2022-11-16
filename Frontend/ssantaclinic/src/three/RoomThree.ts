@@ -9,6 +9,8 @@ import gsap from 'gsap';
 
 import axios from 'axios';
 
+import { API_BASE_URL } from '../apis/url';
+const BASE_URL = API_BASE_URL;
 interface Item {
   itemImg: string;
   price: string;
@@ -488,7 +490,7 @@ export class RoomThree {
             console.log('result : ', glbFile);
 
             axios({
-              url: 'http://localhost:8080/api/tree',
+              url: BASE_URL + '/api/tree',
               method: 'post',
               data: formData,
               headers: {
