@@ -65,7 +65,7 @@ export default function Home() {
   const [scenenumber, setSceneNumber] = useState<number>(1);
   const [clickedItem, setClickedItem] = useState<number>(0);
   const [isClick, setIsClick] = useState<boolean>(false);
-  const [isShop, setIsShop] = useState<Boolean>(false);
+  const [isShop, setIsShop] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -73,7 +73,7 @@ export default function Home() {
   const setUserItems = useSetRecoilState(MyItems);
   const item = useRecoilValue(MyItems);
   const [cost, setCost] = useState<number>(0);
-
+  const [isCancle, setIsCancel] = useState<boolean>(false);
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
 
@@ -186,11 +186,11 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
+    console.log(homeCanvas._isItemClick);
     setSceneNumber(homeCanvas._scenenumber);
-    setIsClick(homeCanvas._isItemClick);
+
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
-
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
@@ -202,7 +202,11 @@ export default function Home() {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
       homeCanvas.update2(time);
-
+      if (isCancle) {
+        setIsClick(false);
+      } else {
+        setIsClick(homeCanvas._isItemClick);
+      }
       requestAnimationFrame(render);
     }
   };
@@ -340,7 +344,12 @@ export default function Home() {
       ></FriendModal>
       <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
       {isClick ? (
-        <ShopAlert item={clickedItem} userId={userId} cost={cost}></ShopAlert>
+        <ShopAlert
+          item={clickedItem}
+          userId={userId}
+          cost={cost}
+          onClose={setIsCancel}
+        ></ShopAlert>
       ) : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
