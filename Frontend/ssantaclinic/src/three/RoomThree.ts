@@ -39,8 +39,10 @@ export class RoomThree {
   _inven: any;
   _isTreeModal: boolean;
   _check: any;
+  _treeaddres: string;
 
   constructor(items: number[], tree: string) {
+    this._treeaddres = tree;
     this._scenenumber = 1;
     this._isTreeModal = false;
     this._items = items;
@@ -249,10 +251,11 @@ export class RoomThree {
       // model.name = 'close';
     });
 
-    loader.load('/room/tree.glb', (gltf) => {
+    loader.load(`${this._treeaddres}`, (gltf) => {
       count += 1;
       const tree: any[] = [];
       const model: any = gltf.scene;
+      console.log('tree:', model);
       // model.traverse((child: any) => {
       //   if (child instanceof THREE.Group) {
       //     // console.log(child, child.name);
