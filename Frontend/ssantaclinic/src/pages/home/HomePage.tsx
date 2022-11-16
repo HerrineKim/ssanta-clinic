@@ -187,6 +187,7 @@ export default function Home() {
   //     });
   // };
   useEffect(() => {
+    let requestId: number;
     axios
       .all([
         getCoin(),
@@ -208,18 +209,17 @@ export default function Home() {
           homeCanvas = new MainCanvas(userId, res2.data.tree);
 
           homeCanvas.setupOnce();
-          const requestId = requestAnimationFrame(render);
+          requestId = requestAnimationFrame(render);
           console.log(randomTrees);
-
-          return () => {
-            cancelAnimationFrame(requestId);
-            console.log('canvas 끝!');
-          };
         }),
       )
       .catch((err) => {
         console.log(err);
       });
+    return () => {
+      cancelAnimationFrame(requestId);
+      console.log('canvas 끝!');
+    };
   }, []);
 
   const render = (time: number) => {
@@ -283,16 +283,6 @@ export default function Home() {
     }
   }, [clickedItem]);
 
-  // useEffect(() => {
-  //   homeCanvas.setupOnce();
-  //   const requestId = requestAnimationFrame(render);
-
-  //   return () => {
-  //     cancelAnimationFrame(requestId);
-  //     console.log('canvas 끝!');
-  //   };
-  // }, []);
-
   // bgm
   const opts: YouTubeProps['opts'] = {
     height: '70',
@@ -307,12 +297,7 @@ export default function Home() {
       modestbranding: 1,
     },
   };
-  // setInterval(() => {
-  //   console.log(homeCanvas._isShop);
-  // }, 1000);
-  // useEffect(() => {
-  //   console.log(scenenumber);
-  // }, [scenenumber]);
+
   return (
     <Div>
       {/* <div
