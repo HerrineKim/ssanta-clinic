@@ -41,10 +41,10 @@ export class RoomThree {
   _check: any;
   _treeaddres: string;
   _isSave: boolean;
-  _clickedItem: any[];
+  _unclickedItem: any[];
 
   constructor(items: number[], tree: string) {
-    this._clickedItem = [];
+    this._unclickedItem = [];
     this._treeaddres = tree;
     this._scenenumber = 1;
     this._isTreeModal = false;
@@ -347,6 +347,7 @@ export class RoomThree {
     });
     const itemCount = this._items.length;
     this._items = items;
+    this._unclickedItem = items;
 
     const loadPage = setInterval(() => {
       console.log('로딩중');
@@ -508,11 +509,11 @@ export class RoomThree {
       if (closeTarget.length > 0) {
         // scene1으롣 돌아가기
 
-        // 백에 glb 보내기
         this._scene2.remove(this._check);
 
         this._scene2.remove(this._showcase);
-        this._scene2.remove(...this._items);
+        console.log('closetarget:', ...this._unclickedItem);
+        this._scene2.remove(...this._unclickedItem);
         this._scene2.remove(this._close);
         // 나중에 any 지우기
         this._dragControls.forEach((control: any) => {
@@ -557,6 +558,7 @@ export class RoomThree {
   }
 
   _zoomInven(object3d: any[], viewAngle: number) {
+    console.log('zoominven:', this._unclickedItem);
     console.log(object3d);
     const positions: any[] = [];
 
@@ -622,7 +624,7 @@ export class RoomThree {
     setTimeout(() => {
       //showcase만 add하게 로딩 시간에 따라 순서변경
       this._scene2.add(this._showcase);
-      this._scene2.add(...this._items);
+      this._scene2.add(...this._unclickedItem);
       this._scene2.add(this._close);
       this._scene2.add(this._check);
       this._scenenumber = 2;
@@ -637,7 +639,7 @@ export class RoomThree {
     // console.log('tree:', this._tree);
     const positions = this._position;
     const tree = this._tree;
-    const clickedItems = this._clickedItem;
+    let unclickedItems = this._unclickedItem;
     let items = this._items;
     // console.log(items);
     // const raycaster = this._raycaster;
@@ -650,106 +652,116 @@ export class RoomThree {
       );
       controls.transformGroup = true;
 
-      controls.addEventListener('dragstart', (event) => {
-        // child.position.z = 1.5;
-        // 이미 걸려있는 것 처리
-        const targets = controls.getRaycaster().intersectObjects(tree);
-        let object;
-        if (targets.length > 0) {
-          console.log('이미 걸려있음');
-          object = targets[0].object;
-          while (object.parent) {
-            object = object.parent;
-            if (object instanceof THREE.Group && object.name === 'tree') {
-              break;
-            }
-          }
-        }
-        console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
-        // 장식품이 트리에 붙어있는 것일때
-        if (event.object.parent === object) {
-          console.log('parent = event.object');
-          console.log(event.object);
-          event.object.removeFromParent();
-          this._scene2.add(event.object);
+      // controls.addEventListener('dragstart', (event) => {
+      //   console.log(event.object);
+      //   // child.position.z = 1.5;
+      //   // 이미 걸려있는 것 처리
+      //   const targets = controls.getRaycaster().intersectObjects(tree);
+      //   let object;
+      //   if (targets.length > 0) {
+      //     console.log('이미 걸려있음');
+      //     object = targets[0].object;
+      //     while (object.parent) {
+      //       object = object.parent;
+      //       if (object instanceof THREE.Group && object.name === 'tree') {
+      //         break;
+      //       }
+      //     }
+      //   }
 
-          console.log(event.object);
-        }
-        // if (
-        //   1 <= parseInt(event.object.name) &&
-        //   parseInt(event.object.name) <= 8
-        // ) {
-        //   event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
-        // } else {
-        //   event.object.children[0].material.emissive.set(0xaaaaaa);
-        // }
-      });
+      //   if (event.object.parent === object) {
+      //     console.log('parent = event.object');
+      //     console.log(event.object);
+      //     const previosPosition = event.object.position;
+      //     event.object.removeFromParent();
+      //     this._scene2.add(event.object);
+      //     event.object.position = previosPosition;
+      //   }
+      //   // if (
+      //   //   1 <= parseInt(event.object.name) &&
+      //   //   parseInt(event.object.name) <= 8
+      //   // ) {
+      //   //   event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
+      //   // } else {
+      //   //   event.object.children[0].material.emissive.set(0xaaaaaa);
+      //   // }
+      // });
 
       controls.addEventListener('dragend', (event) => {
         const targets = controls.getRaycaster().intersectObjects(tree);
+        console.log(targets);
         console.log('dragend targets:', targets);
-        // if (
-        //   1 <= parseInt(event.object.name) &&
-        //   parseInt(event.object.name) <= 8
-        // ) {
-        //   event.object.children[0].children[0].material.emissive.set(0x000000);
-        // } else {
-        //   event.object.children[0].material.emissive.set(0x000000);
-        // }
-
-        //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
-        // console.log('world position:', event.object.getWorldPosition());
-
-        if (targets.length > 0) {
-          if (targets[0].object.name === 'tree') {
-            //만난다면 장식품을 tree에 붙이고 종속시킴
-            console.log('tree 장식!', event.object, targets);
-            event.object.position.setX(targets[0].point.x);
-            event.object.position.setY(targets[0].point.y);
-            event.object.position.setZ(targets[0].point.z);
-            let object = targets[0].object;
-            // tree 최상위 찾기
-            while (object.parent) {
-              object = object.parent;
-              if (object instanceof THREE.Group) {
-                break;
+        console.log(unclickedItems, event.object);
+        if (unclickedItems.includes(event.object)) {
+          if (targets.length > 0) {
+            if (targets[0].object.name === 'tree') {
+              //만난다면 장식품을 tree에 붙이고 종속시킴
+              console.log('tree 장식!', event.object, targets);
+              event.object.position.setX(targets[0].point.x);
+              event.object.position.setY(targets[0].point.y);
+              event.object.position.setZ(targets[0].point.z);
+              let object = targets[0].object;
+              // tree 최상위 찾기
+              while (object.parent) {
+                object = object.parent;
+                if (object instanceof THREE.Group) {
+                  break;
+                }
               }
-            }
+              unclickedItems = unclickedItems.filter(
+                (obj: any) => obj !== event.object,
+              );
 
-            // items = items.filter((obj: any) => obj !== event.object);
-            object.attach(event.object);
-            // this._items = items;
+              object.attach(event.object);
+              // this._items = items;
+            }
           } else {
-            // 나눌 필요 있음
-            // event.object.removeFromParent();
-            console.log(111111111111);
-            console.log('tree가 아닌것 raycast');
             event.object.position.setX(positions[index][0]);
             event.object.position.setY(positions[index][1]);
             event.object.position.setZ(positions[index][2]);
           }
         } else {
-          console.log(2222222222);
-          console.log(event.object);
-          // event.object.removeFromParent();
-          console.log('remove object:', event.object);
-          console.log('target.length === 0');
-          // console.log('else event:', event);
-          console.log(child, positions[child.name][0]);
-          event.object.position.setX(positions[index][0]);
-          event.object.position.setY(positions[index][1]);
-          event.object.position.setZ(positions[index][2]);
-          console.log(event.object.position);
-        }
+          //
+          let i: number;
+          if (targets.length > 2) {
+            for (i = 0; i < targets.length; i++) {
+              if (targets[i].object.name === 'tree') {
+                break;
+              }
+            }
 
+            if (targets[i].object.name === 'tree') {
+              //만난다면 장식품을 tree에 붙이고 종속시킴
+              console.log('tree 장식!', event.object, targets);
+              event.object.removeFromParent();
+              event.object.position.setX(targets[i].point.x);
+              event.object.position.setY(targets[i].point.y);
+              event.object.position.setZ(targets[i].point.z);
+              let object = targets[i].object;
+              // tree 최상위 찾기
+              while (object.parent) {
+                object = object.parent;
+                if (object instanceof THREE.Group) {
+                  break;
+                }
+              }
+              object.attach(event.object);
+            }
+          } else {
+            event.object.removeFromParent();
+            this._scene2.add(event.object);
+            event.object.position.setX(positions[index][0]);
+            event.object.position.setY(positions[index][1]);
+            event.object.position.setZ(positions[index][2]);
+            unclickedItems.push(event.object);
+          }
+        }
+        this._unclickedItem = unclickedItems;
         //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
       });
       // ###########  item 에서 삭제되면 앞으로 한칸씩 밀리는 거였다.
       // => 해결해야한다.
       controls.addEventListener('drag', function (event) {
-        // console.log('drag position:', position);
-        // console.log(child.position);
-        // console.log(event.object.position);
         event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
       });
       this._dragControls.push(controls);
