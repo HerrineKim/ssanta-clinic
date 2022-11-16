@@ -301,7 +301,7 @@ export class RoomThree {
           model.traverse((child) => {
             child.name = String(item);
           });
-          console.log(model);
+          // console.log(model);
           // console.log(`${index}: `, model);
           model.scale.set(0.01, 0.01, 0.01);
           const position = this._position[`${index}`];
@@ -317,8 +317,8 @@ export class RoomThree {
 
     const loadPage = setInterval(() => {
       console.log('로딩중');
-      console.log(count);
-      console.log(itemCount);
+      // console.log(count);
+      // console.log(itemCount);
       if (count === itemCount + 5) {
         const loading = document.querySelector(
           '#room-canvas .loading',
