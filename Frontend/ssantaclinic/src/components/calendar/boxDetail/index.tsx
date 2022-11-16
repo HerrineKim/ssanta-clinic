@@ -7,7 +7,7 @@ export function BoxDetail() {
   useEffect(() => {
     // api/calendar/play?boxId=9
     axios
-      .get('http://localhost:8080/api/calendar/play?boxId=9', {
+      .get('http://localhost:8080/api/calendar/play?boxId=11', {
         headers: {
           Authorization: ACCESS_TOKEN,
         },

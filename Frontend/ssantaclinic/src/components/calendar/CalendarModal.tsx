@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './calendar.css';
 import './modalAnimation.scss';
@@ -62,6 +62,10 @@ import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
 
 export function CalendarModal(props: any) {
+  useEffect(() => {
+    // 현재 url 가져오기
+    const url = window.location.href;
+  }, []);
   const { onClose } = props;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const nickName = useRecoilValue(selectUserNickname);
@@ -160,13 +164,7 @@ export function CalendarModal(props: any) {
           }
           년 어드벤트 캘린더
         </CalendarTitle>
-        <PresentButton
-          onClick={() => {
-            showBoxCreate();
-          }}
-        >
-          선물하기💟
-        </PresentButton>
+
         {/* 크리스마스 카운터 */}
         <Countdown
           date={
@@ -185,22 +183,6 @@ export function CalendarModal(props: any) {
         </CloseButton>
       </TopContainer>
       <CalendarPageContainer>
-        {/* 녹음 불러오는 버튼
-        <button
-          onClick={() => {
-            play();
-          }}
-        >
-          재생
-        </button>
-        <button
-          onClick={() => {
-            getBoxInfo();
-          }}
-        >
-          박스 정보
-        </button> */}
-        {/* 박스 내용  */}
         <div>{content}</div>
         <div>{audioUrl}</div>
         <div>{imges}</div>
