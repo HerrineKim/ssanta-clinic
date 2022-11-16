@@ -40,7 +40,7 @@ export class RoomThree {
   _isTreeModal: boolean;
   _check: any;
 
-  constructor(items: number[]) {
+  constructor(items: number[], tree: string) {
     this._scenenumber = 1;
     this._isTreeModal = false;
     this._items = items;
@@ -70,7 +70,9 @@ export class RoomThree {
       [4.8, 2, 1.2],
       [5.2, 2, 1.2],
     ];
+  }
 
+  setupOnce() {
     this._setupThreeJs();
     this._setupCamera();
     this._setupLight();
@@ -82,6 +84,7 @@ export class RoomThree {
     this._setupPicking();
     this._setupEvents();
   }
+
   _setupThreeJs() {
     const divContainer = document.querySelector('#room-canvas');
     this._divContainer = divContainer;
@@ -104,7 +107,7 @@ export class RoomThree {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
+    // requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
@@ -117,27 +120,22 @@ export class RoomThree {
     this._orbitControls.update();
   }
 
-  render() {
-    if (this._scenenumber === 1) {
-      // console.log(this._camera.position);
-      this._renderer.render(this._scene, this._camera);
-      this.update();
-      // console.log('!');
+  // render() {
+  //   if (this._scenenumber === 1) {
+  //     // console.log(this._camera.position);
+  //     this._renderer.render(this._scene, this._camera);
+  //     this.update();
+  //     // console.log('!');
 
-      requestAnimationFrame(this.render.bind(this));
-    } else {
-      // inven scene
-      this._renderer.render(this._scene2, this._camera);
-      this.update2();
+  //     requestAnimationFrame(this.render.bind(this));
+  //   } else {
+  //     // inven scene
+  //     this._renderer.render(this._scene2, this._camera);
+  //     this.update2();
 
-      requestAnimationFrame(this.render.bind(this));
-    }
-    // this._renderer.render(this._scene, this._camera);
-    // this.update();
-    // // console.log(this._camera.position);
-
-    // requestAnimationFrame(this.render.bind(this));
-  }
+  //     requestAnimationFrame(this.render.bind(this));
+  //   }
+  // }
 
   resize() {
     const width = this._divContainer.clientWidth;
