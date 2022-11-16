@@ -163,11 +163,6 @@ export class LoginToHome {
       ]);
 
       this._path = path;
-      const points = path.getPoints(1000);
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const material = new THREE.LineBasicMaterial({ color: 0x555555 });
-      const pathLine = new THREE.Line(geometry, material);
-      this._scene.add(pathLine);
 
       // // const floor = new THREE.Mesh(
       // //   new THREE.PlaneGeometry(7000, 7000),
@@ -230,6 +225,7 @@ export class LoginToHome {
     const time = this._clock.oldTime * 0.0001;
 
     if (this._path) {
+      console.log('애니시작');
       const currentPosition = new THREE.Vector3();
       const nextPosition = new THREE.Vector3();
 
