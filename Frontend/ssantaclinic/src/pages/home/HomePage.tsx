@@ -80,6 +80,7 @@ export default function Home() {
   const resetIsCover = useResetRecoilState(isLoggedIn);
   const resetUser = useResetRecoilState(currentUser);
   const resetNoti = useResetRecoilState(NotiListState);
+  0;
   // 로그아웃
   function LogoutToHome() {
     logout();
