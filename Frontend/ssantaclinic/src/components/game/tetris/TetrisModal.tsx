@@ -169,16 +169,16 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
           <StyledTetris>
             <div className="display">
               {gameOver ? (
-                <>
+                <Fragment>
                   <Display gameOver={gameOver} text="게임 오버" />
                   <StartButton callback={handleStartGame} />
-                </>
+                </Fragment>
               ) : (
-                <>
+                <Fragment>
                   <Display text={`점수: ${score}`} />
                   <Display text={`줄 수: ${rows}`} />
                   <Display text={`레벨: ${level}`} />
-                </>
+                </Fragment>
               )}
             </div>
             <GameResult>
@@ -191,13 +191,25 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
                   onClose={onClose}
                 ></ResultTetris>
               ) : null}
-              {isFail ? <div className="wit-over">Game Over!</div> : null}
+              {isFail ? (
+                <div
+                  className="wit-over"
+                  style={{
+                    fontFamily: 'Cafe24Ssurround',
+                    textShadow: '0 0 10px #fff',
+                  }}
+                >
+                  Game Over!
+                </div>
+              ) : null}
               <span
                 className="memory-'start__text"
                 style={{
                   fontSize: isFail ? '5vmin' : '20vmin',
                   color: 'green',
                   cursor: 'pointer',
+                  fontFamily: 'Cafe24Ssurround',
+                  textShadow: '0 0 10px black',
                 }}
                 onClick={() => {
                   if (isFail) {
