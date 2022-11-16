@@ -76,6 +76,10 @@ public class User {
         this.money = money;
     }
 
+    public void changeTree(String treeUrl) {
+        this.treeUrl = treeUrl;
+    }
+
     public void changeFindPasswordNum(String findPasswordNum) {
         this.findPasswordNum = findPasswordNum;
     }
