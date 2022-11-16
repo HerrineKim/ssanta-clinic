@@ -252,31 +252,58 @@ export class RoomThree {
 
       // model.name = 'close';
     });
-
-    loader.load(`${this._treeaddres}`, (gltf) => {
-      count += 1;
-      const tree: any[] = [];
-      const model: any = gltf.scene;
-      console.log('tree:', model);
-      // model.traverse((child: any) => {
-      //   if (child instanceof THREE.Group) {
-      //     // console.log(child, child.name);
-      //     group.push(child);
-      //   }
-      // });
-      // model.position.set(5, 0, -4.5);
-      model.name = 'tree';
-      model.traverse((child: THREE.Object3D) => {
-        tree.push(child);
-        child.name = 'tree';
+    // treeaddres 없을 수도 있음
+    if (this._treeaddres) {
+      loader.load(`${this._treeaddres}`, (gltf) => {
+        count += 1;
+        const tree: any[] = [];
+        const model: any = gltf.scene;
+        console.log('tree:', model);
+        // model.traverse((child: any) => {
+        //   if (child instanceof THREE.Group) {
+        //     // console.log(child, child.name);
+        //     group.push(child);
+        //   }
+        // });
+        // model.position.set(5, 0, -4.5);
+        model.name = 'tree';
+        model.traverse((child: THREE.Object3D) => {
+          tree.push(child);
+          child.name = 'tree';
+        });
+        this._scene.add(model);
+        inven.push(model);
+        // console.log('loadtree inven:', inven);
+        // console.log('treegltf:', model);
+        this._tree = tree;
+        this._inven = inven;
       });
-      this._scene.add(model);
-      inven.push(model);
-      // console.log('loadtree inven:', inven);
-      // console.log('treegltf:', model);
-      this._tree = tree;
-      this._inven = inven;
-    });
+    } else {
+      loader.load('/room/tree.glb', (gltf) => {
+        count += 1;
+        const tree: any[] = [];
+        const model: any = gltf.scene;
+        console.log('tree:', model);
+        // model.traverse((child: any) => {
+        //   if (child instanceof THREE.Group) {
+        //     // console.log(child, child.name);
+        //     group.push(child);
+        //   }
+        // });
+        // model.position.set(5, 0, -4.5);
+        model.name = 'tree';
+        model.traverse((child: THREE.Object3D) => {
+          tree.push(child);
+          child.name = 'tree';
+        });
+        this._scene.add(model);
+        inven.push(model);
+        // console.log('loadtree inven:', inven);
+        // console.log('treegltf:', model);
+        this._tree = tree;
+        this._inven = inven;
+      });
+    }
 
     loader.load('/room/showcase.glb', (gltf) => {
       count += 1;
