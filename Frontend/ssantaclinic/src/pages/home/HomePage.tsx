@@ -71,6 +71,8 @@ export default function Home() {
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
 
+  const [randomTrees, setRandomTrees] = useState<string[]>([]);
+
   const navigate = useNavigate();
 
   const resetMoney = useResetRecoilState(Money);
@@ -115,21 +117,6 @@ export default function Home() {
   //     });
   // };
 
-  // money 정보 불러오기
-  // useEffect(() => {
-  //   SSantaApi.getInstance().money(
-  //     { userId: userId },
-  //     {
-  //       onSuccess(data) {
-  //         console.log(data);
-  //         setUserMoney({ money: data.money });
-  //         console.log(money);
-  //       },
-  //       navigate,
-  //     },
-  //   );
-  // }, []);
-
   const getCoin = () =>
     axios({
       url: `${BASE_URL}coin`,
@@ -139,7 +126,19 @@ export default function Home() {
       },
     }).then((res) => {
       setUserMoney(res.data.coin);
-      // console.log(res);
+      console.log(res);
+    });
+  // random tree 불러오기
+  const getTree = () =>
+    axios({
+      url: `${BASE_URL}tree`,
+      method: 'get',
+      headers: {
+        Authorization: ACCESS_TOKEN,
+      },
+    }).then((res) => {
+      setRandomTrees(res.data.tree);
+      console.log(res);
     });
 
   //items 정보불러오기
@@ -157,64 +156,81 @@ export default function Home() {
   }, []);
 
   const [isLetter, setIsLetter] = useState<boolean>(false);
-  useEffect(() => {
-    // 추천 친구 목록 불러오기(api/friend/recommend)
-    const getFriendList = () => {
-      axios
-        .get('http://localhost:8080/api/friend/recommend', {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setFriendList(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-        });
-    };
-    // 팔로잉 목록(api/friend/followings)
-    const getFollowingList = () => {
-      axios
-        .get('http://localhost:8080/api/friend/followings', {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setFollowingList(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-        });
-    };
-    // 팔로워 목록(api/friend/followers)
-    const getFollowerList = () => {
-      axios
-        .get('http://localhost:8080/api/friend/followers', {
-          headers: {
-            Authorization: ACCESS_TOKEN,
-          },
-        })
-        .then((res) => {
-          // console.log(res.data);
-          setFollowerList(res.data);
-        })
-        .catch((err) => {
-          // console.log(err.response);
-        });
-    };
-    getFriendList();
+  const getFriendList = () => {
+    axios
+      .get('http://localhost:8080/api/friend/recommend', {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        // console.log(res.data);
+        setFriendList(res.data);
+      })
+      .catch((err) => {
+        // console.log(err.response);
+      });
+  };
+  // 팔로잉 목록(api/friend/followings)
+  const getFollowingList = () => {
+    axios
+      .get('http://localhost:8080/api/friend/followings', {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        // console.log(res.data);
+        setFollowingList(res.data);
+      })
+      .catch((err) => {
+        // console.log(err.response);
+      });
+  };
+  // 팔로워 목록(api/friend/followers)
+  const getFollowerList = () => {
+    axios
+      .get('http://localhost:8080/api/friend/followers', {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        // console.log(res.data);
+        setFollowerList(res.data);
+      })
+      .catch((err) => {
+        // console.log(err.response);
+      });
+  };
+
+  async function callAxios() {
+    await getFriendList();
     getFollowingList();
     getFollowerList();
     getCoin();
+    getTree();
+    return true;
+  }
+
+  let homeCanvas: any;
+  useEffect(() => {
+    // 추천 친구 목록 불러오기(api/friend/recommend)
+    callAxios().then((res) => {
+      console.log(res);
+      homeCanvas = new MainCanvas(userId, randomTrees);
+      homeCanvas.setupOnce();
+    });
+    const requestId = requestAnimationFrame(render);
+    console.log(randomTrees);
+
+    return () => {
+      cancelAnimationFrame(requestId);
+      console.log('canvas 끝!');
+    };
   }, []);
 
   // 친구 검색: 추후 구현
-
-  const homeCanvas = new MainCanvas(userId);
 
   const render = (time: number) => {
     setSceneNumber(homeCanvas._scenenumber);
@@ -251,15 +267,15 @@ export default function Home() {
     }
   }, [clickedItem]);
 
-  useEffect(() => {
-    homeCanvas.setupOnce();
-    const requestId = requestAnimationFrame(render);
+  // useEffect(() => {
+  //   homeCanvas.setupOnce();
+  //   const requestId = requestAnimationFrame(render);
 
-    return () => {
-      cancelAnimationFrame(requestId);
-      console.log('canvas 끝!');
-    };
-  }, []);
+  //   return () => {
+  //     cancelAnimationFrame(requestId);
+  //     console.log('canvas 끝!');
+  //   };
+  // }, []);
 
   // bgm
   const opts: YouTubeProps['opts'] = {

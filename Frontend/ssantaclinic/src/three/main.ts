@@ -90,13 +90,17 @@ export class MainCanvas {
   _arrow: any;
   _clickedItem: number;
   _isItemClick: boolean;
+  _randomTrees: string[];
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
   _scenenumber = 1;
 
-  constructor(userId: number) {
+  constructor(userId: number, randomTrees: string[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
+    console.log(randomTrees);
+    this._randomTrees = randomTrees;
+    console.log(this._randomTrees);
     this._userId = userId;
     this._items = [];
     this._isAlert = false;
@@ -232,6 +236,11 @@ export class MainCanvas {
 
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
+    console.log(this._randomTrees);
+    this._randomTrees.forEach((tree) => {
+      console.log(tree);
+    });
+
     // 안눌러도 되는 맵 로드
     loader.load('main/arrowmain.glb', (gltf) => {
       const model1 = gltf.scene;
