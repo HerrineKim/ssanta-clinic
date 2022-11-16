@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarAlertDiv, CalendarButton } from './style';
 import { useParams } from 'react-router-dom';
-import { CalendarModal } from '../../calendar/CalendarModal';
+import { OtherCalendarModal } from '../../calendar/OtherCalendarModal';
 import axios from 'axios';
 // interface Iprops {
 //   return;
 // }
 
-export function CalendarAlert(props: any) {
+export function OtherCalendarAlert(props: any) {
   const [isHelp, setisHelp] = useState<boolean>(false);
   const param = useParams();
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
@@ -41,6 +41,6 @@ export function CalendarAlert(props: any) {
       </CalendarAlertDiv>
     );
   } else {
-    return <CalendarModal onClose={setisHelp}></CalendarModal>;
+    return <OtherCalendarModal onClose={setisHelp}></OtherCalendarModal>;
   }
 }

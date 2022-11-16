@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { OtherRoom } from '../../components/otherroom/OtherRoom';
 import { Wrapper, CanvasContainer, ToHomeButton } from './styles';
 import { OtherRoomThree } from '../../three/OtherRoomThree';
-import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
+import { OtherCalendarAlert } from '../../components/room/calendaralert/OtherCalendar';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
@@ -29,7 +29,7 @@ export const OtherRoomPage = () => {
   return (
     <Wrapper>
       <OtherRoom />
-      <CalendarAlert></CalendarAlert>
+      <OtherCalendarAlert></OtherCalendarAlert>
       <CanvasContainer id="other-room-canvas"></CanvasContainer>
       <ToHomeButton
         as={motion.button}

@@ -12,10 +12,6 @@ export interface IUser {
   // jwt: string;
 }
 
-export interface ILetter {
-  isList: boolean;
-}
-
 interface isLoggedIn {
   isLoggedIn: boolean;
 }

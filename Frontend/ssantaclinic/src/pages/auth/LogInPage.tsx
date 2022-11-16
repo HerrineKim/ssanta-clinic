@@ -28,7 +28,7 @@ export const LogInPage = () => {
   if (isLogin) {
     return (
       <Wrapper>
-        <LogInToHomePage></LogInToHomePage>;
+        <LogInToHomePage checkIsLogin={isLogin}></LogInToHomePage>;
       </Wrapper>
     );
   } else {
