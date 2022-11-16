@@ -420,7 +420,7 @@ export class MainCanvas {
       // console.log('targets: ', targets);
 
       this._removeMemory();
-      // this._removeHomeAlert();
+      this._removeHomeAlert();
       this._removeTetris();
       this._removeWit();
       this._removeLetter();
