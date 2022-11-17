@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResultDiv, CoinImg } from './resultstyle';
+import { ResultDiv, CoinImg, YesButton } from './resultstyle';
 import { SSantaApi } from '../../../apis/ssantaApi';
 import { useNavigate } from 'react-router-dom';
 import { Money } from '../../../store/store';
@@ -47,7 +47,7 @@ export default function ResultMemory(props: ResultProp) {
       ) : (
         '실망스럽습니다'
       )}
-      <button onClick={() => onClose(false)}>돌아가기</button>
+      <YesButton onClick={() => onClose(false)}>돌아가기</YesButton>
     </ResultDiv>
   );
 }
