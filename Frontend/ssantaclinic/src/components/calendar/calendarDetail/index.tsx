@@ -38,6 +38,10 @@ export function CalendarDetail(props: CalendarDetailProps) {
         setBoxDetail(res.data);
         console.log(res.data);
       })
+      // 비동기 처리 성공!
+      .then(() => {
+        setBoxDetailOpen(true);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -82,11 +86,6 @@ export function CalendarDetail(props: CalendarDetailProps) {
           boxDetailOpen={boxDetailOpen}
           boxDetail={boxDetail}
         ></BoxDetail>
-        {/* <BoxDetail
-          setBoxDetailOpen={setBoxDetailOpen}
-          boxDetailOpen={boxDetailOpen}
-          boxDetail={boxDetail}
-        ></BoxDetail> */}
         <CalendarDetailTopContainer>
           <DayDiv>
             12월 {props.date < 10 ? `0${props.date}` : props.date}일
@@ -98,9 +97,7 @@ export function CalendarDetail(props: CalendarDetailProps) {
           {props.Boxes.map((box: any) => (
             <div
               onClick={() => {
-                // alert('클릭');
                 getBoxDetail(box.boxId);
-                setBoxDetailOpen(true);
               }}
               key={box.boxId}
             >
