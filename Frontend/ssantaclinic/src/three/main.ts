@@ -360,6 +360,7 @@ export class MainCanvas {
 
     // scenenumber 분기
     if (this._scenenumber === 1) {
+      this._isShop = false;
       // 화살표
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
       // 기본 맵
