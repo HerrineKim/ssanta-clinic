@@ -1,5 +1,16 @@
-import React, { Fragment, useEffect } from 'react';
-import { BoxDetailContainer } from './styles';
+import React from 'react';
+import {
+  BoxDetailContainer,
+  CloseButton,
+  BoxDetailTop,
+  BoxDetailMiddle,
+  BoxDetailBottom,
+  SenderText,
+  ContentText,
+  PlayButton,
+  ImageButton,
+  ButtonsDiv,
+} from './styles';
 import { API_BASE_URL } from '../../../apis/url';
 import axios from 'axios';
 
@@ -38,18 +49,25 @@ export function BoxDetail(props: BoxDetailProps) {
   } else {
     return (
       <BoxDetailContainer>
-        <button onClick={closeBoxDetailModal}>x</button>
-        <div>{props.boxDetail.content}</div>
-        {/* <div>{props.boxDetail.d}</div> */}
-        {/* audioUrl 재생 */}
-        <button
-          onClick={() => {
-            playAudio();
-          }}
-        >
-          재생
-        </button>
-        <div>{props.boxDetail.sender}</div>
+        <BoxDetailTop>
+          <CloseButton onClick={closeBoxDetailModal}>x</CloseButton>
+        </BoxDetailTop>
+        <BoxDetailMiddle>
+          <ButtonsDiv>
+            <ImageButton>🖼️</ImageButton>
+            <PlayButton
+              onClick={() => {
+                playAudio();
+              }}
+            >
+              📟
+            </PlayButton>
+          </ButtonsDiv>
+          <ContentText>{props.boxDetail.content}</ContentText>
+        </BoxDetailMiddle>
+        <BoxDetailBottom>
+          <SenderText>From. {props.boxDetail.sender}</SenderText>
+        </BoxDetailBottom>
       </BoxDetailContainer>
     );
   }
