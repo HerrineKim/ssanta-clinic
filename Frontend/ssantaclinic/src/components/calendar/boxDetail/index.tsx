@@ -1,14 +1,27 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import { API_BASE_URL } from '../../../apis/url';
+import React, { Fragment, useEffect } from 'react';
+import { BoxDetailContainer } from './styles';
 
 type BoxDetailProps = {
-  boxId: number;
+  setBoxDetailOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  boxDetailOpen: boolean;
+  boxDetail: any;
 };
-export function BoxDetail(props: BoxDetailProps) {
-  const BASE_URL = API_BASE_URL;
-  const ACCESS_TOKEN = localStorage.getItem('jwt');
-  // 녹음 테스트
 
-  return <div></div>;
+export function BoxDetail(props: BoxDetailProps) {
+  useEffect(() => {
+    console.log(props.boxDetail);
+  }, [props.boxDetail]);
+  const closeBoxDetailModal = () => {
+    props.setBoxDetailOpen(false);
+  };
+  if (!props.boxDetailOpen) {
+    return null;
+  } else {
+    return (
+      <Fragment>
+        <button onClick={closeBoxDetailModal}>x</button>
+        <div>{props.boxDetail.content}</div>
+      </Fragment>
+    );
+  }
 }
