@@ -204,12 +204,15 @@ public class CalendarServiceImpl implements CalendarService{
             var info = new DataLine.Info(Clip.class, format);
             clip = (Clip) AudioSystem.getLine(info);
         } catch (LineUnavailableException e) {
+            e.printStackTrace();
             System.err.println("matching line is not available due to resource restrictions");
             return;
         } catch (SecurityException ee) {
+            ee.printStackTrace();
             System.err.println("if a matching line is not available due to security restrictions");
             return;
         } catch (IllegalArgumentException eee) {
+            eee.printStackTrace();
             System.err.println("if the system does not support at least one line matching the specified Line.Info object " +
                     "through any installed mixer");
             return;
