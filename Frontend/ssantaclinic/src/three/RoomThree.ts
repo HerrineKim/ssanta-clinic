@@ -255,7 +255,7 @@ export class RoomThree {
       // model.name = 'close';
     });
     // treeaddres 없을 수도 있음
-    if (this._treeaddres) {
+    if (this._treeaddres !== '') {
       loader.load(`${this._treeaddres}`, (gltf) => {
         count += 1;
         const tree: any[] = [];
