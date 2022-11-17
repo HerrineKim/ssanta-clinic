@@ -1,5 +1,26 @@
 import styled from 'styled-components';
 
+export const PresentButton = styled.button`
+  min-width: 130px;
+  font-family: 'Cafe24Ssurround';
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 600;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-top: 1.5%;
+  transition: all 0.3s;
+  &:hover {
+    background-color: #422800;
+    color: #fbeee0;
+  }
+`;
+
 export const CalendarBackground = styled.div`
   position: absolute;
   top: 1.5%;
@@ -765,4 +786,40 @@ export const MiniContainerTen = styled.div`
   color: #f6ebd4;
   background-color: #b8c7b0;
   border-radius: 8px;
+`;
+export const CloseButton = styled.button`
+background-color: #fbeee0;
+border: 2px solid #422800;
+border-radius: 30px;
+box-shadow: #422800 4px 4px 0 0;
+color: #422800;
+cursor: pointer;
+display: inline-block;
+font-weight: 600;
+font-size: 1.5rem;
+padding: 0 18px;
+line-height: 50px;
+text-align: center;
+text-decoration: none;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+z-index: 999;
+font-family: 'Cafe24Ssurround';
+}
+
+:hover {
+background-color: #fff;
+}
+
+:active {
+box-shadow: #422800 2px 2px 0 0;
+transform: translate(2px, 2px);
+}
+
+@media (min-width: 100px) {
+{
+  min-width: 60px;
+  padding: 0 25px;
+}
 `;

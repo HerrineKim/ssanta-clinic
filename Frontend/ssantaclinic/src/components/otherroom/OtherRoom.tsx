@@ -4,17 +4,19 @@ import { selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { OtherRoomContainer } from './styled';
 import { useParams, useNavigate } from 'react-router-dom';
-
+import { API_BASE_URL } from '../../apis/url';
 const TOKEN = localStorage.getItem('jwt') || '';
 
 export const OtherRoom = () => {
+  const BASE_URL = API_BASE_URL;
   const navigate = useNavigate();
   const param = useParams();
   const OtherID = param.id;
   useEffect(() => {
     // const OtherId =
+    console.log(OtherID);
     axios
-      .get('http://localhost:8080/api/user/detail/' + OtherID, {
+      .get(BASE_URL + 'user/detail/' + OtherID, {
         headers: {
           Authorization: TOKEN,
         },
@@ -24,7 +26,6 @@ export const OtherRoom = () => {
       })
       .catch((err) => {
         console.log(err.resonse);
-        navigate('/404');
       });
   });
   // function GetOtherUser() { //다른 사람 유저 정보

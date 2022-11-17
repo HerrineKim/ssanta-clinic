@@ -62,9 +62,7 @@ export class LoginToHome {
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color('#080078');
-      // scene.fog = new THREE.FogExp2('#080078', 0.1);
-      const axesHelper = new THREE.AxesHelper(20);
-      scene.add(axesHelper);
+      scene.fog = new THREE.FogExp2('#080078', 0.1);
       this._scene = scene;
     }
   }
@@ -151,38 +149,18 @@ export class LoginToHome {
       this._mixer = mixer;
 
       const path = new THREE.CatmullRomCurve3([
-        // new THREE.Vector3(-1, 0, -0.5),
-        // new THREE.Vector3(10, 0, -0.5),
-        // new THREE.Vector3(30, 0, -10),
-        // new THREE.Vector3(15, -7, -15),
-
-        // new THREE.Vector3(15, -6, 15),
-        // new THREE.Vector3(-15, -5, 15),
-        // new THREE.Vector3(-15, -4, -15),
-        // new THREE.Vector3(15, -3, -15),
-
-        // new THREE.Vector3(15, -2, 15),
-        // new THREE.Vector3(-15, 15, 35),
         new THREE.Vector3(0, 0, 0),
-        new THREE.Vector3(5, 0, 0),
-        new THREE.Vector3(15, 5, 0),
-        new THREE.Vector3(20, 10, 0),
-
-        // new THREE.Vector3(15, -6, 15),
-        // new THREE.Vector3(-15, -5, 15),
-        // new THREE.Vector3(-15, -4, -15),
-        // new THREE.Vector3(15, -3, -15),
-
-        // new THREE.Vector3(15, -2, 15),
-        // new THREE.Vector3(-15, 15, 35),
+        new THREE.Vector3(5, 0, 5),
+        new THREE.Vector3(10, 0, 10),
+        new THREE.Vector3(20, 5, 20),
+        new THREE.Vector3(25, 10, 25),
+        new THREE.Vector3(30, 20, 30),
+        new THREE.Vector3(35, 30, 20),
+        new THREE.Vector3(40, 40, 10),
+        new THREE.Vector3(45, 50, 0),
       ]);
 
       this._path = path;
-      const points = path.getPoints(1000);
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const material = new THREE.LineBasicMaterial({ color: 0x555555 });
-      const pathLine = new THREE.Line(geometry, material);
-      this._scene.add(pathLine);
 
       // // const floor = new THREE.Mesh(
       // //   new THREE.PlaneGeometry(7000, 7000),
@@ -213,7 +191,7 @@ export class LoginToHome {
     });
     new GLTFLoader().load('/login/dongurami.glb', (gltf) => {
       const model4 = gltf.scene;
-      model4.position.set(20, 10, 0);
+      model4.position.set(40, 50, 0);
       this._model4 = model4;
       this._scene.add(model4);
     });
@@ -243,28 +221,30 @@ export class LoginToHome {
     if (this._mixer) this._mixer.update(delta);
 
     const time = this._clock.oldTime * 0.0001;
+    if (window.location.pathname === '/login/') {
+      if (this._path) {
+        console.log('애니시작');
+        const currentPosition = new THREE.Vector3();
+        const nextPosition = new THREE.Vector3();
 
-    if (this._path) {
-      const currentPosition = new THREE.Vector3();
-      const nextPosition = new THREE.Vector3();
+        this._path.getPointAt(time % 1, currentPosition);
+        this._path.getPointAt((time + 9.001) % 1, nextPosition);
 
-      this._path.getPointAt(time % 1, currentPosition);
-      this._path.getPointAt((time + 9.001) % 1, nextPosition);
+        this._santa.position.copy(currentPosition);
+        this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+        this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
 
-      this._santa.position.copy(currentPosition);
-      this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
-      this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+        //   // santaMove.getWorldPosition(this._camera.position);
+        //   // const targetPivot = this._scene.getObjectByName('targetPivot');
+        //   // if (targetPivot) {
+        //   //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
 
-      //   // santaMove.getWorldPosition(this._camera.position);
-      //   // const targetPivot = this._scene.getObjectByName('targetPivot');
-      //   // if (targetPivot) {
-      //   //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
-
-      //   //   const target = targetPivot.children[0];
-      //   //   const pt = new THREE.Vector3();
-      //   //   target.getWorldPosition(pt);
-      //   //   this._camera.lookAt(pt);
-      //   // }
+        //   //   const target = targetPivot.children[0];
+        //   //   const pt = new THREE.Vector3();
+        //   //   target.getWorldPosition(pt);
+        //   //   this._camera.lookAt(pt);
+        //   // }
+      }
     }
   }
 

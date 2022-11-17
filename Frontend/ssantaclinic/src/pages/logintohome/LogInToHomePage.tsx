@@ -3,21 +3,22 @@ import { LoginToHome } from '../../three/LoginToHome';
 import { Wrapper, CanvasContainer } from './styles';
 import { useNavigate } from 'react-router-dom';
 
-export const LogInToHomePage = () => {
+export const LogInToHomePage = (props: any) => {
+  const { checkIsLogin, goHome } = props;
+  console.log(checkIsLogin, '렌더링 체크');
   const navigate = useNavigate();
   useEffect(() => {
     setTimeout(() => {
       navigate('/');
-    }, 8000);
+      goHome(true);
+    }, 9000);
     const toHomeCanvas = new LoginToHome();
-    console.log(toHomeCanvas.render.bind(toHomeCanvas));
-    console.log('useeffect');
-    const requestId1 = requestAnimationFrame(
+    const requestId2 = requestAnimationFrame(
       toHomeCanvas.render.bind(toHomeCanvas),
     );
 
     return () => {
-      cancelAnimationFrame(requestId1);
+      cancelAnimationFrame(requestId2);
     };
   }, []);
   return (

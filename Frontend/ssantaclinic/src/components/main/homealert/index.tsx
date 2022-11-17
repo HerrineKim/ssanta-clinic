@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Div } from './style';
+import { HomeAlertDiv, InButton } from './style';
 import { useRecoilValue } from 'recoil';
 import { selectUserId } from '../../../store/store';
+
 // import { Link } from 'react-router-dom';
 import RoomModal from '../../room/RoomModal';
 
@@ -11,19 +12,18 @@ import RoomModal from '../../room/RoomModal';
 
 export function HomeAlert(props: any) {
   const Id = useRecoilValue(selectUserId);
-  const userId = '1';
-  const url = '/myroom/' + userId;
+
   const [isHelp, setisHelp] = useState<boolean>(false);
   function help() {
     setisHelp(true);
   }
-  console.log(url);
+
   if (!isHelp) {
     return (
-      <Div className="home">
+      <HomeAlertDiv className="home">
         들어갈래?
-        <button onClick={help}>ㅇㅋ</button>
-      </Div>
+        <InButton onClick={help}>네!</InButton>
+      </HomeAlertDiv>
     );
   } else {
     return <RoomModal onClose={setisHelp}></RoomModal>;

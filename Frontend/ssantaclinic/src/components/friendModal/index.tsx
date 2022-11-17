@@ -18,8 +18,9 @@ import {
   PeopleContainer,
   SearchListContainer,
 } from './styles';
-
+import { API_BASE_URL } from '../../apis/url';
 export default function FriendModal(props: any) {
+  const BASE_URL = API_BASE_URL;
   // 크리스마스 관련 이모지 중 랜덤 이모지 선택
   const christmasEmojiList = [
     '🎄',
@@ -46,11 +47,12 @@ export default function FriendModal(props: any) {
     props.followerList,
     props.setFollowerList,
   ];
+  // Navigate 선언
+  const navigate = useNavigate();
+
   // 친구 검색(api/user/search)
   const ACCESS_TOKEN = localStorage.getItem('jwt');
-  const [searchList, setSearchList] = useState([]);
   const [searchInput, setSearchInput] = useState('');
-  const [isSearch, setIsSearch] = useState(false);
 
   const handleSearchInput = (e: any) => {
     setSearchInput(e.target.value);
@@ -59,7 +61,7 @@ export default function FriendModal(props: any) {
   const handleSearch = () => {
     axios
       .post(
-        `http://localhost:8080/api/user/search`,
+        BASE_URL + `user/search`,
         { nickName: searchInput },
         {
           headers: {
@@ -70,6 +72,7 @@ export default function FriendModal(props: any) {
       .then((res) => {
         console.log(res.data);
         // 해당 유저의 마이룸으로 이동
+        navigate('/otherroom/' + res.data.userId);
       })
       .catch((err) => {
         console.log(err.response);

@@ -8,13 +8,57 @@ export interface IUser {
   id: string;
   nickname: string;
   noti: Array<string>;
+  isLogin: boolean;
   // jwt: string;
 }
 
-export interface ILetter {
-  isList: boolean;
-  isWirte: boolean;
+interface isLoggedIn {
+  isLoggedIn: boolean;
 }
+
+export const isLoggedIn = atom<isLoggedIn>({
+  key: 'isLoggedin',
+  default: {
+    isLoggedIn: localStorage.getItem('jwt') ? true : false,
+  },
+});
+
+// iscover
+export const IsCover = atom<boolean>({
+  key: 'isCover',
+  default: true,
+});
+
+// money
+export const Money = atom<number>({
+  key: 'money',
+  default: 0,
+});
+
+interface Items {
+  items: Item[];
+}
+
+interface Item {
+  itemImg: string;
+  price: string;
+  // 아이템이름??
+  nickname: string;
+}
+
+// items
+export const MyItems = atom<number[]>({
+  key: 'items',
+  default: [],
+});
+
+export const isLogIn = selector<boolean>({
+  key: 'isLogIn',
+  get: ({ get }) => {
+    const isLogdIn = get(isLoggedIn);
+    return isLogdIn.isLoggedIn;
+  },
+});
 
 export const currentUser = atom<IUser>({
   key: 'user',
@@ -23,18 +67,12 @@ export const currentUser = atom<IUser>({
     id: '',
     nickname: '',
     noti: [],
+    isLogin: false,
     // jwt: '',
   },
   effects_UNSTABLE: [persistAtom],
 });
 
-export const letterState = atom<ILetter>({
-  key: 'letter',
-  default: {
-    isList: true,
-    isWirte: false,
-  },
-});
 // export const selectToken = selector({
 //   key: 'userToken',
 //   get: ({ get }) => {
@@ -66,20 +104,11 @@ export const selectUserNickname = selector<string>({
     return user.nickname;
   },
 });
-
-export const selectLetterList = selector<boolean>({
-  key: 'nowLetterState',
+export const selectUserIsLogin = selector<boolean>({
+  key: 'IsLogin',
   get: ({ get }) => {
-    const letter = get(letterState);
-    return letter.isList;
-  },
-});
-
-export const selectLetterWrite = selector<boolean>({
-  key: 'nowWriteState',
-  get: ({ get }) => {
-    const letter = get(letterState);
-    return letter.isWirte;
+    const user = get(currentUser);
+    return user.isLogin;
   },
 });
 

@@ -35,14 +35,9 @@ public class TreeServiceImpl implements TreeService{
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 기존 tree url 받아오기
         String userTreeUrl = user.getTreeUrl();
+        user.changeTree(treeUrl);
         // tree url update
-        userRepository.save(User.builder()
-                                .userId(user.getUserId())
-                                .nickName(user.getNickName())
-                                .email(user.getEmail())
-                                .password(user.getPassword())
-                                .treeUrl(treeUrl)
-                                .build());
+        userRepository.save(user);
         return userTreeUrl;
     }
 
@@ -77,5 +72,13 @@ public class TreeServiceImpl implements TreeService{
            item.changeCount(item.getCount() + 1);
            userItemBoxRepository.save(item);
         }
+    
+    @Override
+    public String getTreeInfo(int userId) {
+        // 유저 검색
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+        String treeUrl = user.getTreeUrl().isBlank() ? "" : user.getTreeUrl();
+        return treeUrl;
     }
 }

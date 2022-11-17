@@ -13,6 +13,7 @@ export const FindPasswordPageContainer = styled.div`
 export const Wrapper = styled.div`
   width: 100%;
   height: 100vh;
+  overflow: hidden;
 `;
 
 export const CanvasContainer = styled.div`

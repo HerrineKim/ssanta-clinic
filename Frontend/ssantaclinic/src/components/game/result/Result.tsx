@@ -1,31 +1,35 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { ResultDiv, CoinImg } from './resultstyle';
+import axios from 'axios';
+import { API_BASE_URL } from '../../../apis/url';
+import { useSetRecoilState } from 'recoil';
+import { Money } from '../../../store/store';
 
 interface ResultProp {
   isSucces: boolean;
   time: number | null;
   round: number | null;
+  money: number;
   onClose: (value: React.SetStateAction<boolean>) => void;
-  game: number;
 }
 
 export default function Result(props: ResultProp) {
-  const { isSucces, onClose, time, game } = props;
-  const [money, setMoney] = useState<number>(0);
-  console.log(game);
+  const { isSucces, onClose, time, money } = props;
+  const BASE_URL = API_BASE_URL;
+  const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
+  const setUserMoney = useSetRecoilState(Money);
+
   useEffect(() => {
-    if (time !== null && isSucces) {
-      if (time <= 30) {
-        setMoney(10);
-      } else if (time <= 40) {
-        setMoney(8);
-      } else if (time <= 50) {
-        setMoney(6);
-      } else if (time <= 60) {
-        setMoney(4);
-      } else {
-        setMoney(2);
-      }
+    if (isSucces) {
+      axios({
+        method: 'patch',
+        url: `${BASE_URL}coin`,
+        data: { coin: money },
+        headers: { Authorization: ACCESS_TOKEN },
+      }).then((res) => {
+        console.log(res);
+        setUserMoney(res.data.coin);
+      });
     }
   }, []);
   console.log(time);

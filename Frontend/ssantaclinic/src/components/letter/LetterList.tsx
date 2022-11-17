@@ -1,33 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { LetterListContainer } from './styles';
+import { motion } from 'framer-motion';
 
-export const LetterList = () => {
-  const [message, setMessage] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
-  const navigate = useNavigate();
+export const LetterList = (props: any) => {
+  const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
 
-  useEffect(() => {
-    axios
-      .get('http://localhost:8080' + '/api/letter', {
-        headers: {
-          Authorization: ACCESS_TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setMessage('산타에게서 온 답장');
-        setTitle('편지 제목');
-      })
-      .catch((err) => {
-        console.log(err.resonse);
-      });
-  });
+  const { onLetters, onLetterId, onReceiveLetter, onLetterList } = props;
+
+  function Letter({ letter }: { letter: any }) {
+    return (
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        id="letterbox"
+        onClick={() => {
+          onLetterId(letter.replyLetterid);
+          onReceiveLetter(true);
+          onLetterList(false);
+        }}
+      >
+        <b>{letter.title}</b>
+      </motion.div>
+    );
+  }
+
   return (
-    <div id="receive-letter-container">
-      <p>리스트</p>
-    </div>
+    <LetterListContainer id="receive-letter-container">
+      {onLetters.map((letter: any, index: any) => (
+        <Letter letter={letter} key={index} />
+      ))}
+    </LetterListContainer>
   );
 };
