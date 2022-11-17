@@ -18,60 +18,7 @@ import { ResetTokenPage } from './pages/ResetTokenPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
 
-import axios from 'axios';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { selectUserId } from './store/store';
-import { notiState } from './store/Notification';
-import { EventSourcePolyfill } from 'event-source-polyfill';
-import { API_BASE_URL } from './apis/url';
-const EventSource = EventSourcePolyfill;
-
 function App() {
-  const BASE_URL = API_BASE_URL;
-  const TOKEN = localStorage.getItem('jwt') || '';
-  const ID = useRecoilValue(selectUserId);
-  const setNotis = useSetRecoilState(notiState);
-
-  useEffect(() => {
-    if (TOKEN) {
-      console.log('sse');
-      const eventSource = new EventSource(BASE_URL + 'noti/sub/' + ID, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      });
-      eventSource.onopen = (event) => console.log('open', event); // <2>
-      getNotiList(TOKEN);
-      eventSource.onerror = (event) => {
-        console.log('error', event);
-      };
-
-      eventSource.onmessage = function (event) {
-        try {
-          const data: any = JSON.parse(event.data);
-          setNotis((names) => [...names, data]);
-        } catch {
-          console.log(event, '패스');
-        }
-      };
-    }
-  });
-
-  function getNotiList(TOKEN: any) {
-    console.log('비동기 안되냐');
-    axios
-      .get(BASE_URL + 'noti/list/' + ID, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res, '리스트');
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }
   console.log('APP');
   return (
     <Router>
