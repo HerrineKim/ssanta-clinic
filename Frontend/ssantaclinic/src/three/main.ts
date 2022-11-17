@@ -144,9 +144,13 @@ export class MainCanvas {
     this.resize();
   }
 
-  update2(time: number) {
+  update2(time: number, isC: boolean) {
     time *= 0.001;
     // console.log('updaete2');
+    console.log(isC);
+    if (isC) {
+      this.isCancle();
+    }
     this._controls.update();
   }
 
@@ -618,7 +622,7 @@ export class MainCanvas {
       letterAlert.style.display = 'none';
     }
   }
-  _isCancle() {
+  isCancle() {
     this._isItemClick = false;
   }
 

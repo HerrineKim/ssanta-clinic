@@ -186,18 +186,17 @@ export default function Home() {
     };
   }, []);
 
+  // useEffect(() => {
+  //   if (isClick) {
+  //     setIsCancel(true);
+  //   } else {
+  //     setIsCancel(false);
+  //   }
+  // }, [isClick]);
+
   const render = (time: number) => {
     // console.log(homeCanvas._isItemClick);
-    setSceneNumber(homeCanvas._scenenumber);
-    if (isCancle) {
-      homeCanvas._isItemClick = false;
-      setIsClick(false);
-    } else {
-      setIsClick(homeCanvas._isItemClick);
-    }
 
-    setClickedItem(homeCanvas._clickedItem);
-    setIsShop(homeCanvas._isShop);
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
@@ -208,10 +207,22 @@ export default function Home() {
     } else {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
-      homeCanvas.update2(time);
+      homeCanvas.update2(time, isCancle);
+      // if (isCancle) {
+      //   homeCanvas.isCancle();
+      //   setIsClick(false);
+      //   console.log(1);
+      // } else {
+      //   setIsClick(homeCanvas._isItemClick);
+      //   console.log(2);
+      // }
 
       requestAnimationFrame(render);
     }
+    setSceneNumber(homeCanvas._scenenumber);
+    setIsClick(homeCanvas._isItemClick);
+    setClickedItem(homeCanvas._clickedItem);
+    setIsShop(homeCanvas._isShop);
   };
 
   function getCoin() {
@@ -238,6 +249,9 @@ export default function Home() {
 
   let homeCanvas: any;
 
+  useEffect(() => {
+    console.log(isCancle);
+  }, [isCancle]);
   // 친구 검색: 추후 구현
 
   useEffect(() => {
