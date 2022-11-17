@@ -54,7 +54,15 @@ public class StoreServiceImpl implements StoreService{
 
         // 1-1. 현재 로그인한 user와 사려는 user가 다르면 error 반환
 
-
+        // 사려는 개수 + 내가 가진 아이템 개수 > 24 이면 error
+        List<UserItemBox> userItemBoxList = userItemBoxRepository.findAllByUser_UserId(userId);
+        int userItemCnt = 0;
+        for (var item : userItemBoxList) {
+            userItemCnt += item.getCount();
+        }
+        if(count + userItemCnt > 24) {
+            throw new CustomException(ErrorCode.ITEM_LIMIT_EXCESS);
+        }
         // 2. 아이템 개당 가격을 가져와서 회원 잔고를 갱신 -(count * price)
         Item item = itemRepository.getItemByItemId(itemId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ITEM_INFO));
@@ -65,7 +73,6 @@ public class StoreServiceImpl implements StoreService{
         // 회원 잔고 계산
         User user = userRepository.getUserByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
-
         int leftMoney = user.getMoney() - totalPrice;
 
         // 잔고가 0보다 작으면 살 수 없으므로 Error, 아니면 회원 잔고 갱신
@@ -74,7 +81,8 @@ public class StoreServiceImpl implements StoreService{
         } else {
             throw new CustomException(ErrorCode.NOT_ENOUGH_MONEY_ERROR);
         }
-
+        user.changeMoney(leftMoney);
+        userRepository.save(user);
         // 3. userId를 이용하여 해당 유저가 이미 가지고 있는 아이템인지 확인. 이미 가지고 있다면 count ++ 아니면 새롭게 행 추가
         // userId와 itemId에 일치하는 데이터 가져오기
         Optional<UserItemBox> userItemBox = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId, itemId);
@@ -120,5 +128,15 @@ public class StoreServiceImpl implements StoreService{
         return StoreResponse.UserItemListResponse.builder()
                 .itemList(itemList)
                 .build();
+    }
+
+    @Override
+    public List<StoreResponse.UserItemList2Response> getUserItemList2(int userId) {
+        // 존재하는 회원인지 확인
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+
+        return userItemBoxRepository.findAllByUser_UserId(userId).stream().map(StoreResponse.UserItemList2Response::new)
+                .collect(Collectors.toList());
     }
 }

@@ -1,29 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { ResultDiv, CoinImg } from './resultstyle';
+import axios from 'axios';
+import { API_BASE_URL } from '../../../apis/url';
+import { useSetRecoilState } from 'recoil';
+import { Money } from '../../../store/store';
 
 interface ResultProp {
   isSucces: boolean;
   time: number | null;
   round: number | null;
+  money: number;
   onClose: (value: React.SetStateAction<boolean>) => void;
 }
 
 export default function ResultTetris(props: ResultProp) {
-  const { isSucces, onClose, round } = props;
-  const [money, setMoney] = useState<number>(0);
+  const { isSucces, onClose, round, money } = props;
+  const BASE_URL = API_BASE_URL;
+  const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
+  const setUserMoney = useSetRecoilState(Money);
 
   useEffect(() => {
-    if (round !== null && isSucces) {
-      if (round >= 40) {
-        setMoney(10);
-      } else if (round >= 30) {
-        setMoney(8);
-      } else if (round >= 20) {
-        setMoney(6);
-      } else if (round >= 10) {
-        setMoney(4);
-      }
-    }
+    axios({
+      method: 'patch',
+      url: `${BASE_URL}coin`,
+      data: { coin: money },
+      headers: { Authorization: ACCESS_TOKEN },
+    }).then((res) => {
+      console.log(res);
+      setUserMoney(res.data.coin);
+    });
   }, []);
 
   return (

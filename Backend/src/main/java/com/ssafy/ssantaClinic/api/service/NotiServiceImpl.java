@@ -56,7 +56,7 @@ public class NotiServiceImpl implements NotiService {
         // 비동기 요청이 시간 초과가 나면 emitter를 삭제한다.
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
         // sse 연결을 유지하기 위한 dummy data 전송
-        sendToClient(emitter, id, "EventStream Created. [userId = " + userId + "]");
+        sendToClient(emitter, userId + "_" + System.currentTimeMillis(), id, "EventStream Created. [userId = " + userId + "]");
         // 헤더에 last-event-id가 있으면 유실된 데이터를 다시 전송한다.
         if(!lastEventId.isEmpty()){
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(userId);
@@ -64,22 +64,21 @@ public class NotiServiceImpl implements NotiService {
                     // last-event-id 이전에 전송된 이벤트들은 제외
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     // 유실된 이벤트들은 다시 전송
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
+                    .forEach(entry -> sendToClient(emitter, entry.getKey(), id, entry.getValue()));
         }
         return emitter;
     }
     @Override
-    public void sendToClient(SseEmitter emitter, String id, Object data) {
+    public void sendToClient(SseEmitter emitter, String eventId, String emitterId, Object data) {
         /**
          * @Method Name :  sendToClient
          * @Method 설명 :  sse로 데이터를 전송한다.
          */
         try {
             emitter.send(SseEmitter.event()
-                                    .id(id).name("sse").data(data));
+                                    .id(eventId).data(data));
         } catch (IOException e) {
-            emitterRepository.deleteById(id);
-            throw new CustomException(ErrorCode.SSE_SEND_ERROR);
+            emitterRepository.deleteById(emitterId);
         }
     }
     @Override
@@ -91,7 +90,7 @@ public class NotiServiceImpl implements NotiService {
          */
         Notification notification = createNotification(receiver, type, message, id);
         int userId = receiver.getUserId();
-
+        String eventId = userId + "_" + System.currentTimeMillis();
         // 로그인 한 유저의 SseEmitter 모두 가져오기
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByUserId(userId);
         sseEmitters.forEach(
@@ -99,7 +98,7 @@ public class NotiServiceImpl implements NotiService {
                     // 데이터 캐시 저장(유실된 데이터 처리하기 위함)
                     emitterRepository.saveEventCache(key, notification);
                     // 데이터 전송
-                    sendToClient(emitter, key, new NotiResponse.GetNotiResponse(notification));
+                    sendToClient(emitter, eventId, key, new NotiResponse.GetNotiResponse(notification));
                 }
         );
     }

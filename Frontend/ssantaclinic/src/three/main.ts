@@ -5,24 +5,8 @@ import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기
 //충돌 감지 를 위한 모듈들
 import { Octree } from 'three/examples/jsm/math/Octree.js';
 // import { Capsule } from 'three/examples/jsm/math/Capsule.js';
-import { Mesh, Vector3 } from 'three';
+import { Mesh } from 'three';
 import { gsap } from 'gsap';
-import { DragControls } from 'three/examples/jsm/controls/DragControls';
-import { threadId } from 'worker_threads';
-import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
-import axios from 'axios';
-import { throws } from 'assert';
-import React from 'react';
-import * as ReactDOM from 'react-dom/client';
-import ShopAlert from '../components/shop';
-
-// import { chdir } from 'process';
-
-// type RGB = `rgb(${number}, ${number}, ${number})`;
-// type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
-// type HEX = `#${string}`;
-
-// type Color = RGB | RGBA | HEX;
 
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
 function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
@@ -46,16 +30,14 @@ export class MainCanvas {
   _worldOctree: any;
   _controls: any;
   _camera: any;
-  _fps: any;
-  _pressedKeys: any;
+
   _currentAnimationAction: any;
   _animationMap: any;
   _mixer: any;
-  _capsule: any;
+
   _boxHelper: any;
   _model: any;
-  _raycaster3: any;
-  _raycaster2: any;
+
   _raycaster: any;
   _group: any;
   _isAlert: boolean;
@@ -86,17 +68,24 @@ export class MainCanvas {
   _isGame3: boolean;
   _isGame4: boolean;
   _isLetter: boolean;
-
+  _userId: number;
   _arrow: any;
+  _clickedItem: number;
+  _isItemClick: boolean;
+  _randomTrees: string[];
+  _clearId: any;
 
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
   _scenenumber = 1;
 
-  constructor(items: number[]) {
+  constructor(userId: number, randomTrees: string[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
 
-    this._items = items;
+    this._randomTrees = randomTrees;
+
+    this._userId = userId;
+    this._items = [];
     this._isAlert = false;
     this._isZoom = false;
     this._isShop = false;
@@ -115,10 +104,11 @@ export class MainCanvas {
     this._letter = [];
     this._home = [];
     this._showcase = [];
+    this._clickedItem = 0;
+    this._isItemClick = false;
+  }
 
-    // const divContainer = document.querySelector('#webgl-container');
-    // this._divContainer = divContainer;
-    console.log('constructor');
+  setupOnce() {
     const canvasContainer = document.querySelector('#main-canvas');
     this._canvasContainer = canvasContainer;
 
@@ -154,24 +144,6 @@ export class MainCanvas {
     this.resize();
   }
 
-  render(time: number) {
-    // console.log('!!!!');
-    if (this._scenenumber === 1) {
-      // console.log(this._camera.position);
-      this._renderer.render(this._scene, this._camera);
-      this.update(time);
-      // console.log('!');
-
-      requestAnimationFrame(this.render.bind(this));
-    } else {
-      // inven scene
-      this._renderer.render(this._scene2, this._camera);
-      this.update2(time);
-
-      requestAnimationFrame(this.render.bind(this));
-    }
-  }
-
   update2(time: number) {
     time *= 0.001;
     // console.log('updaete2');
@@ -196,8 +168,6 @@ export class MainCanvas {
     // if (this._boxHelper) {
     //   this._boxHelper.update();
     // }
-
-    this._fps.update();
 
     this._previousTime = time;
   }
@@ -224,17 +194,8 @@ export class MainCanvas {
 
       //마우스 회전 부드럽게
       this._controls.enableDamping = true;
-
-      const stats = Stats();
-      this._canvasContainer.appendChild(stats.dom);
-      this._fps = stats;
-      console.log('setoucontrols111');
     } else {
-      // 트리 위주로 돌릴 수 있게
-      // 드래그앤 드롭
       this._controls.enabled = false;
-      // this._controls.minDistance = 0.3;
-      console.log('setupcontrols222');
     }
   }
 
@@ -246,6 +207,11 @@ export class MainCanvas {
 
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
+    console.log(this._randomTrees);
+    this._randomTrees.forEach((tree) => {
+      console.log(tree);
+    });
+
     // 안눌러도 되는 맵 로드
     loader.load('main/arrowmain.glb', (gltf) => {
       const model1 = gltf.scene;
@@ -254,18 +220,18 @@ export class MainCanvas {
       const animationMap: any = {};
       animationClips.forEach((clip) => {
         const name = clip.name;
-        console.log(name);
+        // console.log(name);
         animationMap[name] = mixer.clipAction(clip); //THREE.AnimationAction
       });
 
       this._mixer = mixer;
-      console.log(this._mixer);
+      // console.log(this._mixer);
       this._animationMap = animationMap;
       this._currentAnimationAction =
         this._animationMap['Object_2.001Action.007'];
       this._currentAnimationAction.play();
 
-      console.log(gltf);
+      // console.log(gltf);
       count += 1;
       // console.log(gltf);
       // console.log(gltf.scene);
@@ -296,7 +262,7 @@ export class MainCanvas {
       // console.log(m);
       const originModel = gltf.scene;
       const model = gltf.scene.children[0];
-      console.log('LOAD model:', model);
+      // console.log('LOAD model:', model);
       this._model = model;
       this._scene.add(originModel);
 
@@ -353,8 +319,6 @@ export class MainCanvas {
 
     // scene에 있는 모든 3dobj 검사
     const loadPage = setInterval(() => {
-      console.log('로딩중');
-      console.log(count);
       if (count === 3) {
         const loading = document.querySelector(
           '.loading',
@@ -369,27 +333,20 @@ export class MainCanvas {
     }, 1000);
 
     this._group = group;
-    console.log(group);
   }
 
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
 
-    console.log('setpupicking');
+    // console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
 
     this._canvasContainer.addEventListener('click', this._onClick.bind(this));
     this._raycaster = raycaster;
-    // this._canvasContainer.addEventListener(
-    //   'wheel',
-    //   this._setupRotate.bind(this),
-    // );
   }
 
   //클릭 함수
   _onClick(event: any) {
-    console.log('click!!!');
-
     const width = this._canvasContainer.clientWidth;
     const height = this._canvasContainer.clientHeight;
 
@@ -399,56 +356,51 @@ export class MainCanvas {
     };
 
     this._raycaster.setFromCamera(xy, this._camera);
+
+    // scenenumber 분기
     if (this._scenenumber === 1) {
-      // console.log('scenenumber1 _camera:', this._camera);
-      // 모든 3d 돌면서 더블클릭된 객체 zoomfit
-      // console.log('click함수 실행:', this._group);    클릭한것 검사
+      // 화살표
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
+      // 기본 맵
+      const targets = this._raycaster.intersectObject(this._model);
       if (arrowTarget.length > 0) {
-        this._scenenumber = 2;
+        this._isShop = true;
+
         this._zoomInven(this._showcase, 70);
+
         return;
       }
       this._scene.remove(this._arrow);
-
-      // 원래 버전
-      // const targets = this._raycaster.intersectObjects(this._group);
-      console.log('click!!', this._model);
-      const targets = this._raycaster.intersectObject(this._model);
-      console.log('raycaaster target:', targets);
-      // const target = this._raycaster.intersectObject(this._group[11]);
-      // console.log('target : ', target);
-      // console.log('targets: ', targets);
 
       this._removeMemory();
       this._removeHomeAlert();
       this._removeTetris();
       this._removeWit();
-
+      this._removeLetter();
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
-          // this._zoomInven(this._showcase, 70);
+          this._isShop = true;
           this._zoomFit(targets[0].object.parent, 75);
-          setTimeout(() => {
+          this._clearId = setTimeout(() => {
             // this._setupAlert();
             this._scene.add(this._arrow);
           }, 1500);
         } else if (targets[0].object.name === 'home') {
-          console.log('home!!!!!!!!');
+          this._isHome = true;
           this._zoomFit(targets[0].object.parent, 60);
-          setTimeout(() => {
+          this._clearId = setTimeout(() => {
             this._setupHomeAlert();
           }, 1500);
         } else if (targets[0].object.name.includes('game1')) {
-          console.log('game1!!!!!!!!!!!!!!');
+          this._isGame1 = true;
           this._zoomFit(targets[0].object.parent, 80);
-          setTimeout(() => {
+          this._clearId = setTimeout(() => {
             this._setupTetris();
           }, 1500);
         } else if (targets[0].object.name.includes('game2')) {
-          console.log('game2!!!!!!!!!!!!!!');
+          this._isGame2 = true;
           this._zoomFit(targets[0].object.parent, 80);
-          setTimeout(() => {
+          this._clearId = setTimeout(() => {
             this._setupWit();
           }, 1500);
         }
@@ -457,32 +409,33 @@ export class MainCanvas {
         //   this._zoomFit(targets[0].object.parent, 80);
         // }
         else if (targets[0].object.name.includes('game4')) {
-          console.log('game4!!!!!!!!!!!!!!');
+          this._isGame4 = true;
           this._zoomFit(targets[0].object.parent, 60);
-          console.log(targets[0].object.parent);
-          setTimeout(() => {
+          this._clearId = setTimeout(() => {
             this._setupMemory();
           }, 1500);
         } else if (targets[0].object.name.includes('playground')) {
-          console.log('ground!!!!!!!!!!!!!!');
+          // 나중에 추가할 거 있으면
           this._zoomFit(targets[0].object.parent, 60);
         } else if (targets[0].object.name.includes('letter')) {
-          console.log('letter!!!!!!!!!!!!!!');
+          this._isLetter = true;
           this._zoomFit(targets[0].object.parent, 60);
-          console.log(targets[0].object.parent);
-          setTimeout(() => {
+          this._clearId = setTimeout(() => {
             this._setupLetter();
           }, 1500);
         } else {
+          // 맵중에 아무것도 안눌렀을 때
+          console.log(1);
           if (this._isAlert) {
-            this._removeAlert();
+            this._isItemClick = false;
             this._removeHomeAlert();
             this._removeMemory();
+            this._removeLetter();
           }
 
           this._scenenumber = 1;
 
-          this._removeModal();
+          // this._removeModal();
           if (this._isZoom) {
             setTimeout(() => {
               // this._setupControls();
@@ -491,14 +444,19 @@ export class MainCanvas {
           }
         }
       } else {
-        this._scenenumber = 1;
+        console.log(2);
+        if (!this._isShop) {
+          this._scenenumber = 1;
+        }
         if (this._isAlert) {
-          this._removeAlert();
+          this._isItemClick = false;
+
           this._removeHomeAlert();
           this._removeMemory();
+          this._removeLetter();
         }
 
-        this._removeModal();
+        // this._removeModal();
         if (this._isZoom) {
           setTimeout(() => {
             // this._setupControls();
@@ -506,36 +464,22 @@ export class MainCanvas {
           }, 100);
         }
       }
-
-      // const targets2 = this._raycaster.intersectObjects(this._tree);
-      // if (targets2.length > 0) {
-      //   let object = targets2[0].object;
-      //   while (object.parent) {
-      //     object = object.parent;
-      //     if (object instanceof THREE.Group) {
-      //       break;
-      //     }
-      //   }
-      //   console.log('parent:', object);
-      //   this._isTreeModal = true;
-      //   this._zoomInven(this._inven, 90);
-      // }
     } else if (this._scenenumber === 2) {
-      console.log('scenenumber 22222222');
       // scenenumber == 2 일때
       const itemTarget = this._raycaster.intersectObjects(this._items);
-      console.log(itemTarget);
+
       if (itemTarget.length > 0) {
-        this._setupAlert(itemTarget[0].object.name);
+        this._clickedItem = parseInt(itemTarget[0].object.name);
+        this._isItemClick = true;
       } else {
-        this._removeAlert();
+        this._isItemClick = false;
       }
 
       const closeTarget = this._raycaster.intersectObject(this._close);
       if (closeTarget.length > 0) {
         this._scenenumber = 1;
         // this._setupControls();
-        console.log(this._shop);
+        // console.log(this._shop);
         // setTimeout(() => {
         //   this._zoomFit(this._shop[0].parent, 60);
         // }, 100);
@@ -543,203 +487,6 @@ export class MainCanvas {
           this._zoomOut(60);
         }, 100);
       }
-    } else {
-      // const exporter = new GLTFExporter();
-      // object = treeTarget[0].object;
-      // while (object.parent) {
-      //   object = object.parent;
-      //   if (object instanceof THREE.Group && object.name === 'tree') {
-      //     break;
-      //   }
-      // }
-      // const itemTarget = this._raycaster.intersectObjects(this._items);
-      // const formData = new FormData();
-      // const TOKEN = localStorage.getItem('jwt') || '';
-      // if (closeTarget.length > 0) {
-      //   // scene1으롣 돌아가기
-      //   let glbFile: Blob;
-      //   exporter.parse(
-      //     this._tree[0],
-      //     function (result) {
-      //       console.log('result:', result);
-      //       glbFile = saveArrayBuffer(result);
-      //       formData.append('glbfile', glbFile);
-      //       console.log('result : ', glbFile);
-      //       axios({
-      //         url: 'http://localhost:8080/api/tree',
-      //         method: 'post',
-      //         data: formData,
-      //         headers: {
-      //           Authorization: TOKEN,
-      //         },
-      //       }).then((res) => {
-      //         console.log(res);
-      //       });
-      //     },
-      //     function (error) {
-      //       console.log(error);
-      //     },
-      //     { binary: true },
-      //   );
-      //   this._scene2.remove(this._showcase);
-      //   this._scene2.remove(...this._items);
-      //   this._scene2.remove(this._close);
-      //   this._dragControls.forEach((control) => {
-      //     control.deactivate();
-      //   });
-      //   this._scenenumber = 1;
-      //   this._setupControls();
-      //   setTimeout(() => {
-      //     this._zoomFit(this._model, 60);
-      //   }, 100);
-      // }
-      // if (itemTarget.length > 0) {
-      //   this._setupDrag(itemTarget[0]);
-      // }
-      // console.log('treetarget:', treeTarget);
-      // console.log('itemTarget:', itemTarget);
-    }
-  }
-
-  // _setupRotate(event: any) {
-  //   if (this._scenenumber === 2) {
-  //     event.preventDefault();
-  //     // console.log('rotate', this._tree[0]);
-  //     this._tree[0].rotateY(event.deltaY * 0.0005);
-  //   }
-  // }
-
-  // _setupTreeModal() {
-  //   const treeModal = document.querySelector(
-  //     '.treemodal',
-  //   ) as HTMLElement | null;
-  //   if (treeModal !== null) {
-  //     treeModal.style.display = 'flex';
-  //   }
-  //   this._isTreeModal = true;
-  // }
-  _dragControls: any[] = [];
-  // _setupDrag() {
-  //   console.log('items:', this._items);
-  //   console.log('tree:', this._tree);
-  //   const positions = this._position;
-  //   const tree = this._tree;
-  //   let items = this._items;
-  //   // const raycaster = this._raycaster;
-
-  //   items.forEach((child, index) => {
-  //     // console.log('item child:', child);
-  //     child.name = index;
-  //     const controls = new DragControls(
-  //       [child],
-  //       this._camera,
-  //       this._renderer.domElement,
-  //     );
-  //     controls.transformGroup = true;
-
-  //     controls.addEventListener('dragstart', function (event) {
-  //       const targets = controls.getRaycaster().intersectObjects(tree);
-  //       let object;
-  //       if (targets.length > 0) {
-  //         object = targets[0].object;
-  //         while (object.parent) {
-  //           object = object.parent;
-  //           if (object instanceof THREE.Group && object.name === 'tree') {
-  //             break;
-  //           }
-  //         }
-  //       }
-  //       console.log('dragstart!!!!!!!!!!!!!', event.object, targets, object);
-  //       // 장식품이 트리에 붙어있는 것일때
-  //       if (event.object.parent === object) {
-  //         console.log('parent = event.object');
-  //         event.object.removeFromParent();
-  //       }
-  //       event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
-  //     });
-
-  //     controls.addEventListener('dragend', (event) => {
-  //       const targets = controls.getRaycaster().intersectObjects(tree);
-  //       console.log('dragend targets:', targets);
-  //       event.object.children[0].children[0].material.emissive.set(0x000000);
-
-  //       //drag가 끝났을 때 raycaster로 tree와 만나는지 판단
-  //       // console.log('world position:', event.object.getWorldPosition());
-
-  //       if (targets.length > 0) {
-  //         if (targets[0].object.name === 'tree') {
-  //           //만난다면 장식품을 tree에 붙이고 종속시킴
-  //           console.log('tree 장식!', event.object, targets);
-  //           event.object.position.setX(targets[0].point.x);
-  //           event.object.position.setY(targets[0].point.y);
-  //           event.object.position.setZ(targets[0].point.z);
-  //           let object = targets[0].object;
-  //           while (object.parent) {
-  //             object = object.parent;
-  //             if (object instanceof THREE.Group) {
-  //               break;
-  //             }
-  //           }
-
-  //           items = items.filter((obj) => obj !== event.object);
-  //           object.attach(event.object);
-  //           this._items = items;
-  //         } else {
-  //           // 나눌 필요 있음
-  //           // event.object.removeFromParent();
-  //           console.log('tree가 아닌것 raycast');
-  //           event.object.position.setX(positions[child.name][0]);
-  //           event.object.position.setY(positions[child.name][1]);
-  //           event.object.position.setZ(positions[child.name][2]);
-  //         }
-  //       } else {
-  //         // event.object.removeFromParent();
-  //         console.log('remove object:', event.object);
-  //         console.log('target.length === 0');
-  //         // console.log('else event:', event);
-  //         console.log(positions[child.name][0]);
-  //         event.object.position.setX(positions[child.name][0]);
-  //         event.object.position.setY(positions[child.name][1]);
-  //         event.object.position.setZ(positions[child.name][2]);
-  //         console.log(event.object.position);
-  //       }
-
-  //       //tree와 만나지 않는다면 다시 원래 위치로 돌려보냄
-  //     });
-
-  //     controls.addEventListener('drag', function (event) {
-  //       // console.log('drag position:', position);
-  //       event.object.position.z = child.position.z; // This will prevent moving z axis, but will be on 0 line. change this to your object position of z axis.
-  //     });
-  //     this._dragControls.push(controls);
-  //   });
-  //   // this._tree = tree;
-
-  //   // this._items = items;
-  // }
-
-  // _removeTreeModal() {
-  //   this._scene.remove(this._showcase);
-  //   this._scene.remove(...this._items);
-  // }
-  _removeAlert() {
-    const shop = document.getElementById('shop');
-    if (shop !== null) {
-      const root = ReactDOM.createRoot(shop);
-      console.log('unmount');
-      root.unmount();
-    }
-  }
-  _setupAlert(itemId: string) {
-    console.log('setupalert');
-    const item = parseInt(itemId);
-    const e = React.createElement;
-    const shop = document.getElementById('shop');
-    if (shop !== null) {
-      console.log(shop);
-      const root = ReactDOM.createRoot(shop);
-
-      root.render(e(ShopAlert, [{ item: item }], null));
     }
   }
 
@@ -761,9 +508,11 @@ export class MainCanvas {
     }
     this._isAlert = true;
   }
+
   // 순발력
   _setupWit() {
     this._isGame2 = true;
+    this._isAlert = true;
     const memoryAlert = document.querySelector(
       '.witAlert',
     ) as HTMLElement | null;
@@ -772,9 +521,10 @@ export class MainCanvas {
       console.log('memoryAlert');
       memoryAlert.style.display = 'flex';
     }
-    this._isAlert = true;
   }
   _removeWit() {
+    this._isGame2 = false;
+
     const memoryAlert = document.querySelector(
       '.witAlert',
     ) as HTMLElement | null;
@@ -787,10 +537,9 @@ export class MainCanvas {
 
   // 기억력게임
   _setupMemory() {
-    this._isZoom = true;
-
     this._isGame4 = true;
 
+    this._isAlert = true;
     const memoryAlert = document.querySelector(
       '.memoryAlert',
     ) as HTMLElement | null;
@@ -799,9 +548,9 @@ export class MainCanvas {
       console.log('memoryAlert');
       memoryAlert.style.display = 'flex';
     }
-    this._isAlert = true;
   }
   _removeMemory() {
+    this._isGame4 = false;
     const memoryAlert = document.querySelector(
       '.memoryAlert',
     ) as HTMLElement | null;
@@ -814,6 +563,9 @@ export class MainCanvas {
 
   // 테트리스
   _setupTetris() {
+    this._isGame1 = true;
+
+    this._isAlert = true;
     console.log('setuptetris');
     const tetrisAlert = document.querySelector(
       '.tetrisAlert',
@@ -823,9 +575,11 @@ export class MainCanvas {
       console.log('tetrisAlert');
       tetrisAlert.style.display = 'flex';
     }
-    this._isAlert = true;
   }
   _removeTetris() {
+    this._isGame1 = false;
+
+    this._isAlert = false;
     const tetrisAlert = document.querySelector(
       '.tetrisAlert',
     ) as HTMLElement | null;
@@ -836,9 +590,11 @@ export class MainCanvas {
   }
   // 편지
   _setupLetter() {
-    this._isZoom = true;
+    console.log('편지클릭');
 
     this._isLetter = true;
+
+    this._isAlert = true;
 
     const letterAlert = document.querySelector(
       '.letterAlert',
@@ -848,32 +604,21 @@ export class MainCanvas {
       console.log('편지');
       letterAlert.style.display = 'flex';
     }
-    this._isAlert = true;
   }
   _removeLetter() {
+    this._isLetter = false;
+
+    this._isAlert = false;
     const letterAlert = document.querySelector(
       '.letterAlert',
     ) as HTMLElement | null;
     // console.log(memoryAlert);
     if (letterAlert !== null) {
-      console.log('letterAlert');
       letterAlert.style.display = 'none';
     }
-    this._isAlert = false;
   }
-
-  _removeModal() {
-    const modal = document.querySelector('.modal') as HTMLElement | null;
-    if (modal !== null) {
-      modal.style.display = 'none';
-    }
-  }
-
-  _setupModal() {
-    const modal = document.querySelector('.modal') as HTMLElement | null;
-    if (modal !== null) {
-      modal.style.display = 'block';
-    }
+  _isCancle() {
+    this._isItemClick = false;
   }
 
   // https://www.youtube.com/watch?v=OgC3kGKKb7A
@@ -884,7 +629,7 @@ export class MainCanvas {
     this._controls.minDistance = 0;
     this._controls.maxDistance = Infinity;
     this._controls.maxPolarAngle = Math.PI / 2;
-    // this._controls.minPolarAngle = 0;
+
     this._controls.maxAzimuthAngle = Infinity;
     this._controls.minAzimuthAngle = Infinity;
 
@@ -921,11 +666,7 @@ export class MainCanvas {
       newVec.x = -1;
       newVec.z = 1;
     }
-    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
-    //   newVec.x = 1;
-    // } else if (object3d.position.x > 0 && object3d.position.z < 0) {
-    //   newVec.x = 1;
-    // }
+
     direction.applyAxisAngle(newVec, THREE.MathUtils.degToRad(viewAngle));
 
     const halfSizeModel = sizeBox * 0.5;
@@ -935,9 +676,6 @@ export class MainCanvas {
     const newPosition = new THREE.Vector3().copy(
       direction.multiplyScalar(distance).add(centerBox),
     );
-
-    // this._camera.position.copy(newPosition);
-    // this._controls.target.copy(centerBox);
 
     //애니메이션 라이브러리 gsap
     //카메라 위치변경
@@ -1044,7 +782,7 @@ export class MainCanvas {
 
   //zoomout 함수
   _zoomOut(viewAngle: number) {
-    // this._scenenumber = 1;
+    clearTimeout(this._clearId);
     this._isZoom = false;
     this._controls.minDistance = 30;
     this._controls.maxDistance = 80;
@@ -1125,6 +863,12 @@ export class MainCanvas {
     const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
     this._scene.add(ambientLight);
 
+    // const spotLight = new THREE.SpotLight(0xffffff);
+    // spotLight.position.set(-60, 0, 0);
+    // this._scene.add(spotLight);
+
+    // const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    // this._scene.add(spotLightHelper);
     // this._addPointLight(50, 20, 50, 0xff0000);
     // this._addPointLight(-50, 20, 50, 0xffff00);
     // this._addPointLight(-50, 20, -50, 0x00ff00);

@@ -3,10 +3,11 @@ import { WriteLetter } from '../../components/letter/WriteLetter';
 import { Wrapper, CanvasContainer, LetterPageContainer } from './styles';
 import { LetterWriteModel } from '../../three/LetterWrite';
 import { Button } from './styles';
-
+import { motion } from 'framer-motion';
 export const WriteLetterPage = (props: any) => {
-  const { onClose } = props;
+  const { onBack, goList } = props;
   useEffect(() => {
+    console.log(onBack, 'ghkrd;s');
     const letterCanvas = new LetterWriteModel();
     console.log('useeffect');
     const requestId1 = requestAnimationFrame(
@@ -22,9 +23,13 @@ export const WriteLetterPage = (props: any) => {
       <LetterPageContainer id="letter-container">
         <WriteLetter />
         <Button
-          id="back-button"
+          as={motion.button}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          id="write-back-button"
           onClick={() => {
-            onClose(false);
+            onBack(false);
+            goList(true);
           }}
         >
           뒤로가기
