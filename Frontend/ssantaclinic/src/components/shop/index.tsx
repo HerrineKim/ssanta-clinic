@@ -24,8 +24,7 @@ interface Request {
 export default function ShopAlert(props: Iprops) {
   const BASE_URL = API_BASE_URL;
   // const [itemId, setItemId] = useState<number>(0);
-  // const navigate = useNavigate();
-  const BASE_URL = API_BASE_URL;
+  // const navigate = useNavigate()
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);

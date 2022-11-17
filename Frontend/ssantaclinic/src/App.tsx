@@ -77,7 +77,6 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
-        {/* <Route path="/shop" element={<ShopPage />}></Route> */}
         {/* 회원관련 */}
         <Route path="/signup" element={<SignUpPage />}></Route>
         <Route path="/login" element={<LogInPage />}></Route>
@@ -86,11 +85,6 @@ function App() {
           path="/changePassword/:UUID"
           element={<ChangePasswordPage />}
         ></Route>
-        {/* <Route path="/wits" element={<WitsPage />}></Route> */}
-        {/* <Route path="/memory" element={<MemoryPage />}></Route> */}
-        {/* <Route path="/boxCreate" element={<BoxCreate />}></Route> */}
-        {/* <Route path="/letter/write" element={<WriteLetterPage />}></Route> */}
-        {/* <Route path="/myroom/:id" element={<MyRoomPage />}></Route> */}
         <Route path="/otherroom/:id" element={<OtherRoomPage />}></Route>
         {/* <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route> */}
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
@@ -98,7 +92,6 @@ function App() {
         <Route path="/resetToken" element={<ResetTokenPage />}></Route>
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
-        <Route path="/boxDetail" element={<BoxDetail />}></Route>
       </Routes>
     </Router>
   );
