@@ -152,21 +152,13 @@ export default function Home() {
   }
   // 로그아웃
   function LogoutToHome() {
+    resetUser;
     logout();
     navigate('/login');
-    setTimeout(() => {
-      console.log('기달');
-      location.reload();
-    }, 1000);
+    location.reload();
   }
   function logout() {
     localStorage.clear();
-    resetMoney;
-    resetMyItems;
-    resetIsCover;
-    resetUser;
-    resetNoti;
-    console.log('1');
   }
 
   // const LogOut = () => { // 토큰을 찾을 수 없다고 뜹니다.
@@ -230,12 +222,12 @@ export default function Home() {
           setFriendList(res4.data);
           setFollowerList(res5.data);
           setFollowingList(res6.data);
-          console.log(res1, res2, res3, res4, res5, res6);
+          // console.log(res1, res2, res3, res4, res5, res6);
           homeCanvas = new MainCanvas(userId, res2.data.tree);
 
           homeCanvas.setupOnce();
           requestId = requestAnimationFrame(render);
-          console.log(randomTrees);
+          // console.log(randomTrees);
         }),
       )
       .catch((err) => {
@@ -305,7 +297,7 @@ export default function Home() {
   }, [scenenumber]);
   // 아이템에 따라 가격 다르게
   useEffect(() => {
-    console.log(clickedItem);
+    // console.log(clickedItem);
     if (clickedItem === 0) {
       setIsCancel(false);
     } else if (0 < clickedItem && clickedItem <= 28) {
@@ -315,7 +307,7 @@ export default function Home() {
       setIsCancel(true);
       setCost(2000);
     }
-    console.log('clickedItem 변경:', clickedItem);
+    // console.log('clickedItem 변경:', clickedItem);
   }, [clickedItem]);
 
   // bgm
