@@ -27,6 +27,7 @@ import {
   LogoutButton,
   NotiButton,
   NotiConTainer,
+  NotiCount,
 } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
@@ -44,14 +45,21 @@ import {
   currentUser,
   NotiListState,
 } from '../../store/store';
-import { useRecoilValue, useSetRecoilState, useResetRecoilState } from 'recoil';
-
+import {
+  useRecoilValue,
+  useSetRecoilState,
+  useResetRecoilState,
+  useRecoilState,
+} from 'recoil';
+import ItemModal from '../../components/itemModal/ItemModal';
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
 // 알림 관련
 import { motion, Variants } from 'framer-motion';
 import NotiModal from '../../components/notification/NotiModal';
-
+import { notiState } from '../../store/Notification';
+import { EventSourcePolyfill } from 'event-source-polyfill';
+const EventSource = EventSourcePolyfill;
 export default function Home() {
   const BASE_URL = API_BASE_URL;
   // 친구 모달 관리
@@ -66,6 +74,7 @@ export default function Home() {
   const [clickedItem, setClickedItem] = useState<number>(0);
   const [isClick, setIsClick] = useState<boolean>(false);
   const [isShop, setIsShop] = useState<boolean>(false);
+  const [isItem, setIsItem] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -88,6 +97,59 @@ export default function Home() {
   const resetNoti = useResetRecoilState(NotiListState);
   //알림
   const [isOpen, setIsOpen] = useState(false);
+  const TOKEN = localStorage.getItem('jwt') || '';
+  const ID = useRecoilValue(selectUserId);
+  const [notis, setNotis] = useRecoilState(notiState);
+
+  useEffect(() => {
+    if (TOKEN) {
+      console.log('sse');
+      const eventSource = new EventSource(BASE_URL + 'noti/sub/' + ID, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      });
+      eventSource.onopen = (event) => console.log('open', event); // <2>
+      getNotiList(TOKEN);
+      eventSource.onerror = (event) => {
+        console.log('error', event);
+      };
+
+      eventSource.onmessage = function (event) {
+        try {
+          const data: any = JSON.parse(event.data);
+          // let isInList = false;
+          // for (const noti of notis) {
+          //   if (noti.notiId === data.notiId) {
+          //     isInList = true;
+          //   }
+          // }
+          // if (!isInList) {
+          //   console.log(data);
+          setNotis((notiList) => [...notiList, data]);
+          // }
+        } catch {
+          console.log('sse 패스');
+        }
+      };
+    }
+  }, []);
+
+  function getNotiList(TOKEN: any) {
+    console.log('비동기 안되냐');
+    axios
+      .get(BASE_URL + 'noti/list/' + ID, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res, '리스트');
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
   // 로그아웃
   function LogoutToHome() {
     logout();
@@ -186,11 +248,8 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
-    console.log(homeCanvas._isItemClick);
-    setSceneNumber(homeCanvas._scenenumber);
+    // console.log(homeCanvas._isItemClick);
 
-    setClickedItem(homeCanvas._clickedItem);
-    setIsShop(homeCanvas._isShop);
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
@@ -202,13 +261,13 @@ export default function Home() {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
       homeCanvas.update2(time);
-      if (isCancle) {
-        setIsClick(false);
-      } else {
-        setIsClick(homeCanvas._isItemClick);
-      }
+
       requestAnimationFrame(render);
     }
+    setSceneNumber(homeCanvas._scenenumber);
+    setIsClick(homeCanvas._isItemClick);
+    setClickedItem(homeCanvas._clickedItem);
+    setIsShop(homeCanvas._isShop);
   };
 
   function getCoin() {
@@ -246,11 +305,17 @@ export default function Home() {
   }, [scenenumber]);
   // 아이템에 따라 가격 다르게
   useEffect(() => {
-    if (clickedItem <= 28) {
+    console.log(clickedItem);
+    if (clickedItem === 0) {
+      setIsCancel(false);
+    } else if (0 < clickedItem && clickedItem <= 28) {
+      setIsCancel(true);
       setCost(1000);
     } else {
+      setIsCancel(true);
       setCost(2000);
     }
+    console.log('clickedItem 변경:', clickedItem);
   }, [clickedItem]);
 
   // bgm
@@ -319,9 +384,10 @@ export default function Home() {
             >
               알림
             </NotiButton>
+            <NotiCount>{notis.length}</NotiCount>
           </NotiConTainer>
 
-          <ItemButton>아이템</ItemButton>
+          <ItemButton onClick={() => setIsItem(true)}>아이템</ItemButton>
           <FriendButton
             onClick={() => {
               setIsModal(true);
@@ -343,7 +409,7 @@ export default function Home() {
         followerList={followerList}
       ></FriendModal>
       <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
-      {isClick ? (
+      {isCancle ? (
         <ShopAlert
           item={clickedItem}
           userId={userId}
@@ -351,6 +417,7 @@ export default function Home() {
           onClose={setIsCancel}
         ></ShopAlert>
       ) : null}
+      {isItem ? <ItemModal onClose={setIsItem}></ItemModal> : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
       <ShopDiv id="shop"></ShopDiv>
