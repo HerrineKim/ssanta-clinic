@@ -255,7 +255,7 @@ export class RoomThree {
       // model.name = 'close';
     });
     // treeaddres 없을 수도 있음
-    if (this._treeaddres) {
+    if (this._treeaddres !== '') {
       loader.load(`${this._treeaddres}`, (gltf) => {
         count += 1;
         const tree: any[] = [];
@@ -640,7 +640,7 @@ export class RoomThree {
     const positions = this._position;
     const tree = this._tree;
     let unclickedItems = this._unclickedItem;
-    let items = this._items;
+    const items = this._items;
     // console.log(items);
     // const raycaster = this._raycaster;
     console.log('setuodrag:', items);

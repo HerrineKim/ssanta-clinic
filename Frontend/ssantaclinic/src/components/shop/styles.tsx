@@ -47,7 +47,8 @@ export const ItemAlert = styled.div`
 export const Button = styled.button`
   z-index: 4;
   position: relative;
- 
+  margin-left:10px;
+  margin-right:10px;
   background-color: #561d18;
   border: 2px solid #422800;
   border-radius: 30px;
@@ -81,4 +82,17 @@ export const Button = styled.button`
     min-width: 40px;
     padding: 0 20px;
   }
+`;
+
+export const ButtonDiv = styled.div`
+  z-index: 4;
+  display: flex;
+  justify-content: space-evenly;
+  }
+`;
+
+export const TextSpan = styled.span`
+  color: red;
+  font-size: 25px;
+  margin-top: 15px;
 `;
