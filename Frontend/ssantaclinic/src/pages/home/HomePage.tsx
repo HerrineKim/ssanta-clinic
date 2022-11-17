@@ -152,21 +152,13 @@ export default function Home() {
   }
   // 로그아웃
   function LogoutToHome() {
+    resetUser;
     logout();
     navigate('/login');
-    setTimeout(() => {
-      console.log('기달');
-      location.reload();
-    }, 1000);
+    location.reload();
   }
   function logout() {
     localStorage.clear();
-    resetMoney;
-    resetMyItems;
-    resetIsCover;
-    resetUser;
-    resetNoti;
-    console.log('1');
   }
 
   // const LogOut = () => { // 토큰을 찾을 수 없다고 뜹니다.
