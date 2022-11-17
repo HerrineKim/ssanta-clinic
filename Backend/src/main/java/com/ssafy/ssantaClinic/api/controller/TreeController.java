@@ -44,7 +44,7 @@ public class TreeController {
             produces = { MediaType.APPLICATION_JSON_VALUE }
     )
     public ResponseEntity<SimpleMessageResponse> getTreeInfo (@RequestPart(required = false) MultipartFile glbfile,
-                                                              @RequestPart TreeRequest treeRequest) throws IOException {
+                                                              @RequestPart String item) throws IOException {
         /**
          * @Method Name : getTreeInfo
          * @Method 설명 : 클라이언트로부터 트리정보를 받아온다.
@@ -61,7 +61,7 @@ public class TreeController {
             s3Service.delete(orgUrl);
         }
         // 유저 아이템 업데이트 하기
-        treeService.updateUserItemBox(userId, treeRequest.getItem());
+        treeService.updateUserItemBox(userId, item);
         return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
     }
     @ApiOperation(value = "트리 3D 파일 받아오기", notes = "클라이언트로부터 3D을 받아온다.")
