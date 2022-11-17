@@ -27,6 +27,7 @@ import {
   LogoutButton,
   NotiButton,
   NotiConTainer,
+  NotiCount,
 } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
@@ -44,14 +45,21 @@ import {
   currentUser,
   NotiListState,
 } from '../../store/store';
-import { useRecoilValue, useSetRecoilState, useResetRecoilState } from 'recoil';
+import {
+  useRecoilValue,
+  useSetRecoilState,
+  useResetRecoilState,
+  useRecoilState,
+} from 'recoil';
 
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
 // 알림 관련
 import { motion, Variants } from 'framer-motion';
 import NotiModal from '../../components/notification/NotiModal';
-
+import { notiState } from '../../store/Notification';
+import { EventSourcePolyfill } from 'event-source-polyfill';
+const EventSource = EventSourcePolyfill;
 export default function Home() {
   const BASE_URL = API_BASE_URL;
   // 친구 모달 관리
@@ -88,6 +96,59 @@ export default function Home() {
   const resetNoti = useResetRecoilState(NotiListState);
   //알림
   const [isOpen, setIsOpen] = useState(false);
+  const TOKEN = localStorage.getItem('jwt') || '';
+  const ID = useRecoilValue(selectUserId);
+  const [notis, setNotis] = useRecoilState(notiState);
+
+  useEffect(() => {
+    if (TOKEN) {
+      console.log('sse');
+      const eventSource = new EventSource(BASE_URL + 'noti/sub/' + ID, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      });
+      eventSource.onopen = (event) => console.log('open', event); // <2>
+      getNotiList(TOKEN);
+      eventSource.onerror = (event) => {
+        console.log('error', event);
+      };
+
+      eventSource.onmessage = function (event) {
+        try {
+          const data: any = JSON.parse(event.data);
+          // let isInList = false;
+          // for (const noti of notis) {
+          //   if (noti.notiId === data.notiId) {
+          //     isInList = true;
+          //   }
+          // }
+          // if (!isInList) {
+          //   console.log(data);
+          setNotis((notiList) => [...notiList, data]);
+          // }
+        } catch {
+          console.log('sse 패스');
+        }
+      };
+    }
+  }, []);
+
+  function getNotiList(TOKEN: any) {
+    console.log('비동기 안되냐');
+    axios
+      .get(BASE_URL + 'noti/list/' + ID, {
+        headers: {
+          Authorization: TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res, '리스트');
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  }
   // 로그아웃
   function LogoutToHome() {
     logout();
@@ -319,6 +380,7 @@ export default function Home() {
             >
               알림
             </NotiButton>
+            <NotiCount>{notis.length}</NotiCount>
           </NotiConTainer>
 
           <ItemButton>아이템</ItemButton>
