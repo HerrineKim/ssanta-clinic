@@ -1,7 +1,8 @@
 import styled from 'styled-components';
 
-export const NotiModalContainer = styled.div`
+export const DescriptionModalContainer = styled.div`
   display: flex;
+  background-color: #ffffff;
   flex-direction: column;
   align-items: center;
   width: 100%;
@@ -10,19 +11,7 @@ export const NotiModalContainer = styled.div`
   padding: 1rem;
   text-align: center;
   overflow-y: scroll;
-  #noti {
-    background: white;
-    width: 50%;
-    height: 10%;
-    margin-top: 3%;
-    border: 1px solid black;
-    border-radius: 20px;
-    font-family: 'Cafe24Ssurround';
-    box-shadow: 5px 5px 5px 5px gray;
-    .noti-message {
-      margin: auto auto;
-    }
-  }
+
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -33,9 +22,10 @@ export const NotiModalContainer = styled.div`
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.3);
     border-radius: 6px;
+  }
 `;
 
-export const NotiModalCloseButton = styled.button`
+export const DescriptionModalCloseButton = styled.button`
   position: absolute;
   background-color: #fbeee0;
   width: 5%;
