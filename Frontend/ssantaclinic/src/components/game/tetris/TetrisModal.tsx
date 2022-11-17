@@ -105,7 +105,7 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
     }
   };
   const result = () => {
-    const number = Math.floor(score / 100);
+    const number = Math.floor(score / 10);
     setMoney(number);
 
     setIsResult(true);
