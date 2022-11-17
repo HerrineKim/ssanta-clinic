@@ -1,8 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import axios from 'axios';
 import { ReactMediaRecorder } from 'react-media-recorder';
-import { selectUserId, selectUserNickname } from '../../../store/store';
-import { useRecoilValue } from 'recoil';
 import {
   BoxCreateContainer,
   MessageContainer,
@@ -48,7 +46,7 @@ export function BoxCreate(props: BoxCreateProps) {
   const [content, setContent] = useState<string>('');
   const [createdAt, setCreatedAt] = useState<string>('');
   const [receiver, setReceiver] = useState<string>('');
-  const [day, setDay] = useState<number>(1);
+  const [dayBox, setDayBox] = useState<number>(1);
 
   // 자동으로 현재 날짜 및 시간 yyyy-mm-dd hh:mm:ss 형태로 가져오기
   useEffect(() => {
@@ -82,7 +80,7 @@ export function BoxCreate(props: BoxCreateProps) {
       content: content,
       sender: sender,
       createdAt: createdAt,
-      day: day,
+      day: dayBox,
       receiverId: receiver,
     };
     // formData를 생성한다.
@@ -112,7 +110,7 @@ export function BoxCreate(props: BoxCreateProps) {
       data: boxFormData,
       params: {
         userId: receiver,
-        day: day,
+        day: dayBox,
       },
     };
     axios(config)
@@ -141,7 +139,7 @@ export function BoxCreate(props: BoxCreateProps) {
           <DayInput
             type="number"
             placeholder="날짜"
-            onChange={(e) => setDay(Number(e.target.value))}
+            onChange={(e) => setDayBox(Number(e.target.value))}
             // 1~25일까지만 입력 가능
             min="1"
             max="25"
