@@ -486,10 +486,19 @@ export default function MemoryModal(props: any) {
       >
         X
       </button>
-      <div className="memory-header">
-        <div className="memory-round">Round {displayRound}</div>
+      <div
+        className="memory-header"
+        style={{
+          fontSize: '30px',
+          fontFamily: 'Cafe24Ssurround',
+          textShadow: '0 0 10px black',
+        }}
+      >
+        <div className="memory-round" style={{ color: 'green' }}>
+          Round {displayRound}
+        </div>
         <div className="round-counter">{timeLimit}</div>
-        <div className="memory-level">
+        <div className="memory-level" style={{ color: 'green' }}>
           {displayRound >= 25
             ? 'Expert'
             : displayRound >= 13
@@ -524,7 +533,13 @@ export default function MemoryModal(props: any) {
             )}
             <span
               className="memory-'start__text"
-              style={{ fontSize: gameClear || isFail ? '5vmin' : '20vmin' }}
+              style={{
+                fontSize: gameClear || isFail ? '5vmin' : '20vmin',
+                color: 'green',
+                cursor: 'pointer',
+                fontFamily: 'Cafe24Ssurround',
+                textShadow: '0 0 10px black',
+              }}
               onClick={() => {
                 animations.forEach((el) => {
                   el.kill();

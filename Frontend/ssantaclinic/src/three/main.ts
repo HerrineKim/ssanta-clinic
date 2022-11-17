@@ -126,8 +126,8 @@ export class MainCanvas {
     const scene = new THREE.Scene();
     this._scene = scene;
 
-    const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper();
+    // scene.add(axesHelper);
 
     // this._setupOctree();
     this._setupLight();
@@ -208,9 +208,9 @@ export class MainCanvas {
 
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
-    console.log(this._randomTrees);
+    // console.log(this._randomTrees);
     this._randomTrees.forEach((tree) => {
-      console.log(tree);
+      // console.log(tree);
     });
 
     // 안눌러도 되는 맵 로드
@@ -360,6 +360,7 @@ export class MainCanvas {
 
     // scenenumber 분기
     if (this._scenenumber === 1) {
+      this._isShop = false;
       // 화살표
       const arrowTarget = this._raycaster.intersectObject(this._arrow);
       // 기본 맵
@@ -506,7 +507,7 @@ export class MainCanvas {
     const home = document.querySelector('.home') as HTMLElement | null;
 
     if (home !== null) {
-      console.log('alert');
+      // console.log('alert');
       home.style.display = 'flex';
     }
     this._isAlert = true;
@@ -854,12 +855,12 @@ export class MainCanvas {
 
     this._scene.add(pointLight);
 
-    const pointLightHelper = new THREE.PointLightHelper(
-      pointLight,
-      10,
-      helperColr,
-    );
-    this._scene.add(pointLightHelper);
+    // const pointLightHelper = new THREE.PointLightHelper(
+    //   pointLight,
+    //   10,
+    //   helperColr,
+    // );
+    // this._scene.add(pointLightHelper);
   }
 
   _setupLight() {
@@ -880,11 +881,11 @@ export class MainCanvas {
     const shadowLight = new THREE.DirectionalLight(0xffffff, 0.2);
     shadowLight.position.set(20, 50, 20);
     shadowLight.target.position.set(0, 0, 0);
-    const directionalLightHelper = new THREE.DirectionalLightHelper(
-      shadowLight,
-      10,
-    );
-    this._scene.add(directionalLightHelper);
+    // const directionalLightHelper = new THREE.DirectionalLightHelper(
+    //   shadowLight,
+    //   10,
+    // );
+    // this._scene.add(directionalLightHelper);
 
     this._scene.add(shadowLight);
     this._scene.add(shadowLight.target);
@@ -898,10 +899,10 @@ export class MainCanvas {
     shadowLight.shadow.camera.near = 10;
     shadowLight.shadow.camera.far = 90;
     shadowLight.shadow.radius = 5;
-    const shadowCameraHelper = new THREE.CameraHelper(
-      shadowLight.shadow.camera,
-    );
-    this._scene.add(shadowCameraHelper);
+    // const shadowCameraHelper = new THREE.CameraHelper(
+    //   shadowLight.shadow.camera,
+    // );
+    // this._scene.add(shadowCameraHelper);
   }
 
   _previousDirectionOffset = 0;
