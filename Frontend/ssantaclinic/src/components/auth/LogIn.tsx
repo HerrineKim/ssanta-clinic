@@ -45,6 +45,7 @@ export const LogIn = () => {
           noti: [],
           isLogin: true,
         });
+        navigate('/logintohome');
       })
       .catch((err) => {
         console.log(err.response);

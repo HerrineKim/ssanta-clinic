@@ -38,7 +38,7 @@ export const LogInPage = () => {
         <YouTube videoId="JJT85ezuLeQ" opts={opts} />
       </div>
 
-      {isLogin && <LogInToHomePage tohome={isLogin}></LogInToHomePage>}
+      {/* {isLogin && <LogInToHomePage tohome={isLogin}></LogInToHomePage>} */}
       {!isLogin && <LogInInput></LogInInput>}
     </Wrapper>
   );
