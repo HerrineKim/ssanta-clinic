@@ -42,7 +42,7 @@ export default function ShopAlert(props: Iprops) {
   console.log('shopalert:', props);
 
   function send(event: any) {
-    if (isMoneyPossible && isItemPossible) {
+    if (isMoneyPossible && isItemPossible && count > 0) {
       setIsBuy(true);
       axios({
         url: `${BASE_URL}store/buy`,
