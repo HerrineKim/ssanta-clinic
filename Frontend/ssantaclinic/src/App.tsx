@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import { BoxDetail } from './components/calendar/boxDetail';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
 import HomePage from './pages/home/HomePage';
