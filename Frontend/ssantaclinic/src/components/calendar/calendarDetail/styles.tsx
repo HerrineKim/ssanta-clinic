@@ -24,7 +24,7 @@ export const CalendarDetailTopContainer = styled.div`
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  height: 20%;
+  height: 30%;
   padding: 5%;
 `;
 
@@ -35,7 +35,7 @@ export const CalendarDetailBottomContainer = styled.div`
   justify-content: center;
   align-items: space-around;
   width: 100%;
-  height: 80%;
+  height: 70%;
   padding: 7% 1%;
   z-index: 999;
 `;
