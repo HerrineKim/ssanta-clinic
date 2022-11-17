@@ -481,6 +481,7 @@ export class RoomThree {
       if (checkTarget.length > 0) {
         this._isSave = true;
         let glbFile: Blob;
+        formData.append('item', String(this._unclickedItem));
         exporter.parse(
           this._tree[0],
           (result) => {
@@ -495,11 +496,17 @@ export class RoomThree {
               data: formData,
               headers: {
                 Authorization: TOKEN,
+                'Content-Type': 'multipart/form-data',
               },
-            }).then((res) => {
-              this._isSave = false;
-              console.log(res);
-            });
+            })
+              .then((res) => {
+                this._isSave = false;
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log('저장 실패');
+                this._isSave = false;
+              });
           },
           function (error) {
             console.log(error);
