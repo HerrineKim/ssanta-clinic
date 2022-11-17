@@ -17,22 +17,79 @@ import { ResetTokenPage } from './pages/ResetTokenPage';
 // import ShopPage from './pages/shop/ShopPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
+import { isLoggedIn } from './store/store';
+import { useRecoilValue } from 'recoil';
+import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   console.log('APP');
+  const isLogIn = useRecoilValue(isLoggedIn);
+  console.log(isLogIn.isLoggedIn);
+
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute
+              outlet={<HomePage />}
+              isAuthentication={isLogIn.isLoggedIn}
+              redirectPath="/login"
+            />
+          }
+        ></Route>
         {/* 회원관련 */}
-        <Route path="/signup" element={<SignUpPage />}></Route>
-        <Route path="/login" element={<LogInPage />}></Route>
-        <Route path="/findPassword" element={<FindPasswordPage />}></Route>
+        <Route
+          path="/signup"
+          element={
+            <ProtectedRoute
+              outlet={<SignUpPage />}
+              isAuthentication={!isLogIn.isLoggedIn}
+              redirectPath="/"
+            />
+          }
+        ></Route>
+        <Route
+          path="/login"
+          element={
+            <ProtectedRoute
+              outlet={<LogInPage />}
+              isAuthentication={!isLogIn.isLoggedIn}
+              redirectPath="/"
+            />
+          }
+        ></Route>
+        <Route
+          path="/findPassword"
+          element={
+            <ProtectedRoute
+              outlet={<FindPasswordPage />}
+              isAuthentication={!isLogIn.isLoggedIn}
+              redirectPath="/"
+            />
+          }
+        ></Route>
         <Route
           path="/changePassword/:UUID"
-          element={<ChangePasswordPage />}
+          element={
+            <ProtectedRoute
+              outlet={<ChangePasswordPage />}
+              isAuthentication={!isLogIn.isLoggedIn}
+              redirectPath="/"
+            />
+          }
         ></Route>
-        <Route path="/otherroom/:id" element={<OtherRoomPage />}></Route>
+        <Route
+          path="/otherroom/:id"
+          element={
+            <ProtectedRoute
+              outlet={<OtherRoomPage />}
+              isAuthentication={isLogIn.isLoggedIn}
+              redirectPath="/login"
+            />
+          }
+        ></Route>
         {/* <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route> */}
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
         {/* <Route path="/tetris" element={<TetrisPage />}></Route> */}
