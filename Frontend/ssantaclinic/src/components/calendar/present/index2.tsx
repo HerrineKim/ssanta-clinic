@@ -2,7 +2,7 @@ import React from 'react';
 import './styles2.css';
 import presentHeart from '../../../assets/image/presentHeart.png';
 
-export function Present2() {
+export function Present2(Present2Props: any) {
   return (
     <div className="container">
       <div className="row">

@@ -1,5 +1,19 @@
 import styled from 'styled-components';
 
+export const CountdownDiv = styled.div`
+  width: 40%;
+`;
+
+export const BoxNumText = styled.div`
+  font-size: 1rem;
+  font-family: 'IMRegular';
+  // text-align: center;
+  color: #d6cfc7;
+  // font-weight: 700;
+  // text-shadow: 1px 1px 0px #eb452b, 2px 2px 0px #efa032, 3px 3px 0px #46b59b,
+  // 4px 4px 0px #017e7f, 5px 5px 0px #052939, 6px 6px 0px #c11a2b;
+`;
+
 export const PresentButton = styled.button`
   min-width: 130px;
   font-family: 'Cafe24Ssurround';
@@ -38,28 +52,26 @@ export const CalendarBackground = styled.div`
 export const TopContainer = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  align-items: end;
+  justify-content: space-around;
   width: 90vw;
   padding: 0 20px;
+  margin-right: 10vw;
+  margin-left: 5vw;
 `;
 
 export const CalendarPageContainer = styled.div`
   display: flex;
-  flex-direction: ;
   align-items: center;
   justify-content: space-around;
   height: 85vh;
   width: 90vw;
-  // background-color: skyblue;
 `;
 
 export const CalendarTitle = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: start;
-  justify-content: end;
-  height: 10vh;
-  width: 88vw;
+  align-items: end;
   font-family: 'Cafe24Ssurround';
   font-size: 2.5rem;
   font-weight: 700;
@@ -787,7 +799,8 @@ export const MiniContainerTen = styled.div`
   background-color: #b8c7b0;
   border-radius: 8px;
 `;
-export const CloseButton = styled.button`
+export const CloseButton = styled.div`
+width: 50px;
 background-color: #fbeee0;
 border: 2px solid #422800;
 border-radius: 30px;
@@ -797,8 +810,6 @@ cursor: pointer;
 display: inline-block;
 font-weight: 600;
 font-size: 1.5rem;
-padding: 0 18px;
-line-height: 50px;
 text-align: center;
 text-decoration: none;
 user-select: none;
@@ -817,9 +828,4 @@ box-shadow: #422800 2px 2px 0 0;
 transform: translate(2px, 2px);
 }
 
-@media (min-width: 100px) {
-{
-  min-width: 60px;
-  padding: 0 25px;
-}
 `;

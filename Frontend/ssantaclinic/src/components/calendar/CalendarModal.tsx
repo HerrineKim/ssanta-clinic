@@ -11,7 +11,12 @@ import { selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 
 import Countdown from 'react-countdown';
-import { TopContainer, PresentButton } from './styles';
+import {
+  TopContainer,
+  PresentButton,
+  BoxNumText,
+  CountdownDiv,
+} from './styles';
 import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
@@ -64,20 +69,24 @@ import { MiniContainerTen } from './styles';
 
 export function CalendarModal(props: any) {
   const BASE_URL = API_BASE_URL;
-  useEffect(() => {
-    // 현재 url 가져오기
-    const url = window.location.href;
-  }, []);
-  const { onClose } = props;
+
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const nickName = useRecoilValue(selectUserNickname);
   const userId = useRecoilValue(selectUserId);
+  const [boxDate, setBoxDate] = useState<number>(1);
 
-  const [content, setContent] = useState<string>('');
-  const [audioUrl, setAudioUrl] = useState<string>('');
-  const [imges, setImges] = useState<[]>([]);
-  const [sender, setSender] = useState<string>('');
-
+  const [Boxes, setBoxes] = useState<any[]>([]);
+  const getBoxes = (date: string) => {
+    axios
+      .get(`http://localhost:8080/api/calendar?date=${date}`, {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        setBoxes(res.data);
+      });
+  };
   // 캘린더 날짜 별 개수 가져오기(api/calendar/userId=int)
   const [boxNums, setBoxNums] = useState<any[]>([]);
   // [{"date":1,"cnt":0},{"date":2,"cnt":1},{"date":3,"cnt":0}]
@@ -94,8 +103,6 @@ export function CalendarModal(props: any) {
       .catch((err) => {
         console.log(err);
       });
-    // axios
-    // .get(`http://localhost:8080/api/calendar/use`, {
   }, [ACCESS_TOKEN, userId]);
 
   // 어드벤트 캘린더 박스 클릭했는데 오늘이 2022년 12월 25일 이전이면 이동 되지 않고 경고창 띄우기
@@ -137,35 +144,10 @@ export function CalendarModal(props: any) {
     }
   };
 
-  const getBoxInfo = () => {
-    axios
-      .get(BASE_URL + 'calendar?boxId=3', {
-        headers: {
-          Authorization: ACCESS_TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setContent(res.data.content);
-        setAudioUrl(res.data.audioUrl);
-        setImges(res.data.imges);
-        setSender(res.data.sender);
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  };
-
   // 일별 모달창 노출 여부
   const [calendarDetailOpen, setCalendarDetailOpen] = useState<boolean>(false);
   const showCalendarDetail = () => {
     setCalendarDetailOpen(true);
-  };
-
-  // boxCreate창 노출 여부
-  const [boxCreateOpen, setBoxCreateOpen] = useState<boolean>(false);
-  const showBoxCreate = () => {
-    setBoxCreateOpen(true);
   };
 
   return (
@@ -173,11 +155,10 @@ export function CalendarModal(props: any) {
       <CalendarDetail
         setCalendarDetailOpen={setCalendarDetailOpen}
         calendarDetailOpen={calendarDetailOpen}
+        date={boxDate}
+        Boxes={Boxes}
+        // 해당 박스 번호
       ></CalendarDetail>
-      <BoxCreate
-        setBoxCreateOpen={setBoxCreateOpen}
-        boxCreateOpen={boxCreateOpen}
-      ></BoxCreate>
       <TopContainer>
         <CalendarTitle>
           {nickName}님의{' '}
@@ -187,23 +168,16 @@ export function CalendarModal(props: any) {
           }
           년 어드벤트 캘린더
         </CalendarTitle>
-
         {/* 크리스마스 카운터 */}
-        <Countdown
-          date={
-            // 2022년 12월 25일 00시 00분 00초
-            new Date(2022, 11, 25, 0, 0, 0)
-          }
-          renderer={renderer}
-        />
-        <CloseButton
-          className="outbtn"
-          onClick={() => {
-            onClose(false);
-          }}
-        >
-          x
-        </CloseButton>
+        <CountdownDiv>
+          <Countdown
+            date={
+              // 2022년 12월 25일 00시 00분 00초
+              new Date(2022, 11, 25, 0, 0, 0)
+            }
+            renderer={renderer}
+          />
+        </CountdownDiv>
       </TopContainer>
       <CalendarPageContainer>
         <CalendarLeftContainer>
@@ -211,83 +185,154 @@ export function CalendarModal(props: any) {
             {/* 모달 오픈 */}
             <BoxOne
               onClick={() => {
+                setBoxDate(1);
+
                 showCalendarDetail();
               }}
             >
               1
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 1) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxOne>
-            <BoxTwo>
+            <BoxTwo
+              onClick={() => {
+                setBoxDate(2);
+                getBoxes('2');
+                showCalendarDetail();
+              }}
+            >
               2
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 2) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxTwo>
-            <BoxThree>
+            <BoxThree
+              onClick={() => {
+                setBoxDate(3);
+                showCalendarDetail();
+              }}
+            >
               3
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 3) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxThree>
           </MiniContainerOne>
           <MiniContainerTwo>
-            <BoxEight>
+            <BoxEight
+              onClick={() => {
+                setBoxDate(8);
+                showCalendarDetail();
+              }}
+            >
               8
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 8) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxEight>
             <MiniContainerTwoRight>
               <MiniContainerTwoTop>
-                <BoxNine>
+                <BoxNine
+                  onClick={() => {
+                    setBoxDate(9);
+                    showCalendarDetail();
+                  }}
+                >
                   9
                   {boxNums.map((boxNum) => {
                     if (boxNum.date === 9) {
-                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                      return (
+                        <BoxNumText key={boxNum.date}>
+                          {boxNum.cnt}개
+                        </BoxNumText>
+                      );
                     }
                   })}
                 </BoxNine>
-                <BoxTen>
+                <BoxTen
+                  onClick={() => {
+                    setBoxDate(10);
+                    showCalendarDetail();
+                  }}
+                >
                   10
                   {boxNums.map((boxNum) => {
                     if (boxNum.date === 10) {
-                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                      return (
+                        <BoxNumText key={boxNum.date}>
+                          {boxNum.cnt}개
+                        </BoxNumText>
+                      );
                     }
                   })}
                 </BoxTen>
               </MiniContainerTwoTop>
               <MiniContainerTwoBottom>
-                <BoxThirteen>
+                <BoxThirteen
+                  onClick={() => {
+                    setBoxDate(13);
+                    showCalendarDetail();
+                  }}
+                >
                   13
                   {boxNums.map((boxNum) => {
                     if (boxNum.date === 13) {
-                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                      return (
+                        <BoxNumText key={boxNum.date}>
+                          {boxNum.cnt}개
+                        </BoxNumText>
+                      );
                     }
                   })}
                 </BoxThirteen>
-                <BoxFourteen>
+                <BoxFourteen
+                  onClick={() => {
+                    setBoxDate(14);
+                    showCalendarDetail();
+                  }}
+                >
                   14
                   {boxNums.map((boxNum) => {
                     if (boxNum.date === 14) {
-                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                      return (
+                        <BoxNumText key={boxNum.date}>
+                          {boxNum.cnt}개
+                        </BoxNumText>
+                      );
                     }
                   })}
                 </BoxFourteen>
-                <BoxFifteen>
+                <BoxFifteen
+                  onClick={() => {
+                    setBoxDate(15);
+                    showCalendarDetail();
+                  }}
+                >
                   15
                   {boxNums.map((boxNum) => {
                     if (boxNum.date === 15) {
-                      return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                      return (
+                        <BoxNumText key={boxNum.date}>
+                          {boxNum.cnt}개
+                        </BoxNumText>
+                      );
                     }
                   })}
                 </BoxFifteen>
@@ -295,145 +340,258 @@ export function CalendarModal(props: any) {
             </MiniContainerTwoRight>
           </MiniContainerTwo>
           <MiniContainerThree>
-            <BoxTwentyOne>
+            <BoxTwentyOne
+              onClick={() => {
+                setBoxDate(21);
+                showCalendarDetail();
+              }}
+            >
               21
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 21) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxTwentyOne>
-            <BoxTwentyTwo>
+            <BoxTwentyTwo
+              onClick={() => {
+                setBoxDate(22);
+                showCalendarDetail();
+              }}
+            >
               22
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 22) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxTwentyTwo>
-            <BoxTwentyThree>
+            <BoxTwentyThree
+              onClick={() => {
+                setBoxDate(23);
+                showCalendarDetail();
+              }}
+            >
               23
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 23) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxTwentyThree>
           </MiniContainerThree>
         </CalendarLeftContainer>
         <CalendarMiddleContainer>
-          <BoxFour>
+          <BoxFour
+            onClick={() => {
+              setBoxDate(4);
+              showCalendarDetail();
+            }}
+          >
             4
             {boxNums.map((boxNum) => {
               if (boxNum.date === 4) {
-                return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                return (
+                  <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                );
               }
             })}
           </BoxFour>
-          <BoxSixteen>
+          <BoxSixteen
+            onClick={() => {
+              setBoxDate(16);
+              showCalendarDetail();
+            }}
+          >
             16
             {boxNums.map((boxNum) => {
               if (boxNum.date === 16) {
-                return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                return (
+                  <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                );
               }
             })}
           </BoxSixteen>
         </CalendarMiddleContainer>
         <CalendarRightContainer>
           <MiniContainerFour>
-            <BoxFive>
+            <BoxFive
+              onClick={() => {
+                setBoxDate(5);
+                showCalendarDetail();
+              }}
+            >
               5
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 5) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxFive>
-            <BoxSix>
+            <BoxSix
+              onClick={() => {
+                setBoxDate(6);
+                showCalendarDetail();
+              }}
+            >
               6
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 6) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxSix>
-            <BoxSeven>
+            <BoxSeven
+              onClick={() => {
+                setBoxDate(7);
+                showCalendarDetail();
+              }}
+            >
               7
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 7) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxSeven>
           </MiniContainerFour>
           <MiniContainerFive>
-            <BoxEleven>
+            <BoxEleven
+              onClick={() => {
+                setBoxDate(11);
+                getBoxes('11');
+                showCalendarDetail();
+              }}
+            >
               11
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 11) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxEleven>
-            <BoxTwelve>
+            <BoxTwelve
+              onClick={() => {
+                setBoxDate(12);
+                showCalendarDetail();
+              }}
+            >
               12
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 12) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </BoxTwelve>
           </MiniContainerFive>
           <MiniContainerSix>
             <MiniContainerSeven>
-              <BoxSeventeen>
+              <BoxSeventeen
+                onClick={() => {
+                  setBoxDate(17);
+                  showCalendarDetail();
+                }}
+              >
                 17
                 {boxNums.map((boxNum) => {
                   if (boxNum.date === 17) {
-                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    return (
+                      <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                    );
                   }
                 })}
               </BoxSeventeen>
-              <BoxTwentyFour>
+              <BoxTwentyFour
+                onClick={() => {
+                  setBoxDate(24);
+                  showCalendarDetail();
+                }}
+              >
                 24
                 {boxNums.map((boxNum) => {
                   if (boxNum.date === 24) {
-                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    return (
+                      <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                    );
                   }
                 })}
               </BoxTwentyFour>
             </MiniContainerSeven>
-            <MiniContainerEight>
+            <MiniContainerEight
+              onClick={() => {
+                setBoxDate(18);
+                showCalendarDetail();
+              }}
+            >
               18
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 18) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </MiniContainerEight>
             <MiniContainerNine>
-              <BoxNineteen>
+              <BoxNineteen
+                onClick={() => {
+                  setBoxDate(19);
+                  showCalendarDetail();
+                }}
+              >
                 19
                 {boxNums.map((boxNum) => {
                   if (boxNum.date === 19) {
-                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    return (
+                      <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                    );
                   }
                 })}
               </BoxNineteen>
-              <BoxTwentyFive>
+              <BoxTwentyFive
+                onClick={() => {
+                  setBoxDate(25);
+                  showCalendarDetail();
+                }}
+              >
                 25
                 {boxNums.map((boxNum) => {
                   if (boxNum.date === 25) {
-                    return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                    return (
+                      <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                    );
                   }
                 })}
               </BoxTwentyFive>
             </MiniContainerNine>
-            <MiniContainerTen>
+            <MiniContainerTen
+              onClick={() => {
+                setBoxDate(20);
+                showCalendarDetail();
+              }}
+            >
               20
               {boxNums.map((boxNum) => {
                 if (boxNum.date === 20) {
-                  return <p key={boxNum.date}>{boxNum.cnt}</p>;
+                  return (
+                    <BoxNumText key={boxNum.date}>{boxNum.cnt}개</BoxNumText>
+                  );
                 }
               })}
             </MiniContainerTen>
