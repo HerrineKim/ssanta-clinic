@@ -110,15 +110,15 @@ export default function WitsModal(props: any) {
 
   const result = () => {
     if (time <= 30) {
-      setMoney(10);
+      setMoney(3000);
     } else if (time <= 40) {
-      setMoney(8);
+      setMoney(2000);
     } else if (time <= 50) {
-      setMoney(6);
+      setMoney(1500);
     } else if (time <= 60) {
-      setMoney(4);
+      setMoney(1000);
     } else {
-      setMoney(2);
+      setMoney(500);
     }
     setIsResult(true);
   };
