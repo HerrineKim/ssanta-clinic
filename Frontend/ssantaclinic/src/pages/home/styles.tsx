@@ -277,13 +277,19 @@ export const FriendButton = styled.button`
   }
 `;
 export const NotiConTainer = styled.div`
-  width: 10%;
+  width: 100px;
   z-index: 1;
   position: relative;
+  margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  // justify-content: center;
+  align-items: center;
 `;
-export const NotiButton = styled.button`  z-index: 4;
+export const NotiButton = styled.button`  
+z-index: 4;
 position: absolute;
-left: 40%;
+
 
 background-color: #fbeee0;
 border: 2px solid #422800;
@@ -291,7 +297,7 @@ border-radius: 30px;
 box-shadow: #422800 4px 4px 0 0;
 color: #422800;
 cursor: pointer;
-display: inline-block;
+
 font-weight: 600;
 font-size: 1.5rem;
 padding: 0 18px;
@@ -329,8 +335,9 @@ export const NotiCount = styled.div`
   border-radius: 20px;
   line-height: 40px;
   font-family: 'Cafe24Ssurround';
-  margin-left: 75%;
-  margin-top: 5%;
+
+  margin: auto;
+  margin-top: 10%;
   z-index: 10;
 `;
 
