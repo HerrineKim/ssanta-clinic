@@ -3,6 +3,7 @@ import React, { useState, Fragment } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './index.module.css';
 import {
+  FriendInfoText,
   FriendModalContainer,
   FriendModalBottomContainer,
   FriendModalTopContainer,
@@ -112,6 +113,9 @@ export default function FriendModal(props: any) {
                 X
               </FriendModalCloseButton>
             </FriendModalTopContainer>
+            <FriendInfoText>
+              *닉네임으로 친구를 검색하면 친구의 마이룸으로 이동해요
+            </FriendInfoText>
             <FriendModalBottomContainer>
               <FollowerContainer>
                 <FollowerText>팔로워</FollowerText>
