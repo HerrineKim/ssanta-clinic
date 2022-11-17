@@ -159,3 +159,11 @@ export const SearchListContainer = styled.div`
   height: 80%;
   z-index: 1;
 `;
+
+export const FriendInfoText = styled.div`
+  width: 100%;
+  margin-left: 5%;
+  font-family: 'IMRegular';
+  font-size: 1.2rem;
+  color: #422800;
+`;
