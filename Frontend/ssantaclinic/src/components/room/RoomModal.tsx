@@ -3,7 +3,7 @@ import { Wrapper, CanvasContainer, CloseButton } from './styled';
 import { RoomThree } from '../../three/RoomThree';
 import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { CalendarAlert } from './calendaralert/Calendar';
 import Loading from '../loading/Loading';
 import { MyItems } from '../../store/store';
@@ -14,6 +14,7 @@ export default function RoomModal(props: any) {
   const { onClose } = props;
   const BASE_URL = API_BASE_URL;
   const items = useRecoilValue(MyItems);
+  const setItems = useSetRecoilState(MyItems);
   let roomCanvas: any;
   const NICKNAME = useRecoilValue(selectUserNickname);
   const ID = useRecoilValue(selectUserId);
@@ -23,6 +24,10 @@ export default function RoomModal(props: any) {
   const [isSave, setIsSave] = useState<boolean>(false);
 
   // 트리 정보받기, 캘린더(선물) 정보 받기
+
+  useEffect(() => {
+    console.log(items);
+  });
 
   useEffect(() => {
     let requestId1: number;
@@ -50,6 +55,7 @@ export default function RoomModal(props: any) {
       });
     return () => {
       cancelAnimationFrame(requestId1);
+      setItems(roomCanvas._remainItems);
     };
   }, []);
   console.log(items);

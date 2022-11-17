@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ResultDiv, CoinImg } from './resultstyle';
+import { ResultDiv, CoinImg, YesButton } from './resultstyle';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../apis/url';
 import { useSetRecoilState } from 'recoil';
@@ -44,7 +44,7 @@ export default function ResultTetris(props: ResultProp) {
       ) : (
         '실망스럽습니다'
       )}
-      <button onClick={() => onClose(false)}>돌아가기</button>
+      <YesButton onClick={() => onClose(false)}>돌아가기</YesButton>
     </ResultDiv>
   );
 }
