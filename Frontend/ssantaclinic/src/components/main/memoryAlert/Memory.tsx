@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Div } from './styles';
+import { MemoryAlertDiv, YesButton } from './styles';
 import MemoryModal from '../../game/memory/MemoryModal';
 import { IsCover } from '../../../store/store';
 import { useRecoilValue } from 'recoil';
@@ -26,10 +26,10 @@ export function MemoryAlert() {
   }
   if (!isHelp) {
     return (
-      <Div className="memoryAlert">
+      <MemoryAlertDiv className="memoryAlert">
         도와 주세요
-        <button onClick={help}>ㅇㅋ</button>
-      </Div>
+        <YesButton onClick={help}>ㅇㅋ</YesButton>
+      </MemoryAlertDiv>
     );
   } else {
     return <MemoryModal onClose={setisHelp}></MemoryModal>;
