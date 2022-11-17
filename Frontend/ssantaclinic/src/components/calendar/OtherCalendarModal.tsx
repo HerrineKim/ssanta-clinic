@@ -60,16 +60,34 @@ import { MiniContainerNine } from './styles';
 import { BoxNineteen } from './styles';
 import { BoxTwentyFive } from './styles';
 import { MiniContainerTen } from './styles';
+import { useParams } from 'react-router-dom';
 
 export function OtherCalendarModal(props: any) {
+  const params = useParams();
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const BASE_URL = API_BASE_URL;
+  const [useId, setUerId] = useState<number>(0);
+  const [userNickName, setUserNickName] = useState<string>('');
   useEffect(() => {
     // 현재 url 가져오기
     const url = window.location.href;
+    console.log(BASE_URL + 'user/deatil/' + params.id);
+    axios
+      .get(BASE_URL + 'user/detail/' + params.id, {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res.data, '다른 유저 정보');
+        setUerId(res.data.id);
+        setUserNickName(res.data.nickName);
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
   }, []);
   const { onClose } = props;
-  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
-  const nickName = useRecoilValue(selectUserNickname);
 
   const [content, setContent] = useState<string>('');
   const [audioUrl, setAudioUrl] = useState<string>('');
@@ -127,7 +145,7 @@ export function OtherCalendarModal(props: any) {
       ></BoxCreate>
       <TopContainer>
         <CalendarTitle>
-          {nickName}님의{' '}
+          {userNickName}님의{' '}
           {
             // 오늘 연도
             new Date().getFullYear()
