@@ -38,7 +38,7 @@ export class LoginToHome {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.3,
+      0.5,
       1,
       0.1,
     );
@@ -61,7 +61,7 @@ export class LoginToHome {
       this._renderer = renderer;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color('#080078');
+      scene.background = new THREE.Color('#04003C');
       // scene.fog = new THREE.FogExp2('#080078', 0.1);
       this._scene = scene;
     }
@@ -80,9 +80,9 @@ export class LoginToHome {
   }
   _setupLight() {
     const color1 = '#FFFFFF';
-    const color2 = '#00D9FF';
+    const color2 = '#FFFFFF';
     const light1 = new THREE.PointLight(color1, 1);
-    const light2 = new THREE.PointLight(color2, 2.3);
+    const light2 = new THREE.PointLight(color2, 1);
     const light3 = new THREE.PointLight(color1, 1);
     light1.position.set(0, 1.212, 1.951);
     light2.position.set(-31.85, 0.0, 0);
@@ -149,15 +149,15 @@ export class LoginToHome {
       this._mixer = mixer;
 
       const path = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(-20, 0, 0),
+        new THREE.Vector3(-10, 0, 0),
         new THREE.Vector3(0, 0, 0),
         new THREE.Vector3(5, 0, 5),
         new THREE.Vector3(10, 0, 10),
-        new THREE.Vector3(20, 5, 20),
-        new THREE.Vector3(25, 10, 25),
-        new THREE.Vector3(30, 20, 30),
-        new THREE.Vector3(35, 30, 20),
-        new THREE.Vector3(40, 40, 10),
-        new THREE.Vector3(45, 50, 0),
+        new THREE.Vector3(20, 0, 20),
+        // new THREE.Vector3(20, 5, 20),
+        // new THREE.Vector3(25, 10, 25),
+        // new THREE.Vector3(30, 20, 30),
       ]);
 
       this._path = path;
@@ -184,14 +184,14 @@ export class LoginToHome {
       this._model2 = model2;
       this._scene.add(model2);
     });
-    new GLTFLoader().load('/login/ToHomeText.glb', (gltf) => {
-      const model3 = gltf.scene;
-      this._model3 = model3;
-      this._scene.add(model3);
-    });
+    // new GLTFLoader().load('/login/ToHomeText.glb', (gltf) => {
+    //   const model3 = gltf.scene;
+    //   this._model3 = model3;
+    //   this._scene.add(model3);
+    // });
     new GLTFLoader().load('/login/dongurami.glb', (gltf) => {
       const model4 = gltf.scene;
-      model4.position.set(40, 50, 0);
+      model4.position.set(20, 0, 20);
       this._model4 = model4;
       this._scene.add(model4);
     });
@@ -215,15 +215,15 @@ export class LoginToHome {
   }
 
   update() {
-    const delta = this._clock.getDelta();
-    this._orbitControls.update();
+    const TOKEN = localStorage.getItem('jwt');
+    if (TOKEN) {
+      const delta = this._clock.getDelta();
+      this._orbitControls.update();
 
-    if (this._mixer) this._mixer.update(delta);
+      if (this._mixer) this._mixer.update(delta);
 
-    const time = this._clock.oldTime * 0.0001;
-    if (window.location.pathname === '/login/') {
+      const time = this._clock.oldTime * 0.0001;
       if (this._path) {
-        console.log('애니시작');
         const currentPosition = new THREE.Vector3();
         const nextPosition = new THREE.Vector3();
 
@@ -233,28 +233,14 @@ export class LoginToHome {
         this._santa.position.copy(currentPosition);
         this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
         this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
-
-        //   // santaMove.getWorldPosition(this._camera.position);
-        //   // const targetPivot = this._scene.getObjectByName('targetPivot');
-        //   // if (targetPivot) {
-        //   //   targetPivot.rotation.y = THREE.MathUtils.degToRad(t * 5 + 1);
-
-        //   //   const target = targetPivot.children[0];
-        //   //   const pt = new THREE.Vector3();
-        //   //   target.getWorldPosition(pt);
-        //   //   this._camera.lookAt(pt);
-        //   // }
       }
     }
   }
 
   render() {
-    // this._renderer.render(this._scene, this._camera);
     this._composer.render();
-    // setTimeout(() => {
-    //   this.update(time);
-    // }, 5000);
     this.update();
+
     requestAnimationFrame(this.render.bind(this));
   }
 
