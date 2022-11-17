@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
+import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
 import HomePage from './pages/home/HomePage';
 // import TetrisPage from './pages/game/tetris/TetrisPage';
 // import WitsPage from './pages/game/WitsPage';
@@ -92,6 +93,7 @@ function App() {
         {/* <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route> */}
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
         {/* <Route path="/tetris" element={<TetrisPage />}></Route> */}
+        <Route path="/logintohome" element={<LogInToHomePage />}></Route>
         <Route path="/resetToken" element={<ResetTokenPage />}></Route>
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
