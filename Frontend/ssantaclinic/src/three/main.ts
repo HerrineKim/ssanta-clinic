@@ -126,8 +126,8 @@ export class MainCanvas {
     const scene = new THREE.Scene();
     this._scene = scene;
 
-    const axesHelper = new THREE.AxesHelper(5);
-    scene.add(axesHelper);
+    // const axesHelper = new THREE.AxesHelper();
+    // scene.add(axesHelper);
 
     // this._setupOctree();
     this._setupLight();
@@ -855,12 +855,12 @@ export class MainCanvas {
 
     this._scene.add(pointLight);
 
-    const pointLightHelper = new THREE.PointLightHelper(
-      pointLight,
-      10,
-      helperColr,
-    );
-    this._scene.add(pointLightHelper);
+    // const pointLightHelper = new THREE.PointLightHelper(
+    //   pointLight,
+    //   10,
+    //   helperColr,
+    // );
+    // this._scene.add(pointLightHelper);
   }
 
   _setupLight() {
@@ -881,11 +881,11 @@ export class MainCanvas {
     const shadowLight = new THREE.DirectionalLight(0xffffff, 0.2);
     shadowLight.position.set(20, 50, 20);
     shadowLight.target.position.set(0, 0, 0);
-    const directionalLightHelper = new THREE.DirectionalLightHelper(
-      shadowLight,
-      10,
-    );
-    this._scene.add(directionalLightHelper);
+    // const directionalLightHelper = new THREE.DirectionalLightHelper(
+    //   shadowLight,
+    //   10,
+    // );
+    // this._scene.add(directionalLightHelper);
 
     this._scene.add(shadowLight);
     this._scene.add(shadowLight.target);
@@ -899,10 +899,10 @@ export class MainCanvas {
     shadowLight.shadow.camera.near = 10;
     shadowLight.shadow.camera.far = 90;
     shadowLight.shadow.radius = 5;
-    const shadowCameraHelper = new THREE.CameraHelper(
-      shadowLight.shadow.camera,
-    );
-    this._scene.add(shadowCameraHelper);
+    // const shadowCameraHelper = new THREE.CameraHelper(
+    //   shadowLight.shadow.camera,
+    // );
+    // this._scene.add(shadowCameraHelper);
   }
 
   _previousDirectionOffset = 0;
