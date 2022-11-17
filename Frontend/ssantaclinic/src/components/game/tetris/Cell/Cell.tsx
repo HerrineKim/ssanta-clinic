@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyledCell } from './Cell.styles';
-import { TETROMINOS } from '../../../../pages/game/tetris/setup';
+import { TETROMINOS } from '../../../../components/game/tetris/setup';
 
 type Props = {
   type: keyof typeof TETROMINOS;
