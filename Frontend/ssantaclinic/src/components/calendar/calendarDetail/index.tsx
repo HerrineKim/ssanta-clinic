@@ -25,6 +25,7 @@ export function CalendarDetail(props: CalendarDetailProps) {
   // boxDetail 모달 설정
   const [boxDetailOpen, setBoxDetailOpen] = useState<boolean>(false);
   const [boxDetail, setBoxDetail] = useState<any>(null);
+  const [boxId, setBoxId] = useState<number>(1);
 
   // boxDetail 값 읽어오기
   const getBoxDetail = (boxId: number) => {
@@ -36,6 +37,8 @@ export function CalendarDetail(props: CalendarDetailProps) {
       })
       .then((res) => {
         setBoxDetail(res.data);
+        setBoxId(boxId);
+
         console.log(res.data);
       })
       // 비동기 처리 성공!
@@ -85,6 +88,7 @@ export function CalendarDetail(props: CalendarDetailProps) {
           setBoxDetailOpen={setBoxDetailOpen}
           boxDetailOpen={boxDetailOpen}
           boxDetail={boxDetail}
+          boxId={boxId}
         ></BoxDetail>
         <CalendarDetailTopContainer>
           <DayDiv>

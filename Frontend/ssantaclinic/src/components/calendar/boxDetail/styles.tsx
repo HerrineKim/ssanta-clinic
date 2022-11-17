@@ -7,7 +7,11 @@ export const BoxDetailContainer = styled.div`
   align-items: center;
   width: 50%;
   height: 70%;
-  z-index: 1001;
+  z-index: 1000;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   transition: all 0.7s;
   background-color: #335749;
   border: 2px solid black;
