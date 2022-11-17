@@ -35,7 +35,7 @@ export class LoginThree {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.6,
+      0.3,
       1,
       0.1,
     );
@@ -58,8 +58,7 @@ export class LoginThree {
       this._renderer = renderer;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color('#080078');
-      scene.fog = new THREE.FogExp2('#080078', 0.4);
+      scene.background = new THREE.Color('#04003C');
       this._scene = scene;
     }
   }
@@ -79,9 +78,9 @@ export class LoginThree {
   }
   _setupLight() {
     const color1 = '#FFFFFF';
-    const color2 = '#00D9FF';
+    const color2 = '#FFFFFF';
     const light1 = new THREE.PointLight(color1, 1);
-    const light2 = new THREE.PointLight(color2, 2.3);
+    const light2 = new THREE.PointLight(color2, 1);
     const light3 = new THREE.PointLight(color1, 1);
     light1.position.set(0, 1.212, 1.951);
     light2.position.set(-31.85, 0.0, 0);
