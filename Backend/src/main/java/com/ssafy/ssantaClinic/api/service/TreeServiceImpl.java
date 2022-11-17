@@ -58,21 +58,23 @@ public class TreeServiceImpl implements TreeService{
         StringTokenizer stk = new StringTokenizer(leftItem, "[,] ");
         try {
             userItemBoxRepository.deleteAllByUserUserId(userId);
-        } catch (Exception e) {}
-        // 남은 아이템 목록으로 업데이트 하기기
-        while(stk.hasMoreTokens()){
-           int itemId = Integer.parseInt(stk.nextToken());
-           UserItemBox item = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId, itemId)
-                   .orElse(UserItemBox.builder()
-                           .item(itemRepository.findById(itemId).orElseThrow(() ->
-                                   new CustomException(ErrorCode.NOT_FOUND_ITEM_INFO)))
-                           .user(user)
-                           .count(0)
-                           .build());
-           item.changeCount(item.getCount() + 1);
-           userItemBoxRepository.save(item);
+        } catch (Exception e) {
         }
-    
+        // 남은 아이템 목록으로 업데이트 하기기
+        while (stk.hasMoreTokens()) {
+            int itemId = Integer.parseInt(stk.nextToken());
+            UserItemBox item = userItemBoxRepository.findByUser_UserIdAndItem_ItemId(userId, itemId)
+                    .orElse(UserItemBox.builder()
+                            .item(itemRepository.findById(itemId).orElseThrow(() ->
+                                    new CustomException(ErrorCode.NOT_FOUND_ITEM_INFO)))
+                            .user(user)
+                            .count(0)
+                            .build());
+            item.changeCount(item.getCount() + 1);
+            userItemBoxRepository.save(item);
+        }
+    }
+
     @Override
     public String getTreeInfo(int userId) {
         // 유저 검색
