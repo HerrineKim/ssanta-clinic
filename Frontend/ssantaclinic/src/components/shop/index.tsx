@@ -61,6 +61,7 @@ export default function ShopAlert(props: Iprops) {
 
   function changeCount(event: any) {
     setCount(event.target.value);
+    console.log(event.target.value);
   }
 
   useEffect(() => {
@@ -74,6 +75,10 @@ export default function ShopAlert(props: Iprops) {
     } else {
       setIsMoneyPossible(true);
     }
+    console.log(items);
+    console.log(items.length + count);
+    console.log(items.length);
+    console.log(count);
 
     if (items.length + count > 24) {
       setIsItemPossible(false);

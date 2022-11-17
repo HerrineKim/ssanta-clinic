@@ -187,9 +187,10 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
-    console.log(homeCanvas._isItemClick);
+    // console.log(homeCanvas._isItemClick);
     setSceneNumber(homeCanvas._scenenumber);
     if (isCancle) {
+      homeCanvas._isItemClick = false;
       setIsClick(false);
     } else {
       setIsClick(homeCanvas._isItemClick);
