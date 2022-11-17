@@ -162,7 +162,13 @@ export default function WitsModal(props: any) {
             )}
             <div
               className="memory-'start__text"
-              style={{ fontSize: gameClear || isFail ? '5vmin' : '20vmin' }}
+              style={{
+                fontSize: gameClear || isFail ? '5vmin' : '20vmin',
+                color: 'green',
+                cursor: 'pointer',
+                fontFamily: 'Cafe24Ssurround',
+                textShadow: '0 0 10px black',
+              }}
               onClick={() => {
                 if (isFail || gameClear) {
                   result();

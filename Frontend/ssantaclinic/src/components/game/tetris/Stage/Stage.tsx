@@ -1,7 +1,7 @@
 import React from 'react';
 import Cell from '../Cell/Cell';
 import { StyledStage } from './Stage.styles';
-import { TETROMINOS } from '../../../../pages/game/tetris/setup';
+import { TETROMINOS } from '../../../../components/game/tetris/setup';
 // import ResultMemory from '../../result/ResultMemory';
 
 export type STAGECELL = [keyof typeof TETROMINOS, string];

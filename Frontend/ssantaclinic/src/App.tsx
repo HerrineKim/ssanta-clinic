@@ -5,7 +5,7 @@ import { BoxDetail } from './components/calendar/boxDetail';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
 import HomePage from './pages/home/HomePage';
-import TetrisPage from './pages/game/tetris/TetrisPage';
+// import TetrisPage from './pages/game/tetris/TetrisPage';
 // import WitsPage from './pages/game/WitsPage';
 // import MemoryPage from './pages/game/MemoryPage';
 import FindPasswordPage from './pages/auth/FindPasswordPage';
@@ -41,7 +41,7 @@ function App() {
         <Route path="/otherroom/:id" element={<OtherRoomPage />}></Route>
         {/* <Route path="/letter/receive" element={<ReceiveLetterPage />}></Route> */}
         {/* 여기 리시브 뒤에 편지 아이디 시용예정 */}
-        <Route path="/tetris" element={<TetrisPage />}></Route>
+        {/* <Route path="/tetris" element={<TetrisPage />}></Route> */}
         <Route path="/resetToken" element={<ResetTokenPage />}></Route>
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
