@@ -44,8 +44,10 @@ export class RoomThree {
   _treeaddres: string;
   _isSave: boolean;
   _unclickedItem: any[];
+  _remainItems: any[];
 
   constructor(items: number[], tree: string) {
+    this._remainItems = items;
     this._unclickedItem = [];
     this._treeaddres = tree;
     this._scenenumber = 1;
@@ -477,11 +479,12 @@ export class RoomThree {
       //   }
       // }
       const formData = new FormData();
-      const remainItem = this._unclickedItem.map((child) => child.name);
+      const remainItem = this._unclickedItem.map((child) =>
+        parseInt(child.name),
+      );
 
       const TOKEN = localStorage.getItem('jwt') || '';
 
-      console.log(typeof JSON.stringify(remainItem));
       if (checkTarget.length > 0) {
         this._isSave = true;
         let glbFile: Blob;
@@ -506,6 +509,7 @@ export class RoomThree {
               .then((res) => {
                 this._isSave = false;
                 console.log(res);
+                this._remainItems = remainItem;
               })
               .catch((err) => {
                 console.log('저장 실패');

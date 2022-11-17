@@ -39,6 +39,15 @@ export default function ShopAlert(props: Iprops) {
   const [isItemPossible, setIsItemPossible] = useState<boolean>(true);
   // const money = useRecoilValue(Money);
   console.log('shopalert:', props);
+  const [newItems, setNewItems] = useState<number[]>([]);
+
+  useEffect(() => {
+    const nitems = [];
+    for (let i = 0; i < count; i++) {
+      nitems.push(item);
+    }
+    setNewItems(nitems);
+  }, [count, item]);
 
   function send(event: any) {
     if (isMoneyPossible && isItemPossible && count > 0) {
@@ -54,6 +63,7 @@ export default function ShopAlert(props: Iprops) {
         console.log(res);
         setIsBuy(false);
         setUserMoney(res.data.money);
+        setUserItems((items) => [...items, ...newItems]);
       });
     }
   }
