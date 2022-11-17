@@ -477,11 +477,15 @@ export class RoomThree {
       //   }
       // }
       const formData = new FormData();
+      const remainItem = this._unclickedItem.map((child) => child.name);
+
       const TOKEN = localStorage.getItem('jwt') || '';
+
+      console.log(typeof JSON.stringify(remainItem));
       if (checkTarget.length > 0) {
         this._isSave = true;
         let glbFile: Blob;
-        formData.append('item', String(this._unclickedItem));
+        formData.append('item', JSON.stringify(remainItem));
         exporter.parse(
           this._tree[0],
           (result) => {
