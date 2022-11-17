@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Div } from './styles';
+import { WitAlertDiv, YesButton } from './styles';
 import WitsModal from '../../game/wit/WitsModal';
 import { IsCover } from '../../../store/store';
 import { useRecoilValue } from 'recoil';
@@ -22,10 +22,10 @@ export function WitAlert() {
 
   if (!isHelp) {
     return (
-      <Div className="witAlert">
+      <WitAlertDiv className="witAlert">
         도와 주세요
-        <button onClick={help}>ㅇㅋ</button>
-      </Div>
+        <YesButton onClick={help}>ㅇㅋ</YesButton>
+      </WitAlertDiv>
     );
   } else {
     return <WitsModal onClose={setisHelp}></WitsModal>;
