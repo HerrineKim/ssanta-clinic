@@ -144,13 +144,10 @@ export class MainCanvas {
     this.resize();
   }
 
-  update2(time: number, isC: boolean) {
+  update2(time: number) {
     time *= 0.001;
     // console.log('updaete2');
-    console.log(isC);
-    if (isC) {
-      this.isCancle();
-    }
+
     this._controls.update();
   }
 
@@ -477,6 +474,7 @@ export class MainCanvas {
         this._isItemClick = true;
       } else {
         this._isItemClick = false;
+        this._clickedItem = 0;
       }
 
       const closeTarget = this._raycaster.intersectObject(this._close);
