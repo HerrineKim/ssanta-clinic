@@ -135,13 +135,13 @@ export default function MemoryModal(props: any) {
     setTimeLimit(10);
 
     if (round >= 40) {
-      setMoney(10);
+      setMoney(2000);
     } else if (round >= 30) {
-      setMoney(8);
+      setMoney(1500);
     } else if (round >= 20) {
-      setMoney(6);
+      setMoney(1000);
     } else if (round >= 10) {
-      setMoney(4);
+      setMoney(500);
     }
   }, [answer, cardEls, clickedCards]);
 
