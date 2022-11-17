@@ -1,5 +1,6 @@
 package com.ssafy.ssantaClinic.api.controller;
 
+import com.ssafy.ssantaClinic.api.request.TreeRequest;
 import com.ssafy.ssantaClinic.api.response.SimpleMessageResponse;
 import com.ssafy.ssantaClinic.api.response.TreeResponse;
 import com.ssafy.ssantaClinic.api.service.S3Service;
@@ -42,11 +43,11 @@ public class TreeController {
             consumes = { MediaType.MULTIPART_FORM_DATA_VALUE },
             produces = { MediaType.APPLICATION_JSON_VALUE }
     )
-    public ResponseEntity<SimpleMessageResponse> getGlbFile
-            (@RequestPart(required = false) MultipartFile glbfile) throws IOException {
+    public ResponseEntity<SimpleMessageResponse> getTreeInfo (@RequestPart(required = false) MultipartFile glbfile,
+                                                              @RequestPart String item) throws IOException {
         /**
-         * @Method Name : getGlbFile
-         * @Method 설명 : 클라이언트로부터 3D을 받아온다.
+         * @Method Name : getTreeInfo
+         * @Method 설명 : 클라이언트로부터 트리정보를 받아온다.
          */
         // 현재 로그인한 유저의 아이디 가져오기
         int userId = JwtUtil.getCurrentUserId();
@@ -59,6 +60,8 @@ public class TreeController {
         if(orgUrl != null) {
             s3Service.delete(orgUrl);
         }
+        // 유저 아이템 업데이트 하기
+        treeService.updateUserItemBox(userId, item);
         return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
     }
     @ApiOperation(value = "트리 3D 파일 받아오기", notes = "클라이언트로부터 3D을 받아온다.")

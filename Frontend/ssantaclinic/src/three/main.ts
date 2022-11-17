@@ -147,6 +147,7 @@ export class MainCanvas {
   update2(time: number) {
     time *= 0.001;
     // console.log('updaete2');
+
     this._controls.update();
   }
 
@@ -473,11 +474,13 @@ export class MainCanvas {
         this._isItemClick = true;
       } else {
         this._isItemClick = false;
+        this._clickedItem = 0;
       }
 
       const closeTarget = this._raycaster.intersectObject(this._close);
       if (closeTarget.length > 0) {
         this._scenenumber = 1;
+        this._isItemClick = false;
         // this._setupControls();
         // console.log(this._shop);
         // setTimeout(() => {
@@ -617,7 +620,7 @@ export class MainCanvas {
       letterAlert.style.display = 'none';
     }
   }
-  _isCancle() {
+  isCancle() {
     this._isItemClick = false;
   }
 

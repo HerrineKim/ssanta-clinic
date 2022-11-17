@@ -257,7 +257,7 @@ export class RoomThree {
       // model.name = 'close';
     });
     // treeaddres 없을 수도 있음
-    if (this._treeaddres) {
+    if (this._treeaddres !== '') {
       loader.load(`${this._treeaddres}`, (gltf) => {
         count += 1;
         const tree: any[] = [];
@@ -477,10 +477,15 @@ export class RoomThree {
       //   }
       // }
       const formData = new FormData();
+      const remainItem = this._unclickedItem.map((child) => child.name);
+
       const TOKEN = localStorage.getItem('jwt') || '';
+
+      console.log(typeof JSON.stringify(remainItem));
       if (checkTarget.length > 0) {
         this._isSave = true;
         let glbFile: Blob;
+        formData.append('item', JSON.stringify(remainItem));
         exporter.parse(
           this._tree[0],
           (result) => {
@@ -495,11 +500,17 @@ export class RoomThree {
               data: formData,
               headers: {
                 Authorization: TOKEN,
+                'Content-Type': 'multipart/form-data',
               },
-            }).then((res) => {
-              this._isSave = false;
-              console.log(res);
-            });
+            })
+              .then((res) => {
+                this._isSave = false;
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log('저장 실패');
+                this._isSave = false;
+              });
           },
           function (error) {
             console.log(error);
