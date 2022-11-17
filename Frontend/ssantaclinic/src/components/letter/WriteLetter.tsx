@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { selectUserNickname, selectUserId } from '../../store/store';
 import { useRecoilValue } from 'recoil';
 import { LetterContainer, Button, MessageInput } from './styles';
-
+import { API_BASE_URL } from '../../apis/url';
 import { motion } from 'framer-motion';
 // import './paper.scss';
 type Keyword = 'WORK' | 'STUDY' | 'CHRISTMAS';
 
 export const WriteLetter = () => {
+  const BASE_URL = API_BASE_URL;
   const [message, setMessage] = useState<string>('');
   const [title, setTitle] = useState<string>('테스트');
   const [button, setButton] = useState<boolean>(true);
@@ -27,7 +28,7 @@ export const WriteLetter = () => {
     e.preventDefault();
     axios
       .post(
-        'http://localhost:8080' + '/api/letter',
+        BASE_URL + 'letter',
         {
           title: title,
           message: message,

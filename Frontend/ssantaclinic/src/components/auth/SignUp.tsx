@@ -7,7 +7,10 @@ import { Input } from './styles';
 import { CheckButton } from './styles';
 
 import { motion } from 'framer-motion';
+
+import { API_BASE_URL } from '../../apis/url';
 export const SignUp = () => {
+  const BASE_URL = API_BASE_URL;
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [passwordConfirm, setPasswordConfirm] = useState<string>('');
@@ -20,7 +23,7 @@ export const SignUp = () => {
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     axios
-      .post('http://localhost:8080' + '/api/user/join', {
+      .post(BASE_URL + 'user/join', {
         email: email,
         password: password,
         nickName: nickname,
@@ -40,7 +43,7 @@ export const SignUp = () => {
     e.preventDefault();
     console.log(email);
     axios
-      .post('http://localhost:8080' + '/api/user/check/email', {
+      .post(BASE_URL + 'user/check/email', {
         email: email,
       })
       .then((res) => {
@@ -62,7 +65,7 @@ export const SignUp = () => {
   function checkNickname(e: React.FormEvent<HTMLElement>) {
     e.preventDefault();
     axios
-      .post('http://localhost:8080' + '/api/user/check/nickname', {
+      .post(BASE_URL + 'user/check/nickname', {
         nickName: nickname,
       })
       .then((res) => {

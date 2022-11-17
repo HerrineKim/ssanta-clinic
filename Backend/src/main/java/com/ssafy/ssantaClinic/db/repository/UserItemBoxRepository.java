@@ -14,4 +14,6 @@ public interface UserItemBoxRepository extends JpaRepository<UserItemBox, Intege
     Optional<UserItemBox> findByUser_UserIdAndItem_ItemId(int userId, int itemId);
 
     List<UserItemBox> findAllByUser_UserId(int userId);
+
+    void deleteAllByUserUserId(int userId);
 }

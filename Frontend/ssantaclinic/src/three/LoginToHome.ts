@@ -62,7 +62,7 @@ export class LoginToHome {
 
       const scene = new THREE.Scene();
       scene.background = new THREE.Color('#080078');
-      scene.fog = new THREE.FogExp2('#080078', 0.1);
+      // scene.fog = new THREE.FogExp2('#080078', 0.1);
       this._scene = scene;
     }
   }

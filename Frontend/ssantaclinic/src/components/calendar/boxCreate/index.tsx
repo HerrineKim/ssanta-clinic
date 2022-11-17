@@ -30,6 +30,8 @@ import {
   RecordSaveButton,
 } from './styles';
 
+import { API_BASE_URL } from '../../../apis/url';
+
 const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
 
 type BoxCreateProps = {
@@ -38,6 +40,7 @@ type BoxCreateProps = {
 };
 
 export function BoxCreate(props: BoxCreateProps) {
+  const BASE_URL = API_BASE_URL;
   // 상자 보내기 (/api/calendar)
   const [audio, setAudio] = useState<File>();
   const [image, setImage] = useState<File[]>([]);
@@ -101,7 +104,7 @@ export function BoxCreate(props: BoxCreateProps) {
     // config
     const config = {
       method: 'post',
-      url: 'http://localhost:8080/api/calendar',
+      url: BASE_URL + 'calendar',
       headers: {
         Authorization: ACCESS_TOKEN,
         'Content-Type': 'multipart/form-data',

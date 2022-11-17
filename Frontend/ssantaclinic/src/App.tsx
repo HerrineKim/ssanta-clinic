@@ -1,75 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import { BoxDetail } from './components/calendar/boxDetail';
 import { SignUpPage } from './pages/auth/SignUpPage';
 import { LogInPage } from './pages/auth/LogInPage';
-import { LogOutPage } from './pages/auth/LogOutPage';
 import HomePage from './pages/home/HomePage';
 import TetrisPage from './pages/game/tetris/TetrisPage';
 // import WitsPage from './pages/game/WitsPage';
 // import MemoryPage from './pages/game/MemoryPage';
 import FindPasswordPage from './pages/auth/FindPasswordPage';
 import ChangePasswordPage from './pages/auth/ChangePasswordPage';
-import { WriteLetterPage } from './pages/letter/WriteLetterPage';
+
 // import { MyRoomPage } from './pages/myroom/MyRoomPage';
-import { ReceiveLetterPage } from './pages/letter/ReceiveLetterPage';
+
 import { ResetTokenPage } from './pages/ResetTokenPage';
 // import ShopPage from './pages/shop/ShopPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
-import { LogInToHomePage } from './pages/logintohome/LogInToHomePage';
-import { Test } from './components/notification/SSE';
-import { AniTestPage } from './pages/logintohome/AniTest';
-import axios from 'axios';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { currentUser, isLogIn, selectUserId } from './store/store';
-import { INoti, notiState } from './store/Notification';
-import { EventSourcePolyfill } from 'event-source-polyfill';
-const EventSource = EventSourcePolyfill;
 
 function App() {
-  const LOCAL = 'http://localhost:8080';
-  const TOKEN = localStorage.getItem('jwt') || '';
-  const ID = useRecoilValue(selectUserId);
-  const setNotis = useSetRecoilState(notiState);
-  const [test, setTest] = useState<any[]>([]);
-  useEffect(() => {
-    if (TOKEN) {
-      console.log('sse');
-      const eventSource = new EventSource(LOCAL + '/api/noti/sub/' + ID, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      });
-      eventSource.onopen = (event) => console.log('open', event); // <2>
-      getNotiList(TOKEN);
-      eventSource.onerror = (event) => {
-        console.log('error', event);
-      };
-
-      eventSource.onmessage = function (event) {
-        const data: any = JSON.parse(event.data);
-        setNotis((names) => [...names, data]);
-      };
-    }
-  });
-
-  function getNotiList(TOKEN: any) {
-    console.log('비동기 안되냐');
-    axios
-      .get(LOCAL + '/api/noti/list/' + ID, {
-        headers: {
-          Authorization: TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res, '리스트');
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
-  }
   console.log('APP');
   return (
     <Router>
@@ -96,8 +45,6 @@ function App() {
         <Route path="/resetToken" element={<ResetTokenPage />}></Route>
         <Route path={'*'} element={<NotFound />}></Route>
         <Route path="/404" element={<NotFound />}></Route>
-        <Route path="/test" element={<Test />}></Route>
-        <Route path="/aniTest" element={<AniTestPage />}></Route>
         <Route path="/boxDetail" element={<BoxDetail />}></Route>
       </Routes>
     </Router>
