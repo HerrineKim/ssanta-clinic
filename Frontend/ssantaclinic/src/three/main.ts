@@ -37,7 +37,7 @@ export class MainCanvas {
 
   _boxHelper: any;
   _model: any;
-
+  _text_model: any;
   _raycaster: any;
   _group: any;
   _isAlert: boolean;
@@ -312,6 +312,12 @@ export class MainCanvas {
       this._arrow = model;
 
       model.name = 'arrow';
+    });
+    // Text
+    loader.load('main/main_Text_lwt.glb', (gltf) => {
+      const text_model = gltf.scene;
+      this._text_model = text_model;
+      this._scene.add(text_model);
     });
 
     // 전역변수 설정
