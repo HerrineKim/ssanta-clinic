@@ -24,6 +24,7 @@ export class LoginToHome {
   _mixer: any;
   _clock: any;
   _orbitControls: any;
+  _isStart: any;
   constructor() {
     this._setupThreeJs();
     this._setupCamera();
@@ -94,7 +95,7 @@ export class LoginToHome {
   _setupModel() {
     new GLTFLoader().load('/login/change_deer.glb', (gltf) => {
       const model1 = gltf.scene;
-      this._scene.add(model1);
+      // this._scene.add(model1);
       // this._model1 = model1;
       const clips = gltf.animations;
       const mixer = new THREE.AnimationMixer(model1);
@@ -115,10 +116,6 @@ export class LoginToHome {
         clips,
         'Armature.002Action.001',
       );
-      // const clip12 = THREE.AnimationClip.findByName(
-      //   clips,
-      //   'Armature|mixamo.com|Layer()',
-      // );
 
       const action1 = mixer.clipAction(clip1);
       const action2 = mixer.clipAction(clip2);
@@ -162,17 +159,6 @@ export class LoginToHome {
 
       this._path = path;
 
-      // // const floor = new THREE.Mesh(
-      // //   new THREE.PlaneGeometry(7000, 7000),
-      // //   new THREE.MeshStandardMaterial({ color: 0x4f4f4f }),
-      // // );
-      // // floor.receiveShadow = true;
-      // // floor.position.y = -100;
-      // // floor.rotation.x = -Math.PI / 2;
-      // // this._scene.add(floor);
-
-      this._santa = model1;
-
       model1.rotation.y = -Math.PI / 2;
       const parent = new THREE.Object3D();
       parent.add(model1);
@@ -212,28 +198,27 @@ export class LoginToHome {
 
     this._clock = new THREE.Clock();
     requestAnimationFrame(this.render.bind(this));
+    this._isStart = false;
   }
 
   update() {
-    const TOKEN = localStorage.getItem('jwt');
-    if (TOKEN) {
-      const delta = this._clock.getDelta();
-      this._orbitControls.update();
+    this._isStart = true;
+    const delta = this._clock.getDelta();
+    this._orbitControls.update();
 
-      if (this._mixer) this._mixer.update(delta);
+    if (this._mixer) this._mixer.update(delta);
 
-      const time = this._clock.oldTime * 0.0001;
-      if (this._path) {
-        const currentPosition = new THREE.Vector3();
-        const nextPosition = new THREE.Vector3();
+    const time = this._clock.oldTime * 0.0001;
+    if (this._path && this._isStart) {
+      const currentPosition = new THREE.Vector3();
+      const nextPosition = new THREE.Vector3();
 
-        this._path.getPointAt(time % 1, currentPosition);
-        this._path.getPointAt((time + 9.001) % 1, nextPosition);
+      this._path.getPointAt(time % 1, currentPosition);
+      this._path.getPointAt((time + 0.001) % 1, nextPosition);
 
-        this._santa.position.copy(currentPosition);
-        this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
-        this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
-      }
+      this._santa.position.copy(currentPosition);
+      this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
+      this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
     }
   }
 
