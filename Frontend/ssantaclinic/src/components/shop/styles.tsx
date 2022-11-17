@@ -90,3 +90,9 @@ export const ButtonDiv = styled.div`
   justify-content: space-evenly;
   }
 `;
+
+export const TextSpan = styled.span`
+  color: red;
+  font-size: 25px;
+  margin-top: 15px;
+`;

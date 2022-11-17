@@ -45,7 +45,7 @@ import {
   NotiListState,
 } from '../../store/store';
 import { useRecoilValue, useSetRecoilState, useResetRecoilState } from 'recoil';
-
+import ItemModal from '../../components/itemModal/ItemModal';
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
 // 알림 관련
@@ -66,6 +66,7 @@ export default function Home() {
   const [clickedItem, setClickedItem] = useState<number>(0);
   const [isClick, setIsClick] = useState<boolean>(false);
   const [isShop, setIsShop] = useState<boolean>(false);
+  const [isItem, setIsItem] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -186,8 +187,14 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
-    console.log(homeCanvas._isItemClick);
+    // console.log(homeCanvas._isItemClick);
     setSceneNumber(homeCanvas._scenenumber);
+    if (isCancle) {
+      homeCanvas._isItemClick = false;
+      setIsClick(false);
+    } else {
+      setIsClick(homeCanvas._isItemClick);
+    }
 
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
@@ -202,11 +209,7 @@ export default function Home() {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
       homeCanvas.update2(time);
-      if (isCancle) {
-        setIsClick(false);
-      } else {
-        setIsClick(homeCanvas._isItemClick);
-      }
+
       requestAnimationFrame(render);
     }
   };
@@ -321,7 +324,7 @@ export default function Home() {
             </NotiButton>
           </NotiConTainer>
 
-          <ItemButton>아이템</ItemButton>
+          <ItemButton onClick={() => setIsItem(true)}>아이템</ItemButton>
           <FriendButton
             onClick={() => {
               setIsModal(true);
@@ -351,6 +354,7 @@ export default function Home() {
           onClose={setIsCancel}
         ></ShopAlert>
       ) : null}
+      {isItem ? <ItemModal onClose={setIsItem}></ItemModal> : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
       <ShopDiv id="shop"></ShopDiv>

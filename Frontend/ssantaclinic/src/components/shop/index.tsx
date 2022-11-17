@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ItemAlert, Button, ButtonDiv } from './styles';
+import { ItemAlert, Button, ButtonDiv, TextSpan } from './styles';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/url';
 import { Money, MyItems } from '../../store/store';
@@ -44,6 +44,7 @@ export default function ShopAlert(props: Iprops) {
 
   function send(event: any) {
     if (isMoneyPossible && isItemPossible) {
+      setIsBuy(true);
       axios({
         url: `${BASE_URL}store/buy`,
         method: 'post',
@@ -53,12 +54,14 @@ export default function ShopAlert(props: Iprops) {
         },
       }).then((res) => {
         console.log(res);
+        setIsBuy(false);
+        setUserMoney(res.data.money);
       });
     }
   }
 
   function changeCount(event: any) {
-    setCount(event.target.value);
+    setCount(parseInt(event.target.value));
   }
 
   useEffect(() => {
@@ -82,6 +85,7 @@ export default function ShopAlert(props: Iprops) {
 
   return (
     <ItemAlert className="alert">
+      {isBuy ? <span>구매중</span> : null}
       <span>{item}구매하시겠습니까?</span>
       <span>개당 {cost}입니다.</span>
       <input type="number" value={count} onChange={changeCount} min="0"></input>
@@ -95,13 +99,14 @@ export default function ShopAlert(props: Iprops) {
           ㄴㄴ
         </Button>
       </ButtonDiv>
-      {isItemPossible && isMoneyPossible
-        ? null
-        : isItemPossible
-        ? '돈이 부족합니다.'
-        : isMoneyPossible
-        ? '아이템칸이 부족합니다.'
-        : '돈도 부족, 아이템칸도 부족'}
+
+      {isItemPossible && isMoneyPossible ? null : isItemPossible ? (
+        <TextSpan>돈이 부족합니다.</TextSpan>
+      ) : isMoneyPossible ? (
+        <TextSpan>아이템칸이 부족합니다.</TextSpan>
+      ) : (
+        <TextSpan>돈도 부족, 아이템칸도 부족</TextSpan>
+      )}
     </ItemAlert>
   );
 }
