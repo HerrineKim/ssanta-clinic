@@ -208,9 +208,9 @@ export class MainCanvas {
 
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
-    console.log(this._randomTrees);
+    // console.log(this._randomTrees);
     this._randomTrees.forEach((tree) => {
-      console.log(tree);
+      // console.log(tree);
     });
 
     // 안눌러도 되는 맵 로드
@@ -506,7 +506,7 @@ export class MainCanvas {
     const home = document.querySelector('.home') as HTMLElement | null;
 
     if (home !== null) {
-      console.log('alert');
+      // console.log('alert');
       home.style.display = 'flex';
     }
     this._isAlert = true;
