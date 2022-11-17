@@ -21,7 +21,7 @@ export default function FindPassword() {
         sendUrl(res.data);
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   };
   function sendUrl(UUID: string) {

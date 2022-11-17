@@ -85,6 +85,7 @@ export function CalendarModal(props: any) {
       })
       .then((res) => {
         setBoxes(res.data);
+        console.log(res.data);
       });
   };
   // 캘린더 날짜 별 개수 가져오기(api/calendar/userId=int)
@@ -186,7 +187,7 @@ export function CalendarModal(props: any) {
             <BoxOne
               onClick={() => {
                 setBoxDate(1);
-
+                getBoxes('1');
                 showCalendarDetail();
               }}
             >
@@ -218,6 +219,7 @@ export function CalendarModal(props: any) {
             <BoxThree
               onClick={() => {
                 setBoxDate(3);
+                getBoxes('3');
                 showCalendarDetail();
               }}
             >
@@ -235,6 +237,7 @@ export function CalendarModal(props: any) {
             <BoxEight
               onClick={() => {
                 setBoxDate(8);
+                getBoxes('8');
                 showCalendarDetail();
               }}
             >
@@ -252,6 +255,7 @@ export function CalendarModal(props: any) {
                 <BoxNine
                   onClick={() => {
                     setBoxDate(9);
+                    getBoxes('9');
                     showCalendarDetail();
                   }}
                 >
@@ -269,6 +273,7 @@ export function CalendarModal(props: any) {
                 <BoxTen
                   onClick={() => {
                     setBoxDate(10);
+                    getBoxes('10');
                     showCalendarDetail();
                   }}
                 >
@@ -288,6 +293,7 @@ export function CalendarModal(props: any) {
                 <BoxThirteen
                   onClick={() => {
                     setBoxDate(13);
+                    getBoxes('13');
                     showCalendarDetail();
                   }}
                 >
@@ -305,6 +311,7 @@ export function CalendarModal(props: any) {
                 <BoxFourteen
                   onClick={() => {
                     setBoxDate(14);
+                    getBoxes('14');
                     showCalendarDetail();
                   }}
                 >
@@ -322,6 +329,7 @@ export function CalendarModal(props: any) {
                 <BoxFifteen
                   onClick={() => {
                     setBoxDate(15);
+                    getBoxes('15');
                     showCalendarDetail();
                   }}
                 >
@@ -343,6 +351,7 @@ export function CalendarModal(props: any) {
             <BoxTwentyOne
               onClick={() => {
                 setBoxDate(21);
+                getBoxes('21');
                 showCalendarDetail();
               }}
             >
@@ -358,6 +367,7 @@ export function CalendarModal(props: any) {
             <BoxTwentyTwo
               onClick={() => {
                 setBoxDate(22);
+                getBoxes('22');
                 showCalendarDetail();
               }}
             >
@@ -373,6 +383,7 @@ export function CalendarModal(props: any) {
             <BoxTwentyThree
               onClick={() => {
                 setBoxDate(23);
+                getBoxes('23');
                 showCalendarDetail();
               }}
             >
@@ -391,6 +402,7 @@ export function CalendarModal(props: any) {
           <BoxFour
             onClick={() => {
               setBoxDate(4);
+              getBoxes('4');
               showCalendarDetail();
             }}
           >
@@ -406,6 +418,7 @@ export function CalendarModal(props: any) {
           <BoxSixteen
             onClick={() => {
               setBoxDate(16);
+              getBoxes('16');
               showCalendarDetail();
             }}
           >
@@ -424,6 +437,7 @@ export function CalendarModal(props: any) {
             <BoxFive
               onClick={() => {
                 setBoxDate(5);
+                getBoxes('5');
                 showCalendarDetail();
               }}
             >
@@ -439,6 +453,7 @@ export function CalendarModal(props: any) {
             <BoxSix
               onClick={() => {
                 setBoxDate(6);
+                getBoxes('6');
                 showCalendarDetail();
               }}
             >
@@ -454,6 +469,7 @@ export function CalendarModal(props: any) {
             <BoxSeven
               onClick={() => {
                 setBoxDate(7);
+                getBoxes('7');
                 showCalendarDetail();
               }}
             >
@@ -487,6 +503,7 @@ export function CalendarModal(props: any) {
             <BoxTwelve
               onClick={() => {
                 setBoxDate(12);
+                getBoxes('12');
                 showCalendarDetail();
               }}
             >
@@ -505,6 +522,7 @@ export function CalendarModal(props: any) {
               <BoxSeventeen
                 onClick={() => {
                   setBoxDate(17);
+                  getBoxes('17');
                   showCalendarDetail();
                 }}
               >
@@ -520,6 +538,7 @@ export function CalendarModal(props: any) {
               <BoxTwentyFour
                 onClick={() => {
                   setBoxDate(24);
+                  getBoxes('24');
                   showCalendarDetail();
                 }}
               >
@@ -536,6 +555,7 @@ export function CalendarModal(props: any) {
             <MiniContainerEight
               onClick={() => {
                 setBoxDate(18);
+                getBoxes('18');
                 showCalendarDetail();
               }}
             >
@@ -552,6 +572,7 @@ export function CalendarModal(props: any) {
               <BoxNineteen
                 onClick={() => {
                   setBoxDate(19);
+                  getBoxes('19');
                   showCalendarDetail();
                 }}
               >
@@ -567,6 +588,7 @@ export function CalendarModal(props: any) {
               <BoxTwentyFive
                 onClick={() => {
                   setBoxDate(25);
+                  getBoxes('25');
                   showCalendarDetail();
                 }}
               >
@@ -583,6 +605,7 @@ export function CalendarModal(props: any) {
             <MiniContainerTen
               onClick={() => {
                 setBoxDate(20);
+                getBoxes('20');
                 showCalendarDetail();
               }}
             >
