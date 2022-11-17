@@ -47,7 +47,7 @@ export class RoomThree {
   _remainItems: any[];
 
   constructor(items: number[], tree: string) {
-    this._remainItems = [];
+    this._remainItems = items;
     this._unclickedItem = [];
     this._treeaddres = tree;
     this._scenenumber = 1;
