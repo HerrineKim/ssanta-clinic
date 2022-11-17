@@ -38,6 +38,7 @@ export const ButtonLetterContainer = styled.div`
     font-family: 'Cafe24Ssurround';
   }
   button {
+    font-family: 'Cafe24Ssurround';
     background-color: #fbeee0;
     border: 2px solid #422800;
     border-radius: 30px;

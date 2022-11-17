@@ -161,21 +161,59 @@ export const TitleInput = styled.input`
 export const MessageInput = styled.textarea`
   width: 30%;
   height: 22vw;
-  border-radius: 10px;
+
   margin: 0 auto;
   background: #f8f4e5;
   resize: none;
-  font-family: 'Cafe24Ssurround';
+
+  border: 2px solid #422800;
+  border-radius: 10px;
+
+  font-family: 'IMRegular';
+  font-size: 1.2rem;
+  color: #422800;
+  padding: 2%;
+  // 스크롤 제거
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  resize: none;
+  // 150자 제한
+  &::placeholder {
+    color: black;
+    font-family: 'IMRegular';
+    font-size: 1.2rem;
+  }
 `;
 export const Message = styled.div`
   width: 30%;
   height: 70%;
-  border-radius: 10px;
   background: #f8f4e5;
   margin-top: 15%;
-  margin-left: 35%;
-  font-family: 'Cafe24Ssurround';
+  margin-left: 32.6%;
   word-wrap: break-word;
+
+  width: 35%;
+  height: 22vw;
+
+  border: 2px solid #422800;
+  border-radius: 10px;
+
+  font-family: 'IMRegular';
+  font-size: 1.2rem;
+  color: #422800;
+  padding: 1%;
+  // 스크롤 제거
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  resize: none;
+  // 150자 제한
+  &::placeholder {
+    color: black;
+    font-family: 'IMRegular';
+    font-size: 1.2rem;
+  }
 `;
 
 export const LetterListContainer = styled.div`
@@ -183,7 +221,10 @@ export const LetterListContainer = styled.div`
   height: 100%;
   background-color: #033220;
   text-align: center;
-
+  overflow-y: scroll;
+  .letter-title{
+    font-family: 'Cafe24Ssurround';
+  }
   #letterbox {
     background-color: #ffffff;
     width: 50%;
@@ -193,6 +234,16 @@ export const LetterListContainer = styled.div`
     margin-left: 24%;
     box-shadow: 5px 5px 5px 5px;
   }
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
 `;
 export const ReceiveLetterContainer = styled.div`
   width: 80%;
