@@ -16,14 +16,14 @@ import { ResetTokenPage } from './pages/ResetTokenPage';
 // import ShopPage from './pages/shop/ShopPage';
 import { NotFound } from './pages/NotFoundPage';
 import { OtherRoomPage } from './pages/otherroom/OtherRoomPage';
-import { isLoggedIn } from './store/store';
+import { selectUserIsLogin } from './store/store';
 import { useRecoilValue } from 'recoil';
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
   console.log('APP');
-  const isLogIn = useRecoilValue(isLoggedIn);
-  console.log(isLogIn.isLoggedIn);
+  const isLoggedIn = useRecoilValue(selectUserIsLogin);
+  // console.log(isLoggedIn);
 
   return (
     <Router>
@@ -33,7 +33,7 @@ function App() {
           element={
             <ProtectedRoute
               outlet={<HomePage />}
-              isAuthentication={isLogIn.isLoggedIn}
+              isAuthentication={isLoggedIn}
               redirectPath="/login"
             />
           }
@@ -44,7 +44,7 @@ function App() {
           element={
             <ProtectedRoute
               outlet={<SignUpPage />}
-              isAuthentication={!isLogIn.isLoggedIn}
+              isAuthentication={!isLoggedIn}
               redirectPath="/"
             />
           }
@@ -54,7 +54,7 @@ function App() {
           element={
             <ProtectedRoute
               outlet={<LogInPage />}
-              isAuthentication={!isLogIn.isLoggedIn}
+              isAuthentication={!isLoggedIn}
               redirectPath="/"
             />
           }
@@ -64,7 +64,7 @@ function App() {
           element={
             <ProtectedRoute
               outlet={<FindPasswordPage />}
-              isAuthentication={!isLogIn.isLoggedIn}
+              isAuthentication={!isLoggedIn}
               redirectPath="/"
             />
           }
@@ -74,7 +74,7 @@ function App() {
           element={
             <ProtectedRoute
               outlet={<ChangePasswordPage />}
-              isAuthentication={!isLogIn.isLoggedIn}
+              isAuthentication={!isLoggedIn}
               redirectPath="/"
             />
           }
@@ -84,7 +84,7 @@ function App() {
           element={
             <ProtectedRoute
               outlet={<OtherRoomPage />}
-              isAuthentication={isLogIn.isLoggedIn}
+              isAuthentication={isLoggedIn}
               redirectPath="/login"
             />
           }
