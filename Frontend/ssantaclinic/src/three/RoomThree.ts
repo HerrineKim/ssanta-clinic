@@ -87,6 +87,7 @@ export class RoomThree {
     this._setupCamera();
     this._setupLight();
     this._setupModel();
+
     const scene2 = this._scene;
     this._scene2 = scene2;
 
@@ -130,23 +131,6 @@ export class RoomThree {
     this._orbitControls.update();
   }
 
-  // render() {
-  //   if (this._scenenumber === 1) {
-  //     // console.log(this._camera.position);
-  //     this._renderer.render(this._scene, this._camera);
-  //     this.update();
-  //     // console.log('!');
-
-  //     requestAnimationFrame(this.render.bind(this));
-  //   } else {
-  //     // inven scene
-  //     this._renderer.render(this._scene2, this._camera);
-  //     this.update2();
-
-  //     requestAnimationFrame(this.render.bind(this));
-  //   }
-  // }
-
   resize() {
     const width = this._divContainer.clientWidth;
     const height = this._divContainer.clientHeight;
@@ -157,21 +141,6 @@ export class RoomThree {
     this._renderer.setSize(width, height);
   }
   _setupCamera() {
-    // const camera = new THREE.PerspectiveCamera(
-    //   75,
-    //   window.innerWidth / window.innerHeight,
-    //   0.1,
-    //   1000,
-    // );
-    // const aspect = window.innerWidth / window.innerHeight;
-    // const camera = new THREE.OrthographicCamera(
-    //   -10 * aspect,
-    //   10 * aspect,
-    //   10,
-    //   -10,
-    //   1,
-    //   1000,
-    // );
     const camera = new THREE.PerspectiveCamera(
       60,
       window.innerWidth / window.innerHeight,
@@ -373,9 +342,11 @@ export class RoomThree {
   _setupControls() {
     if (this._scenenumber === 1) {
       this._orbitControls = new OrbitControls(this._camera, this._divContainer);
-
+      this._orbitControls.enabled = false;
+      console.log(this._model);
+      this._orbitControls.target.set(0, 2, 0);
       // //orbicontrol shift 기능 없애기
-      // this._orbitControls.enablePan = false;
+      this._orbitControls.enablePan = false;
       // this._orbitControls.minDistance = 30;
       // this._orbitControls.maxDistance = 80;
       // this._orbitControls.maxPolarAngle = (Math.PI * 2) / 5;
@@ -391,7 +362,7 @@ export class RoomThree {
       // 트리 위주로 돌릴 수 있게
       // 드래그앤 드롭
       this._orbitControls.enabled = false;
-      console.log('setupcontrols222');
+      // console.log('setupcontrols222');
     }
   }
   _onClick(event: any) {
@@ -789,15 +760,6 @@ export class RoomThree {
   }
 
   _zoomFit(object3d: any, viewAngle: number) {
-    // this._orbitControls.minDistance = 0;
-    // this._orbitControls.maxDistance = Infinity;
-    // this._orbitControls.maxPolarAngle = Math.PI / 2;
-    // // this._orbitControls.minPolarAngle = 0;
-    // this._orbitControls.maxAzimuthAngle = Infinity;
-    // this._orbitControls.minAzimuthAngle = Infinity;
-
-    // console.log('zoomfit object3d: ', object3d);
-    //box 는 객체를 담는 최소크기 박스
     const box = new THREE.Box3().setFromObject(object3d);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
     // const sizeBox = box.getSize(new THREE.Vector3()).length();
