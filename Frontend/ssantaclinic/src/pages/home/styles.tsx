@@ -278,7 +278,7 @@ export const FriendButton = styled.button`
 `;
 export const NotiConTainer = styled.div`
   width: 10%;
-
+  z-index: 1;
   position: relative;
 `;
 export const NotiButton = styled.button`  z-index: 4;
@@ -301,6 +301,7 @@ user-select: none;
 -webkit-user-select: none;
 touch-action: manipulation;
 font-family: 'Cafe24Ssurround';
+z-index: 1;
 }
 
 :hover {
@@ -317,6 +318,21 @@ transform: translate(2px, 2px);
   min-width: 40px;
   padding: 0 20px;
 }`;
+
+export const NotiCount = styled.div`
+  position: absolute;
+  width: 20%;
+  height: 4vh;
+  color: white;
+  background: #ff6600;
+  text-align: center;
+  border-radius: 20px;
+  line-height: 40px;
+  font-family: 'Cafe24Ssurround';
+  margin-left: 75%;
+  margin-top: 5%;
+  z-index: 10;
+`;
 
 export const ShopTalk = styled.div`
   z-index: 4;
