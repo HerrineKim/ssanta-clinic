@@ -145,7 +145,14 @@ export default function WitsModal(props: any) {
           ></Result>
         ) : null}
 
-        <div className="wit-header">
+        <div
+          className="wit-header"
+          style={{
+            fontSize: '20px',
+            fontFamily: 'Cafe24Ssurround',
+            textShadow: '0 0 10px black',
+          }}
+        >
           <div className="round-counter">{time}</div>
           <div className="click-count">기회: {clickCount}</div>
         </div>
