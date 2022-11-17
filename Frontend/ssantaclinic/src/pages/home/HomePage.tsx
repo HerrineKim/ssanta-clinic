@@ -186,14 +186,6 @@ export default function Home() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (isClick) {
-  //     setIsCancel(true);
-  //   } else {
-  //     setIsCancel(false);
-  //   }
-  // }, [isClick]);
-
   const render = (time: number) => {
     // console.log(homeCanvas._isItemClick);
 
@@ -207,15 +199,7 @@ export default function Home() {
     } else {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
-      homeCanvas.update2(time, isCancle);
-      // if (isCancle) {
-      //   homeCanvas.isCancle();
-      //   setIsClick(false);
-      //   console.log(1);
-      // } else {
-      //   setIsClick(homeCanvas._isItemClick);
-      //   console.log(2);
-      // }
+      homeCanvas.update2(time);
 
       requestAnimationFrame(render);
     }
@@ -249,9 +233,6 @@ export default function Home() {
 
   let homeCanvas: any;
 
-  useEffect(() => {
-    console.log(isCancle);
-  }, [isCancle]);
   // 친구 검색: 추후 구현
 
   useEffect(() => {
@@ -263,11 +244,17 @@ export default function Home() {
   }, [scenenumber]);
   // 아이템에 따라 가격 다르게
   useEffect(() => {
-    if (clickedItem <= 28) {
+    console.log(clickedItem);
+    if (clickedItem === 0) {
+      setIsCancel(false);
+    } else if (0 < clickedItem && clickedItem <= 28) {
+      setIsCancel(true);
       setCost(1000);
     } else {
+      setIsCancel(true);
       setCost(2000);
     }
+    console.log('clickedItem 변경:', clickedItem);
   }, [clickedItem]);
 
   // bgm
@@ -360,7 +347,7 @@ export default function Home() {
         followerList={followerList}
       ></FriendModal>
       <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
-      {isClick ? (
+      {isCancle ? (
         <ShopAlert
           item={clickedItem}
           userId={userId}

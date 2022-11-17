@@ -92,7 +92,7 @@ export default function ShopAlert(props: Iprops) {
         <Button onClick={send}>구매!</Button>
         <Button
           onClick={() => {
-            onClose(true);
+            onClose(false);
           }}
         >
           ㄴㄴ
