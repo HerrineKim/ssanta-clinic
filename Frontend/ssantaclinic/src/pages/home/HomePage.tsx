@@ -8,7 +8,7 @@ import React, {
 import YouTube, { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
-import { CoinImg, Div, ModalDiv, ShopDiv } from './styles';
+import { CoinImg, Div, ModalDiv, ShopDiv, ShopTalk } from './styles';
 import { MainCanvas } from '../../three/main';
 import { Alert } from '../../components/main/alert/index';
 // import { TreeModal } from '../../components/tree/index';
@@ -45,7 +45,7 @@ import {
   NotiListState,
 } from '../../store/store';
 import { useRecoilValue, useSetRecoilState, useResetRecoilState } from 'recoil';
-
+import ItemModal from '../../components/itemModal/ItemModal';
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
 // 알림 관련
@@ -65,6 +65,8 @@ export default function Home() {
   const [scenenumber, setSceneNumber] = useState<number>(1);
   const [clickedItem, setClickedItem] = useState<number>(0);
   const [isClick, setIsClick] = useState<boolean>(false);
+  const [isShop, setIsShop] = useState<boolean>(false);
+  const [isItem, setIsItem] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -72,7 +74,7 @@ export default function Home() {
   const setUserItems = useSetRecoilState(MyItems);
   const item = useRecoilValue(MyItems);
   const [cost, setCost] = useState<number>(0);
-
+  const [isCancle, setIsCancel] = useState<boolean>(false);
   const setIsCover = useSetRecoilState(IsCover);
   const isCover = useRecoilValue(IsCover);
 
@@ -185,9 +187,7 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
-    setSceneNumber(homeCanvas._scenenumber);
-    setIsClick(homeCanvas._isItemClick);
-    setClickedItem(homeCanvas._clickedItem);
+    // console.log(homeCanvas._isItemClick);
 
     if (homeCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
@@ -203,6 +203,10 @@ export default function Home() {
 
       requestAnimationFrame(render);
     }
+    setSceneNumber(homeCanvas._scenenumber);
+    setIsClick(homeCanvas._isItemClick);
+    setClickedItem(homeCanvas._clickedItem);
+    setIsShop(homeCanvas._isShop);
   };
 
   function getCoin() {
@@ -234,15 +238,23 @@ export default function Home() {
   useEffect(() => {
     if (scenenumber === 2) {
       setIsCover(false);
+    } else {
+      setIsCover(true);
     }
   }, [scenenumber]);
   // 아이템에 따라 가격 다르게
   useEffect(() => {
-    if (clickedItem <= 28) {
+    console.log(clickedItem);
+    if (clickedItem === 0) {
+      setIsCancel(false);
+    } else if (0 < clickedItem && clickedItem <= 28) {
+      setIsCancel(true);
       setCost(1000);
     } else {
+      setIsCancel(true);
       setCost(2000);
     }
+    console.log('clickedItem 변경:', clickedItem);
   }, [clickedItem]);
 
   // bgm
@@ -285,7 +297,7 @@ export default function Home() {
       {/* <TreeModal data={data}></TreeModal> */}
       {/* 버튼들 */}
 
-      {isCover ? (
+      {isShop || isCover ? (
         <TopBar>
           <MoneyState>
             <CoinImg src="img/coin.png"></CoinImg>
@@ -313,7 +325,7 @@ export default function Home() {
             </NotiButton>
           </NotiConTainer>
 
-          <ItemButton>아이템</ItemButton>
+          <ItemButton onClick={() => setIsItem(true)}>아이템</ItemButton>
           <FriendButton
             onClick={() => {
               setIsModal(true);
@@ -324,7 +336,9 @@ export default function Home() {
           </FriendButton>
         </BottomBar>
       ) : null}
-
+      {scenenumber === 2 ? (
+        <ShopTalk>사고 싶은 아이템을 클릭하세요.</ShopTalk>
+      ) : null}
       <FriendModal
         isModal={isModal}
         setIsModal={setIsModal}
@@ -333,9 +347,15 @@ export default function Home() {
         followerList={followerList}
       ></FriendModal>
       <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
-      {isClick ? (
-        <ShopAlert item={clickedItem} userId={userId} cost={cost}></ShopAlert>
+      {isCancle ? (
+        <ShopAlert
+          item={clickedItem}
+          userId={userId}
+          cost={cost}
+          onClose={setIsCancel}
+        ></ShopAlert>
       ) : null}
+      {isItem ? <ItemModal onClose={setIsItem}></ItemModal> : null}
       <ModalDiv className="modal"></ModalDiv>
       <Loading></Loading>
       <ShopDiv id="shop"></ShopDiv>
