@@ -146,9 +146,14 @@ export class MainCanvas {
 
   update2(time: number) {
     time *= 0.001;
-    // console.log('updaete2');
-
     this._controls.update();
+    // console.log('updaete2');
+    if (this._mixer) {
+      // console.log('mixer');  //mixer는 charecter.glb의 animation
+      const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이
+      this._mixer.update(deltaTime);
+    }
+    this._previousTime = time;
   }
 
   update(time: number) {
@@ -214,8 +219,9 @@ export class MainCanvas {
     });
 
     // 안눌러도 되는 맵 로드
-    loader.load('main/arrowmain.glb', (gltf) => {
+    loader.load('main/arrowmainanimal.glb', (gltf) => {
       const model1 = gltf.scene;
+
       const animationClips = gltf.animations; //THREE.AnimationCLip []
       const mixer = new THREE.AnimationMixer(model1);
       const animationMap: any = {};
@@ -231,6 +237,12 @@ export class MainCanvas {
       this._currentAnimationAction =
         this._animationMap['Object_2.001Action.007'];
       this._currentAnimationAction.play();
+      for (const key in animationMap) {
+        const value = animationMap[key];
+        value.play();
+      }
+
+      // this._animationMap.forEach((each: any) => each.play());
 
       // console.log(gltf);
       count += 1;
@@ -238,6 +250,8 @@ export class MainCanvas {
       // console.log(gltf.scene);
       const m = gltf.scene;
       m.traverse((child) => {
+        // console.log(child);
+        child.frustumCulled = false;
         try {
           if (
             1 <= parseInt(child.name) &&
@@ -263,6 +277,7 @@ export class MainCanvas {
       // console.log(m);
       const originModel = gltf.scene;
       const model = gltf.scene.children[0];
+      console.log('model:', model);
       // console.log('LOAD model:', model);
       this._model = model;
       this._scene.add(originModel);
