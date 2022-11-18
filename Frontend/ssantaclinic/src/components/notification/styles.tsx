@@ -9,7 +9,7 @@ export const NotiModalContainer = styled.div`
   border-radius: 0.5rem;
   padding: 1rem;
   text-align: center;
-
+  overflow-y: scroll;
   #noti {
     background: white;
     width: 50%;
@@ -23,6 +23,16 @@ export const NotiModalContainer = styled.div`
       margin: auto auto;
     }
   }
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.4);
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
 `;
 
 export const NotiModalCloseButton = styled.button`

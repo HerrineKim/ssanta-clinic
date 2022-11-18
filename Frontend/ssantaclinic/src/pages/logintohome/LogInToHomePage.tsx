@@ -21,7 +21,7 @@ export const LogInToHomePage = (props: any) => {
     return () => {
       cancelAnimationFrame(requestId2);
     };
-  }, [tohome]);
+  }, []);
   // function ToHome() {
   //   // setTimeout(() => {
   //   //   navigate('/');

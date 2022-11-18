@@ -20,7 +20,7 @@ export const LetterList = (props: any) => {
           onLetterList(false);
         }}
       >
-        <b>{letter.title}</b>
+        <b className="letter-title">{letter.title}</b>
       </motion.div>
     );
   }
