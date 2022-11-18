@@ -19,7 +19,6 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +30,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class NotiServiceImpl implements NotiService {
-    private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
+    private static final Long DEFAULT_TIMEOUT = 60L* 1000 ; // 10분
     private static final String BASE_URL = "http://localhost:8080";
     private final int DECEMBER = 11;
     private final EmitterRepository emitterRepository;
@@ -139,7 +138,7 @@ public class NotiServiceImpl implements NotiService {
         if(LocalDateTime.now().getMonthValue() == DECEMBER){
             int day = LocalDateTime.now().getDayOfMonth();
             List<AdventCalendar> unOpenedBoxes =
-                    calendarRepository.findAllByReceiverUserIdAndIsReadIsFalse(userId);
+                    calendarRepository.findAllByReceiverUserIdAndIsRead(userId, false);
             for(AdventCalendar box : unOpenedBoxes){
                 if(box.getDay() <= day){
                     send(user, Type.GIFT, box.getSender()+ "님으로부터 선물이 도착했습니다!", box.getId());
