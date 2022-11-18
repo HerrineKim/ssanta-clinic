@@ -142,9 +142,21 @@ public class NotiServiceImpl implements NotiService {
                     calendarRepository.findAllByReceiverUserIdAndIsReadIsFalse(userId);
             for(AdventCalendar box : unOpenedBoxes){
                 if(box.getDay() <= day){
-                    send(user, Type.GIFT, "선물이 도착했습니다!", box.getId());
+                    send(user, Type.GIFT, box.getSender()+ "님으로부터 선물이 도착했습니다!", box.getId());
                 }
             }
+        }
+    }
+
+    @Override
+    public void readAllNotification(int userId) {
+        // 존재하는 회원인지 확인
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+        List<Notification> notiList = notiRepository.findAllByUserUserId(userId);
+        for (var noti : notiList) {
+            noti.isRead();
+            notiRepository.save(noti);
         }
     }
 }
