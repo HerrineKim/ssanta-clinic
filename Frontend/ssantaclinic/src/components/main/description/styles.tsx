@@ -12,11 +12,12 @@ export const DescriptionModalContainer = styled.div`
   text-align: center;
   overflow-y: scroll;
   #title {
-    font-size: 50px;
+    font-size: 70px;
     font-family: 'Cafe24Ssurround';
   }
   #title-description {
     font-family: 'IMRegular';
+    font-size: 30px;
     margin-top: 1%;
     margin-bottom: 1%;
   }
@@ -72,15 +73,16 @@ export const DescriptionModalCloseButton = styled.button`
 
 export const SmallTitle = styled.h2`
   font-family: 'Cafe24Ssurround';
-  font-size: 30px;
+  font-size: 50px;
 `;
 
 export const DescriptionContainer = styled.div`
   width: 100%;
   height: 100%;
-  font-family: 'IMRegular';
   margin-top: 2%;
   margin-bottom: 2%;
+  font-family: 'IMRegular';
+  font-size: 30px;
 `;
 
 export const Text = styled.p`

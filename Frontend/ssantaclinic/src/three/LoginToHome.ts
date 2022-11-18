@@ -158,7 +158,6 @@ export class LoginToHome {
       ]);
 
       this._path = path;
-
       model1.rotation.y = -Math.PI / 2;
       const parent = new THREE.Object3D();
       parent.add(model1);
@@ -202,19 +201,21 @@ export class LoginToHome {
   }
 
   update() {
-    this._isStart = true;
     const delta = this._clock.getDelta();
     this._orbitControls.update();
 
     if (this._mixer) this._mixer.update(delta);
 
-    const time = this._clock.oldTime * 0.0001;
-    if (this._path && this._isStart) {
+    console.log(this._clock.elapsedTime, '이게 뭐여');
+    const time = this._clock.elapsedTime * 0.1;
+
+    if (this._path) {
+      this._isStart = false;
       const currentPosition = new THREE.Vector3();
       const nextPosition = new THREE.Vector3();
-
       this._path.getPointAt(time % 1, currentPosition);
-      this._path.getPointAt((time + 0.001) % 1, nextPosition);
+
+      this._path.getPointAt((time + 0.00003) % 1, nextPosition);
 
       this._santa.position.copy(currentPosition);
       this._santa.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);

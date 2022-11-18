@@ -39,7 +39,9 @@ export default function NotiModal(props: any) {
         //   onLetterList(false);
         // }}
       >
-        <b className="noti-message">{noti.message}</b>
+        <b className="noti-message">
+          {noti.notiId} {noti.message} {noti.type}
+        </b>
       </div>
     );
   }
