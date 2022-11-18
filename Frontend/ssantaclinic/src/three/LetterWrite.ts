@@ -68,7 +68,7 @@ export class LetterWriteModel {
     this._scene.add(light);
   }
   _setupModel() {
-    new GLTFLoader().load('/letter/letter_write.glb', (gltf) => {
+    new GLTFLoader().load('/letter/letter_write_v2.glb', (gltf) => {
       const model1 = gltf.scene;
       this._scene.add(model1);
     });
