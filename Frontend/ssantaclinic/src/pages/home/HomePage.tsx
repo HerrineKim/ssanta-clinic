@@ -238,6 +238,7 @@ export default function Home() {
       .catch((err) => {
         if (err.response.status === 401) {
           localStorage.clear();
+          navigate('/login');
         }
         console.log(err);
       });
