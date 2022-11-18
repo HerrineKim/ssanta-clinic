@@ -1,5 +1,15 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { ItemAlert, Button, ButtonDiv, TextSpan, SuccessAlert } from './styles';
+import {
+  ItemAlert,
+  Button,
+  ButtonDiv,
+  TextSpan,
+  SuccessAlert,
+  NumberBox,
+  NextNumber,
+  NumberContainer,
+  PrevNumber,
+} from './styles';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/url';
 import { Money, MyItems } from '../../store/store';
@@ -102,6 +112,18 @@ export default function ShopAlert(props: Iprops) {
     }
   }, [count]);
 
+  function up() {
+    setCount(count + 1);
+  }
+  function down() {
+    if (count > 0) {
+      setCount(count - 1);
+    }
+  }
+  useEffect(() => {
+    console.log(count);
+  }, [count]);
+
   return (
     <ItemAlert className="alert">
       {isBuy ? <span>구매중</span> : null}
@@ -109,14 +131,23 @@ export default function ShopAlert(props: Iprops) {
         <SuccessAlert>구매 성공!</SuccessAlert>
       ) : (
         <Fragment>
+          <span>개당 {cost}코인입니다.</span>
           <span>{item}구매하시겠습니까?</span>
-          <span>개당 {cost}입니다.</span>
-          <input
+
+          <NumberContainer>
+            <NextNumber onClick={() => up()}></NextNumber>
+            <PrevNumber onClick={() => down()}></PrevNumber>
+            <NumberBox>
+              <span>{count}</span>
+            </NumberBox>
+          </NumberContainer>
+
+          {/* <input
             type="number"
             value={count}
             onChange={changeCount}
             min="0"
-          ></input>
+          ></input> */}
           <ButtonDiv>
             <Button onClick={send}>구매!</Button>
             <Button
@@ -124,7 +155,7 @@ export default function ShopAlert(props: Iprops) {
                 onClose(false);
               }}
             >
-              ㄴㄴ
+              아뇨
             </Button>
           </ButtonDiv>
         </Fragment>
