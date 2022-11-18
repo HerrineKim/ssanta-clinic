@@ -21,7 +21,7 @@ import { CalendarBackground } from './styles';
 import { CalendarPageContainer } from './styles';
 import { CalendarLeftContainer } from './styles';
 // 좌측 상단
-import { CalendarTitle, CloseButton } from './styles';
+import { MyCalendarTitle, CloseButton } from './styles';
 import { MiniContainerOne } from './styles';
 import { BoxOne } from './styles';
 import { BoxTwo } from './styles';
@@ -161,14 +161,14 @@ export function CalendarModal(props: any) {
         // 해당 박스 번호
       ></CalendarDetail>
       <TopContainer>
-        <CalendarTitle>
+        <MyCalendarTitle>
           {nickName}님의{' '}
           {
             // 오늘 연도
             new Date().getFullYear()
           }
           년 어드벤트 캘린더
-        </CalendarTitle>
+        </MyCalendarTitle>
         {/* 크리스마스 카운터 */}
         <CountdownDiv>
           <Countdown

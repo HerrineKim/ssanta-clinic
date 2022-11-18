@@ -14,6 +14,18 @@ export const BoxNumText = styled.div`
   // 4px 4px 0px #017e7f, 5px 5px 0px #052939, 6px 6px 0px #c11a2b;
 `;
 
+export const MyCalendarTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: end;
+  font-family: 'Cafe24Ssurround';
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #f6eed7;
+  margin-top: 1%;
+`;
+
 export const PresentButton = styled.button`
   min-width: 130px;
   font-family: 'Cafe24Ssurround';
