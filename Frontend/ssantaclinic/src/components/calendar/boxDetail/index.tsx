@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactAudioPlayer from 'react-audio-player';
+
 import {
   BoxDetailContainer,
   CloseButton,
@@ -10,6 +12,7 @@ import {
   PlayButton,
   ImageButton,
   ButtonsDiv,
+  AudioPlayer,
 } from './styles';
 import { PictureModal } from '../pictureModal/index';
 import { API_BASE_URL } from '../../../apis/url';
@@ -23,24 +26,30 @@ type BoxDetailProps = {
 };
 
 export function BoxDetail(props: BoxDetailProps) {
+  useEffect(() => {
+    if (props) {
+      console.log(props.boxDetail);
+    }
+  }, [props.boxDetail]);
+
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const BASE_URL = API_BASE_URL;
 
   // 오디오 재생(calendar/play?boxId=${props.boxId})
-  const playAudio = () => {
-    axios
-      .get(BASE_URL + `calendar/play?boxId=${props.boxId}`, {
-        headers: {
-          Authorization: ACCESS_TOKEN,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  // const playAudio = () => {
+  //   axios
+  //     .get(BASE_URL + `calendar/play?boxId=${props.boxId}`, {
+  //       headers: {
+  //         Authorization: ACCESS_TOKEN,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
   const closeBoxDetailModal = () => {
     props.setBoxDetailOpen(false);
@@ -51,6 +60,10 @@ export function BoxDetail(props: BoxDetailProps) {
   const openPictureModal = () => {
     setPictureModalOpen(true);
   };
+
+  // 오디오 객체(props.boxDetail.audioUrl)
+  // audio가
+  // const audio = new Audio(props.boxDetail.audioUrl);
 
   if (!props.boxDetailOpen) {
     return null;
@@ -68,13 +81,10 @@ export function BoxDetail(props: BoxDetailProps) {
         <BoxDetailMiddle>
           <ButtonsDiv>
             <ImageButton onClick={openPictureModal}>🖼️</ImageButton>
-            <PlayButton
-              onClick={() => {
-                playAudio();
-              }}
-            >
-              📟
-            </PlayButton>
+            {/* 오디오 재생 */}
+            <AudioPlayer controls>
+              <source src={props.boxDetail.audioUrl} type="audio/mpeg" />
+            </AudioPlayer>
           </ButtonsDiv>
           <ContentText>{props.boxDetail.content}</ContentText>
         </BoxDetailMiddle>
