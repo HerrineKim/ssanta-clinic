@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,6 +26,9 @@ public class FollowServiceImpl implements FollowService {
     public void follow(int parentId, int childId) {
         User parent = userRepository.findById(parentId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         User child = userRepository.findById(childId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        if(followRepository.findByParentAndChild(parent, child).isPresent())
+            throw new CustomException(ErrorCode.ALREADY_FOLLOWED);
 
         Follow follow = Follow.builder()
                 .parent(parent)
