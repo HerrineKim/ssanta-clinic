@@ -1,8 +1,5 @@
 import styled from 'styled-components';
-import {
-  STAGE_WIDTH,
-  STAGE_HEIGHT,
-} from '../../../../components/game/tetris/setup';
+import { STAGE_WIDTH, STAGE_HEIGHT } from '../../tetris/setup';
 
 export const StyledStage = styled.div`
   display: grid;

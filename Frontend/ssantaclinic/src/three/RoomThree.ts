@@ -308,7 +308,45 @@ export class RoomThree {
           });
           // console.log(model);
           // console.log(`${index}: `, model);
-          model.scale.set(0.01, 0.01, 0.01);
+          if (
+            (1 <= item && item <= 8) ||
+            (21 <= item && item <= 27) ||
+            item === 17
+          ) {
+            model.scale.set(0.012, 0.012, 0.012);
+          } else if (item === 9 || item === 36) {
+            model.scale.set(0.015, 0.015, 0.015);
+          } else if ((10 <= item && item <= 16) || item === 18) {
+            model.scale.set(0.008, 0.008, 0.008);
+          } else if (item === 20) {
+            model.scale.set(0.011, 0.011, 0.011);
+          } else if ([19, 28, 29, 32, 33].includes(item)) {
+            model.scale.set(0.01, 0.01, 0.01);
+          } else if (item === 30) {
+            model.scale.set(0.012, 0.012, 0.012);
+          } else if (item === 31) {
+            model.scale.set(0.02, 0.02, 0.02);
+          } else if (item === 34) {
+            model.scale.set(0.023, 0.023, 0.023);
+          } else if (item === 35) {
+            model.scale.set(0.014, 0.014, 0.014);
+          } else if (item === 37) {
+            model.scale.set(0.02, 0.02, 0.02);
+          } else if (item === 38) {
+            model.scale.set(0.008, 0.008, 0.008);
+          } else if (40 <= item && item <= 46) {
+            model.scale.set(0.06, 0.06, 0.04);
+          } else if (item === 48 || item === 39) {
+            model.scale.set(0.05, 0.05, 0.05);
+          } else if (item === 47 || item === 50 || item === 51) {
+            model.scale.set(0.03, 0.03, 0.03);
+          } else if (item === 52 || item === 54) {
+            model.scale.set(0.07, 0.07, 0.07);
+          } else if (item === 53) {
+            model.scale.set(0.09, 0.09, 0.09);
+          } else if (item === 55) {
+            model.scale.set(0.04, 0.04, 0.04);
+          }
           const position = this._position[`${index}`];
           // model.position.set(0, 0, 0);
           model.position.set(position[0], position[1], position[2]);

@@ -236,7 +236,7 @@ export default function Home() {
         }),
       )
       .catch((err) => {
-        if (err.status === 401) {
+        if (err.response.status === 401) {
           localStorage.clear();
         }
         console.log(err);
