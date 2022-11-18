@@ -3,6 +3,7 @@ package com.ssafy.ssantaClinic.api.service;
 import com.ssafy.ssantaClinic.api.request.SendLetterRequest;
 import com.ssafy.ssantaClinic.api.response.LetterResponse;
 import com.ssafy.ssantaClinic.common.auth.util.JwtUtil;
+import com.ssafy.ssantaClinic.common.event.NotifyEvent;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
 import com.ssafy.ssantaClinic.db.entity.*;
@@ -10,6 +11,7 @@ import com.ssafy.ssantaClinic.db.entity.columnEnum.Emotion;
 import com.ssafy.ssantaClinic.db.entity.columnEnum.LetterType;
 import com.ssafy.ssantaClinic.db.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,8 @@ public class LetterServiceImpl implements LetterService {
     private final SantaLetterRepository santaLetterRepository;
     private final QuoteRepository quoteRepository;
     private final Random randomizer = new Random();
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional
@@ -62,7 +66,7 @@ public class LetterServiceImpl implements LetterService {
         replyLetter
                 .title(santaLetter.getTitle())
                 .isRead(false)
-                .isReceived(LocalDateTime.now().plusHours(randomizer.nextInt(2) + 1))// 1~3시간 후에 받을 수 있도록 설정
+                .isReceived(LocalDateTime.now().plusSeconds(10))// 10초 후에 받을 수 있도록 설정
                 .user(user)
                 .sendLetter(sendLetter);
 
@@ -76,7 +80,10 @@ public class LetterServiceImpl implements LetterService {
             // 긍정 or 중립일 경우 그냥 편지만
             replyLetter.message(santaLetter.getContent().replaceAll("OO", nickName));
         }
-        replyLetterRepository.save(replyLetter.build());
+        ReplyLetter result = replyLetter.build();
+        replyLetterRepository.save(result);
+
+        applicationEventPublisher.publishEvent(NotifyEvent.builder().receiver(user).type(Type.REPLY).message("답장 편지가 도착했어요!").id(result.getReplyLetterId()).build());
     }
 
     @Override
