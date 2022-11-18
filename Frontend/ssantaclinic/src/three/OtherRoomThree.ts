@@ -329,7 +329,8 @@ export class OtherRoomThree {
   _setupControls() {
     if (this._scenenumber === 1) {
       this._orbitControls = new OrbitControls(this._camera, this._divContainer);
-
+      this._orbitControls.target.set(0, 2, 0);
+      this._orbitControls.enabled = false;
       // //orbicontrol shift 기능 없애기
       // this._orbitControls.enablePan = false;
       // this._orbitControls.minDistance = 30;
