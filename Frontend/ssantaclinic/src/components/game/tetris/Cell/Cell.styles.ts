@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { TETROMINOS } from '../../../../components/game/tetris/setup';
+import { TETROMINOS } from '../../tetris/setup';
 
 type Props = {
   type: keyof typeof TETROMINOS;

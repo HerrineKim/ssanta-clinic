@@ -275,45 +275,44 @@ export class OtherRoomThree {
       this._inven = inven;
     });
 
-    loader.load('/room/showcase.glb', (gltf) => {
-      count += 1;
-      const model: any = gltf.scene;
-      // this._scene.add(model);
-      // console.log('showcase:', model);
-      model.position.setZ(model.position.z + 1);
-      this._showcase = model;
-      inven.push(model);
-      // console.log('loadshowcase inven:', inven);
-      this._inven = inven;
-    });
+    // loader.load('/room/showcase.glb', (gltf) => {
+    //   count += 1;
+    //   const model: any = gltf.scene;
+    //   // this._scene.add(model);
+    //   // console.log('showcase:', model);
+    //   model.position.setZ(model.position.z + 1);
+    //   this._showcase = model;
+    //   inven.push(model);
+    //   // console.log('loadshowcase inven:', inven);
+    //   this._inven = inven;
+    // });
 
     // item load 부분
-    const items: any[] = [];
-    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
-    this._items.forEach((item: number, index: number) => {
-      // console.log('item:', item);
-      // console.log(index);
-      if (item !== 0) {
-        loader.load(`/items/${item}.glb`, (gltf) => {
-          count += 1;
-          // console.log(index);
-          const model = gltf.scene;
-          console.log(model);
-          // console.log(`${index}: `, model);
-          model.scale.set(0.01, 0.01, 0.01);
-          const position = this._position[`${index}`];
-          // model.position.set(0, 0, 0);
-          model.position.set(position[0], position[1], position[2]);
-          items.push(model);
-          // this._scene.add(model);
-        });
-      }
-    });
-    const itemCount = this._items.length;
-    this._items = items;
+    // const items: any[] = [];
+    // // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    // this._items.forEach((item: number, index: number) => {
+    //   // console.log('item:', item);
+    //   // console.log(index);
+    //   if (item !== 0) {
+    //     loader.load(`/items/${item}.glb`, (gltf) => {
+    //       count += 1;
+    //       // console.log(index);
+    //       const model = gltf.scene;
+
+    //       model.scale.set(0.01, 0.01, 0.01);
+    //       const position = this._position[`${index}`];
+    //       // model.position.set(0, 0, 0);
+    //       model.position.set(position[0], position[1], position[2]);
+    //       items.push(model);
+    //       // this._scene.add(model);
+    //     });
+    //   }
+    // });
+    // const itemCount = this._items.length;
+    // this._items = items;
 
     const loadPage = setInterval(() => {
-      if (count === itemCount + 5) {
+      if (count === 4) {
         const loading = document.querySelector(
           '#room-canvas .loading',
         ) as HTMLElement | null;
