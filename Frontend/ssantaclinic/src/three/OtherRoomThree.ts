@@ -275,82 +275,44 @@ export class OtherRoomThree {
       this._inven = inven;
     });
 
-    loader.load('/room/showcase.glb', (gltf) => {
-      count += 1;
-      const model: any = gltf.scene;
-      // this._scene.add(model);
-      // console.log('showcase:', model);
-      model.position.setZ(model.position.z + 1);
-      this._showcase = model;
-      inven.push(model);
-      // console.log('loadshowcase inven:', inven);
-      this._inven = inven;
-    });
+    // loader.load('/room/showcase.glb', (gltf) => {
+    //   count += 1;
+    //   const model: any = gltf.scene;
+    //   // this._scene.add(model);
+    //   // console.log('showcase:', model);
+    //   model.position.setZ(model.position.z + 1);
+    //   this._showcase = model;
+    //   inven.push(model);
+    //   // console.log('loadshowcase inven:', inven);
+    //   this._inven = inven;
+    // });
 
     // item load 부분
-    const items: any[] = [];
-    // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
-    this._items.forEach((item: number, index: number) => {
-      // console.log('item:', item);
-      // console.log(index);
-      if (item !== 0) {
-        loader.load(`/items/${item}.glb`, (gltf) => {
-          count += 1;
-          // console.log(index);
-          const model = gltf.scene;
-          if (
-            (1 <= item && item <= 8) ||
-            (21 <= item && item <= 27) ||
-            item === 17
-          ) {
-            model.scale.set(0.012, 0.012, 0.012);
-          } else if (item === 9 || item === 36) {
-            model.scale.set(0.015, 0.015, 0.015);
-          } else if ((10 <= item && item <= 16) || item === 18) {
-            model.scale.set(0.008, 0.008, 0.008);
-          } else if (item === 20) {
-            model.scale.set(0.011, 0.011, 0.011);
-          } else if ([19, 28, 29, 32, 33].includes(item)) {
-            model.scale.set(0.01, 0.01, 0.01);
-          } else if (item === 30) {
-            model.scale.set(0.012, 0.012, 0.012);
-          } else if (item === 31) {
-            model.scale.set(0.02, 0.02, 0.02);
-          } else if (item === 34) {
-            model.scale.set(0.023, 0.023, 0.023);
-          } else if (item === 35) {
-            model.scale.set(0.014, 0.014, 0.014);
-          } else if (item === 37) {
-            model.scale.set(0.02, 0.02, 0.02);
-          } else if (item === 38) {
-            model.scale.set(0.008, 0.008, 0.008);
-          } else if (40 <= item && item <= 46) {
-            model.scale.set(0.06, 0.06, 0.04);
-          } else if (item === 48 || item === 39) {
-            model.scale.set(0.05, 0.05, 0.05);
-          } else if (item === 47 || item === 50 || item === 51) {
-            model.scale.set(0.03, 0.03, 0.03);
-          } else if (item === 52 || item === 54) {
-            model.scale.set(0.07, 0.07, 0.07);
-          } else if (item === 53) {
-            model.scale.set(0.09, 0.09, 0.09);
-          } else if (item === 55) {
-            model.scale.set(0.04, 0.04, 0.04);
-          }
-          // model.scale.set(0.01, 0.01, 0.01);
-          const position = this._position[`${index}`];
-          // model.position.set(0, 0, 0);
-          model.position.set(position[0], position[1], position[2]);
-          items.push(model);
-          // this._scene.add(model);
-        });
-      }
-    });
-    const itemCount = this._items.length;
-    this._items = items;
+    // const items: any[] = [];
+    // // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
+    // this._items.forEach((item: number, index: number) => {
+    //   // console.log('item:', item);
+    //   // console.log(index);
+    //   if (item !== 0) {
+    //     loader.load(`/items/${item}.glb`, (gltf) => {
+    //       count += 1;
+    //       // console.log(index);
+    //       const model = gltf.scene;
+
+    //       model.scale.set(0.01, 0.01, 0.01);
+    //       const position = this._position[`${index}`];
+    //       // model.position.set(0, 0, 0);
+    //       model.position.set(position[0], position[1], position[2]);
+    //       items.push(model);
+    //       // this._scene.add(model);
+    //     });
+    //   }
+    // });
+    // const itemCount = this._items.length;
+    // this._items = items;
 
     const loadPage = setInterval(() => {
-      if (count === itemCount + 5) {
+      if (count === 4) {
         const loading = document.querySelector(
           '#room-canvas .loading',
         ) as HTMLElement | null;
