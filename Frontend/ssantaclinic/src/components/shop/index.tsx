@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ItemAlert, Button, ButtonDiv, TextSpan } from './styles';
+import React, { useState, useEffect, Fragment } from 'react';
+import { ItemAlert, Button, ButtonDiv, TextSpan, SuccessAlert } from './styles';
 import axios from 'axios';
 import { API_BASE_URL } from '../../apis/url';
 import { Money, MyItems } from '../../store/store';
@@ -37,6 +37,7 @@ export default function ShopAlert(props: Iprops) {
   const TOKEN = localStorage.getItem('jwt') || '';
   const [isMoneyPossible, setIsMoneyPossible] = useState<boolean>(true);
   const [isItemPossible, setIsItemPossible] = useState<boolean>(true);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
   // const money = useRecoilValue(Money);
   console.log('shopalert:', props);
   const [newItems, setNewItems] = useState<number[]>([]);
@@ -64,9 +65,19 @@ export default function ShopAlert(props: Iprops) {
         setIsBuy(false);
         setUserMoney(res.data.money);
         setUserItems((items) => [...items, ...newItems]);
+
+        setIsSuccess(true);
       });
     }
   }
+  useEffect(() => {
+    if (isSuccess === true) {
+      setTimeout(() => {
+        setIsSuccess(false);
+        onClose(false);
+      }, 2000);
+    }
+  }, [isSuccess]);
 
   function changeCount(event: any) {
     setCount(parseInt(event.target.value));
@@ -94,19 +105,30 @@ export default function ShopAlert(props: Iprops) {
   return (
     <ItemAlert className="alert">
       {isBuy ? <span>구매중</span> : null}
-      <span>{item}구매하시겠습니까?</span>
-      <span>개당 {cost}입니다.</span>
-      <input type="number" value={count} onChange={changeCount} min="0"></input>
-      <ButtonDiv>
-        <Button onClick={send}>구매!</Button>
-        <Button
-          onClick={() => {
-            onClose(false);
-          }}
-        >
-          ㄴㄴ
-        </Button>
-      </ButtonDiv>
+      {isSuccess ? (
+        <SuccessAlert>구매 성공!</SuccessAlert>
+      ) : (
+        <Fragment>
+          <span>{item}구매하시겠습니까?</span>
+          <span>개당 {cost}입니다.</span>
+          <input
+            type="number"
+            value={count}
+            onChange={changeCount}
+            min="0"
+          ></input>
+          <ButtonDiv>
+            <Button onClick={send}>구매!</Button>
+            <Button
+              onClick={() => {
+                onClose(false);
+              }}
+            >
+              ㄴㄴ
+            </Button>
+          </ButtonDiv>
+        </Fragment>
+      )}
 
       {isItemPossible && isMoneyPossible ? null : isItemPossible ? (
         <TextSpan>돈이 부족합니다.</TextSpan>

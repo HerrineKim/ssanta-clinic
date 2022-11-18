@@ -1,19 +1,5 @@
 import styled from 'styled-components';
 
-export const asdf = styled.div`
-  width: 300px;
-  height: 200px;
-  z-index: 999;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: gray;
-  border: 1px solid black;
-  border-radius: 8px;
-  flex-direction: column;
-  display: flex;
-`;
 export const ItemAlert = styled.div`
   z-index: 4;
   position: relative;
@@ -95,4 +81,34 @@ export const TextSpan = styled.span`
   color: red;
   font-size: 25px;
   margin-top: 15px;
+`;
+
+export const SuccessAlert = styled.div`
+  z-index: 4;
+  position: fixed;
+  width: 60%;
+  height: 40%;
+  color: green;
+  margin:auto;
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  width: 300px;
+  display: flex;
+  
+  flex-direction: column;
+  align-items:center;
+  justify-content:center;
+  font-weight: 600;
+  font-size: 1.5rem;
+  padding: 0 18px;
+  text-align: center;
+  text-decoration: none;
+  
+  
+  touch-action: manipulation;
+  font-family: 'Cafe24Ssurround';
+  }
 `;
