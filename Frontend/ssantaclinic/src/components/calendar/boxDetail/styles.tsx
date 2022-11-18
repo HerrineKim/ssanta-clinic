@@ -80,6 +80,7 @@ export const ContentText = styled.div`
   border-radius: 8px;
   margin: 0 0 10px 0;
   word-break: keep-all;
+  margin-top: 5%;
 `;
 
 export const BoxDetailBottom = styled.div`
@@ -177,4 +178,20 @@ export const SenderText = styled.div`
   font-size: 1.5rem;
   font-family: 'Cafe24Ssurround';
   color: #422800;
+`;
+
+export const AudioPlayer = styled.audio`
+  width: 50%;
+  height: 140%;
+  margin-left: 2%;
+  margin-bottom: 5%;
+  border-radius: 25px;
+  border: 2px solid #422800;
+  ::-webkit-media-controls-panel {
+    background-color: #fbeee0;
+  }
+  ::-webkit-media-controls-mute-button {
+    background-color: #fbefd9;
+    border-radius: 50%;
+  }
 `;
