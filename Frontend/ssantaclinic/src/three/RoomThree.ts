@@ -1,11 +1,14 @@
 /* eslint-disable no-undef */
 // import { throws } from 'assert';
+import React from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
+import * as ReactDOM from 'react-dom/client';
 import gsap from 'gsap';
+import ItemDeleteAlert from '../components/room/itemdelete/ItemDeleteAlert';
 
 import axios from 'axios';
 
@@ -241,10 +244,10 @@ export class RoomThree {
         //   }
         // });
         // model.position.set(5, 0, -4.5);
+
         model.name = 'tree';
         model.traverse((child: THREE.Object3D) => {
           tree.push(child);
-          child.name = 'tree';
         });
         this._scene.add(model);
         inven.push(model);
@@ -480,6 +483,7 @@ export class RoomThree {
       const closeTarget = this._raycaster.intersectObject(this._close);
       const treeTarget = this._raycaster.intersectObjects(this._tree);
       const checkTarget = this._raycaster.intersectObject(this._check);
+
       // object = treeTarget[0].object;
       // while (object.parent) {
       //   object = object.parent;
@@ -487,6 +491,25 @@ export class RoomThree {
       //     break;
       //   }
       // }
+
+      if (
+        treeTarget.length > 0 &&
+        !treeTarget[0].object.name.includes('tree')
+      ) {
+        let object = treeTarget[0].object;
+        // tree 최상위 찾기
+        while (object.parent) {
+          object = object.parent;
+          if (!(object instanceof THREE.Mesh)) {
+            break;
+          }
+        }
+        const result = confirm('지우겠습니까?');
+        if (result) {
+          object.removeFromParent();
+        }
+      }
+
       const formData = new FormData();
       const remainItem = this._unclickedItem.map((child) =>
         parseInt(child.name),
@@ -720,7 +743,7 @@ export class RoomThree {
         console.log(unclickedItems, event.object);
         if (unclickedItems.includes(event.object)) {
           if (targets.length > 0) {
-            if (targets[0].object.name === 'tree') {
+            if (targets[0].object.name.includes('tree')) {
               //만난다면 장식품을 tree에 붙이고 종속시킴
               console.log('tree 장식!', event.object, targets);
               event.object.position.setX(targets[0].point.x);
@@ -740,6 +763,10 @@ export class RoomThree {
 
               object.attach(event.object);
               // this._items = items;
+            } else {
+              event.object.position.setX(positions[index][0]);
+              event.object.position.setY(positions[index][1]);
+              event.object.position.setZ(positions[index][2]);
             }
           } else {
             event.object.position.setX(positions[index][0]);
@@ -751,12 +778,12 @@ export class RoomThree {
           let i: number;
           if (targets.length > 2) {
             for (i = 0; i < targets.length; i++) {
-              if (targets[i].object.name === 'tree') {
+              if (targets[i].object.name.includes('tree')) {
                 break;
               }
             }
 
-            if (targets[i].object.name === 'tree') {
+            if (targets[i].object.name.includes('tree')) {
               //만난다면 장식품을 tree에 붙이고 종속시킴
               console.log('tree 장식!', event.object, targets);
               event.object.removeFromParent();

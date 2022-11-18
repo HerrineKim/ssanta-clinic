@@ -80,7 +80,7 @@ export default function RoomModal(props: any) {
   };
 
   return (
-    <Wrapper className="roommodal">
+    <Wrapper className="roommodal" id="room">
       <CloseButton
         className="outbtn"
         onClick={() => {
