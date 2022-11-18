@@ -67,4 +67,19 @@ public class NotiController {
         notiService.sendUnOpenedBoxNotification(userId);
         return ResponseEntity.ok().header("X-Accel-Buffering", "no").build();
     }
+
+    @ApiOperation(value = "알림 읽음 처리", notes = "알림 읽음 처리하기")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(code = 500, message = "서버 에러 발생")
+    })
+    @PatchMapping("/read/{userId}")
+    public ResponseEntity<SimpleMessageResponse> readAlarm(@PathVariable int userId) {
+        /**
+         * @Method Name : readAlarm
+         * @Method 설명 : 알림 읽음 처리하기
+         */
+        notiService.readAllNotification(userId);
+        return ResponseEntity.ok().body(SimpleMessageResponse.builder().Result("success").build());
+    }
 }
