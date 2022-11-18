@@ -51,7 +51,7 @@ export const SignUp = () => {
         if (res.data.duplicated) {
           alert('중복입니다');
         } else {
-          alert('말복입니다 통과~');
+          alert('중복된 이메일이 없습니다!');
           setEmailDuplicated(false);
           if (!emailDuplicated && !nickNameDuplicated) {
             setIsValid(true);
@@ -72,7 +72,7 @@ export const SignUp = () => {
         if (res.data.duplicated) {
           alert('중복입니다');
         } else {
-          alert('말복입니다 통과~');
+          alert('중복된 닉네임이 없습니다!');
           setNickNameDuplicated(false);
           if (!emailDuplicated && !nickNameDuplicated) {
             setIsValid(true);
