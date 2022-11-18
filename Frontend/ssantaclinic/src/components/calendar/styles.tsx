@@ -55,9 +55,6 @@ export const TopContainer = styled.div`
   align-items: end;
   justify-content: space-around;
   width: 90vw;
-  padding: 0 20px;
-  margin-right: 10vw;
-  margin-left: 5vw;
 `;
 
 export const CalendarPageContainer = styled.div`
@@ -76,6 +73,9 @@ export const CalendarTitle = styled.div`
   font-size: 2.5rem;
   font-weight: 700;
   color: #f6eed7;
+  width: 105%;
+  margin-top: 1%;
+  margin-right: 1%;
 `;
 
 // 좌측 영역
@@ -800,7 +800,7 @@ export const MiniContainerTen = styled.div`
   border-radius: 8px;
 `;
 export const CloseButton = styled.div`
-width: 50px;
+min-width: 50px;
 background-color: #fbeee0;
 border: 2px solid #422800;
 border-radius: 30px;
