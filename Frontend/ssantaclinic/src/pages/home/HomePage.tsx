@@ -123,16 +123,7 @@ export default function Home() {
       eventSource.onmessage = function (event) {
         try {
           const data: any = JSON.parse(event.data);
-          // let isInList = false;
-          // for (const noti of notis) {
-          //   if (noti.notiId === data.notiId) {
-          //     isInList = true;
-          //   }
-          // }
-          // if (!isInList) {
-          //   console.log(data);
           setNotis((notiList) => [...notiList, data]);
-          // }
         } catch {
           console.log('sse 패스');
         }
@@ -165,25 +156,6 @@ export default function Home() {
   function logout() {
     localStorage.clear();
   }
-
-  // const LogOut = () => { // 토큰을 찾을 수 없다고 뜹니다.
-  //   console.log(ACCESS_TOKEN);
-  //   axios
-  //     .post('http://localhost:8080/api/user/logout', {
-  //       headers: {
-  //         Authorization: ACCESS_TOKEN,
-  //       },
-  //     })
-  //     .then((res) => {
-  //       console.log(res.data);
-  //       // token, recoil 값들이 locastorage에 저장됨
-  //       localStorage.clear();
-  //       navigate('/login');
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response);
-  //     });
-  // };
 
   const instance = axios.create({
     baseURL: `${BASE_URL}`,
@@ -249,13 +221,9 @@ export default function Home() {
   }, []);
 
   const render = (time: number) => {
-    // console.log(homeCanvas._isItemClick);
-
     if (homeCanvas._scenenumber === 1) {
-      // console.log(this._camera.position);
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
       homeCanvas.update(time);
-      // console.log('!');
 
       requestAnimationFrame(render);
     } else {
@@ -326,9 +294,7 @@ export default function Home() {
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
-      // 유튜브 주소
       disablekb: 1,
-      // controls: 0,
       fs: 0,
       modestbranding: 1,
     },
@@ -355,10 +321,6 @@ export default function Home() {
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       <LetterAlert></LetterAlert>
-      {/* <ShopAlert></ShopAlert> */}
-      {/* <TreeModal data={data}></TreeModal> */}
-      {/* 버튼들 */}
-
       {isShop || isCover ? (
         <TopBar>
           <DescriptionButton
