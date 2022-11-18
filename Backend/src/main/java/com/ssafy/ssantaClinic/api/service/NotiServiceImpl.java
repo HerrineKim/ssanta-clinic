@@ -147,4 +147,16 @@ public class NotiServiceImpl implements NotiService {
             }
         }
     }
+
+    @Override
+    public void readAllNotification(int userId) {
+        // 존재하는 회원인지 확인
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+        List<Notification> notiList = notiRepository.findAllByUserUserId(userId);
+        for (var noti : notiList) {
+            noti.isRead();
+            notiRepository.save(noti);
+        }
+    }
 }
