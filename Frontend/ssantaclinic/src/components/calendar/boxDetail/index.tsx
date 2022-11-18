@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   BoxDetailContainer,
   CloseButton,
@@ -11,6 +11,7 @@ import {
   ImageButton,
   ButtonsDiv,
 } from './styles';
+import { PictureModal } from '../pictureModal/index';
 import { API_BASE_URL } from '../../../apis/url';
 import axios from 'axios';
 
@@ -44,17 +45,29 @@ export function BoxDetail(props: BoxDetailProps) {
   const closeBoxDetailModal = () => {
     props.setBoxDetailOpen(false);
   };
+
+  // 사진 모달
+  const [pictureModalOpen, setPictureModalOpen] = useState(false);
+  const openPictureModal = () => {
+    setPictureModalOpen(true);
+  };
+
   if (!props.boxDetailOpen) {
     return null;
   } else {
     return (
       <BoxDetailContainer>
+        <PictureModal
+          pictureModalOpen={pictureModalOpen}
+          images={props.boxDetail.imges}
+          setPictureModalOpen={setPictureModalOpen}
+        ></PictureModal>
         <BoxDetailTop>
           <CloseButton onClick={closeBoxDetailModal}>x</CloseButton>
         </BoxDetailTop>
         <BoxDetailMiddle>
           <ButtonsDiv>
-            <ImageButton>🖼️</ImageButton>
+            <ImageButton onClick={openPictureModal}>🖼️</ImageButton>
             <PlayButton
               onClick={() => {
                 playAudio();
