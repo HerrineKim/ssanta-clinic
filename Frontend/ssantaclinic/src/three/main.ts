@@ -1,27 +1,27 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import Stats from 'three/examples/jsm/libs/stats.module.js'; // fps 표시하기위 한 모듈
+
 //충돌 감지 를 위한 모듈들
 import { Octree } from 'three/examples/jsm/math/Octree.js';
 // import { Capsule } from 'three/examples/jsm/math/Capsule.js';
-import { Mesh } from 'three';
+
 import { gsap } from 'gsap';
 
 // 오브젝트 3d 구성하는 요소들의 이름목록 표시
-function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
-  const localPrefix = isLast ? '└─' : '├─';
-  const word = `${prefix}${prefix ? localPrefix : ''}
-  ${obj.name || '*no-name*'} [${obj.type}]`;
-  lines.push(word);
-  const newPrefix = prefix + (isLast ? '  ' : '│ ');
-  const lastNdx: number = obj.children.length - 1;
-  obj.children.forEach((child: Mesh, ndx: number) => {
-    const isLast = ndx === lastNdx;
-    dumpObject(child, lines, isLast, newPrefix);
-  });
-  return lines;
-}
+// function dumpObject(obj: any, lines: string[], isLast = true, prefix = '') {
+//   const localPrefix = isLast ? '└─' : '├─';
+//   const word = `${prefix}${prefix ? localPrefix : ''}
+//   ${obj.name || '*no-name*'} [${obj.type}]`;
+//   lines.push(word);
+//   const newPrefix = prefix + (isLast ? '  ' : '│ ');
+//   const lastNdx: number = obj.children.length - 1;
+//   obj.children.forEach((child: Mesh, ndx: number) => {
+//     const isLast = ndx === lastNdx;
+//     dumpObject(child, lines, isLast, newPrefix);
+//   });
+//   return lines;
+// }
 
 export class MainCanvas {
   _canvasContainer: any;
@@ -214,9 +214,6 @@ export class MainCanvas {
     let showcase2: THREE.Mesh | null;
     let showcase1: THREE.Mesh | null;
     // console.log(this._randomTrees);
-    this._randomTrees.forEach((tree) => {
-      // console.log(tree);
-    });
 
     // 안눌러도 되는 맵 로드
     loader.load('main/arrowmainanimal.glb', (gltf) => {
@@ -867,22 +864,22 @@ export class MainCanvas {
     this._camera = camera;
   }
 
-  _addPointLight(x: number, y: number, z: number, helperColr: number) {
-    const color = 0xffffff;
-    const intensity = 0.5;
+  // _addPointLight(x: number, y: number, z: number, helperColr: number) {
+  //   const color = 0xffffff;
+  //   const intensity = 0.5;
 
-    const pointLight = new THREE.PointLight(color, intensity, 2000);
-    pointLight.position.set(x, y, z);
+  //   const pointLight = new THREE.PointLight(color, intensity, 2000);
+  //   pointLight.position.set(x, y, z);
 
-    this._scene.add(pointLight);
+  //   this._scene.add(pointLight);
 
-    // const pointLightHelper = new THREE.PointLightHelper(
-    //   pointLight,
-    //   10,
-    //   helperColr,
-    // );
-    // this._scene.add(pointLightHelper);
-  }
+  //   // const pointLightHelper = new THREE.PointLightHelper(
+  //   //   pointLight,
+  //   //   10,
+  //   //   helperColr,
+  //   // );
+  //   // this._scene.add(pointLightHelper);
+  // }
 
   _setupLight() {
     const ambientLight = new THREE.AmbientLight(0xfff8ea, 1);
