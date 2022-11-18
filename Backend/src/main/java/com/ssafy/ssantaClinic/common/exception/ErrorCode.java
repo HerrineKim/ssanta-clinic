@@ -44,6 +44,8 @@ public enum ErrorCode {
     CHRISTMAS_IS_OVER(HttpStatus.BAD_REQUEST, "400", "1일에서 25일까지만 선물 가능합니다."),
 
     // 팔로우 팔로잉
+    ALREADY_FOLLOWED(HttpStatus.BAD_REQUEST, "400", "이미 팔로우 중입니다."),
+
     // 로그인
     FOLLOW_NOT_FOUND_USER_ID(HttpStatus.NOT_FOUND, "404", "해당 아이디를 찾을 수 없습니다"),
     FOLLOW_NOT_FOUND_USER_INFO(HttpStatus.NOT_FOUND, "404", "해당 유저가 존재하지 않습니다"),
