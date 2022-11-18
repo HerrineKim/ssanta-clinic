@@ -330,7 +330,6 @@ export const NotiButton = styled.button`
 z-index: 4;
 position: absolute;
 
-
 background-color: #fbeee0;
 border: 2px solid #422800;
 border-radius: 30px;
@@ -367,17 +366,17 @@ transform: translate(2px, 2px);
 
 export const NotiCount = styled.div`
   position: absolute;
-  width: 20%;
-  height: 4vh;
+  width: 25%;
+  height: 3vh;
   color: white;
   background: #ff6600;
   text-align: center;
   border-radius: 20px;
-  line-height: 40px;
+  line-height: 32px;
   font-family: 'Cafe24Ssurround';
+  margin-left: 60%;
 
-  margin: auto;
-  margin-top: 10%;
+  margin-top: 15%;
   z-index: 10;
 `;
 
