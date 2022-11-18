@@ -5,8 +5,8 @@ export const PictureModalContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: 160%;
+  height: 160%;
   z-index: 1001;
   position: absolute;
   top: 50%;
