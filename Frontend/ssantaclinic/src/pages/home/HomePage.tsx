@@ -28,6 +28,7 @@ import {
   NotiButton,
   NotiConTainer,
   NotiCount,
+  DescriptionButton,
 } from './styles';
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
@@ -54,6 +55,8 @@ import {
 import ItemModal from '../../components/itemModal/ItemModal';
 // import { CalendarAlert } from '../../components/room/calendaralert/Calendar';
 import ShopAlert from '../../components/shop';
+// 설명 관련
+import DescriptionModal from '../../components/main/description/DescriptionModal';
 // 알림 관련
 import { motion, Variants } from 'framer-motion';
 import NotiModal from '../../components/notification/NotiModal';
@@ -95,6 +98,8 @@ export default function Home() {
   const resetIsCover = useResetRecoilState(isLoggedIn);
   const resetUser = useResetRecoilState(currentUser);
   const resetNoti = useResetRecoilState(NotiListState);
+  // 설명
+  const [isDescription, setIsDescription] = useState(false);
   //알림
   const [isOpen, setIsOpen] = useState(false);
   const TOKEN = localStorage.getItem('jwt') || '';
@@ -231,6 +236,9 @@ export default function Home() {
         }),
       )
       .catch((err) => {
+        if (err.status === 401) {
+          localStorage.clear();
+        }
         console.log(err);
       });
     return () => {
@@ -352,6 +360,13 @@ export default function Home() {
 
       {isShop || isCover ? (
         <TopBar>
+          <DescriptionButton
+            as={motion.button}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => setIsDescription(!isDescription)}
+          >
+            설명
+          </DescriptionButton>
           <MoneyState>
             <CoinImg src="img/coin.png"></CoinImg>
             {money}
@@ -401,6 +416,10 @@ export default function Home() {
         followerList={followerList}
       ></FriendModal>
       <NotiModal isModal={isOpen} setIsModal={setIsOpen}></NotiModal>
+      <DescriptionModal
+        isModal={isDescription}
+        setIsModal={setIsDescription}
+      ></DescriptionModal>
       {isCancle ? (
         <ShopAlert
           item={clickedItem}

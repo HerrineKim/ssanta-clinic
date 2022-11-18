@@ -135,6 +135,46 @@ export const CoinImg = styled.img`
   height: 50px;
   background-size: cover;
 `;
+export const DescriptionButton = styled.button`
+z-index: 4;
+position: relative;
+margin-right: 20px;
+margin-top:0px;
+background-color: #fbeee0;
+border: 2px solid #422800;
+border-radius: 30px;
+box-shadow: #422800 4px 4px 0 0;
+color: #422800;
+cursor: pointer;
+display: flex;
+justify-content:center;
+align-items:center;
+font-weight: 600;
+font-size: 1.5rem;
+padding: 0 18px;
+text-align: center;
+text-decoration: none;
+user-select: none;
+-webkit-user-select: none;
+touch-action: manipulation;
+font-family: 'Cafe24Ssurround';
+}
+
+:hover {
+background-color: #fff;
+}
+
+:active {
+box-shadow: #422800 2px 2px 0 0;
+transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+{
+  min-width: 40px;
+  padding: 0 20px;
+}
+`;
 
 export const ItemButton = styled.button`
   z-index: 4;
