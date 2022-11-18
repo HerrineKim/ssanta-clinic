@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './index.module.css';
 import { NotiModalContainer, NotiModalCloseButton } from './styles';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { selectUserId } from '../../store/store';
 import { notiState } from '../../store/Notification';
+import axios from 'axios';
+import { API_BASE_URL } from '../../apis/url';
 
 export default function NotiModal(props: any) {
+  const BASE_URL = API_BASE_URL;
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const [notis, setNotis] = useRecoilState(notiState);
   const [isModal, setIsModal] = [props.isModal, props.setIsModal];
+  const ID = useRecoilValue(selectUserId);
+  useEffect(() => {
+    axios
+      .patch(BASE_URL + 'noti/read/' + ID, {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log('알림 다 읽음');
+      })
+      .catch((err) => {
+        console.log(err.resonse);
+      });
+  });
   function Notis({ noti }: { noti: any }) {
     return (
       <div
