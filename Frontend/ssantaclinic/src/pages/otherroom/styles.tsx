@@ -50,6 +50,7 @@ export const ToHomeButton = styled.button`
 `;
 
 export const FollowButton = styled.button`
+  min-width: 100px;
   position: absolute;
   right: 2%;
   top: 10%;
@@ -61,23 +62,18 @@ export const FollowButton = styled.button`
   cursor: pointer;
   display: inline-block;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 1.2rem;
   text-align: center;
   text-decoration: none;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  font-family: 'Cafe24Ssurround';
+  font-family: 'IMBold';
   :hover {
-  background-color: #fff;
+    background-color: #fff;
   }
   :active {
-  box-shadow: #422800 2px 2px 0 0;
-  transform: translate(2px, 2px);
-  }
-  @media (min-width: 768px) {
-  {
-    min-width: 50px;
-    padding: 0 25px;
+    box-shadow: #422800 2px 2px 0 0;
+    transform: translate(2px, 2px);
   }
 `;
