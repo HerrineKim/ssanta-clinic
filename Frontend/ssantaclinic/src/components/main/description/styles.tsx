@@ -11,13 +11,20 @@ export const DescriptionModalContainer = styled.div`
   padding: 1rem;
   text-align: center;
   overflow-y: scroll;
-
+  #title {
+    font-size: 50px;
+    font-family: 'Cafe24Ssurround';
+  }
+  #title-description {
+    font-family: 'IMRegular';
+    margin-top: 1%;
+    margin-bottom: 1%;
+  }
   &::-webkit-scrollbar {
     width: 8px;
     height: 8px;
     border-radius: 6px;
     background: rgba(255, 255, 255, 0.4);
-    display: none;
   }
   &::-webkit-scrollbar-thumb {
     background: rgba(0, 0, 0, 0.3);
@@ -61,4 +68,34 @@ export const DescriptionModalCloseButton = styled.button`
   {
     min-width: 10px;
   }
+`;
+
+export const SmallTitle = styled.h2`
+  font-family: 'Cafe24Ssurround';
+  font-size: 30px;
+`;
+
+export const DescriptionContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  font-family: 'IMRegular';
+  margin-top: 2%;
+  margin-bottom: 2%;
+`;
+
+export const Text = styled.p`
+  margin-top: 1%;
+  padding-bottom: 2%;
+`;
+
+export const DescriptionImg = styled.img`
+  width: 40%;
+  height: 40%;
+  border-radius: 20px;
+`;
+
+export const DescriptionGameImg = styled.img`
+  width: 30%;
+  height: 20%;
+  border-radius: 20px;
 `;
