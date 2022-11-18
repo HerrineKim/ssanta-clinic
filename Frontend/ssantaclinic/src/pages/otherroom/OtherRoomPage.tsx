@@ -2,24 +2,20 @@
 import React, { useEffect } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { OtherRoom } from '../../components/otherroom/OtherRoom';
-import { Wrapper, CanvasContainer, ToHomeButton } from './styles';
+import { Wrapper, CanvasContainer, ToHomeButton, FollowButton } from './styles';
 import { OtherRoomThree } from '../../three/OtherRoomThree';
 import { OtherCalendarAlert } from '../../components/room/calendaralert/OtherCalendar';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 
 export const OtherRoomPage = () => {
-  // bgm
-  // bgm
   const opts: YouTubeProps['opts'] = {
     height: '70',
     width: '70',
     playerVars: {
       // https://developers.google.com/youtube/player_parameters
       autoplay: 1,
-      // 유튜브 주소
       disablekb: 1,
-      // controls: 0,
       fs: 0,
       modestbranding: 1,
     },
@@ -59,6 +55,14 @@ export const OtherRoomPage = () => {
       <OtherRoom />
       <OtherCalendarAlert></OtherCalendarAlert>
       <CanvasContainer id="other-room-canvas"></CanvasContainer>
+      <FollowButton
+        as={motion.button}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        {/* 팔로우 되어 있지 않으면 '팔로우', 팔로우 되어 있으면 '언팔로우' */}
+        <span>팔로우</span>
+      </FollowButton>
       <ToHomeButton
         as={motion.button}
         whileHover={{ scale: 1.1 }}
