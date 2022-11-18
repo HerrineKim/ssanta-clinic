@@ -10,7 +10,6 @@ export const OtherRoom = () => {
   const param = useParams();
   const OtherID = param.id;
   useEffect(() => {
-    console.log(OtherID);
     axios
       .get(BASE_URL + 'user/detail/' + OtherID, {
         headers: {
@@ -21,7 +20,7 @@ export const OtherRoom = () => {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log(err.resonse);
+        console.log(err.response);
       });
   });
   return <OtherRoomContainer></OtherRoomContainer>;
