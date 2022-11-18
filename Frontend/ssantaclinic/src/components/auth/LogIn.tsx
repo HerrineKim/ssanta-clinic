@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useSetRecoilState } from 'recoil';
-import { useRecoilValue } from 'recoil';
-import { currentUser, isLogIn } from '../../store/store';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { currentUser, isLogIn, isValidLogIn } from '../../store/store';
 import { LoginContainer } from './styles';
 import { Input } from './styles';
 import { motion } from 'framer-motion';
@@ -13,8 +12,8 @@ export const LogIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [button, setButton] = useState<boolean>(true);
-  const [notificacoes, setNotificacoes] = useState([]);
   const setUserState = useSetRecoilState(currentUser);
+  const setIsValidLogin = useSetRecoilState(isValidLogIn);
   const isLoggedIn = useRecoilValue(isLogIn);
   const navigate = useNavigate();
 
@@ -35,17 +34,23 @@ export const LogIn = () => {
         password: password,
       })
       .then((res) => {
+        setIsValidLogin({
+          isValidLogin: true,
+        });
         console.log(res.data);
         accessToken = res.headers.authorization;
         localStorage.setItem('jwt', accessToken);
-        setUserState({
-          email: email,
-          id: res.data.userId,
-          nickname: res.data.nickName,
-          noti: [],
-          isLogin: true,
-        });
-        navigate('/logintohome');
+        setTimeout(() => {
+          setUserState({
+            email: email,
+            id: res.data.userId,
+            nickname: res.data.nickName,
+            noti: [],
+            isLogin: true,
+          });
+        }, 8000);
+
+        // navigate('/logintohome');
       })
       .catch((err) => {
         console.log(err.response);
