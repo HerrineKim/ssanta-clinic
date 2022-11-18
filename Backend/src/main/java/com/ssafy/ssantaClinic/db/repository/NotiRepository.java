@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface NotiRepository extends JpaRepository<Notification, Integer> {
     Optional<Notification> findByUserUserIdAndUrl(int userId, String url);
     Optional<Notification> findByUrlEndsWith(String url);
+    List<Notification> findAllByUserUserId(int userId);
 }
