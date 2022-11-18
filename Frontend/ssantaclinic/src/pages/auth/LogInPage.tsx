@@ -2,7 +2,7 @@ import React from 'react';
 import { Wrapper } from './styles';
 import { LogInToHomePage } from '../logintohome/LogInToHomePage';
 import { useRecoilValue } from 'recoil';
-import { selectUserIsLogin } from '../../store/store';
+import { selectUserIsValidLogin } from '../../store/store';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import { LogInInput } from './LoginInput';
 
@@ -21,7 +21,7 @@ export const LogInPage = () => {
       modestbranding: 1,
     },
   };
-  const isLogin = useRecoilValue(selectUserIsLogin);
+  const isValidLogin = useRecoilValue(selectUserIsValidLogin);
   // const isLogin = true;
 
   return (
@@ -38,8 +38,10 @@ export const LogInPage = () => {
         <YouTube videoId="JJT85ezuLeQ" opts={opts} />
       </div>
 
-      {/* {isLogin && <LogInToHomePage tohome={isLogin}></LogInToHomePage>} */}
-      {!isLogin && <LogInInput></LogInInput>}
+      {isValidLogin && (
+        <LogInToHomePage tohome={isValidLogin}></LogInToHomePage>
+      )}
+      {!isValidLogin && <LogInInput></LogInInput>}
     </Wrapper>
   );
 };

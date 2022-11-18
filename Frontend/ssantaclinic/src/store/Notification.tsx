@@ -13,7 +13,7 @@ export interface INoti {
 export const notiState = atom<INoti[]>({
   key: 'notification',
   default: [],
-  // effects_UNSTABLE: [persistAtom],
+  effects_UNSTABLE: [persistAtom],
 });
 
 // export const selectUserId = selector<string>({

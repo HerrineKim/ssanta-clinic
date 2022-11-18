@@ -13,7 +13,7 @@ export const LogInToHomePage = (props: any) => {
     console.log(tohome, '투홈 상태');
     setTimeout(() => {
       navigate('/');
-    }, 7000);
+    }, 8000);
     const toHomeCanvas = new LoginToHome();
     const requestId2 = requestAnimationFrame(
       toHomeCanvas.render.bind(toHomeCanvas),

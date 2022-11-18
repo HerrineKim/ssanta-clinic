@@ -12,7 +12,7 @@ export default function FindPassword() {
     e.preventDefault();
     setIsValid(true);
     axios
-      .post(BASE_URL + 'api/user/find/password', {
+      .post(BASE_URL + 'user/find/password', {
         email: email,
       })
       .then((res) => {
@@ -26,9 +26,9 @@ export default function FindPassword() {
   };
   function sendUrl(UUID: string) {
     axios
-      .post(BASE_URL + 'api/user/find/password/url', {
+      .post(BASE_URL + 'user/find/password/url', {
         email: email,
-        url: BASE_URL + '/changepassword/' + UUID,
+        url: BASE_URL + 'changepassword/' + UUID,
       })
       .then((res) => {
         confirm('이메일을 확인하세요');
