@@ -22,7 +22,15 @@ export const isLoggedIn = atom<isLoggedIn>({
     isLoggedIn: localStorage.getItem('jwt') ? true : false,
   },
 });
-
+interface isValidLogIn {
+  isValidLogin: boolean;
+}
+export const isValidLogIn = atom<isValidLogIn>({
+  key: 'isValidLogIn',
+  default: {
+    isValidLogin: false,
+  },
+});
 // iscover
 export const IsCover = atom<boolean>({
   key: 'isCover',
@@ -111,7 +119,13 @@ export const selectUserIsLogin = selector<boolean>({
     return user.isLogin;
   },
 });
-
+export const selectUserIsValidLogin = selector<boolean>({
+  key: 'IsValidLogin',
+  get: ({ get }) => {
+    const isValid = get(isValidLogIn);
+    return isValid.isValidLogin;
+  },
+});
 export const NotiListState = atom({
   key: 'NotiList',
   default: [],
