@@ -48,8 +48,10 @@ export class RoomThree {
   _isSave: boolean;
   _unclickedItem: any[];
   _remainItems: any[];
+  _saveSuccess: boolean;
 
   constructor(items: number[], tree: string) {
+    this._saveSuccess = false;
     this._remainItems = items;
     this._unclickedItem = [];
     this._treeaddres = tree;
@@ -485,7 +487,10 @@ export class RoomThree {
       // console.log('close:', this._close);
       // console.log('raycaster:', this._raycaster);
       const closeTarget = this._raycaster.intersectObject(this._close);
-      const treeTarget = this._raycaster.intersectObjects(this._tree);
+      const treeTarget =
+        this._tree.length > 1
+          ? this._raycaster.intersectObjects(this._tree)
+          : this._raycaster.intersectObject(this._tree);
       const checkTarget = this._raycaster.intersectObject(this._check);
 
       // object = treeTarget[0].object;
@@ -545,6 +550,10 @@ export class RoomThree {
             })
               .then((res) => {
                 this._isSave = false;
+                this._saveSuccess = true;
+                setTimeout(() => {
+                  this._saveSuccess = false;
+                }, 2000);
                 console.log(res);
                 this._remainItems = remainItem;
               })
