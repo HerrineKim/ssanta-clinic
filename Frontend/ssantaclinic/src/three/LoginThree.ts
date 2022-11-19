@@ -21,6 +21,7 @@ export class LoginThree {
   _mixer: any;
   _clock: any;
   _orbitControls: any;
+  _id: any;
   constructor() {
     this._setupThreeJs();
     this._setupCamera();
@@ -132,15 +133,12 @@ export class LoginThree {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
+    // requestAnimationFrame(this.render.bind(this));
   }
-  // _setupEvents2() {
-  //   window.onresize = this.resize.bind(this);
-  //   this.resize();
 
-  //   this._clock = new THREE.Clock();
-  //   requestAnimationFrame(this.render.bind(this));
-  // }
+  cancle() {
+    cancelAnimationFrame(this._id);
+  }
 
   update() {
     const delta = this._clock.getDelta();
@@ -150,11 +148,12 @@ export class LoginThree {
   }
 
   render() {
+    // console.log(1);
     // this._renderer.render(this._scene1, this._camera);
     this._composer.render();
     // this._finalComposer.render();
     this.update();
-    requestAnimationFrame(this.render.bind(this));
+    this._id = requestAnimationFrame(this.render.bind(this));
   }
   // render2() {
   //   this._renderer.render(this._scene, this._camera);
