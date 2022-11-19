@@ -19,6 +19,7 @@ export const LogInToHomePage = (props: any) => {
       toHomeCanvas.render.bind(toHomeCanvas),
     );
     return () => {
+      toHomeCanvas.cancle();
       cancelAnimationFrame(requestId2);
     };
   }, []);

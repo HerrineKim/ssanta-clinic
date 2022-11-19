@@ -236,7 +236,7 @@ export class RoomThree {
         count += 1;
         const tree: any[] = [];
         const model: any = gltf.scene;
-        console.log('tree:', model);
+
         // model.traverse((child: any) => {
         //   if (child instanceof THREE.Group) {
         //     // console.log(child, child.name);
@@ -247,6 +247,7 @@ export class RoomThree {
 
         model.name = 'tree';
         model.traverse((child: THREE.Object3D) => {
+          console.log(child);
           tree.push(child);
         });
         this._scene.add(model);
@@ -261,7 +262,7 @@ export class RoomThree {
         count += 1;
         const tree: any[] = [];
         const model: any = gltf.scene;
-        console.log('tree:', model);
+
         // model.traverse((child: any) => {
         //   if (child instanceof THREE.Group) {
         //     // console.log(child, child.name);
