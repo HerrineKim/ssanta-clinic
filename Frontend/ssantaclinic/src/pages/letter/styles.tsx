@@ -9,7 +9,6 @@ export const Wrapper = styled.div`
 
 export const CanvasContainer = styled.div`
   height: 100%;
-  background: #8a2be2;
 `;
 export const LetterPageContainer = styled.div`
   position: absolute;
