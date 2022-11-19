@@ -54,7 +54,7 @@ export const ResultDiv = styled.div`
 export const YesButton = styled.button`
   z-index: 4;
   position: relative;
- 
+  width: 200px;
   background-color: #561d18;
   border: 2px solid #422800;
   border-radius: 30px;

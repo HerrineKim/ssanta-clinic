@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
@@ -33,7 +27,7 @@ import {
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
-import { SSantaApi } from '../../apis/ssantaApi';
+
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
 //recoil
@@ -79,6 +73,15 @@ export default function Home() {
   const [isShop, setIsShop] = useState<boolean>(false);
   const [isItem, setIsItem] = useState<boolean>(false);
 
+  const [isTetris, setIsTetris] = useState<boolean>(false);
+  const [isTetris2, setIsTetris2] = useState<boolean>(false);
+
+  const [isMemory, setIsMemory] = useState<boolean>(false);
+  const [isMemory2, setIsMemory2] = useState<boolean>(false);
+
+  const [isWit, setIsWit] = useState<boolean>(false);
+  const [isWit2, setIsWit2] = useState<boolean>(false);
+
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
@@ -105,6 +108,14 @@ export default function Home() {
   const TOKEN = localStorage.getItem('jwt') || '';
   const ID = useRecoilValue(selectUserId);
   const [notis, setNotis] = useRecoilState(notiState);
+
+  useEffect(() => {
+    if (isTetris2 || isMemory2 || isWit2) {
+      setIsCover(false);
+    } else {
+      setIsCover(true);
+    }
+  }, [isTetris2, isMemory2, isWit2]);
 
   useEffect(() => {
     if (TOKEN) {
@@ -141,6 +152,18 @@ export default function Home() {
       };
     }
   }, []);
+
+  useEffect(() => {
+    setIsTetris2(isTetris);
+  }, [isTetris]);
+
+  useEffect(() => {
+    setIsMemory2(isMemory);
+  }, [isMemory]);
+
+  useEffect(() => {
+    setIsWit2(isWit);
+  }, [isWit]);
 
   function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
@@ -248,6 +271,9 @@ export default function Home() {
     setIsClick(homeCanvas._isItemClick);
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
+    setIsTetris(homeCanvas._isGame1);
+    setIsMemory(homeCanvas._isGame4);
+    setIsWit(homeCanvas._isGame2);
   };
 
   function getCoin() {
@@ -275,6 +301,9 @@ export default function Home() {
   let homeCanvas: any;
 
   // 친구 검색: 추후 구현
+  useEffect(() => {
+    console.log(isCover);
+  });
 
   useEffect(() => {
     if (scenenumber === 2) {
@@ -314,7 +343,7 @@ export default function Home() {
   return (
     <Div>
       {/* render after three seconds */}
-      <div
+      {/* <div
         // 메인화면 유튜브 BGM 제거/수정하고 싶으면 여기서!
         style={{
           position: 'fixed',
@@ -324,14 +353,10 @@ export default function Home() {
         }}
       >
         <YouTube videoId="yyQL24ZMMjg" opts={opts} />
-      </div>
+      </div> */}
       {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
-      <TetrisAlert></TetrisAlert>
-      <WitAlert></WitAlert>
-      <MemoryAlert></MemoryAlert>
-      <LetterAlert></LetterAlert>
       {isShop || isCover ? (
         <TopBar>
           <DescriptionButton
@@ -379,6 +404,10 @@ export default function Home() {
           </FriendButton>
         </BottomBar>
       ) : null}
+      {isTetris2 && <TetrisAlert tetris={setIsTetris2}></TetrisAlert>}
+      {isMemory2 && <MemoryAlert memory={setIsMemory2}></MemoryAlert>}
+      {isWit2 && <WitAlert wit={setIsWit2}></WitAlert>}
+      <LetterAlert></LetterAlert>
       {scenenumber === 2 ? (
         <ShopTalk>사고 싶은 아이템을 클릭하세요.</ShopTalk>
       ) : null}

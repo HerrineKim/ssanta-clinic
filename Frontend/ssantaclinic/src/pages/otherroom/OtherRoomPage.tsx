@@ -83,6 +83,7 @@ export const OtherRoomPage = () => {
 
     return () => {
       cancelAnimationFrame(requestId1);
+      roomCanvas.cancle();
     };
   }, []);
 

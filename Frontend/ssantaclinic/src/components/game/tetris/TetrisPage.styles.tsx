@@ -3,7 +3,7 @@ import bgImage from '../../../../src/assets/image/bg.png';
 
 export const StyledTetrisWrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
   outline: none;
 `;
@@ -16,7 +16,7 @@ export const StyledTetris = styled.div`
   padding-right: 40px;
   padding-top: 10px;
   margin: 0 auto;
-
+  margin-top: 80px;
   .display {
     display: flex;
     justify-content: space-between;
