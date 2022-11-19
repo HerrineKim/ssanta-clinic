@@ -48,8 +48,10 @@ export class RoomThree {
   _isSave: boolean;
   _unclickedItem: any[];
   _remainItems: any[];
+  _saveSuccess: boolean;
 
   constructor(items: number[], tree: string) {
+    this._saveSuccess = false;
     this._remainItems = items;
     this._unclickedItem = [];
     this._treeaddres = tree;
@@ -545,6 +547,10 @@ export class RoomThree {
             })
               .then((res) => {
                 this._isSave = false;
+                this._saveSuccess = true;
+                setTimeout(() => {
+                  this._saveSuccess = false;
+                }, 2000);
                 console.log(res);
                 this._remainItems = remainItem;
               })
