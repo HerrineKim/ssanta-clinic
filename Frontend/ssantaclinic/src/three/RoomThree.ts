@@ -298,7 +298,7 @@ export class RoomThree {
       // console.log('loadshowcase inven:', inven);
       this._inven = inven;
     });
-    console.log('roomtree:', this._items);
+    // console.log('roomtree:', this._items);
     // item load 부분
     const items: any[] = [];
     // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
@@ -361,7 +361,7 @@ export class RoomThree {
           // this._scene.add(model);
         });
       }
-      console.log('roomtree:', this._items);
+      // console.log('roomtree:', this._items);
     });
     const itemCount = this._items.length;
     this._items = items;
