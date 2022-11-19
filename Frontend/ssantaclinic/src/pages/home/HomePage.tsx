@@ -299,7 +299,7 @@ export default function Home() {
   return (
     <Div>
       {/* render after three seconds */}
-      <div
+      {/* <div
         // 메인화면 유튜브 BGM 제거/수정하고 싶으면 여기서!
         style={{
           position: 'fixed',
@@ -309,7 +309,7 @@ export default function Home() {
         }}
       >
         <YouTube videoId="yyQL24ZMMjg" opts={opts} />
-      </div>
+      </div> */}
       {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
