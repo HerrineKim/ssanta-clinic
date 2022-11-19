@@ -59,10 +59,10 @@ export default function RoomModal(props: any) {
       setItems(roomCanvas._remainItems);
     };
   }, []);
-  console.log(items);
+
   let id: any;
   const render = (time: number) => {
-    console.log('실행되나?');
+    setIsSave(roomCanvas._isSave);
     if (roomCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       roomCanvas._renderer.render(roomCanvas._scene, roomCanvas._camera);
