@@ -75,6 +75,9 @@ export default function Home() {
   const [isTetris, setIsTetris] = useState<boolean>(false);
   const [isTetris2, setIsTetris2] = useState<boolean>(false);
 
+  const [isMemory, setIsMemory] = useState<boolean>(false);
+  const [isMemory2, setIsMemory2] = useState<boolean>(false);
+
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
@@ -103,12 +106,12 @@ export default function Home() {
   const [notis, setNotis] = useRecoilState(notiState);
 
   useEffect(() => {
-    if (isTetris2) {
+    if (isTetris2 || isMemory2) {
       setIsCover(false);
     } else {
       setIsCover(true);
     }
-  }, [isTetris2]);
+  }, [isTetris2, isMemory2]);
 
   useEffect(() => {
     if (TOKEN) {
@@ -138,6 +141,10 @@ export default function Home() {
   useEffect(() => {
     setIsTetris2(isTetris);
   }, [isTetris]);
+
+  useEffect(() => {
+    setIsMemory2(isMemory);
+  }, [isMemory]);
 
   function getNotiList(TOKEN: any) {
     console.log('비동기 안되냐');
@@ -246,6 +253,7 @@ export default function Home() {
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
     setIsTetris(homeCanvas._isGame1);
+    setIsMemory(homeCanvas._isGame4);
   };
 
   function getCoin() {
@@ -377,9 +385,9 @@ export default function Home() {
         </BottomBar>
       ) : null}
       {isTetris2 && <TetrisAlert tetris={setIsTetris2}></TetrisAlert>}
+      {isMemory2 && <MemoryAlert memory={setIsMemory2}></MemoryAlert>}
 
       <WitAlert></WitAlert>
-      <MemoryAlert></MemoryAlert>
       <LetterAlert></LetterAlert>
       {scenenumber === 2 ? (
         <ShopTalk>사고 싶은 아이템을 클릭하세요.</ShopTalk>

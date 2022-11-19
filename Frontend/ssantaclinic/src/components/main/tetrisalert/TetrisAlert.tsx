@@ -26,12 +26,6 @@ export function TetrisAlert(props: any) {
     }
   }, [isHelp]);
 
-  // function endTalk() {
-  //   setFirst(true);
-  //   setEnd(false);
-  //   const
-  // }
-
   if (!isHelp) {
     if (first) {
       return (
