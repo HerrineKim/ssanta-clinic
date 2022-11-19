@@ -11,10 +11,11 @@ interface ResultProp {
   round: number | null;
   money: number;
   onClose: (value: React.SetStateAction<boolean>) => void;
+  tetris: (value: React.SetStateAction<boolean>) => void;
 }
 
 export default function ResultTetris(props: ResultProp) {
-  const { isSucces, onClose, round, money } = props;
+  const { isSucces, onClose, round, money, tetris } = props;
   const BASE_URL = API_BASE_URL;
   const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
   const setUserMoney = useSetRecoilState(Money);
@@ -35,8 +36,7 @@ export default function ResultTetris(props: ResultProp) {
     <ResultDiv>
       {isSucces ? (
         <div>
-          tetris
-          <p>감사합니다 {round}까지 해결해 주셨어요!</p>
+          <p>감사합니다 {round}라운드까지 해결해 주셨어요!</p>
           <p>알바비드릴게요!</p>
           {money}
           <CoinImg src="img/coin.png"></CoinImg>
@@ -44,7 +44,14 @@ export default function ResultTetris(props: ResultProp) {
       ) : (
         '실망스럽습니다'
       )}
-      <YesButton onClick={() => onClose(false)}>돌아가기</YesButton>
+      <YesButton
+        onClick={() => {
+          onClose(false);
+          tetris(false);
+        }}
+      >
+        돌아가기
+      </YesButton>
     </ResultDiv>
   );
 }
