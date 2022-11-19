@@ -3,10 +3,10 @@ import styled from 'styled-components';
 export const TetrisAlertDiv = styled.div`
   z-index: 4;
   position: relative;
-  width: 40%;
-  height: 70%;
-  left: 5%;
-  top:15%;
+  width: 30%;
+  height: 40%;
+  left: 20%;
+  top: 50%;
   
   
   
@@ -17,7 +17,7 @@ export const TetrisAlertDiv = styled.div`
   color: #422800;
   
   display: flex;
-  display: none;
+  // display: none;
   flex-direction: column;
   align-items:center;
   justify-content:center;
@@ -69,5 +69,21 @@ export const YesButton = styled.button`
   {
     min-width: 40px;
     padding: 0 20px;
+  }
+`;
+
+export const ButtonDiv = styled.div`
+  z-index: 4;
+  display: flex;
+  justify-content: space-evenly;
+  
+  button {
+    &:first-child {
+      margin-right:10px;  
+    }
+    &:last-child {
+      margin-left:10px;
+    }
+  }
   }
 `;
