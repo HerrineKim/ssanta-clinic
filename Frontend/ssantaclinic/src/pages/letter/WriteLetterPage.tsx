@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { WriteLetter } from '../../components/letter/WriteLetter';
 import { Wrapper, CanvasContainer, LetterPageContainer } from './styles';
 import { LetterWriteModel } from '../../three/LetterWrite';
 import { Button } from './styles';
 import { motion } from 'framer-motion';
 export const WriteLetterPage = (props: any) => {
+  const [isWrite, setIsWrite] = useState<boolean>(false);
+  const [isList, setIsList] = useState<boolean>(true);
   const { onBack, goList } = props;
   useEffect(() => {
     console.log(onBack, 'ghkrd;s');
@@ -21,7 +23,7 @@ export const WriteLetterPage = (props: any) => {
   return (
     <Wrapper>
       <LetterPageContainer id="letter-container">
-        <WriteLetter />
+        <WriteLetter onBack={setIsWrite} goList={setIsList} />
         <Button
           as={motion.button}
           whileHover={{ scale: 1.1 }}

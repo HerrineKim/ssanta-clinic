@@ -326,7 +326,7 @@ export class MainCanvas {
       model.name = 'arrow';
     });
     // Text
-    loader.load('main/main_Text_lwt.glb', (gltf) => {
+    loader.load('main/main_text.glb', (gltf) => {
       const text_model = gltf.scene;
       this._text_model = text_model;
       this._scene.add(text_model);
@@ -896,7 +896,7 @@ export class MainCanvas {
     // this._addPointLight(-50, 20, -50, 0x00ff00);
     // this._addPointLight(50, 20, -50, 0x0000ff);
 
-    const shadowLight = new THREE.DirectionalLight(0xffffff, 0.2);
+    const shadowLight = new THREE.DirectionalLight(0xffffff, 0.5);
     shadowLight.position.set(20, 50, 20);
     shadowLight.target.position.set(0, 0, 0);
     // const directionalLightHelper = new THREE.DirectionalLightHelper(
