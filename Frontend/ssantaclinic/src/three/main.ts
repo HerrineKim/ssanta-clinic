@@ -419,10 +419,10 @@ export class MainCanvas {
             // this._setupTetris();
           }, 1500);
         } else if (targets[0].object.name.includes('game2')) {
-          this._isGame2 = true;
           this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupWit();
+            this._isGame2 = true;
+            // this._setupWit();
           }, 1500);
         }
         // else if (targets[0].object.name.includes('game3')) {
