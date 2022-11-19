@@ -196,7 +196,7 @@ export class LoginToHome {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
+    // requestAnimationFrame(this.render.bind(this));
     this._isStart = false;
   }
 
@@ -222,12 +222,16 @@ export class LoginToHome {
       this._camera.lookAt(nextPosition.x, nextPosition.y, nextPosition.z);
     }
   }
-
+  _id: any;
   render() {
     this._composer.render();
     this.update();
 
-    requestAnimationFrame(this.render.bind(this));
+    this._id = requestAnimationFrame(this.render.bind(this));
+  }
+
+  cancle() {
+    cancelAnimationFrame(this._id);
   }
 
   resize() {
