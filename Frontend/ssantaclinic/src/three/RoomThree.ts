@@ -487,7 +487,10 @@ export class RoomThree {
       // console.log('close:', this._close);
       // console.log('raycaster:', this._raycaster);
       const closeTarget = this._raycaster.intersectObject(this._close);
-      const treeTarget = this._raycaster.intersectObjects(this._tree);
+      const treeTarget =
+        this._tree.length > 1
+          ? this._raycaster.intersectObjects(this._tree)
+          : this._raycaster.intersectObject(this._tree);
       const checkTarget = this._raycaster.intersectObject(this._check);
 
       // object = treeTarget[0].object;
