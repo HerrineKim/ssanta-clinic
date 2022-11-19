@@ -16,6 +16,7 @@ export const LogInInput = () => {
 
     return () => {
       cancelAnimationFrame(requestId1);
+      test1Canvas.cancle();
     };
   }, []);
   return (

@@ -11,10 +11,11 @@ interface ResultProp {
   round: number | null;
   money: number;
   onClose: (value: React.SetStateAction<boolean>) => void;
+  wit: (value: React.SetStateAction<boolean>) => void;
 }
 
 export default function Result(props: ResultProp) {
-  const { isSucces, onClose, time, money } = props;
+  const { isSucces, onClose, time, money, wit } = props;
   const BASE_URL = API_BASE_URL;
   const ACCESS_TOKEN = `${localStorage.getItem('jwt')}`;
   const setUserMoney = useSetRecoilState(Money);
@@ -46,7 +47,14 @@ export default function Result(props: ResultProp) {
       ) : (
         '실망스럽습니다'
       )}
-      <YesButton onClick={() => onClose(false)}>돌아가기</YesButton>
+      <YesButton
+        onClick={() => {
+          onClose(false);
+          wit(false);
+        }}
+      >
+        돌아가기
+      </YesButton>
     </ResultDiv>
   );
 }

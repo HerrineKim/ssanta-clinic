@@ -39,6 +39,7 @@ export class OtherRoomThree {
   _inven: any;
   _isTreeModal: boolean;
   _check: any;
+  _id: any;
 
   constructor(items: number[]) {
     this._scenenumber = 1;
@@ -104,7 +105,6 @@ export class OtherRoomThree {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
@@ -116,6 +116,9 @@ export class OtherRoomThree {
     // console.log('updaete2');
     this._orbitControls.update();
   }
+  cancle() {
+    cancelAnimationFrame(this._id);
+  }
 
   render() {
     if (this._scenenumber === 1) {
@@ -124,13 +127,13 @@ export class OtherRoomThree {
       this.update();
       // console.log('!');
 
-      requestAnimationFrame(this.render.bind(this));
+      this._id = requestAnimationFrame(this.render.bind(this));
     } else {
       // inven scene
       this._renderer.render(this._scene2, this._camera);
       this.update2();
 
-      requestAnimationFrame(this.render.bind(this));
+      this._id = requestAnimationFrame(this.render.bind(this));
     }
     // this._renderer.render(this._scene, this._camera);
     // this.update();
