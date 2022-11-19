@@ -247,8 +247,11 @@ export class RoomThree {
 
         model.name = 'tree';
         model.traverse((child: THREE.Object3D) => {
-          console.log(child);
+          if (!child.name.includes('tree')) {
+            child.name += 'was';
+          }
           tree.push(child);
+          console.log(child);
         });
         this._scene.add(model);
         inven.push(model);
@@ -495,7 +498,8 @@ export class RoomThree {
 
       if (
         treeTarget.length > 0 &&
-        !treeTarget[0].object.name.includes('tree')
+        !treeTarget[0].object.name.includes('tree') &&
+        treeTarget[0].object.name.includes('was')
       ) {
         let object = treeTarget[0].object;
         // tree 최상위 찾기
