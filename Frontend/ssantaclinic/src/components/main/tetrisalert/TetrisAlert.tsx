@@ -6,13 +6,15 @@ import { IsCover } from '../../../store/store';
 import { selectUserNickname } from '../../../store/store';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 
-export function TetrisAlert() {
+export function TetrisAlert(props: any) {
+  const { tetris } = props;
+
   const [isHelp, setisHelp] = useState<boolean>(false);
   const setIsCover = useSetRecoilState(IsCover);
   const nickName = useRecoilValue(selectUserNickname);
   const [first, setFirst] = useState<boolean>(true);
   const [end, setEnd] = useState<boolean>(false);
-  console.log(isHelp);
+
   function help() {
     setisHelp(true);
   }
@@ -55,6 +57,6 @@ export function TetrisAlert() {
       }
     }
   } else {
-    return <TetrisModal onClose={setisHelp}></TetrisModal>;
+    return <TetrisModal onClose={setisHelp} tetris={tetris}></TetrisModal>;
   }
 }
