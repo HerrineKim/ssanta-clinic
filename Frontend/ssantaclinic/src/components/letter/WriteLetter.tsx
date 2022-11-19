@@ -9,7 +9,8 @@ import { motion } from 'framer-motion';
 // import './paper.scss';
 type Keyword = 'WORK' | 'STUDY' | 'CHRISTMAS';
 
-export const WriteLetter = () => {
+export const WriteLetter = (props: any) => {
+  const { onBack, goList } = props;
   const BASE_URL = API_BASE_URL;
   const [message, setMessage] = useState<string>('');
   const [title, setTitle] = useState<string>('테스트');
@@ -191,6 +192,10 @@ export const WriteLetter = () => {
             type="submit"
             className="send-button"
             disabled={button}
+            onClick={() => {
+              onBack(false);
+              goList(true);
+            }}
           >
             보내기
           </Button>
