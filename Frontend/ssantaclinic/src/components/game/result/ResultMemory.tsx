@@ -11,12 +11,13 @@ interface ResultProp {
   round: number;
   isSucces: boolean;
   onClose: (value: React.SetStateAction<boolean>) => void;
+  memory: (value: React.SetStateAction<boolean>) => void;
 }
 
 export default function ResultMemory(props: ResultProp) {
   const BASE_URL = API_BASE_URL;
   const navigate = useNavigate();
-  const { money, onClose, round, isSucces } = props;
+  const { money, onClose, round, isSucces, memory } = props;
 
   const setUserMoney = useSetRecoilState(Money);
   // const totalmoney = useRecoilValue(Money);
@@ -38,8 +39,7 @@ export default function ResultMemory(props: ResultProp) {
     <ResultDiv>
       {isSucces ? (
         <div>
-          memory
-          <p>감사합니다 {round}까지 해결해 주셨어요!</p>
+          <p>음머어어 {round}라운드네유</p>
           <p>알바비드릴게요!</p>
           {money}
           <CoinImg src="img/coin.png"></CoinImg>
@@ -47,7 +47,14 @@ export default function ResultMemory(props: ResultProp) {
       ) : (
         '실망스럽습니다'
       )}
-      <YesButton onClick={() => onClose(false)}>돌아가기</YesButton>
+      <YesButton
+        onClick={() => {
+          onClose(false);
+          memory(false);
+        }}
+      >
+        돌아가기
+      </YesButton>
     </ResultDiv>
   );
 }

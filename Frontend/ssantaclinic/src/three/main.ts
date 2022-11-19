@@ -430,10 +430,10 @@ export class MainCanvas {
         //   this._zoomFit(targets[0].object.parent, 80);
         // }
         else if (targets[0].object.name.includes('game4')) {
-          this._isGame4 = true;
-          this._zoomFit(targets[0].object.parent, 60);
+          this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupMemory();
+            this._isGame4 = true;
+            // this._setupMemory();
           }, 1500);
         } else if (targets[0].object.name.includes('playground')) {
           // 나중에 추가할 거 있으면
