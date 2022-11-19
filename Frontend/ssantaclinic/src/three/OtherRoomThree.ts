@@ -121,7 +121,6 @@ export class OtherRoomThree {
   }
 
   render() {
-    console.log(1);
     if (this._scenenumber === 1) {
       // console.log(this._camera.position);
       this._renderer.render(this._scene, this._camera);

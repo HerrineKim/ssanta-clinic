@@ -397,6 +397,7 @@ export class MainCanvas {
       this._removeTetris();
       this._removeWit();
       this._removeLetter();
+      this._isGame1 = false;
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
           this._isShop = true;
@@ -412,10 +413,10 @@ export class MainCanvas {
             this._setupHomeAlert();
           }, 1500);
         } else if (targets[0].object.name.includes('game1')) {
-          this._isGame1 = true;
           this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupTetris();
+            this._isGame1 = true;
+            // this._setupTetris();
           }, 1500);
         } else if (targets[0].object.name.includes('game2')) {
           this._isGame2 = true;

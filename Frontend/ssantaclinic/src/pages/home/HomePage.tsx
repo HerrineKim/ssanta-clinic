@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import YouTube, { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
@@ -33,7 +27,7 @@ import {
 // 친구 모달
 import FriendModal from '../../components/friendModal/index';
 import Loading from '../../components/loading/Loading';
-import { SSantaApi } from '../../apis/ssantaApi';
+
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
 //recoil
@@ -78,6 +72,7 @@ export default function Home() {
   const [isClick, setIsClick] = useState<boolean>(false);
   const [isShop, setIsShop] = useState<boolean>(false);
   const [isItem, setIsItem] = useState<boolean>(false);
+  const [isTetris, setIsTetris] = useState<boolean>(false);
 
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
@@ -237,6 +232,7 @@ export default function Home() {
     setIsClick(homeCanvas._isItemClick);
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
+    setIsTetris(homeCanvas._isGame1);
   };
 
   function getCoin() {
@@ -317,7 +313,8 @@ export default function Home() {
       {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
-      <TetrisAlert></TetrisAlert>
+      {isTetris && <TetrisAlert></TetrisAlert>}
+
       <WitAlert></WitAlert>
       <MemoryAlert></MemoryAlert>
       <LetterAlert></LetterAlert>
