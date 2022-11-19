@@ -206,7 +206,6 @@ export class LoginToHome {
 
     if (this._mixer) this._mixer.update(delta);
 
-    console.log(this._clock.elapsedTime, '이게 뭐여');
     const time = this._clock.elapsedTime * 0.1;
 
     if (this._path) {

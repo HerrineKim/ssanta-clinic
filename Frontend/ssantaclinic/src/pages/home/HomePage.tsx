@@ -113,6 +113,7 @@ export default function Home() {
         headers: {
           Authorization: TOKEN,
         },
+        heartbeatTimeout: 120000 * 5,
       });
       eventSource.onopen = (event) => console.log('open', event); // <2>
       getNotiList(TOKEN);
@@ -123,7 +124,17 @@ export default function Home() {
       eventSource.onmessage = function (event) {
         try {
           const data: any = JSON.parse(event.data);
-          setNotis((notiList) => [...notiList, data]);
+          let isInList = false;
+          for (const noti of notis) {
+            if (noti.notiId === data.notiId) {
+              console.log(noti.notiId, data.notiId);
+              isInList = true;
+            }
+          }
+          if (!isInList) {
+            console.log(data);
+            setNotis((notiList) => [...notiList, data]);
+          }
         } catch {
           console.log('sse 패스');
         }
