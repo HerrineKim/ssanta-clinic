@@ -17,7 +17,7 @@ const shuffleArray = (array: number[]) => {
 };
 
 export default function WitsModal(props: any) {
-  const { onClose } = props;
+  const { onClose, wit } = props;
   const [numbers, setNumbers] = useState(array);
   const [gameFlag, setGameFlag] = useState(false);
   const [roundFlag, setRoundFlag] = useState(false);
@@ -142,6 +142,7 @@ export default function WitsModal(props: any) {
             time={time}
             round={null}
             onClose={onClose}
+            wit={wit}
           ></Result>
         ) : null}
 

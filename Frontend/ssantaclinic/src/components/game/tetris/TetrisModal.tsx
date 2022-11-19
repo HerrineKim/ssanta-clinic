@@ -25,9 +25,13 @@ import {
 
 interface TetrisProp {
   onClose: (value: React.SetStateAction<boolean>) => void;
+  tetris: (value: React.SetStateAction<boolean>) => void;
 }
 
-export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
+export const TetrisModal: React.FC<TetrisProp> = ({
+  onClose,
+  tetris,
+}: TetrisProp) => {
   const opts: YouTubeProps['opts'] = {
     height: '60',
     width: '60',
@@ -184,6 +188,7 @@ export const TetrisModal: React.FC<TetrisProp> = ({ onClose }: TetrisProp) => {
             <GameResult>
               {isResult ? (
                 <ResultTetris
+                  tetris={tetris}
                   isSucces={true}
                   money={money}
                   time={null}

@@ -4,7 +4,7 @@ import { gsap } from 'gsap';
 import ResultMemory from '../result/ResultMemory';
 
 export default function MemoryModal(props: any) {
-  const { onClose } = props;
+  const { onClose, memory } = props;
   const [money, setMoney] = useState<number>(0);
   const [isResult, setIsResult] = useState<boolean>(false);
   // 최초 시작
@@ -516,6 +516,7 @@ export default function MemoryModal(props: any) {
             money={money}
             isSucces={round > 2 ? true : false}
             onClose={onClose}
+            memory={memory}
           ></ResultMemory>
         ) : null}
         {(!start || isFail || gameClear) && (

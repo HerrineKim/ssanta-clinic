@@ -397,6 +397,7 @@ export class MainCanvas {
       this._removeTetris();
       this._removeWit();
       this._removeLetter();
+      this._isGame1 = false;
       if (targets.length > 0) {
         if (targets[0].object.name === 'shop') {
           this._isShop = true;
@@ -412,16 +413,16 @@ export class MainCanvas {
             this._setupHomeAlert();
           }, 1500);
         } else if (targets[0].object.name.includes('game1')) {
-          this._isGame1 = true;
           this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupTetris();
+            this._isGame1 = true;
+            // this._setupTetris();
           }, 1500);
         } else if (targets[0].object.name.includes('game2')) {
-          this._isGame2 = true;
           this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupWit();
+            this._isGame2 = true;
+            // this._setupWit();
           }, 1500);
         }
         // else if (targets[0].object.name.includes('game3')) {
@@ -429,10 +430,10 @@ export class MainCanvas {
         //   this._zoomFit(targets[0].object.parent, 80);
         // }
         else if (targets[0].object.name.includes('game4')) {
-          this._isGame4 = true;
-          this._zoomFit(targets[0].object.parent, 60);
+          this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupMemory();
+            this._isGame4 = true;
+            // this._setupMemory();
           }, 1500);
         } else if (targets[0].object.name.includes('playground')) {
           // 나중에 추가할 거 있으면
