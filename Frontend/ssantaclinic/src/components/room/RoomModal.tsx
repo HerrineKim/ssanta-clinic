@@ -22,12 +22,13 @@ export default function RoomModal(props: any) {
   const [isTree, setIsTree] = useState<boolean>(true);
 
   const [isSave, setIsSave] = useState<boolean>(false);
+  const [isSuccess, SetIsSuccess] = useState<boolean>(false);
 
   // 트리 정보받기, 캘린더(선물) 정보 받기
 
-  useEffect(() => {
-    console.log(items);
-  });
+  // useEffect(() => {
+  //   console.log(isSave, isSuccess);
+  // }, [isSave, isSuccess]);
 
   useEffect(() => {
     let requestId1: number;
@@ -63,6 +64,7 @@ export default function RoomModal(props: any) {
   let id: any;
   const render = (time: number) => {
     setIsSave(roomCanvas._isSave);
+    SetIsSuccess(roomCanvas._saveSuccess);
     if (roomCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       roomCanvas._renderer.render(roomCanvas._scene, roomCanvas._camera);
@@ -93,7 +95,9 @@ export default function RoomModal(props: any) {
       <CalendarAlert></CalendarAlert>
       <CanvasContainer id="room-canvas">
         <Loading></Loading>
-        {isSave && <Saving></Saving>}
+        {(isSave || isSuccess) && (
+          <Saving result={[isSave, isSuccess]}></Saving>
+        )}
       </CanvasContainer>
     </Wrapper>
   );
