@@ -79,10 +79,11 @@ export const CalendarPageContainer = styled.div`
 
 export const CalendarTitle = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  justify-content: flex-start;
   align-items: end;
   font-family: 'Cafe24Ssurround';
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #f6eed7;
   width: 105%;
