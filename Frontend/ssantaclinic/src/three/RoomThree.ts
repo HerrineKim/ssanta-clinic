@@ -781,12 +781,21 @@ export class RoomThree {
         } else {
           //
           let i: number;
-          if (targets.length > 2) {
+          let isTree = false;
+          targets.forEach((child) => {
+            if (child.object.name.includes('tree')) {
+              isTree = true;
+            }
+          });
+
+          if (isTree) {
+            //dragend가 트리라고 생각하는 부분
             for (i = 0; i < targets.length; i++) {
               if (targets[i].object.name.includes('tree')) {
                 break;
               }
             }
+            console.log(targets[i]);
 
             if (targets[i].object.name.includes('tree')) {
               //만난다면 장식품을 tree에 붙이고 종속시킴
@@ -806,6 +815,7 @@ export class RoomThree {
               object.attach(event.object);
             }
           } else {
+            //dragend가 트리가 아니라고생각하는 부분
             event.object.removeFromParent();
             this._scene2.add(event.object);
             event.object.position.setX(positions[index][0]);
