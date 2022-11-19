@@ -15,7 +15,7 @@ export class ItemThree {
   _close: any;
   _tree: any;
   _items: any;
-  _scene2: any;
+  _items2: any;
 
   _showcase: any;
   _isZoom: any;
@@ -25,6 +25,7 @@ export class ItemThree {
 
   constructor(items: number[]) {
     this._items = items;
+    this._items2 = items;
     this._position = [
       [1.8, 3.6, 1.2],
       [2.2, 3.6, 1.2],

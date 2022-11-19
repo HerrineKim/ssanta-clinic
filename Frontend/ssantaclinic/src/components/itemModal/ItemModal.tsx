@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CanvasContainer, Wrapper, CloseButton } from './styles';
 import { ItemThree } from '../../three/item';
 import { MyItems } from '../../store/store';
@@ -10,6 +10,7 @@ export default function ItemModal(props: any) {
   let itemCanvas: any;
   let id: any;
   const items = useRecoilValue(MyItems);
+  const [changeItems, setChangeItems] = useState<number[]>([]);
 
   useEffect(() => {
     itemCanvas = new ItemThree(items);
@@ -25,8 +26,8 @@ export default function ItemModal(props: any) {
   }, []);
 
   const render = () => {
-    console.log('item');
     itemCanvas._renderer.render(itemCanvas._scene, itemCanvas._camera);
+    setChangeItems(itemCanvas._item2);
 
     // console.log('!');
 
