@@ -55,27 +55,27 @@ export default function RoomModal(props: any) {
       });
     return () => {
       cancelAnimationFrame(requestId1);
+      cancelAnimationFrame(id);
       setItems(roomCanvas._remainItems);
     };
   }, []);
   console.log(items);
-
+  let id: any;
   const render = (time: number) => {
-    setIsSave(roomCanvas._isSave);
-
+    console.log('실행되나?');
     if (roomCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       roomCanvas._renderer.render(roomCanvas._scene, roomCanvas._camera);
       roomCanvas.update();
       // console.log('!');
 
-      requestAnimationFrame(render);
+      id = requestAnimationFrame(render);
     } else {
       // inven scene
       roomCanvas._renderer.render(roomCanvas._scene2, roomCanvas._camera);
       roomCanvas.update2();
 
-      requestAnimationFrame(render);
+      id = requestAnimationFrame(render);
     }
   };
 
