@@ -247,8 +247,11 @@ export class RoomThree {
 
         model.name = 'tree';
         model.traverse((child: THREE.Object3D) => {
-          console.log(child);
+          if (!child.name.includes('tree')) {
+            child.name += 'was';
+          }
           tree.push(child);
+          // console.log(child);
         });
         this._scene.add(model);
         inven.push(model);
@@ -295,7 +298,7 @@ export class RoomThree {
       // console.log('loadshowcase inven:', inven);
       this._inven = inven;
     });
-    console.log('roomtree:', this._items);
+    // console.log('roomtree:', this._items);
     // item load 부분
     const items: any[] = [];
     // 유저가 갖고있는 아이템 정보(리스트)에 맞게 아이템 로드
@@ -358,7 +361,7 @@ export class RoomThree {
           // this._scene.add(model);
         });
       }
-      console.log('roomtree:', this._items);
+      // console.log('roomtree:', this._items);
     });
     const itemCount = this._items.length;
     this._items = items;
@@ -495,7 +498,8 @@ export class RoomThree {
 
       if (
         treeTarget.length > 0 &&
-        !treeTarget[0].object.name.includes('tree')
+        !treeTarget[0].object.name.includes('tree') &&
+        treeTarget[0].object.name.includes('was')
       ) {
         let object = treeTarget[0].object;
         // tree 최상위 찾기
@@ -525,10 +529,10 @@ export class RoomThree {
         exporter.parse(
           this._tree[0],
           (result) => {
-            console.log('result:', result);
+            // console.log('result:', result);
             glbFile = saveArrayBuffer(result);
             formData.append('glbfile', glbFile);
-            console.log('result : ', glbFile);
+            // console.log('result : ', glbFile);
 
             axios({
               url: BASE_URL + 'tree',
@@ -562,7 +566,7 @@ export class RoomThree {
         this._scene2.remove(this._check);
 
         this._scene2.remove(this._showcase);
-        console.log('closetarget:', ...this._unclickedItem);
+        // console.log('closetarget:', ...this._unclickedItem);
         this._scene2.remove(...this._unclickedItem);
         this._scene2.remove(this._close);
         // 나중에 any 지우기
@@ -608,8 +612,8 @@ export class RoomThree {
   }
 
   _zoomInven(object3d: any[], viewAngle: number) {
-    console.log('zoominven:', this._unclickedItem);
-    console.log(object3d);
+    // console.log('zoominven:', this._unclickedItem);
+    // console.log(object3d);
     const positions: any[] = [];
 
     this._items.forEach((child: any) => {
@@ -621,7 +625,7 @@ export class RoomThree {
     const box2 = new THREE.Box3().setFromObject(object3d[1]);
     const box = new THREE.Box3().union(box1);
     box.union(box2);
-    console.log('zoominven box', box);
+    // console.log('zoominven box', box);
     //box를통해 얻을 수있는 가장 긴 모서리 길이
     const sizeBox = box.getSize(new THREE.Vector3()).length();
     //box 중심점 ;; 카메라가 바라보는 곳으로 설정하면 좋음
@@ -693,7 +697,7 @@ export class RoomThree {
     const items = this._items;
     // console.log(items);
     // const raycaster = this._raycaster;
-    console.log('setuodrag:', items);
+    // console.log('setuodrag:', items);
     items.forEach((child: any, index: any) => {
       const controls = new DragControls(
         [child],
@@ -739,14 +743,14 @@ export class RoomThree {
 
       controls.addEventListener('dragend', (event) => {
         const targets = controls.getRaycaster().intersectObjects(tree);
-        console.log(targets);
-        console.log('dragend targets:', targets);
-        console.log(unclickedItems, event.object);
+        // console.log(targets);
+        // console.log('dragend targets:', targets);
+        // console.log(unclickedItems, event.object);
         if (unclickedItems.includes(event.object)) {
           if (targets.length > 0) {
             if (targets[0].object.name.includes('tree')) {
               //만난다면 장식품을 tree에 붙이고 종속시킴
-              console.log('tree 장식!', event.object, targets);
+              // console.log('tree 장식!', event.object, targets);
               event.object.position.setX(targets[0].point.x);
               event.object.position.setY(targets[0].point.y);
               event.object.position.setZ(targets[0].point.z);
@@ -777,16 +781,25 @@ export class RoomThree {
         } else {
           //
           let i: number;
-          if (targets.length > 2) {
+          let isTree = false;
+          targets.forEach((child) => {
+            if (child.object.name.includes('tree')) {
+              isTree = true;
+            }
+          });
+
+          if (isTree) {
+            //dragend가 트리라고 생각하는 부분
             for (i = 0; i < targets.length; i++) {
               if (targets[i].object.name.includes('tree')) {
                 break;
               }
             }
+            console.log(targets[i]);
 
             if (targets[i].object.name.includes('tree')) {
               //만난다면 장식품을 tree에 붙이고 종속시킴
-              console.log('tree 장식!', event.object, targets);
+              // console.log('tree 장식!', event.object, targets);
               event.object.removeFromParent();
               event.object.position.setX(targets[i].point.x);
               event.object.position.setY(targets[i].point.y);
@@ -802,6 +815,7 @@ export class RoomThree {
               object.attach(event.object);
             }
           } else {
+            //dragend가 트리가 아니라고생각하는 부분
             event.object.removeFromParent();
             this._scene2.add(event.object);
             event.object.position.setX(positions[index][0]);
