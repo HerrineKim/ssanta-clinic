@@ -90,7 +90,7 @@ text-decoration: none;
 user-select: none;
 -webkit-user-select: none;
 touch-action: manipulation;
-z-index: 999;
+z-index: 2;
 font-family: 'Cafe24Ssurround';
 }
 
