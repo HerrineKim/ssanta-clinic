@@ -1,14 +1,13 @@
 /* eslint-disable no-undef */
 // import { throws } from 'assert';
-import React from 'react';
+
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter';
 import { DragControls } from 'three/examples/jsm/controls/DragControls';
-import * as ReactDOM from 'react-dom/client';
+
 import gsap from 'gsap';
-import ItemDeleteAlert from '../components/room/itemdelete/ItemDeleteAlert';
 
 import axios from 'axios';
 

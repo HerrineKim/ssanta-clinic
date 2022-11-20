@@ -2,17 +2,47 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import YouTube, { YouTubeProps } from 'react-youtube';
-import { OtherRoom } from '../../components/otherroom/OtherRoom';
+import Loading from '../../components/loading/Loading';
 import { Wrapper, CanvasContainer, ToHomeButton, FollowButton } from './styles';
 import { OtherRoomThree } from '../../three/OtherRoomThree';
 import { OtherCalendarAlert } from '../../components/room/calendaralert/OtherCalendar';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { API_BASE_URL } from '../../apis/url';
+import { useParams } from 'react-router-dom';
 
 export const OtherRoomPage = () => {
   const ACCESS_TOKEN = localStorage.getItem('jwt');
   const BASE_URL = API_BASE_URL;
+
+  const param = useParams();
+  const OtherID2 = param.id;
+  const OtherID = window.location.href.split('/')[4];
+  console.log(OtherID2, OtherID);
+
+  let roomCanvas: any;
+  useEffect(() => {
+    let requestId1: number;
+    axios
+      .get(BASE_URL + 'user/detail/' + OtherID, {
+        headers: {
+          Authorization: ACCESS_TOKEN,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        roomCanvas = new OtherRoomThree(res.data.treeUrl);
+        requestId1 = requestAnimationFrame(roomCanvas.render.bind(roomCanvas));
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+    return () => {
+      cancelAnimationFrame(requestId1);
+      roomCanvas.cancle();
+    };
+  }, []);
+
   // 팔로잉 목록
   const [followingList, setFollowingList] = useState<number[]>([]);
   const getFollowingList = () => {
@@ -35,12 +65,12 @@ export const OtherRoomPage = () => {
         console.log(err.response);
       });
   };
+
   useEffect(() => {
     getFollowingList();
   }, []);
 
   // 팔로우 함수
-  const OtherID = window.location.href.split('/')[4];
   const handleFollow = () => {
     axios
       .post(
@@ -73,19 +103,18 @@ export const OtherRoomPage = () => {
     },
   };
 
-  const items = [1, 2, 3, 4, 1, 0, 0, 0, 0, 0, 0, 0];
   const navigate = useNavigate();
-  useEffect(() => {
-    const roomCanvas = new OtherRoomThree(items);
-    const requestId1 = requestAnimationFrame(
-      roomCanvas.render.bind(roomCanvas),
-    );
+  // useEffect(() => {
+  //   const roomCanvas = new OtherRoomThree();
+  //   const requestId1 = requestAnimationFrame(
+  //     roomCanvas.render.bind(roomCanvas),
+  //   );
 
-    return () => {
-      cancelAnimationFrame(requestId1);
-      roomCanvas.cancle();
-    };
-  }, []);
+  //   return () => {
+  //     cancelAnimationFrame(requestId1);
+  //     roomCanvas.cancle();
+  //   };
+  // }, []);
 
   function ToHome() {
     navigate('/');
@@ -103,9 +132,11 @@ export const OtherRoomPage = () => {
       >
         <YouTube videoId="9QxFoMEkYBA" opts={opts} />
       </div>
-      <OtherRoom />
+
       <OtherCalendarAlert></OtherCalendarAlert>
-      <CanvasContainer id="other-room-canvas"></CanvasContainer>
+      <CanvasContainer id="other-room-canvas">
+        <Loading></Loading>
+      </CanvasContainer>
       {/* 만약 url 마지막의 숫자가 followingList에 있으면 팔로잉 버튼, 없으면 팔로우 버튼 */}
       {followingList.includes(Number(OtherID)) ? (
         <FollowButton
