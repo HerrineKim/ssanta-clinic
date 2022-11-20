@@ -160,9 +160,11 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
-    // console.log(this._controls.PolarAngle, this._controls.minPolarAngle);
-    // console.log(this._controls);
-    // if (this._snow) {
+    if (this._isZoom) {
+      this._scene.remove(this._text_model);
+    } else {
+      this._scene.add(this._text_model);
+    }
     if (this._mixer) {
       // console.log('mixer');  //mixer는 charecter.glb의 animation
       const deltaTime = time - this._previousTime; //이전프레임과 현재프레임 간의 시간차이

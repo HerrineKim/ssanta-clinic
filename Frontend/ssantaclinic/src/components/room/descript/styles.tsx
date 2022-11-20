@@ -73,7 +73,7 @@ export const ArrowImg = styled.img`
   opacity: 0.6;
   display: block;
   margin-left: 60%;
-  margin-top: 40%;
+  margin-top: 30%;
 `;
 
 export const Arrow = styled.img`
