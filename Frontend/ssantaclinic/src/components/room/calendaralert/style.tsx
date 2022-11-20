@@ -18,16 +18,17 @@ export const Div = styled.div`
 export const CalendarAlertDiv = styled.div`
   z-index: 4;
   position: fixed;
-  width: 60%;
+  width: 30%;
   height: 40%;
-  
+  left:35%;
+  top:30%;
   margin:auto;
   background-color: #fbeee0;
   border: 2px solid #422800;
   border-radius: 30px;
   box-shadow: #422800 4px 4px 0 0;
   color: #422800;
-  width: 300px;
+ 
   display: flex;
   display: none;
   flex-direction: column;
