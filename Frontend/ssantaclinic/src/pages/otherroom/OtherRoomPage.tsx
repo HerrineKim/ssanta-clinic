@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import YouTube, { YouTubeProps } from 'react-youtube';
-import { OtherRoom } from '../../components/otherroom/OtherRoom';
+import Loading from '../../components/loading/Loading';
 import { Wrapper, CanvasContainer, ToHomeButton, FollowButton } from './styles';
 import { OtherRoomThree } from '../../three/OtherRoomThree';
 import { OtherCalendarAlert } from '../../components/room/calendaralert/OtherCalendar';
@@ -134,7 +134,9 @@ export const OtherRoomPage = () => {
       </div>
 
       <OtherCalendarAlert></OtherCalendarAlert>
-      <CanvasContainer id="other-room-canvas"></CanvasContainer>
+      <CanvasContainer id="other-room-canvas">
+        <Loading></Loading>
+      </CanvasContainer>
       {/* 만약 url 마지막의 숫자가 followingList에 있으면 팔로잉 버튼, 없으면 팔로우 버튼 */}
       {followingList.includes(Number(OtherID)) ? (
         <FollowButton
