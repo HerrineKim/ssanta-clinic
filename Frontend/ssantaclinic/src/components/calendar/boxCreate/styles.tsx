@@ -398,3 +398,20 @@ transform: translate(2px, 2px);
   min-width: 60px;
 }
 `;
+
+export const SuccessDiv = styled.div`
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  left: 35%;
+  top: 35%;
+  border-radius: 20px;
+  display: flex;
+  background-color: #fbeee0;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cafe24Ssurround';
+  font-size: 1.5rem;
+  z-index: 999;
+`;
