@@ -31,7 +31,7 @@ export const LogIn = () => {
         setIsValidLogin({
           isValidLogin: true,
         });
-        console.log(res.data);
+        // console.log(res.data);
         accessToken = res.headers.authorization;
         localStorage.setItem('jwt', accessToken);
         setTimeout(() => {
@@ -47,9 +47,12 @@ export const LogIn = () => {
         // navigate('/logintohome');
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
         if (err.response.status === 401) {
           setIsFail(true);
+          setTimeout(() => {
+            setIsFail(false);
+          }, 5000);
         }
       });
   };
