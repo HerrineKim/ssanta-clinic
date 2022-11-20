@@ -6,6 +6,7 @@ import { ReceiveLetterPage } from '../../../pages/letter/ReceiveLetterPage';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { API_BASE_URL } from '../../../apis/url';
+
 export interface ILetters {
   title: string;
   message: string;
@@ -13,7 +14,8 @@ export interface ILetters {
   replyLetterId: number;
   sendLetterId: number;
 }
-export function LetterAlert() {
+export function LetterAlert(props: any) {
+  const { letter } = props;
   const BASE_URL = API_BASE_URL;
   const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const [isList, setIsList] = useState<boolean>(true);
@@ -25,7 +27,10 @@ export function LetterAlert() {
   useEffect(() => {
     getLetters();
   }, []);
+
   function getLetters() {
+    setLetters([]);
+
     axios
       .get(BASE_URL + 'letter', {
         headers: {
@@ -35,13 +40,16 @@ export function LetterAlert() {
       .then((res) => {
         const data = res.data.reply;
         for (let i = 0; i < data.length; i++) {
-          letters.push({
-            replyLetterid: data[i].replyLetterId,
-            sendLetterId: data[i].sendLetterId,
-            title: data[i].title,
-            message: data[i].message,
-            isRead: data[i].isRead,
-          });
+          setLetters((prev) => [
+            ...prev,
+            {
+              replyLetterid: data[i].replyLetterId,
+              sendLetterId: data[i].sendLetterId,
+              title: data[i].title,
+              message: data[i].message,
+              isRead: data[i].isRead,
+            },
+          ]);
         }
       })
       .catch((err) => {
@@ -56,6 +64,7 @@ export function LetterAlert() {
     setIsList(false);
     setIsWrite(false);
     setIsReceive(false);
+    letter(false);
     setTimeout(() => {
       setIsList(true);
     }, 1500);
