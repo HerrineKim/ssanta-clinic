@@ -18,6 +18,7 @@ export const WriteLetterPage = (props: any) => {
 
     return () => {
       cancelAnimationFrame(requestId1);
+      letterCanvas.cancle();
     };
   }, []);
   return (
