@@ -465,7 +465,7 @@ export class MainCanvas {
           if (this._isZoom) {
             setTimeout(() => {
               // this._setupControls();
-              this._zoomOut(60);
+              this._zoomOut();
             }, 100);
           }
         }
@@ -486,7 +486,7 @@ export class MainCanvas {
         if (this._isZoom) {
           setTimeout(() => {
             // this._setupControls();
-            this._zoomOut(60);
+            this._zoomOut();
           }, 100);
         }
       }
@@ -512,7 +512,7 @@ export class MainCanvas {
         //   this._zoomFit(this._shop[0].parent, 60);
         // }, 100);
         setTimeout(() => {
-          this._zoomOut(60);
+          this._zoomOut();
         }, 100);
       }
     }
@@ -809,7 +809,7 @@ export class MainCanvas {
   }
 
   //zoomout 함수
-  _zoomOut(viewAngle: number) {
+  _zoomOut() {
     clearTimeout(this._clearId);
     this._isZoom = false;
     this._controls.minDistance = 30;
