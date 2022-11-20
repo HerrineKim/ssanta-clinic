@@ -251,3 +251,35 @@ export const ReceiveLetterContainer = styled.div`
   margin-left: 10%;
 `;
 export const LetterSanta = styled.div``;
+
+export const SendAlertDiv = styled.div`
+  z-index: 4;
+  position: fixed;
+  width: 30%;
+  height: 40%;
+  left: 35%;
+  top:30%;
+  
+  
+  background-color: #fbeee0;
+  border: 2px solid #422800;
+  border-radius: 30px;
+  box-shadow: #422800 4px 4px 0 0;
+  color: #422800;
+  
+  display: flex;
+  
+  flex-direction: column;
+  align-items:center;
+  justify-content:center;
+  font-weight: 600;
+  font-size: 1.5rem;
+  padding: 0 18px;
+  text-align: center;
+  text-decoration: none;
+  
+  
+  touch-action: manipulation;
+  font-family: 'Cafe24Ssurround';
+  }
+`;
