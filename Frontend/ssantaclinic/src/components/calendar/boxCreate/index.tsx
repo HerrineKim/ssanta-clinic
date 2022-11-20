@@ -114,7 +114,20 @@ export function BoxCreate(props: BoxCreateProps) {
         day: dayBox,
       },
     };
-    axios(config)
+
+    axios({
+      method: 'post',
+      url: BASE_URL + 'calendar',
+      headers: {
+        Authorization: ACCESS_TOKEN,
+        'Content-Type': 'multipart/form-data',
+      },
+      data: boxFormData,
+      params: {
+        userId: receiver,
+        day: dayBox,
+      },
+    })
       .then((res) => {
         console.log(res);
         console.log(config);
