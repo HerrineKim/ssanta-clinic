@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useSetRecoilState, useRecoilValue } from 'recoil';
-import { currentUser, isLogIn, isValidLogIn } from '../../store/store';
+import { useSetRecoilState } from 'recoil';
+import { currentUser, isValidLogIn } from '../../store/store';
 import { LoginContainer } from './styles';
 import { Input } from './styles';
 import { motion } from 'framer-motion';
@@ -14,17 +14,11 @@ export const LogIn = () => {
   const [button, setButton] = useState<boolean>(true);
   const setUserState = useSetRecoilState(currentUser);
   const setIsValidLogin = useSetRecoilState(isValidLogIn);
-  const isLoggedIn = useRecoilValue(isLogIn);
+  const [isFail, setIsFail] = useState<boolean>(false);
   const navigate = useNavigate();
 
   let accessToken: any = '';
 
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     alert('로그인 했잖아요;;');
-  //     navigate('/');
-  //   }
-  // });
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
@@ -37,7 +31,7 @@ export const LogIn = () => {
         setIsValidLogin({
           isValidLogin: true,
         });
-        console.log(res.data);
+        // console.log(res.data);
         accessToken = res.headers.authorization;
         localStorage.setItem('jwt', accessToken);
         setTimeout(() => {
@@ -53,7 +47,13 @@ export const LogIn = () => {
         // navigate('/logintohome');
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
+        if (err.response.status === 401) {
+          setIsFail(true);
+          setTimeout(() => {
+            setIsFail(false);
+          }, 5000);
+        }
       });
   };
 
@@ -93,6 +93,9 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
+        {!email.includes('@') && (
+          <p style={{ color: 'red' }}>이메일 형식이 아닙니다.</p>
+        )}
         <Input
           type="password"
           name="password"
@@ -102,6 +105,9 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
+        {password.length < 5 && (
+          <p style={{ color: 'red' }}>비밀번호가 너무 짧습니다.</p>
+        )}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -111,6 +117,11 @@ export const LogIn = () => {
         >
           로그인
         </motion.button>
+        {isFail ? (
+          <p style={{ color: 'red', marginTop: '10px' }}>
+            이메일 혹은 아이디가 잘못 되었습니다.
+          </p>
+        ) : null}
       </form>
       <motion.button
         whileHover={{ scale: 1.1 }}
