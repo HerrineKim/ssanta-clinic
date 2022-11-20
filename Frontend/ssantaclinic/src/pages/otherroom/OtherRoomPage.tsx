@@ -104,17 +104,6 @@ export const OtherRoomPage = () => {
   };
 
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   const roomCanvas = new OtherRoomThree();
-  //   const requestId1 = requestAnimationFrame(
-  //     roomCanvas.render.bind(roomCanvas),
-  //   );
-
-  //   return () => {
-  //     cancelAnimationFrame(requestId1);
-  //     roomCanvas.cancle();
-  //   };
-  // }, []);
 
   function ToHome() {
     navigate('/');

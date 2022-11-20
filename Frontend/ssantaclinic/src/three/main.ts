@@ -653,6 +653,7 @@ export class MainCanvas {
   // viewangle 은 수직축으로의 각도 90 도면 평면과 평행하게 바라봄. 0 도면 위에서 바라봄.
 
   _zoomFit(object3d: any, viewAngle: number) {
+    clearTimeout(this._clearId);
     this._isZoom = true;
     this._controls.minDistance = 0;
     this._controls.maxDistance = Infinity;
