@@ -134,7 +134,7 @@ export class OtherRoomThree {
       this._model = model;
     });
 
-    if (this._treeaddres !== null) {
+    if (this._treeaddres !== null && this._treeaddres !== '') {
       loader.load(`${this._treeaddres}`, (gltf) => {
         count += 1;
         const model: any = gltf.scene;
