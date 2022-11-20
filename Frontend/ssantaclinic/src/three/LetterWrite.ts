@@ -16,6 +16,7 @@ export class LetterWriteModel {
   _mixer: any;
   _clock: any;
   _orbitControls: any;
+  _id: any;
   constructor() {
     this._setupThreeJs();
     this._setupCamera();
@@ -82,7 +83,6 @@ export class LetterWriteModel {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
@@ -91,9 +91,13 @@ export class LetterWriteModel {
 
   render() {
     this._renderer.render(this._scene, this._camera);
+    console.log(1);
 
     this.update();
-    requestAnimationFrame(this.render.bind(this));
+    this._id = requestAnimationFrame(this.render.bind(this));
+  }
+  cancle() {
+    cancelAnimationFrame(this._id);
   }
 
   resize() {

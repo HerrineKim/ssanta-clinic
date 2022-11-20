@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Wrapper,
-  CanvasContainer,
-  CloseButton,
-  DisButton,
-  DisContainer,
-} from './styled';
+import { Wrapper, CanvasContainer, CloseButton, DisButton } from './styled';
 import { RoomThree } from '../../three/RoomThree';
 import axios from 'axios';
-import { selectUserId, selectUserNickname } from '../../store/store';
+import { selectUserId } from '../../store/store';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { CalendarAlert } from './calendaralert/Calendar';
 import Loading from '../loading/Loading';
@@ -24,10 +18,9 @@ export default function RoomModal(props: any) {
   const items = useRecoilValue(MyItems);
   const setItems = useSetRecoilState(MyItems);
   let roomCanvas: any;
-  const NICKNAME = useRecoilValue(selectUserNickname);
+
   const ID = useRecoilValue(selectUserId);
   const TOKEN = localStorage.getItem('jwt') || '';
-  const [isTree, setIsTree] = useState<boolean>(true);
 
   const [isSave, setIsSave] = useState<boolean>(false);
   const [isSuccess, SetIsSuccess] = useState<boolean>(false);
@@ -52,7 +45,7 @@ export default function RoomModal(props: any) {
       .then((res) => {
         console.log(res.data);
         roomCanvas = new RoomThree(items, res.data.tree);
-        setIsTree(true);
+
         roomCanvas.setupOnce();
         console.log('useeffect');
         requestId1 = requestAnimationFrame(render);
@@ -60,7 +53,7 @@ export default function RoomModal(props: any) {
       .catch((err) => {
         console.log(err.resonse);
         roomCanvas = new RoomThree(items, '');
-        setIsTree(false);
+
         roomCanvas.setupOnce();
         console.log('useeffect');
         requestId1 = requestAnimationFrame(render);
@@ -73,7 +66,7 @@ export default function RoomModal(props: any) {
   }, []);
 
   let id: any;
-  const render = (time: number) => {
+  const render = () => {
     setIsSave(roomCanvas._isSave);
     SetIsSuccess(roomCanvas._saveSuccess);
     setSceneNumber(roomCanvas._scenenumber);
