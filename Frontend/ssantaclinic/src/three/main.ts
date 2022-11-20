@@ -279,7 +279,7 @@ export class MainCanvas {
       // console.log(m);
       const originModel = gltf.scene;
       const model = gltf.scene.children[0];
-      console.log('model:', model);
+      // console.log('model:', model);
       // console.log('LOAD model:', model);
       this._model = model;
       this._scene.add(originModel);
@@ -451,7 +451,7 @@ export class MainCanvas {
           }, 1500);
         } else {
           // 맵중에 아무것도 안눌렀을 때
-          console.log(1);
+          // console.log(1);
           if (this._isAlert) {
             this._isItemClick = false;
             this._removeHomeAlert();
@@ -858,7 +858,7 @@ export class MainCanvas {
       1,
       500,
     );
-    console.log('camera');
+    // console.log('camera');
     camera.position.set(-40, 29, -46);
     camera.getWorldDirection(new THREE.Vector3(0, 0, 0));
     // camera.lookAt(target);

@@ -12,8 +12,8 @@ export const NotiModalContainer = styled.div`
   overflow-y: scroll;
   #noti {
     background: white;
-    width: 50%;
-    height: 10%;
+    width: 70%;
+    height: 5%;
     margin-top: 3%;
     border: 1px solid black;
     border-radius: 20px;
