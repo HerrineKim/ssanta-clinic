@@ -12,8 +12,7 @@ export const Div = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // display: none;
-  border-radius: 30px;
+  border: solid;
 `;
 
 export const TitleLetterContainer = styled.div`
