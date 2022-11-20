@@ -50,7 +50,8 @@ public class User {
         this.lastLoginAt = LocalDateTime.now();
     }
 
-    private int money;
+    @Builder.Default
+    private int money = 10000;
 
     @Column(name = "tree_url", length = 300)
     private String treeUrl;
