@@ -230,6 +230,7 @@ export const LetterListContainer = styled.div`
     width: 50%;
     height: 8%;
     margin-top: 3%;
+    margin-bottom: 3%;
     border-radius: 20px;
     margin-left: 24%;
     box-shadow: 5px 5px 5px 5px;

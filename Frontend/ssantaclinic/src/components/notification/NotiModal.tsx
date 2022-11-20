@@ -20,9 +20,9 @@ export default function NotiModal(props: any) {
           Authorization: ACCESS_TOKEN,
         },
       })
-      .then((res) => {
-        console.log('알림 다 읽음');
-      })
+      // .then((res) => {
+      //   const =
+      // })
       .catch((err) => {
         console.log(err.resonse);
       });
@@ -39,9 +39,16 @@ export default function NotiModal(props: any) {
         //   onLetterList(false);
         // }}
       >
-        <b className="noti-message">
-          {noti.notiId} {noti.message} {noti.type}
-        </b>
+        {noti.type === 'GIFT' && (
+          <b className="noti-message">
+            {noti.message} 방의 캘린더를 확인해보세요!
+          </b>
+        )}
+        {noti.type === 'REPLY' && (
+          <b className="noti-message">
+            산타의 {noti.message} 편지함을 확인해보세요!
+          </b>
+        )}
       </div>
     );
   }
