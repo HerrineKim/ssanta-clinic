@@ -159,7 +159,9 @@ export const SignUp = () => {
               onChange={handleChangePasswordFirm}
               required
             />
-            {password !== passwordConfirm && <p>비밀번호가 달라요!</p>}
+            {password !== passwordConfirm && (
+              <p style={{ color: 'red' }}>비밀번호가 달라요!</p>
+            )}
             <motion.input
               className="signup-input"
               // initial={{opacity=}}
@@ -177,16 +179,31 @@ export const SignUp = () => {
             >
               중복확인
             </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              type="submit"
-              id="signup-button"
-              disabled={isValid}
-              onClick={handleSubmit}
-            >
-              회원가입
-            </motion.button>
+            <div style={{ display: 'flex' }}>
+              <motion.button
+                style={{ marginRight: '10px' }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                type="submit"
+                id="signup-button"
+                disabled={isValid}
+                onClick={handleSubmit}
+              >
+                회원가입
+              </motion.button>
+              <motion.button
+                style={{ marginLeft: '10px' }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                id="signup-button"
+                disabled={isValid}
+                onClick={() => {
+                  navigate('/login');
+                }}
+              >
+                로그인
+              </motion.button>
+            </div>
           </SignUpInputs>
         </SignUpForm>
       </motion.div>
