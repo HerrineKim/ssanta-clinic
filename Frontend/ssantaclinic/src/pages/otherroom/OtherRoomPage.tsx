@@ -18,7 +18,7 @@ export const OtherRoomPage = () => {
   const param = useParams();
   const OtherID2 = param.id;
   const OtherID = window.location.href.split('/')[4];
-  console.log(OtherID2, OtherID);
+  // console.log(OtherID2, OtherID);
 
   let roomCanvas: any;
   useEffect(() => {
@@ -30,12 +30,12 @@ export const OtherRoomPage = () => {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         roomCanvas = new OtherRoomThree(res.data.treeUrl);
         requestId1 = requestAnimationFrame(roomCanvas.render.bind(roomCanvas));
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
       });
     return () => {
       cancelAnimationFrame(requestId1);
@@ -54,15 +54,15 @@ export const OtherRoomPage = () => {
       })
       .then((res) => {
         // userId만 추출해서 배열에 저장
-        console.log(res.data);
+        // console.log(res.data);
         const followingList = res.data.map(
           (following: any) => following.userId,
         );
-        console.log(followingList);
+        // console.log(followingList);
         setFollowingList(followingList);
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
       });
   };
 
@@ -72,23 +72,40 @@ export const OtherRoomPage = () => {
 
   // 팔로우 함수
   const handleFollow = () => {
-    axios
-      .post(
-        BASE_URL + 'friend/follow',
-        { userId: Number(OtherID) },
-        {
+    if (!followingList.includes(Number(OtherID))) {
+      axios
+        .post(
+          BASE_URL + 'friend/follow',
+          { userId: Number(OtherID) },
+          {
+            headers: {
+              Authorization: ACCESS_TOKEN,
+            },
+          },
+        )
+        .then((res) => {
+          // console.log(res.data);
+          getFollowingList();
+        })
+        .catch((err) => {
+          // console.log(err.response);
+        });
+    } else {
+      axios
+        .delete(BASE_URL + 'friend/follow', {
+          data: { userId: Number(OtherID) },
           headers: {
             Authorization: ACCESS_TOKEN,
           },
-        },
-      )
-      .then((res) => {
-        console.log(res.data);
-        getFollowingList();
-      })
-      .catch((err) => {
-        console.log(err.response);
-      });
+        })
+        .then((res) => {
+          // console.log(res.data);
+          getFollowingList();
+        })
+        .catch((err) => {
+          // console.log(err.response);
+        });
+    }
   };
 
   const opts: YouTubeProps['opts'] = {
