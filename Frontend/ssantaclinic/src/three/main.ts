@@ -37,7 +37,7 @@ export class MainCanvas {
 
   _boxHelper: any;
   _model: any;
-  _text_model: any;
+
   _raycaster: any;
   _group: any;
   _isAlert: boolean;
@@ -78,10 +78,11 @@ export class MainCanvas {
   // 보여줘야하는 scene 이어떤건지 결정
   // 1이 기본, 2가 트리꾸미는 scene
   _scenenumber = 1;
+  _text_model: THREE.Object3D | null;
 
   constructor(userId: number, randomTrees: string[]) {
     //(9, 0, -4.5);  오른쪽, 위, 앞
-
+    this._text_model = null;
     this._randomTrees = randomTrees;
 
     this._userId = userId;
@@ -160,10 +161,12 @@ export class MainCanvas {
     time *= 0.001; // second unit
 
     this._controls.update();
-    if (this._isZoom) {
-      this._scene.remove(this._text_model);
-    } else {
-      this._scene.add(this._text_model);
+    if (this._text_model !== null) {
+      if (this._isZoom) {
+        this._scene.remove(this._text_model);
+      } else {
+        this._scene.add(this._text_model);
+      }
     }
     if (this._mixer) {
       // console.log('mixer');  //mixer는 charecter.glb의 animation
@@ -441,10 +444,10 @@ export class MainCanvas {
           // 나중에 추가할 거 있으면
           this._zoomFit(targets[0].object.parent, 60);
         } else if (targets[0].object.name.includes('letter')) {
-          this._isLetter = true;
-          this._zoomFit(targets[0].object.parent, 60);
+          this._zoomFit(targets[0].object.parent, 80);
           this._clearId = setTimeout(() => {
-            this._setupLetter();
+            this._isLetter = true;
+            // this._setupLetter();
           }, 1500);
         } else {
           // 맵중에 아무것도 안눌렀을 때

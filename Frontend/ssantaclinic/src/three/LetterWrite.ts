@@ -91,7 +91,6 @@ export class LetterWriteModel {
 
   render() {
     this._renderer.render(this._scene, this._camera);
-    console.log(1);
 
     this.update();
     this._id = requestAnimationFrame(this.render.bind(this));
