@@ -48,7 +48,7 @@
 
 ### 포팅 매뉴얼
 
-
+https://a201.notion.site/722ef8c41ed54175a08400f625a4b329
 
 ### UCC
 
