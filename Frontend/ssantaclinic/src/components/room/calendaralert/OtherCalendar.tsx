@@ -38,7 +38,7 @@ export function OtherCalendarAlert(props: any) {
   if (!isHelp) {
     return (
       <CalendarAlertDiv className="calendar">
-        선물이 많이 왔을까?
+        캘린더를 선물로 채워주세요
         <CalendarButton onClick={help}>구경</CalendarButton>
       </CalendarAlertDiv>
     );
