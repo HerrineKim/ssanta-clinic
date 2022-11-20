@@ -465,7 +465,7 @@ export class MainCanvas {
           if (this._isZoom) {
             setTimeout(() => {
               // this._setupControls();
-              this._zoomOut(60);
+              this._zoomOut();
             }, 100);
           }
         }
@@ -486,7 +486,7 @@ export class MainCanvas {
         if (this._isZoom) {
           setTimeout(() => {
             // this._setupControls();
-            this._zoomOut(60);
+            this._zoomOut();
           }, 100);
         }
       }
@@ -512,7 +512,7 @@ export class MainCanvas {
         //   this._zoomFit(this._shop[0].parent, 60);
         // }, 100);
         setTimeout(() => {
-          this._zoomOut(60);
+          this._zoomOut();
         }, 100);
       }
     }
@@ -653,6 +653,7 @@ export class MainCanvas {
   // viewangle 은 수직축으로의 각도 90 도면 평면과 평행하게 바라봄. 0 도면 위에서 바라봄.
 
   _zoomFit(object3d: any, viewAngle: number) {
+    clearTimeout(this._clearId);
     this._isZoom = true;
     this._controls.minDistance = 0;
     this._controls.maxDistance = Infinity;
@@ -809,7 +810,7 @@ export class MainCanvas {
   }
 
   //zoomout 함수
-  _zoomOut(viewAngle: number) {
+  _zoomOut() {
     clearTimeout(this._clearId);
     this._isZoom = false;
     this._controls.minDistance = 30;

@@ -163,7 +163,7 @@ export class RoomThree {
   _setupPicking() {
     // raycaster로 뭘 눌렀는지 판단해야함
 
-    console.log('setpupicking');
+    // console.log('setpupicking');
     const raycaster = new THREE.Raycaster();
 
     this._divContainer.addEventListener('click', this._onClick.bind(this));
@@ -369,7 +369,7 @@ export class RoomThree {
     this._unclickedItem = items;
 
     const loadPage = setInterval(() => {
-      console.log('로딩중');
+      // console.log('로딩중');
       // console.log(count);
       // console.log(itemCount);
       if (count === itemCount + 5) {
@@ -389,7 +389,7 @@ export class RoomThree {
     if (this._scenenumber === 1) {
       this._orbitControls = new OrbitControls(this._camera, this._divContainer);
       this._orbitControls.enabled = false;
-      console.log(this._model);
+      // console.log(this._model);
       this._orbitControls.target.set(0, 2, 0);
       // //orbicontrol shift 기능 없애기
       this._orbitControls.enablePan = false;
@@ -403,7 +403,7 @@ export class RoomThree {
       //마우스 회전 부드럽게
       this._orbitControls.enableDamping = true;
 
-      console.log('setoucontrols111');
+      // console.log('setoucontrols111');
     } else {
       // 트리 위주로 돌릴 수 있게
       // 드래그앤 드롭
@@ -415,7 +415,7 @@ export class RoomThree {
     console.log('click!!!');
     function saveArrayBuffer(buffer: any) {
       const file = new Blob([buffer], { type: 'application/octet-stream' });
-      console.log('saveArray:', file);
+      // console.log('saveArray:', file);
       return file;
     }
 
@@ -450,13 +450,13 @@ export class RoomThree {
         // console.log(targets);
         // console.log('scenenumber 1');
         if (targets[0].object.parent.name === 'advaent_calendar') {
-          console.log('달력');
+          // console.log('달력');
           this._setupCalendar();
         } else {
           this._removeCalendar();
         }
       } else {
-        console.log('아무것도업슴');
+        // console.log('아무것도업슴');
         this._removeCalendar();
       }
 
@@ -469,9 +469,9 @@ export class RoomThree {
             break;
           }
         }
-        console.log('parent:', object);
+        // console.log('parent:', object);
         this._isTreeModal = true;
-        console.log('onclick inven:', this._inven);
+        // console.log('onclick inven:', this._inven);
         this._zoomInven(this._inven, 90);
       }
     } else {
@@ -553,16 +553,16 @@ export class RoomThree {
                 setTimeout(() => {
                   this._saveSuccess = false;
                 }, 2000);
-                console.log(res);
+                // console.log(res);
                 this._remainItems = remainItem;
               })
               .catch((err) => {
-                console.log('저장 실패');
+                // console.log('저장 실패');
                 this._isSave = false;
               });
           },
           function (error) {
-            console.log(error);
+            // console.log(error);
           },
           { binary: true },
         );
@@ -592,7 +592,7 @@ export class RoomThree {
       // if (itemTarget.length > 0) {
       //   this._setupDrag(itemTarget[0]);
       // }
-      console.log('treetarget:', treeTarget);
+      // console.log('treetarget:', treeTarget);
       // console.log('itemTarget:', itemTarget);
     }
   }
@@ -605,7 +605,7 @@ export class RoomThree {
     ) as HTMLElement | null;
     // console.log(alert);
     if (calendarAlert !== null) {
-      console.log('calendarAlert');
+      // console.log('calendarAlert');
       calendarAlert.style.display = 'flex';
     }
   }
@@ -714,41 +714,6 @@ export class RoomThree {
       );
       controls.transformGroup = true;
 
-      // controls.addEventListener('dragstart', (event) => {
-      //   console.log(event.object);
-      //   // child.position.z = 1.5;
-      //   // 이미 걸려있는 것 처리
-      //   const targets = controls.getRaycaster().intersectObjects(tree);
-      //   let object;
-      //   if (targets.length > 0) {
-      //     console.log('이미 걸려있음');
-      //     object = targets[0].object;
-      //     while (object.parent) {
-      //       object = object.parent;
-      //       if (object instanceof THREE.Group && object.name === 'tree') {
-      //         break;
-      //       }
-      //     }
-      //   }
-
-      //   if (event.object.parent === object) {
-      //     console.log('parent = event.object');
-      //     console.log(event.object);
-      //     const previosPosition = event.object.position;
-      //     event.object.removeFromParent();
-      //     this._scene2.add(event.object);
-      //     event.object.position = previosPosition;
-      //   }
-      //   // if (
-      //   //   1 <= parseInt(event.object.name) &&
-      //   //   parseInt(event.object.name) <= 8
-      //   // ) {
-      //   //   event.object.children[0].children[0].material.emissive.set(0xaaaaaa);
-      //   // } else {
-      //   //   event.object.children[0].material.emissive.set(0xaaaaaa);
-      //   // }
-      // });
-
       controls.addEventListener('dragend', (event) => {
         const targets = controls.getRaycaster().intersectObjects(tree);
         // console.log(targets);
@@ -803,7 +768,7 @@ export class RoomThree {
                 break;
               }
             }
-            console.log(targets[i]);
+            // console.log(targets[i]);
 
             if (targets[i].object.name.includes('tree')) {
               //만난다면 장식품을 tree에 붙이고 종속시킴
