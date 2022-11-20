@@ -43,7 +43,7 @@ export const WriteLetter = (props: any) => {
       )
       .then((res) => {
         setIsSend(true);
-        console.log('응답 받아옴 성공!', res.data);
+        // console.log('응답 받아옴 성공!', res.data);
         setTimeout(() => {
           setIsSend(false);
           setMessage('');
@@ -190,6 +190,7 @@ export const WriteLetter = (props: any) => {
               <MessageInput
                 name="message"
                 id="message-input"
+                placeholder="산타가 잘 읽을 수 있도록 10자 이상 입력해주세요!"
                 onChange={handleChangeMessage}
                 onKeyUp={changeButton}
                 ref={inputValue}
@@ -203,10 +204,6 @@ export const WriteLetter = (props: any) => {
               type="submit"
               className="send-button"
               disabled={button}
-              onClick={() => {
-                onBack(false);
-                goList(true);
-              }}
             >
               보내기
             </Button>

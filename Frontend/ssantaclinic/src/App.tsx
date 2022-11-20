@@ -22,7 +22,7 @@ import { useRecoilValue } from 'recoil';
 import ProtectedRoute from './ProtectedRoute';
 
 function App() {
-  console.log('APP');
+  // console.log('APP');
   const isLoggedIn = useRecoilValue(selectUserIsLogin);
   // console.log(isLoggedIn);
 

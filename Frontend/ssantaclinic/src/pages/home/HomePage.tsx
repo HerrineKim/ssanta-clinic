@@ -124,11 +124,11 @@ export default function Home() {
         },
         heartbeatTimeout: 120000 * 5,
       });
-      eventSource.onopen = (event) => console.log('open', event); // <2>
+      // eventSource.onopen = (event) => console.log('open', event); // <2>
       getNotiList(TOKEN);
-      eventSource.onerror = (event) => {
-        console.log('error', event);
-      };
+      // eventSource.onerror = (event) => {
+      //   console.log('error', event);
+      // };
 
       eventSource.onmessage = function (event) {
         try {
@@ -136,7 +136,7 @@ export default function Home() {
           let isInList = false;
           for (const noti of notis) {
             if (noti.notiId === data.notiId) {
-              // console.log(noti.notiId, data.notiId);
+              console.log(noti.notiId, data.notiId);
               isInList = true;
             }
           }
