@@ -236,22 +236,24 @@ export default function Home() {
       });
     return () => {
       cancelAnimationFrame(requestId);
+      cancelAnimationFrame(id);
       console.log('canvas 끝!');
     };
   }, []);
-
+  let id: number;
   const render = (time: number) => {
+    console.log(1);
     if (homeCanvas._scenenumber === 1) {
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
       homeCanvas.update(time);
 
-      requestAnimationFrame(render);
+      id = requestAnimationFrame(render);
     } else {
       // inven scene
       homeCanvas._renderer.render(homeCanvas._scene2, homeCanvas._camera);
       homeCanvas.update2(time);
 
-      requestAnimationFrame(render);
+      id = requestAnimationFrame(render);
     }
     setSceneNumber(homeCanvas._scenenumber);
 
