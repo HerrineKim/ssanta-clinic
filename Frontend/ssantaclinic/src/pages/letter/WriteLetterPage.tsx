@@ -9,9 +9,9 @@ export const WriteLetterPage = (props: any) => {
   const [isList, setIsList] = useState<boolean>(true);
   const { onBack, goList } = props;
   useEffect(() => {
-    console.log(onBack, 'ghkrd;s');
+    // console.log(onBack, 'ghkrd;s');
     const letterCanvas = new LetterWriteModel();
-    console.log('useeffect');
+    // console.log('useeffect');
     const requestId1 = requestAnimationFrame(
       letterCanvas.render.bind(letterCanvas),
     );
