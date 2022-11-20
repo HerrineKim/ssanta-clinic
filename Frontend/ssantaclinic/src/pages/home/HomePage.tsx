@@ -108,12 +108,12 @@ export default function Home() {
   const [notis, setNotis] = useRecoilState(notiState);
 
   useEffect(() => {
-    if (isTetris2 || isMemory2 || isWit2) {
+    if (isTetris2 || isMemory2 || isWit2 || isLetter2) {
       setIsCover(false);
     } else {
       setIsCover(true);
     }
-  }, [isTetris2, isMemory2, isWit2]);
+  }, [isTetris2, isMemory2, isWit2, isLetter2]);
 
   useEffect(() => {
     if (TOKEN) {
