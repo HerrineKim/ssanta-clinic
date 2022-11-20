@@ -1,11 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { LogIn } from '../../components/auth/LogIn';
 import { LoginThree } from '../../three/LoginThree';
 import { Wrapper, CanvasContainer, LoginContainer } from './styles';
-import { LogInToHomePage } from '../logintohome/LogInToHomePage';
-import { useRecoilValue } from 'recoil';
-import { selectUserIsLogin } from '../../store/store';
-import YouTube, { YouTubeProps } from 'react-youtube';
 
 export const LogInInput = () => {
   useEffect(() => {

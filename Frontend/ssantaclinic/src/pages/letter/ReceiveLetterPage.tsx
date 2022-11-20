@@ -12,9 +12,9 @@ import { motion } from 'framer-motion';
 export const ReceiveLetterPage = (props: any) => {
   const { onLetterId, onBack, goList } = props;
   useEffect(() => {
-    console.log(onLetterId);
+    // console.log(onLetterId);
     const letterCanvas = new LetterReceiveModel();
-    console.log('useeffect');
+    // console.log('useeffect');
     const requestId1 = requestAnimationFrame(
       letterCanvas.render.bind(letterCanvas),
     );
