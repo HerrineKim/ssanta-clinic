@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import YouTube, { YouTubeProps } from 'react-youtube';
+import { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv, ShopTalk } from './styles';
@@ -36,9 +36,7 @@ import {
   Money,
   MyItems,
   IsCover,
-  isLoggedIn,
   currentUser,
-  NotiListState,
 } from '../../store/store';
 import {
   useRecoilValue,
@@ -52,7 +50,7 @@ import ShopAlert from '../../components/shop';
 // 설명 관련
 import DescriptionModal from '../../components/main/description/DescriptionModal';
 // 알림 관련
-import { motion, Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import NotiModal from '../../components/notification/NotiModal';
 import { notiState } from '../../store/Notification';
 import { EventSourcePolyfill } from 'event-source-polyfill';
@@ -69,7 +67,7 @@ export default function Home() {
   const [isModal, setIsModal] = useState(false);
   const [scenenumber, setSceneNumber] = useState<number>(1);
   const [clickedItem, setClickedItem] = useState<number>(0);
-  const [isClick, setIsClick] = useState<boolean>(false);
+
   const [isShop, setIsShop] = useState<boolean>(false);
   const [isItem, setIsItem] = useState<boolean>(false);
 
@@ -89,7 +87,7 @@ export default function Home() {
   const money = useRecoilValue(Money);
 
   const setUserItems = useSetRecoilState(MyItems);
-  const item = useRecoilValue(MyItems);
+
   const [cost, setCost] = useState<number>(0);
   const [isCancle, setIsCancel] = useState<boolean>(false);
   const setIsCover = useSetRecoilState(IsCover);
@@ -99,11 +97,8 @@ export default function Home() {
 
   const navigate = useNavigate();
 
-  const resetMoney = useResetRecoilState(Money);
-  const resetMyItems = useResetRecoilState(MyItems);
-  const resetIsCover = useResetRecoilState(isLoggedIn);
   const resetUser = useResetRecoilState(currentUser);
-  const resetNoti = useResetRecoilState(NotiListState);
+
   // 설명
   const [isDescription, setIsDescription] = useState(false);
   //알림
@@ -205,20 +200,6 @@ export default function Home() {
     },
   });
 
-  //items 정보불러오기
-  // useEffect(() => {
-  //   SSantaApi.getInstance().items(
-  //     { userId: userId },
-  //     {
-  //       onSuccess(data) {
-  //         // console.log(data);
-  //         setUserItems(data.itemList);
-  //       },
-  //       navigate,
-  //     },
-  //   );
-  // }, []);
-
   useEffect(() => {
     let requestId: number;
     axios
@@ -273,7 +254,7 @@ export default function Home() {
       requestAnimationFrame(render);
     }
     setSceneNumber(homeCanvas._scenenumber);
-    setIsClick(homeCanvas._isItemClick);
+
     setClickedItem(homeCanvas._clickedItem);
     setIsShop(homeCanvas._isShop);
     setIsTetris(homeCanvas._isGame1);
