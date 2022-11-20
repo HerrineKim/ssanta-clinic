@@ -242,7 +242,6 @@ export default function Home() {
   }, []);
   let id: number;
   const render = (time: number) => {
-    console.log(1);
     if (homeCanvas._scenenumber === 1) {
       homeCanvas._renderer.render(homeCanvas._scene, homeCanvas._camera);
       homeCanvas.update(time);

@@ -31,6 +31,7 @@ import {
 import { API_BASE_URL } from '../../../apis/url';
 
 const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
+// console.log(ACCESS_TOKEN);
 
 type BoxCreateProps = {
   setBoxCreateOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -116,10 +117,12 @@ export function BoxCreate(props: BoxCreateProps) {
     axios(config)
       .then((res) => {
         console.log(res);
+        console.log(config);
         // 모달 닫기
         props.setBoxCreateOpen(false);
       })
       .catch((err) => {
+        console.log(config);
         console.log(err);
         alert('오류가 발생했습니다. 다시 시도해주세요.');
       });
