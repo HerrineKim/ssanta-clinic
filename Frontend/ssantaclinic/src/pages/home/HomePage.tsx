@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { YouTubeProps } from 'react-youtube';
+import YouTube, { YouTubeProps } from 'react-youtube';
 import LogoutIcon from '@mui/icons-material/Logout';
 // import { useCanvas } from '../../hooks/useCanvas';
 import { CoinImg, Div, ModalDiv, ShopDiv, ShopTalk } from './styles';
@@ -117,7 +117,7 @@ export default function Home() {
 
   useEffect(() => {
     if (TOKEN) {
-      console.log('sse');
+      // console.log('sse');
       const eventSource = new EventSource(BASE_URL + 'noti/sub/' + ID, {
         headers: {
           Authorization: TOKEN,
@@ -136,16 +136,16 @@ export default function Home() {
           let isInList = false;
           for (const noti of notis) {
             if (noti.notiId === data.notiId) {
-              console.log(noti.notiId, data.notiId);
+              // console.log(noti.notiId, data.notiId);
               isInList = true;
             }
           }
           if (!isInList) {
-            console.log(data);
+            // console.log(data);
             setNotis((notiList) => [...notiList, data]);
           }
         } catch {
-          console.log('sse 패스');
+          // console.log('sse 패스');
         }
       };
     }
@@ -168,7 +168,7 @@ export default function Home() {
   }, [isWit]);
 
   function getNotiList(TOKEN: any) {
-    console.log('비동기 안되냐');
+    // console.log('비동기 안되냐');
     axios
       .get(BASE_URL + 'noti/list/' + ID, {
         headers: {
@@ -176,10 +176,10 @@ export default function Home() {
         },
       })
       .then((res) => {
-        console.log(res, '리스트');
+        // console.log(res, '리스트');
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
       });
   }
   // 로그아웃
@@ -232,12 +232,12 @@ export default function Home() {
           localStorage.clear();
           navigate('/login');
         }
-        console.log(err);
+        // console.log(err);
       });
     return () => {
       cancelAnimationFrame(requestId);
       cancelAnimationFrame(id);
-      console.log('canvas 끝!');
+      // console.log('canvas 끝!');
     };
   }, []);
   let id: number;
@@ -289,9 +289,6 @@ export default function Home() {
   let homeCanvas: any;
 
   // 친구 검색: 추후 구현
-  useEffect(() => {
-    console.log(isCover);
-  });
 
   useEffect(() => {
     if (scenenumber === 2) {
@@ -331,7 +328,7 @@ export default function Home() {
   return (
     <Div>
       {/* render after three seconds */}
-      {/* <div
+      <div
         // 메인화면 유튜브 BGM 제거/수정하고 싶으면 여기서!
         style={{
           position: 'fixed',
@@ -341,7 +338,7 @@ export default function Home() {
         }}
       >
         <YouTube videoId="yyQL24ZMMjg" opts={opts} />
-      </div> */}
+      </div>
       {/* 모달들 */}
       <Alert>들어갈래?</Alert>
       <HomeAlert>집으로 들어갈래?</HomeAlert>
