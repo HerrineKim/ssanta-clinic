@@ -30,7 +30,6 @@ import {
 
 import { API_BASE_URL } from '../../../apis/url';
 
-const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
 // console.log(ACCESS_TOKEN);
 
 type BoxCreateProps = {
@@ -39,6 +38,7 @@ type BoxCreateProps = {
 };
 
 export function BoxCreate(props: BoxCreateProps) {
+  const ACCESS_TOKEN = localStorage.getItem('jwt') || '';
   const BASE_URL = API_BASE_URL;
   // 상자 보내기 (/api/calendar)
   const [audio, setAudio] = useState<File>();
