@@ -1,5 +1,11 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Wrapper, CanvasContainer, CloseButton } from './styled';
+import React, { useEffect, useState } from 'react';
+import {
+  Wrapper,
+  CanvasContainer,
+  CloseButton,
+  DisButton,
+  DisContainer,
+} from './styled';
 import { RoomThree } from '../../three/RoomThree';
 import axios from 'axios';
 import { selectUserId, selectUserNickname } from '../../store/store';
@@ -9,6 +15,8 @@ import Loading from '../loading/Loading';
 import { MyItems } from '../../store/store';
 import { API_BASE_URL } from '../../apis/url';
 import Saving from './saving/Saving';
+import Descript from './descript/Descripte';
+import Descript2 from './descript/Descripte2';
 
 export default function RoomModal(props: any) {
   const { onClose } = props;
@@ -23,6 +31,9 @@ export default function RoomModal(props: any) {
 
   const [isSave, setIsSave] = useState<boolean>(false);
   const [isSuccess, SetIsSuccess] = useState<boolean>(false);
+
+  const [isDis, setIsDis] = useState<boolean>(true);
+  const [scenenumber, setSceneNumber] = useState<number>(0);
 
   // 트리 정보받기, 캘린더(선물) 정보 받기
 
@@ -65,6 +76,7 @@ export default function RoomModal(props: any) {
   const render = (time: number) => {
     setIsSave(roomCanvas._isSave);
     SetIsSuccess(roomCanvas._saveSuccess);
+    setSceneNumber(roomCanvas._scenenumber);
     if (roomCanvas._scenenumber === 1) {
       // console.log(this._camera.position);
       roomCanvas._renderer.render(roomCanvas._scene, roomCanvas._camera);
@@ -91,6 +103,14 @@ export default function RoomModal(props: any) {
       >
         x
       </CloseButton>
+      <DisButton
+        className="outbtn"
+        onClick={() => {
+          setIsDis(!isDis);
+        }}
+      >
+        설명
+      </DisButton>
 
       <CalendarAlert></CalendarAlert>
       <CanvasContainer id="room-canvas">
@@ -98,6 +118,8 @@ export default function RoomModal(props: any) {
         {(isSave || isSuccess) && (
           <Saving result={[isSave, isSuccess]}></Saving>
         )}
+        {isDis &&
+          (scenenumber === 1 ? <Descript></Descript> : <Descript2></Descript2>)}
       </CanvasContainer>
     </Wrapper>
   );

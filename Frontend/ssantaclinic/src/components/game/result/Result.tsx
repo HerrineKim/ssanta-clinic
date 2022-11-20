@@ -38,9 +38,8 @@ export default function Result(props: ResultProp) {
     <ResultDiv>
       {isSucces ? (
         <div>
-          memory
-          <p>감사합니다 {time}만에 해결해 주셨어요!</p>
-          <p>알바비드릴게요!</p>
+          <p>오 {time}초 걸렸어요</p>
+          <p>상금이에요</p>
           {money}
           <CoinImg src="img/coin.png"></CoinImg>
         </div>
