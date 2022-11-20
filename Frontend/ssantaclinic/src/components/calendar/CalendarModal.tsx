@@ -78,7 +78,7 @@ export function CalendarModal(props: any) {
   const [Boxes, setBoxes] = useState<any[]>([]);
   const getBoxes = (date: string) => {
     axios
-      .get(`http://localhost:8080/api/calendar?date=${date}`, {
+      .get(`${BASE_URL}calendar?date=${date}`, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
@@ -93,7 +93,7 @@ export function CalendarModal(props: any) {
   // [{"date":1,"cnt":0},{"date":2,"cnt":1},{"date":3,"cnt":0}]
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/calendar?userId=${userId}`, {
+      .get(`${BASE_URL}calendar?userId=${userId}`, {
         headers: {
           Authorization: ACCESS_TOKEN,
         },
