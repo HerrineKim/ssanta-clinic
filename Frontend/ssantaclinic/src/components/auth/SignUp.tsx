@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 import { SignUpContainer, SignUpForm, SignUpInputs } from './styles';
-import { Input } from './styles';
-import { CheckButton } from './styles';
+// import { Input } from './styles';
+// import { CheckButton } from './styles';
 
 import { motion } from 'framer-motion';
 
