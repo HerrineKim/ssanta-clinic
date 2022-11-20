@@ -82,6 +82,9 @@ export default function Home() {
   const [isWit, setIsWit] = useState<boolean>(false);
   const [isWit2, setIsWit2] = useState<boolean>(false);
 
+  const [isLetter, setIsLetter] = useState<boolean>(false);
+  const [isLetter2, setIsLetter2] = useState<boolean>(false);
+
   const setUserMoney = useSetRecoilState(Money);
   const money = useRecoilValue(Money);
 
@@ -154,6 +157,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    setIsLetter2(isLetter);
+  }, [isLetter]);
+
+  useEffect(() => {
     setIsTetris2(isTetris);
   }, [isTetris]);
 
@@ -211,8 +218,6 @@ export default function Home() {
   //     },
   //   );
   // }, []);
-
-  const [isLetter, setIsLetter] = useState<boolean>(false);
 
   useEffect(() => {
     let requestId: number;
@@ -274,6 +279,7 @@ export default function Home() {
     setIsTetris(homeCanvas._isGame1);
     setIsMemory(homeCanvas._isGame4);
     setIsWit(homeCanvas._isGame2);
+    setIsLetter(homeCanvas._isLetter);
   };
 
   function getCoin() {
@@ -407,7 +413,7 @@ export default function Home() {
       {isTetris2 && <TetrisAlert tetris={setIsTetris2}></TetrisAlert>}
       {isMemory2 && <MemoryAlert memory={setIsMemory2}></MemoryAlert>}
       {isWit2 && <WitAlert wit={setIsWit2}></WitAlert>}
-      <LetterAlert></LetterAlert>
+      {isLetter2 && <LetterAlert letter={setIsLetter2}></LetterAlert>}
       {scenenumber === 2 ? (
         <ShopTalk>사고 싶은 아이템을 클릭하세요.</ShopTalk>
       ) : null}

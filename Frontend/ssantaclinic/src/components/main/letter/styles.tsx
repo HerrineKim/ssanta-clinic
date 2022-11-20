@@ -12,7 +12,7 @@ export const Div = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  display: none;
+  // display: none;
   border-radius: 30px;
 `;
 
