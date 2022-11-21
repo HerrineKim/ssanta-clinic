@@ -21,6 +21,7 @@ export const ReceiveLetterPage = (props: any) => {
 
     return () => {
       cancelAnimationFrame(requestId1);
+      letterCanvas.cancle();
     };
   }, []);
   return (
