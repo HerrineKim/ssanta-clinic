@@ -26,6 +26,9 @@ function App() {
   const isLoggedIn = useRecoilValue(selectUserIsLogin);
   // console.log(isLoggedIn);
 
+  console.log = function no_console() {};
+  console.warn = function no_console() {};
+
   return (
     <Router>
       <Routes>
