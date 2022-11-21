@@ -16,6 +16,7 @@ export class LetterReceiveModel {
   _mixer: any;
   _clock: any;
   _orbitControls: any;
+  _id: any;
   constructor() {
     this._setupThreeJs();
     this._setupCamera();
@@ -82,18 +83,20 @@ export class LetterReceiveModel {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
     this._orbitControls.update();
+  }
+  cancle() {
+    cancelAnimationFrame(this._id);
   }
 
   render() {
     this._renderer.render(this._scene, this._camera);
 
     this.update();
-    requestAnimationFrame(this.render.bind(this));
+    this._id = requestAnimationFrame(this.render.bind(this));
   }
 
   resize() {
