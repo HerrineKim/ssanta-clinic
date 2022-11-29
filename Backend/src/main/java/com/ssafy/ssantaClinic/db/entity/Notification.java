@@ -36,16 +36,13 @@ public class Notification {
     private String message;
 
     @Column(length=20)
-    @NotBlank
     @Enumerated(EnumType.STRING)
     private Type type;
 
     @Column(name = "is_read")
-    @NotBlank
     private boolean isRead ;
 
     @Column(name = "crated_at")
-    @NotBlank
     private LocalDateTime createdAt;
 
     @Builder
@@ -57,5 +54,8 @@ public class Notification {
         this.type = type;
         this.isRead = isRead;
         this.createdAt = createdAt;
+    }
+    public void isRead() {
+        this.isRead = true;
     }
 }

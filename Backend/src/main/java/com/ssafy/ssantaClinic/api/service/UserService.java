@@ -11,7 +11,6 @@ import java.util.OptionalInt;
 
 public interface UserService {
 
-    void save(UserRequest.JoinRequest joinRequest);
 
     User getUserByUserId(int userId);
 
@@ -25,6 +24,8 @@ public interface UserService {
 
     UserResponse.findPasswordResponse getFindPasswordNum(String email) throws NoSuchAlgorithmException;
 
+    void save(UserRequest.JoinRequest joinRequest);
+
     void sendMail(String email, String url);
 
     void updatePassword(String findPasswordNum, String password);
@@ -33,4 +34,5 @@ public interface UserService {
 
     void updateUserItemList(int userId, List<Integer> itemList);
 
+    void updateLastLoginAt(int userId);
 }
