@@ -7,6 +7,7 @@ type Props = {
 export const StyledDisplay = styled.div<Props>`
   box-sizing: border-box;
   display: flex;
+  justify-content: center;
   align-items: space-between;
   margin: 0 0 20px 0;
   padding: 20px;
@@ -16,6 +17,6 @@ export const StyledDisplay = styled.div<Props>`
   border-radius: 10px;
   color: ${(props) => (props.gameOver ? 'red' : '#999')};
   background: #000;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 0.8rem;
+  font-family: Cafe24Ssurround;
+  font-size: 0.9rem;
 `;

@@ -4,7 +4,7 @@ import { Camera } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 
-export class LetterWrite {
+export class LetterWriteModel {
   _model2: any;
   _bloomPass: any;
   _composer: any;
@@ -16,6 +16,7 @@ export class LetterWrite {
   _mixer: any;
   _clock: any;
   _orbitControls: any;
+  _id: any;
   constructor() {
     this._setupThreeJs();
     this._setupCamera();
@@ -37,6 +38,7 @@ export class LetterWrite {
       this._renderer = renderer;
 
       const scene = new THREE.Scene();
+      scene.background = new THREE.Color('#033220');
       this._scene = scene;
     }
   }
@@ -48,8 +50,16 @@ export class LetterWrite {
       1000,
     );
 
-    camera.position.set(0, 1.764, 0.284);
-    camera.rotation.set(-90, 0, 0);
+    camera.position.set(
+      3.673020023484643e-22,
+      1.7867154222191401,
+      0.0000017867948404755238,
+    );
+    camera.rotation.set(
+      -1.5707953267504475,
+      2.0557386909291645e-22,
+      2.0556473190314887e-16,
+    );
     this._camera = camera;
   }
   _setupLight() {
@@ -59,14 +69,9 @@ export class LetterWrite {
     this._scene.add(light);
   }
   _setupModel() {
-    new GLTFLoader().load('/letter/letter_write.glb', (gltf) => {
+    new GLTFLoader().load('/letter/letter_write_v2.glb', (gltf) => {
       const model1 = gltf.scene;
       this._scene.add(model1);
-    });
-    new GLTFLoader().load('/login/login_env.glb', (gltf) => {
-      const model2 = gltf.scene;
-      this._model2 = model2;
-      this._scene.add(model2);
     });
   }
   _setupControls() {
@@ -78,7 +83,6 @@ export class LetterWrite {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
   }
 
   update() {
@@ -89,7 +93,10 @@ export class LetterWrite {
     this._renderer.render(this._scene, this._camera);
 
     this.update();
-    requestAnimationFrame(this.render.bind(this));
+    this._id = requestAnimationFrame(this.render.bind(this));
+  }
+  cancle() {
+    cancelAnimationFrame(this._id);
   }
 
   resize() {

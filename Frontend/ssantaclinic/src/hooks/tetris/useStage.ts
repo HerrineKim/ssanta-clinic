@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStage } from '../../pages/game/tetris/gameHelpers';
+import { createStage } from '../../components/game/tetris/gameHelpers';
 // Types
 import type { PLAYER } from '../../hooks/tetris/usePlayer';
 
