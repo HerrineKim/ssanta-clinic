@@ -1,0 +1,80 @@
+* {
+  box-sizing: border-box;
+}
+
+.game-container {
+  z-index: 999;
+  background-color: white;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+button {
+  margin-top: 30px;
+  width: 100px;
+  height: 50px;
+}
+.wit-content {
+  position: relative;
+}
+.board-container {
+  width: 600px;
+  height: 600px;
+  background-color: white;
+  border: 1px solid blue;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+}
+
+.cell-container {
+  border: 3px solid whitesmoke;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+
+.timer-container {
+  margin-top: 30px;
+  width: 100px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+}
+.wit-header {
+  display: flex;
+  width: 600px;
+  max-width: 80vh;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 10px 10px;
+}
+.wit-clear {
+  font-weight: 700;
+  font-size: 60px;
+  white-space: nowrap;
+  margin-bottom: 5vmin;
+  color: green;
+}
+.wit-over {
+  font-weight: 700;
+  font-size: 60px;
+  white-space: nowrap;
+  margin-bottom: 5vmin;
+  color: red;
+}
+.click-count {
+  color: green;
+}

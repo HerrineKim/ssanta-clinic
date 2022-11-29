@@ -76,9 +76,9 @@ public class FriendController {
             @ApiResponse(code = 500, message = "서버 에러 발생")
     })
     @GetMapping("/recommend")
-    public ResponseEntity<List<User>> getRecommendFriendList(HttpServletRequest request) {
-        // TODO 추천 친구 리스트를 받아온다.
-        return ResponseEntity.ok(new ArrayList<>());
+    public ResponseEntity<List<FriendResponse>> getRecommendFriendList(HttpServletRequest request) {
+        // 추천 친구 리스트를 받아온다.
+        return ResponseEntity.ok(followService.getRecommendFriendList());
     }
 
 

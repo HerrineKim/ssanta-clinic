@@ -4,11 +4,10 @@ package com.ssafy.ssantaClinic.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ssafy.ssantaClinic.api.response.FriendResponse;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -43,7 +42,19 @@ public class User {
     @JsonIgnore
     private String findPasswordNum;
 
-    private int money;
+    @JsonIgnore
+    @Builder.Default
+    private LocalDateTime lastLoginAt = LocalDateTime.now();
+
+    public void updateLastLoginAt() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
+
+    @Builder.Default
+    private int money = 10000;
+
+    @Column(name = "tree_url", length = 300)
+    private String treeUrl;
 
     @OneToMany(mappedBy = "parent")
     @JsonIgnore
@@ -64,6 +75,10 @@ public class User {
     
     public void changeMoney(int money) {
         this.money = money;
+    }
+
+    public void changeTree(String treeUrl) {
+        this.treeUrl = treeUrl;
     }
 
     public void changeFindPasswordNum(String findPasswordNum) {

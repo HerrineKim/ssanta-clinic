@@ -3,6 +3,8 @@ package com.ssafy.ssantaClinic.api.service;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteBucketRequest;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.ssafy.ssantaClinic.common.exception.CustomException;
 import com.ssafy.ssantaClinic.common.exception.ErrorCode;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +32,9 @@ public class S3Service {
     @Value("${cloud.aws.s3.bucket.name}") // 프로퍼티에서 cloud.aws.s3.bucket에 대한 정보를 불러옴
     public String bucket;
 
+    @Value("${aws.accessKey}")
+    private String key;
+
     private final AmazonS3Client amazonS3Client;
 
     public String upload(MultipartFile uploadFile) throws IOException {
@@ -39,8 +43,10 @@ public class S3Service {
          * @Method 설명 : 파일 업로드를 위한 로직
          */
         String origName = uploadFile.getOriginalFilename();
+        if(origName.isBlank()){
+            throw new CustomException(ErrorCode.FILE_NAME_BLANK_ERROR);
+        }
         String url;
-        try {
             // 확장자를 찾기 위한 코드
             final String ext = origName.substring(origName.lastIndexOf('.'));
             // 파일이름 암호화
@@ -48,16 +54,19 @@ public class S3Service {
             // 파일 객체 생성
             // System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
             File file = new File(System.getProperty("user.dir") + saveFileName);
+        try {
             // 파일 변환
             uploadFile.transferTo(file);
             // S3 파일 업로드
             uploadOnS3(saveFileName, file);
             // 주소 할당
             url = defaultUrl + saveFileName;
-            // 파일 삭제
-            file.delete();
         } catch (IOException e) {
             throw new CustomException(ErrorCode.IMAGE_UPLOAD_ERROR);
+        }
+        // 파일 삭제
+        if(!file.delete()){
+            throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
         }
         return url;
     }
@@ -68,24 +77,26 @@ public class S3Service {
          * @Method 설명 : 파일 업로드를 위한 로직
          */
         String url;
-        try {
             // 파일이름 암호화
-            final String saveFileName = getUuid() + ".glb";
+            var saveFileName = getUuid() + ".glb";
             // 파일 객체 생성
             // System.getProperty => 시스템 환경에 관한 정보를 얻을 수 있다. (user.dir = 현재 작업 디렉토리를 의미함)
             File file = new File(System.getProperty("user.dir") + saveFileName);
+            saveFileName = "tree/" + saveFileName;
+        try {
             // 파일 변환
             uploadFile.transferTo(file);
             // S3 파일 업로드
             uploadOnS3(saveFileName, file);
             // 주소 할당
             url = defaultUrl + saveFileName;
-            // 파일 삭제
-            file.delete();
         } catch (IOException e) {
             throw new CustomException(ErrorCode.IMAGE_UPLOAD_ERROR);
         }
-        System.out.println("url = " + url);
+        // 파일 삭제
+        if(!file.delete()){
+            throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
+        }
         return url;
     }
 
@@ -119,7 +130,8 @@ public class S3Service {
          * @Method Name : uploadOnS3
          * @Method 설명 : S3 버킷에 파일 업로드
          */
-        amazonS3Client.putObject(new PutObjectRequest(bucket, findName, file).withCannedAcl(CannedAccessControlList.PublicRead));
+        amazonS3Client.putObject(new PutObjectRequest(bucket, findName, file)
+                .withCannedAcl(CannedAccessControlList.PublicRead));
     }
     public void delete(String imageUrl) {
         /**
@@ -127,37 +139,11 @@ public class S3Service {
          * @Method 설명 : S3 버킷에서 파일 삭제
          */
         try {
-            final String deleteFileName = imageUrl.substring(imageUrl.lastIndexOf('/')+1);
-            amazonS3Client.deleteObject(this.bucket, deleteFileName);
+            final String deleteFileName = "tree/" + imageUrl.substring(imageUrl.lastIndexOf('/')+1);
+//            amazonS3Client.deleteObject(this.bucket, deleteFileName);
+            amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, deleteFileName));
         } catch (SdkClientException e) {
             e.printStackTrace();
         }
-    }
-    public File downloadFile(String fileUrl,String fileName) {
-        /**
-         * @Method Name : downloadFile
-         * @Method 설명 : S3 버킷에서 파일 가져오기
-         */
-        URL url;
-        //읽기 객체
-        InputStream is;
-        //쓰기 객체
-        OutputStream os;
-        try {
-            url = new URL(fileUrl);
-            is = url.openStream();
-            os = new FileOutputStream(fileName);
-            byte[] buffer = new byte[1024*16];
-            while (true) {
-                int inputData = is.read(buffer);
-                if(inputData == -1)break;
-                os.write(buffer,0,inputData);
-            }
-            is.close();
-            os.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new File(fileName);
     }
 }

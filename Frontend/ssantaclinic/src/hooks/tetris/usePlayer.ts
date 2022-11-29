@@ -1,9 +1,9 @@
 import React from 'react';
-import { STAGE_WIDTH } from '../../../src/pages/game/tetris/setup';
+import { STAGE_WIDTH } from '../../../src/components/game/tetris/setup';
 import {
   isColliding,
   randomTetromino,
-} from '../../pages/game/tetris/gameHelpers';
+} from '../../components/game/tetris/gameHelpers';
 import { STAGE } from './useStage';
 
 export type PLAYER = {

@@ -23,7 +23,7 @@ sonarqube {
 		property "sonar.host.url", "http://localhost:9000/"
 		property "sonar.projectKey", "A201"
 		property "sonar.projectName", "SsantaClinic"
-		property "sonar.projectVersion", "1.0"
+		property "sonar.projectVersion", "1.1"
 		property "sonar.sourceEncoding", "UTF-8"
 		property "sonar.login", "bfe7b0de187762f16b4faff62b0dafe192500c3f"
 		property "sonar.host.url", "https://sonarqube.ssafy.com"
@@ -40,7 +40,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.querydsl:querydsl-jpa:5.0.0'
 	implementation 'com.querydsl:querydsl-apt:5.0.0'
-	compileOnly 'org.projectlombok:lombok'
+    implementation 'org.jetbrains:annotations:20.1.0'
+    compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -72,6 +73,7 @@ dependencies {
 	testImplementation 'org.infinispan:infinispan-commons:14.0.2.Final'
 	implementation 'org.infinispan:infinispan-marshaller-protostuff:14.0.2.Final'
 	implementation 'org.jboss.marshalling:jboss-marshalling-osgi:2.0.12.Final'
+	compileOnly 'org.infinispan:infinispan-component-annotations:10.1.8.Final'
 }
 
 tasks.named('test') {

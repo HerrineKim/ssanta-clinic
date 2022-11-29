@@ -21,6 +21,7 @@ export class LoginThree {
   _mixer: any;
   _clock: any;
   _orbitControls: any;
+  _id: any;
   constructor() {
     this._setupThreeJs();
     this._setupCamera();
@@ -35,7 +36,7 @@ export class LoginThree {
     const renderPass = new RenderPass(this._scene, this._camera);
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.8,
+      0.3,
       1,
       0.1,
     );
@@ -58,8 +59,7 @@ export class LoginThree {
       this._renderer = renderer;
 
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color('#080078');
-      scene.fog = new THREE.FogExp2('#080078', 0.4);
+      scene.background = new THREE.Color('#04003C');
       this._scene = scene;
     }
   }
@@ -79,16 +79,19 @@ export class LoginThree {
   }
   _setupLight() {
     const color1 = '#FFFFFF';
-    const color2 = '#00D9FF';
+    const color2 = '#FFFFFF';
     const light1 = new THREE.PointLight(color1, 1);
-    const light2 = new THREE.PointLight(color2, 2.3);
+    const light2 = new THREE.PointLight(color2, 1);
+    const light3 = new THREE.PointLight(color1, 1);
     light1.position.set(0, 1.212, 1.951);
     light2.position.set(-31.85, 0.0, 0);
+    light3.position.set(-0.633, 0.502, -0.436);
     this._scene.add(light1);
     this._scene.add(light2);
+    this._scene.add(light3);
   }
   _setupModel() {
-    new GLTFLoader().load('/login/santa_elf_text.glb', (gltf) => {
+    new GLTFLoader().load('/login/santa_elf_text_deer.glb', (gltf) => {
       const model1 = gltf.scene;
       this._scene.add(model1);
 
@@ -130,15 +133,12 @@ export class LoginThree {
     this.resize();
 
     this._clock = new THREE.Clock();
-    requestAnimationFrame(this.render.bind(this));
+    // requestAnimationFrame(this.render.bind(this));
   }
-  // _setupEvents2() {
-  //   window.onresize = this.resize.bind(this);
-  //   this.resize();
 
-  //   this._clock = new THREE.Clock();
-  //   requestAnimationFrame(this.render.bind(this));
-  // }
+  cancle() {
+    cancelAnimationFrame(this._id);
+  }
 
   update() {
     const delta = this._clock.getDelta();
@@ -148,11 +148,12 @@ export class LoginThree {
   }
 
   render() {
+    // console.log(1);
     // this._renderer.render(this._scene1, this._camera);
     this._composer.render();
     // this._finalComposer.render();
     this.update();
-    requestAnimationFrame(this.render.bind(this));
+    this._id = requestAnimationFrame(this.render.bind(this));
   }
   // render2() {
   //   this._renderer.render(this._scene, this._camera);

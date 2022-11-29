@@ -9,15 +9,16 @@ import com.ssafy.ssantaClinic.db.entity.Type;
 import com.ssafy.ssantaClinic.db.entity.User;
 import com.ssafy.ssantaClinic.db.repository.AdventCalendarRepository;
 import com.ssafy.ssantaClinic.db.repository.EmitterRepository;
+import com.ssafy.ssantaClinic.db.repository.NotiRepository;
 import com.ssafy.ssantaClinic.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
@@ -29,14 +30,16 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 public class NotiServiceImpl implements NotiService {
-    private static final Long DEFAULT_TIMEOUT = 60L* 1000 * 10; // 10분
+    private static final Long DEFAULT_TIMEOUT = 60L* 1000 ; // 10분
     private static final String BASE_URL = "http://localhost:8080";
-    static final int DECEMBER = 12;
+    private final int DECEMBER = 11;
     private final EmitterRepository emitterRepository;
     private final UserRepository userRepository;
     private final AdventCalendarRepository calendarRepository;
+    private final NotiRepository notiRepository;
 
     @Override
+    @Transactional
     public SseEmitter subscribe(int userId, String lastEventId) {
         /**
          * @Method Name :  subscribe
@@ -52,7 +55,7 @@ public class NotiServiceImpl implements NotiService {
         // 비동기 요청이 시간 초과가 나면 emitter를 삭제한다.
         emitter.onTimeout(() -> emitterRepository.deleteById(id));
         // sse 연결을 유지하기 위한 dummy data 전송
-        sendToClient(emitter, id, "EventStream Created. [userId = " + userId + "]");
+        sendToClient(emitter, userId + "_" + System.currentTimeMillis(), id, "EventStream Created. [userId = " + userId + "]");
         // 헤더에 last-event-id가 있으면 유실된 데이터를 다시 전송한다.
         if(!lastEventId.isEmpty()){
             Map<String, Object> events = emitterRepository.findAllEventCacheStartWithByUserId(userId);
@@ -60,25 +63,25 @@ public class NotiServiceImpl implements NotiService {
                     // last-event-id 이전에 전송된 이벤트들은 제외
                     .filter(entry -> lastEventId.compareTo(entry.getKey()) < 0)
                     // 유실된 이벤트들은 다시 전송
-                    .forEach(entry -> sendToClient(emitter, entry.getKey(), entry.getValue()));
+                    .forEach(entry -> sendToClient(emitter, entry.getKey(), id, entry.getValue()));
         }
         return emitter;
     }
     @Override
-    public void sendToClient(SseEmitter emitter, String id, Object data) {
+    public void sendToClient(SseEmitter emitter, String eventId, String emitterId, Object data) {
         /**
          * @Method Name :  sendToClient
          * @Method 설명 :  sse로 데이터를 전송한다.
          */
         try {
             emitter.send(SseEmitter.event()
-                                    .id(id).name("sse").data(data));
+                                    .id(eventId).data(data));
         } catch (IOException e) {
-            emitterRepository.deleteById(id);
-            throw new CustomException(ErrorCode.SSE_SEND_ERROR);
+            emitterRepository.deleteById(emitterId);
         }
     }
     @Override
+    @Transactional
     public void send(User receiver, Type type, String message, int id) {
         /**
          * @Method Name :  send
@@ -86,7 +89,7 @@ public class NotiServiceImpl implements NotiService {
          */
         Notification notification = createNotification(receiver, type, message, id);
         int userId = receiver.getUserId();
-
+        String eventId = userId + "_" + System.currentTimeMillis();
         // 로그인 한 유저의 SseEmitter 모두 가져오기
         Map<String, SseEmitter> sseEmitters = emitterRepository.findAllEmitterStartWithByUserId(userId);
         sseEmitters.forEach(
@@ -94,7 +97,7 @@ public class NotiServiceImpl implements NotiService {
                     // 데이터 캐시 저장(유실된 데이터 처리하기 위함)
                     emitterRepository.saveEventCache(key, notification);
                     // 데이터 전송
-                    sendToClient(emitter, key, new NotiResponse.GetNotiResponse(notification));
+                    sendToClient(emitter, eventId, key, new NotiResponse.GetNotiResponse(notification));
                 }
         );
     }
@@ -105,18 +108,22 @@ public class NotiServiceImpl implements NotiService {
          * @Method 설명 :  알림 객체를 생성한다.
          */
         String url = BASE_URL;
-        if (!type.getType().equals(Type.REPLY.getType()) || !type.getType().equals(Type.GIFT.getType())) {
+        if (!type.getType().equals(Type.REPLY.getType()) && !type.getType().equals(Type.GIFT.getType())) {
             throw new CustomException(ErrorCode.WRONG_NOTI_TYPE_ERROR);
         } else {
             url += "/api/" + type.getUrl() + "/" + id;
         }
-        return Notification.builder()
-                .user(receiver)
-                .url(url)
-                .message(message)
-                .type(type)
-                .isRead(false)
-                .build();
+        Notification notification = notiRepository.findByUserUserIdAndUrl(receiver.getUserId(), url)
+                                    .orElse(Notification.builder()
+                                            .user(receiver)
+                                            .url(url)
+                                            .message(message)
+                                            .type(type)
+                                            .isRead(false)
+                                            .createdAt(LocalDateTime.now())
+                                            .build());
+        notiRepository.save(notification);
+        return notification;
     }
     @Override
     public void sendUnOpenedBoxNotification(int userId){
@@ -127,15 +134,28 @@ public class NotiServiceImpl implements NotiService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         // 12월만 개봉 가능
-        if(LocalDateTime.now().getMonth().equals(Month.DECEMBER)){
+        // 임시로 11월 개봉으로 수정
+        if(LocalDateTime.now().getMonthValue() == DECEMBER){
             int day = LocalDateTime.now().getDayOfMonth();
             List<AdventCalendar> unOpenedBoxes =
-                    calendarRepository.findAllByReceiverUserIdAndIsReadIsFalse(userId);
+                    calendarRepository.findAllByReceiverUserIdAndIsRead(userId, false);
             for(AdventCalendar box : unOpenedBoxes){
                 if(box.getDay() <= day){
-                    send(user, Type.GIFT, "선물이 도착했습니다!", box.getId());
+                    send(user, Type.GIFT, box.getSender()+ "님으로부터 선물이 도착했습니다!", box.getId());
                 }
             }
+        }
+    }
+
+    @Override
+    public void readAllNotification(int userId) {
+        // 존재하는 회원인지 확인
+        if(!userRepository.findById(userId).isPresent())
+            throw new CustomException(ErrorCode.NOT_FOUND_USER_INFO);
+        List<Notification> notiList = notiRepository.findAllByUserUserId(userId);
+        for (var noti : notiList) {
+            noti.isRead();
+            notiRepository.save(noti);
         }
     }
 }

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { STAGE_WIDTH, STAGE_HEIGHT } from '../../../../pages/game/tetris/setup';
+import { STAGE_WIDTH, STAGE_HEIGHT } from '../../tetris/setup';
 
 export const StyledStage = styled.div`
   display: grid;
@@ -9,3 +9,9 @@ export const StyledStage = styled.div`
   border: 1px solid #777;
   background: #222;
 `;
+
+// export const OverDiv = styled.div`
+//   position: relative;
+//   top: 50%;
+//   left: 50%;
+// `;
