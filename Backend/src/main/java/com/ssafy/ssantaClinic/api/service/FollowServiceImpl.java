@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -25,6 +26,9 @@ public class FollowServiceImpl implements FollowService {
     public void follow(int parentId, int childId) {
         User parent = userRepository.findById(parentId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
         User child = userRepository.findById(childId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER_INFO));
+
+        if(followRepository.findByParentAndChild(parent, child).isPresent())
+            throw new CustomException(ErrorCode.ALREADY_FOLLOWED);
 
         Follow follow = Follow.builder()
                 .parent(parent)
@@ -45,26 +49,36 @@ public class FollowServiceImpl implements FollowService {
     }
 
     @Override
+    @Transactional
     public List<User> getFollowerList(int userId) {
         User user = userRepository.getUserByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowers().stream().map(Follow::getChild).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<User> getFollowerList(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowers().stream().map(Follow::getChild).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<User> getFollowingList(int userId) {
         User user = userRepository.getUserByUserId(userId).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowings().stream().map(Follow::getParent).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public List<User> getFollowingList(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomException(ErrorCode.FOLLOW_NOT_FOUND_USER_INFO));
         return user.getFollowings().stream().map(Follow::getParent).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<FriendResponse> getRecommendFriendList() {
+        return userRepository.findTop10ByOrderByLastLoginAtDesc()
+                .stream().map(User::getFriendResponse).collect(Collectors.toList());
     }
 }

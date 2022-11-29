@@ -1,47 +1,59 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
-import { currentUser } from '../../store/store';
-import { Button, LoginContainer } from './styles';
+import { currentUser, isValidLogIn } from '../../store/store';
+import { LoginContainer } from './styles';
 import { Input } from './styles';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '../../apis/url';
 export const LogIn = () => {
+  const BASE_URL = API_BASE_URL;
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [button, setButton] = useState<boolean>(true);
   const setUserState = useSetRecoilState(currentUser);
+  const setIsValidLogin = useSetRecoilState(isValidLogIn);
+  const [isFail, setIsFail] = useState<boolean>(false);
   const navigate = useNavigate();
+
   let accessToken: any = '';
-  useEffect(() => {
-    if (localStorage.getItem('jwt') !== '') {
-      alert('로그인 했잖아요;;');
-      navigate('/');
-    }
-  });
+
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault();
     console.log('제출됨');
     axios
-      .post('http://localhost:8080' + '/api/user/login', {
+      .post(BASE_URL + 'user/login', {
         email: email,
         password: password,
       })
       .then((res) => {
-        console.log(res.data);
+        setIsValidLogin({
+          isValidLogin: true,
+        });
+        // console.log(res.data);
         accessToken = res.headers.authorization;
         localStorage.setItem('jwt', accessToken);
-        setUserState({
-          email: email,
-          id: res.data.userId,
-          nickname: res.data.nickName,
-          noti: [],
-        });
-        const myRoomPath = '/room/' + res.data.userId;
-        navigate(myRoomPath); // Login 성공하면 일단 내 방으로
+        setTimeout(() => {
+          setUserState({
+            email: email,
+            id: res.data.userId,
+            nickname: res.data.nickName,
+            noti: [],
+            isLogin: true,
+          });
+        }, 8000);
+
+        // navigate('/logintohome');
       })
       .catch((err) => {
-        console.log(err.response);
+        // console.log(err.response);
+        if (err.response.status === 401) {
+          setIsFail(true);
+          setTimeout(() => {
+            setIsFail(false);
+          }, 5000);
+        }
       });
   };
 
@@ -53,6 +65,9 @@ export const LogIn = () => {
   }
   function goSignUp() {
     navigate('/signup');
+  }
+  function goFindPassword() {
+    navigate('/findpassword');
   }
   const handleChangeEmail = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +81,7 @@ export const LogIn = () => {
     },
     [],
   );
+
   return (
     <LoginContainer id="login-container">
       <form onSubmit={handleSubmit}>
@@ -77,6 +93,9 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
+        {!email.includes('@') && (
+          <p style={{ color: 'red' }}>이메일 형식이 아닙니다.</p>
+        )}
         <Input
           type="password"
           name="password"
@@ -86,6 +105,9 @@ export const LogIn = () => {
           required
           onKeyUp={changeButton}
         />
+        {password.length < 5 && (
+          <p style={{ color: 'red' }}>비밀번호가 너무 짧습니다.</p>
+        )}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -95,6 +117,11 @@ export const LogIn = () => {
         >
           로그인
         </motion.button>
+        {isFail ? (
+          <p style={{ color: 'red', marginTop: '10px' }}>
+            이메일 혹은 아이디가 잘못 되었습니다.
+          </p>
+        ) : null}
       </form>
       <motion.button
         whileHover={{ scale: 1.1 }}
@@ -103,6 +130,14 @@ export const LogIn = () => {
         onClick={goSignUp}
       >
         회원가입
+      </motion.button>
+      <motion.button
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        id="find-password-button"
+        onClick={goFindPassword}
+      >
+        비밀번호 찾기
       </motion.button>
     </LoginContainer>
   );

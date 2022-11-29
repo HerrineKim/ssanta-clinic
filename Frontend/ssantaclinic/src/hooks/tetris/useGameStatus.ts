@@ -1,5 +1,5 @@
 import React from 'react';
-import { ROWPOINTS } from '../../../src/pages/game/tetris/setup';
+import { ROWPOINTS } from '../../../src/components/game/tetris/setup';
 
 export const useGameStatus = (rowsCleared: number) => {
   const [score, setScore] = React.useState(0);
