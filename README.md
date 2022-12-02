@@ -80,7 +80,7 @@ https://a201.notion.site/722ef8c41ed54175a08400f625a4b329
 
 #### 1. 테트리스
 
-![image-20221120001424258](README.assets/image-20221120001424258.png)
+![image-20221120001424258](README.assets/tetris.png)
 
 #### 2. 기억력 게임
 
